@@ -50,7 +50,6 @@ __heap_base
 Heap_Mem        SPACE   Heap_Size
 __heap_limit
 
-
                 PRESERVE8
                 THUMB
 
@@ -80,38 +79,38 @@ __Vectors       DCD     __initial_sp              ; Top of Stack
                 DCD     SysTick_Handler           ; SysTick Handler
 
                 ; External Interrupts
-                DCD     WDT_IRQHandler            ;  0:  Watchdog Timer
-                DCD     RTC_IRQHandler            ;  1:  Real Time Clock
+                DCD     RTC_IRQHandler            ;  0:  Real Time Clock
+                DCD     WDT_IRQHandler            ;  1:  Watchdog Timer
                 DCD     TIM0_IRQHandler           ;  2:  Timer0 / Timer1
-                DCD     TIM2_IRQHandler           ;  3:  Timer2 / Timer3
-                DCD     MCIA_IRQHandler           ;  4:  MCIa
+                DCD     PWM0_IRQHandler           ;  3:  PWM0 Interrup
+                DCD     PWM1_IRQHandler           ;  4:  PWM1 Interrup
                 DCD     MCIB_IRQHandler           ;  5:  MCIb
                 DCD     UART0_IRQHandler          ;  6:  UART0 - DUT FPGA
-                DCD     UART1_IRQHandler          ;  7:  UART1 - DUT FPGA
-                DCD     UART2_IRQHandler          ;  8:  UART2 - DUT FPGA
-                DCD     UART4_IRQHandler          ;  9:  UART4 - not connected
-                DCD     AACI_IRQHandler           ; 10: AACI / AC97
-                DCD     CLCD_IRQHandler           ; 11: CLCD Combined Interrupt
-                DCD     ENET_IRQHandler           ; 12: Ethernet
-                DCD     USBDC_IRQHandler          ; 13: USB Device
-                DCD     USBHC_IRQHandler          ; 14: USB Host Controller
-                DCD     CHLCD_IRQHandler          ; 15: Character LCD
-                DCD     FLEXRAY_IRQHandler        ; 16: Flexray
-                DCD     CAN_IRQHandler            ; 17: CAN
-                DCD     LIN_IRQHandler            ; 18: LIN
-                DCD     I2C_IRQHandler            ; 19: I2C ADC/DAC
-                DCD     0                         ; 20: Reserved
-                DCD     0                         ; 21: Reserved
-                DCD     0                         ; 22: Reserved
-                DCD     0                         ; 23: Reserved
-                DCD     0                         ; 24: Reserved
+                DCD     SPI0_M_IRQHandler         ;  7:  SPI0 Master
+                DCD     SPI1_M_IRQHandler         ;  8:  SPI1 Master
+                DCD     SPI2_M_IRQHandler         ;  9:  SPI2 Master
+                DCD     UART0_RXDMA_IRQHandler    ; 10: UART0 Rx DMA interrupt
+                DCD     UART0_TXDMA_IRQHandler    ; 11: UART0 Tx DMA interrupt
+                DCD     UART0_IP_IRQHandler       ; 12: UART0 Core interrupt
+                DCD     UART1_RXDMA_IRQHandler    ; 13: UART1 Rx DMA interrupt
+                DCD     UART1_TXDMA_IRQHandler    ; 14: UART1 Tx DMA interrupt
+                DCD     UART1_IP_IRQHandler       ; 15: UART1 Core interrupt
+                DCD     UART2_RXDMA_IRQHandler    ; 16: UART2 Rx DMA interrupt
+                DCD     UART2_TXDMA_IRQHandler    ; 17: UART2 Tx DMA interrupt
+                DCD     UART2_IP_IRQHandler       ; 18: UART2 Core interrupt
+                DCD     I2C0_M_IRQHandler         ; 19: I2C0 ADC/DAC
+                DCD     I2C1_M_IRQHandler         ; 20: I2C1 ADC/DAC
+                DCD     I2S_RXDMA_IRQHandler      ; 21: I2S Rx DMA interrupt
+                DCD     I2S_TXDMA_IRQHandler      ; 22: I2S Tx DMA interrupt
+                DCD     I2S_IP_IRQHandler         ; 23: I2S Core interrupt
+                DCD     DMIC_IRQHandler           ; 24: DMIC interrupt
                 DCD     0                         ; 25: Reserved
-                DCD     0                         ; 26: Reserved
+                DCD     GPIO_IRQHandler           ; 26: GPIO interrupt
                 DCD     0                         ; 27: Reserved
-                DCD     CPU_CLCD_IRQHandler       ; 28: Reserved - CPU FPGA CLCD
-                DCD     0                         ; 29: Reserved - CPU FPGA
+                DCD     AES_IRQHandler            ; 28: AES interrupt
+                DCD     DMU_IRQHandler            ; 29: DMU interrupt
                 DCD     UART3_IRQHandler          ; 30: UART3    - CPU FPGA
-                DCD     SPI_IRQHandler            ; 31: SPI Touchscreen - CPU FPGA
+                DCD     EFLASH_IRQHandler         ; 31: SPI Touchscreen - CPU FPGA
 __Vectors_End
 
 __Vectors_Size  EQU     __Vectors_End - __Vectors
@@ -187,53 +186,71 @@ SysTick_Handler PROC
 
 Default_Handler PROC
 
-                EXPORT  WDT_IRQHandler            [WEAK]
                 EXPORT  RTC_IRQHandler            [WEAK]
+                EXPORT  WDT_IRQHandler            [WEAK]
                 EXPORT  TIM0_IRQHandler           [WEAK]
-                EXPORT  TIM2_IRQHandler           [WEAK]
-                EXPORT  MCIA_IRQHandler           [WEAK]
+                EXPORT  PWM0_IRQHandler           [WEAK]
+                EXPORT  PWM1_IRQHandler           [WEAK]
                 EXPORT  MCIB_IRQHandler           [WEAK]
                 EXPORT  UART0_IRQHandler          [WEAK]
-                EXPORT  UART1_IRQHandler          [WEAK]
+                EXPORT  SPI0_M_IRQHandler         [WEAK]
+                EXPORT  SPI1_M_IRQHandler         [WEAK]
+                EXPORT  SPI2_M_IRQHandler         [WEAK]
                 EXPORT  UART2_IRQHandler          [WEAK]
                 EXPORT  UART3_IRQHandler          [WEAK]
                 EXPORT  UART4_IRQHandler          [WEAK]
-                EXPORT  AACI_IRQHandler           [WEAK]
-                EXPORT  CLCD_IRQHandler           [WEAK]
-                EXPORT  ENET_IRQHandler           [WEAK]
-                EXPORT  USBDC_IRQHandler          [WEAK]
-                EXPORT  USBHC_IRQHandler          [WEAK]
-                EXPORT  CHLCD_IRQHandler          [WEAK]
-                EXPORT  FLEXRAY_IRQHandler        [WEAK]
-                EXPORT  CAN_IRQHandler            [WEAK]
-                EXPORT  LIN_IRQHandler            [WEAK]
-                EXPORT  I2C_IRQHandler            [WEAK]
-                EXPORT  CPU_CLCD_IRQHandler       [WEAK]
-                EXPORT  SPI_IRQHandler            [WEAK]
+                EXPORT  UART0_RXDMA_IRQHandler    [WEAK]
+                EXPORT  UART0_TXDMA_IRQHandler    [WEAK]
+                EXPORT  UART0_IP_IRQHandler       [WEAK]
+                EXPORT  UART1_RXDMA_IRQHandler    [WEAK]
+                EXPORT  UART1_TXDMA_IRQHandler    [WEAK]
+                EXPORT  UART1_IP_IRQHandler       [WEAK]
+                EXPORT  UART2_RXDMA_IRQHandler    [WEAK]
+                EXPORT  UART2_TXDMA_IRQHandler    [WEAK]
+                EXPORT  UART2_IP_IRQHandler       [WEAK]
+                EXPORT  I2C0_M_IRQHandler         [WEAK]
+                EXPORT  I2C1_M_IRQHandler         [WEAK]
+                EXPORT  I2S_RXDMA_IRQHandler      [WEAK]
+                EXPORT  I2S_TXDMA_IRQHandler      [WEAK]
+                EXPORT  I2S_IP_IRQHandler         [WEAK]
+                EXPORT  DMIC_IRQHandler           [WEAK]
+                EXPORT  GPIO_IRQHandler           [WEAK]
+                EXPORT  AES_IRQHandler            [WEAK]
+                EXPORT  DMU_IRQHandler            [WEAK]
+                EXPORT  EFLASH_IRQHandler         [WEAK]
 
-WDT_IRQHandler
 RTC_IRQHandler
+WDT_IRQHandler
 TIM0_IRQHandler
-TIM2_IRQHandler
-MCIA_IRQHandler
+PWM0_IRQHandler
+PWM1_IRQHandler
 MCIB_IRQHandler
 UART0_IRQHandler
-UART1_IRQHandler
+SPI0_M_IRQHandler
+SPI1_M_IRQHandler
+SPI2_M_IRQHandler
 UART2_IRQHandler
 UART3_IRQHandler
 UART4_IRQHandler
-AACI_IRQHandler
-CLCD_IRQHandler
-ENET_IRQHandler
-USBDC_IRQHandler
-USBHC_IRQHandler
-CHLCD_IRQHandler
-FLEXRAY_IRQHandler
-CAN_IRQHandler
-LIN_IRQHandler
-I2C_IRQHandler
-CPU_CLCD_IRQHandler
-SPI_IRQHandler
+UART0_RXDMA_IRQHandler
+UART0_TXDMA_IRQHandler
+UART0_IP_IRQHandler
+UART1_RXDMA_IRQHandler
+UART1_TXDMA_IRQHandler
+UART1_IP_IRQHandler
+UART2_RXDMA_IRQHandler
+UART2_TXDMA_IRQHandler
+UART2_IP_IRQHandler
+I2C0_M_IRQHandler
+I2C1_M_IRQHandler
+I2S_RXDMA_IRQHandler
+I2S_TXDMA_IRQHandler
+I2S_IP_IRQHandler
+DMIC_IRQHandler
+GPIO_IRQHandler
+AES_IRQHandler
+DMU_IRQHandler
+EFLASH_IRQHandler
                 B       .
 
                 ENDP

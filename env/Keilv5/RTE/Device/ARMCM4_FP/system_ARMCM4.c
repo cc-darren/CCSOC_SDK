@@ -43,7 +43,7 @@
   Externals
  *----------------------------------------------------------------------------*/
 #if defined (__VTOR_PRESENT) && (__VTOR_PRESENT == 1)
-  extern uint32_t __Vectors;
+    extern uint32_t __Vectors;
 #endif
 
 /*----------------------------------------------------------------------------
@@ -57,7 +57,7 @@ uint32_t SystemCoreClock = SYSTEM_CLOCK;
  *----------------------------------------------------------------------------*/
 void SystemCoreClockUpdate (void)
 {
-  SystemCoreClock = SYSTEM_CLOCK;
+    SystemCoreClock = SYSTEM_CLOCK;
 }
 
 /*----------------------------------------------------------------------------
@@ -67,17 +67,39 @@ void SystemInit (void)
 {
 
 #if defined (__VTOR_PRESENT) && (__VTOR_PRESENT == 1)
-  SCB->VTOR = (uint32_t) &__Vectors;
+    SCB->VTOR = (uint32_t) &__Vectors;
 #endif
 
 #if defined (__FPU_USED) && (__FPU_USED == 1)
-  SCB->CPACR |= ((3U << 10*2) |           /* set CP10 Full Access */
+    SCB->CPACR |= ((3U << 10*2) |           /* set CP10 Full Access */
                  (3U << 11*2)  );         /* set CP11 Full Access */
 #endif
 
 #ifdef UNALIGNED_SUPPORT_DISABLE
-  SCB->CCR |= SCB_CCR_UNALIGN_TRP_Msk;
+    SCB->CCR |= SCB_CCR_UNALIGN_TRP_Msk;
 #endif
 
-  SystemCoreClock = SYSTEM_CLOCK;
+    NVIC_EnableIRQ((IRQn_Type)1);   // WDT
+    NVIC_EnableIRQ((IRQn_Type)3);   // PWM0
+    NVIC_EnableIRQ((IRQn_Type)4);   // PWM1
+    NVIC_EnableIRQ((IRQn_Type)7);   // SPI0
+    NVIC_EnableIRQ((IRQn_Type)8);   // SPI1
+    NVIC_EnableIRQ((IRQn_Type)9);   // SPI2
+    NVIC_EnableIRQ((IRQn_Type)10);  // UART0 RX
+    NVIC_EnableIRQ((IRQn_Type)11);  // UART0 TX
+    NVIC_EnableIRQ((IRQn_Type)13);  // UART1 RX
+    NVIC_EnableIRQ((IRQn_Type)14);  // UART1 TX
+    NVIC_EnableIRQ((IRQn_Type)16);  // UART2 RX
+    NVIC_EnableIRQ((IRQn_Type)17);  // UART2 TX
+    NVIC_EnableIRQ((IRQn_Type)19);  // I2C0
+    NVIC_EnableIRQ((IRQn_Type)20);  // I2C1
+    NVIC_EnableIRQ((IRQn_Type)21);  // I2S RX
+    NVIC_EnableIRQ((IRQn_Type)22);  // I2S TX
+    NVIC_EnableIRQ((IRQn_Type)24);  // DMIC
+    NVIC_EnableIRQ((IRQn_Type)26);  // GPIO
+    NVIC_EnableIRQ((IRQn_Type)28);  // AES
+    NVIC_EnableIRQ((IRQn_Type)29);  // DMU
+    NVIC_EnableIRQ((IRQn_Type)31);  // EFLASH
+
+    SystemCoreClock = SYSTEM_CLOCK;
 }

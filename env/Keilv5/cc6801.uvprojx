@@ -111,7 +111,7 @@
           <SimDllName>SARMCM3.DLL</SimDllName>
           <SimDllArguments>  </SimDllArguments>
           <SimDlgDll>DARMCM1.DLL</SimDlgDll>
-          <SimDlgDllArguments>-pCM0+</SimDlgDllArguments>
+          <SimDlgDllArguments>-pCM4</SimDlgDllArguments>
           <TargetDllName>SARMCM3.DLL</TargetDllName>
           <TargetDllArguments> </TargetDllArguments>
           <TargetDlgDll>TARMCM1.DLL</TargetDlgDll>
@@ -203,8 +203,8 @@
             <Ro2Chk>0</Ro2Chk>
             <Ro3Chk>0</Ro3Chk>
             <Ir1Chk>1</Ir1Chk>
-            <Ir2Chk>0</Ir2Chk>
-            <Ra1Chk>0</Ra1Chk>
+            <Ir2Chk>1</Ir2Chk>
+            <Ra1Chk>1</Ra1Chk>
             <Ra2Chk>0</Ra2Chk>
             <Ra3Chk>0</Ra3Chk>
             <Im1Chk>1</Im1Chk>
@@ -273,7 +273,7 @@
               <OCR_RVCT4>
                 <Type>1</Type>
                 <StartAddress>0x0</StartAddress>
-                <Size>0x20000</Size>
+                <Size>0x40000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
                 <Type>1</Type>
@@ -282,8 +282,8 @@
               </OCR_RVCT5>
               <OCR_RVCT6>
                 <Type>0</Type>
-                <StartAddress>0x0</StartAddress>
-                <Size>0x0</Size>
+                <StartAddress>0x40000000</StartAddress>
+                <Size>0x10000</Size>
               </OCR_RVCT6>
               <OCR_RVCT7>
                 <Type>0</Type>
@@ -298,11 +298,11 @@
               <OCR_RVCT9>
                 <Type>0</Type>
                 <StartAddress>0x20000000</StartAddress>
-                <Size>0x10000</Size>
+                <Size>0x18000</Size>
               </OCR_RVCT9>
               <OCR_RVCT10>
                 <Type>0</Type>
-                <StartAddress>0x20010000</StartAddress>
+                <StartAddress>0x20020000</StartAddress>
                 <Size>0x2000</Size>
               </OCR_RVCT10>
             </OnChipMemories>
@@ -311,7 +311,7 @@
           <Cads>
             <interw>1</interw>
             <Optim>1</Optim>
-            <oTime>1</oTime>
+            <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
             <Strict>0</Strict>
@@ -331,10 +331,10 @@
             <v6Lto>0</v6Lto>
             <v6WtE>0</v6WtE>
             <VariousControls>
-              <MiscControls></MiscControls>
+              <MiscControls>--no_inline --no_multifile -DMSC_CLOCK</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\inc;..\..\platform\init\inc</IncludePath>
+              <IncludePath>..\..\inc;..\..\platform\init\inc;..\..\simtest</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -400,6 +400,284 @@
               <FileName>int.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\asic\6801\int.c</FilePath>
+            </File>
+            <File>
+              <FileName>spim.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\spim.c</FilePath>
+            </File>
+            <File>
+              <FileName>i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\i2c.c</FilePath>
+            </File>
+            <File>
+              <FileName>i2s.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\i2s.c</FilePath>
+            </File>
+            <File>
+              <FileName>uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>pwm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\pwm.c</FilePath>
+            </File>
+            <File>
+              <FileName>aes.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\aes.c</FilePath>
+            </File>
+            <File>
+              <FileName>wdt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\wdt.c</FilePath>
+            </File>
+            <File>
+              <FileName>gpio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\gpio.c</FilePath>
+            </File>
+            <File>
+              <FileName>dmic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\dmic.c</FilePath>
+            </File>
+            <File>
+              <FileName>eflash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\eflash.c</FilePath>
+            </File>
+            <File>
+              <FileName>dmu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\dmu.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_wdtrst.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_wdtrst.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>simtest</GroupName>
+          <Files>
+            <File>
+              <FileName>eFlash_test.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\eFlash_test.c</FilePath>
+            </File>
+            <File>
+              <FileName>testbed.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\testbed.c</FilePath>
+            </File>
+            <File>
+              <FileName>vtasks.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\vtasks.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_i2c_wr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_i2c_wr.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_rst_spi0.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_rst_spi0.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_rst_spi1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_rst_spi1.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_rst_spi2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_rst_spi2.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_i2s_m_port.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_i2s_m_port.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_uart_rx_irt_byte0.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_uart_rx_irt_byte0.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_uart1_8bit_dw_mode.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_uart1_8bit_dw_mode.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_uart2_8bit_dw_mode.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_uart2_8bit_dw_mode.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_pwm0.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_pwm0.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_pwm1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_pwm1.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_otp_aes.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_otp_aes.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_wdt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_wdt.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_gpio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_gpio.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_dmic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_dmic.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_eflash_dma_wr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_eflash_dma_wr.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_dmu_perf .c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_dmu_perf .c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>dhry</GroupName>
+          <Files>
+            <File>
+              <FileName>dhry.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\simtest\dhry\dhry.h</FilePath>
+            </File>
+            <File>
+              <FileName>dhry_1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\dhry\dhry_1.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>2</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>2</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
+                    <v6Lang>0</v6Lang>
+                    <v6LangP>0</v6LangP>
+                    <vShortEn>2</vShortEn>
+                    <vShortWch>2</vShortWch>
+                    <v6Lto>0</v6Lto>
+                    <v6WtE>0</v6WtE>
+                    <VariousControls>
+                      <MiscControls>--no_inline --no_multifile -DMSC_CLOCK</MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
+            </File>
+            <File>
+              <FileName>dhry_2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\dhry\dhry_2.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>2</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>2</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
+                    <v6Lang>0</v6Lang>
+                    <v6LangP>0</v6LangP>
+                    <vShortEn>2</vShortEn>
+                    <vShortWch>2</vShortWch>
+                    <v6Lto>0</v6Lto>
+                    <v6WtE>0</v6WtE>
+                    <VariousControls>
+                      <MiscControls>--no_inline --no_multifile -DMSC_CLOCK</MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
             </File>
           </Files>
         </Group>
@@ -587,7 +865,7 @@
             <hadIRAM>1</hadIRAM>
             <hadXRAM>0</hadXRAM>
             <uocXRam>0</uocXRam>
-            <RvdsVP>2</RvdsVP>
+            <RvdsVP>1</RvdsVP>
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -609,11 +887,11 @@
             <Ro3Chk>0</Ro3Chk>
             <Ir1Chk>1</Ir1Chk>
             <Ir2Chk>0</Ir2Chk>
-            <Ra1Chk>0</Ra1Chk>
+            <Ra1Chk>1</Ra1Chk>
             <Ra2Chk>0</Ra2Chk>
             <Ra3Chk>0</Ra3Chk>
             <Im1Chk>1</Im1Chk>
-            <Im2Chk>0</Im2Chk>
+            <Im2Chk>1</Im2Chk>
             <OnChipMemories>
               <Ocm1>
                 <Type>0</Type>
@@ -678,7 +956,7 @@
               <OCR_RVCT4>
                 <Type>1</Type>
                 <StartAddress>0x0</StartAddress>
-                <Size>0x20000</Size>
+                <Size>0x1000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
                 <Type>1</Type>
@@ -687,8 +965,8 @@
               </OCR_RVCT5>
               <OCR_RVCT6>
                 <Type>0</Type>
-                <StartAddress>0x0</StartAddress>
-                <Size>0x0</Size>
+                <StartAddress>0x40000000</StartAddress>
+                <Size>0x10000</Size>
               </OCR_RVCT6>
               <OCR_RVCT7>
                 <Type>0</Type>
@@ -703,11 +981,11 @@
               <OCR_RVCT9>
                 <Type>0</Type>
                 <StartAddress>0x20000000</StartAddress>
-                <Size>0x10000</Size>
+                <Size>0x18000</Size>
               </OCR_RVCT9>
               <OCR_RVCT10>
                 <Type>0</Type>
-                <StartAddress>0x20010000</StartAddress>
+                <StartAddress>0x20020000</StartAddress>
                 <Size>0x2000</Size>
               </OCR_RVCT10>
             </OnChipMemories>
@@ -739,7 +1017,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\inc</IncludePath>
+              <IncludePath>..\..\inc;..\..\simtest</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -805,6 +1083,284 @@
               <FileName>int.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\asic\6801\int.c</FilePath>
+            </File>
+            <File>
+              <FileName>spim.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\spim.c</FilePath>
+            </File>
+            <File>
+              <FileName>i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\i2c.c</FilePath>
+            </File>
+            <File>
+              <FileName>i2s.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\i2s.c</FilePath>
+            </File>
+            <File>
+              <FileName>uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>pwm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\pwm.c</FilePath>
+            </File>
+            <File>
+              <FileName>aes.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\aes.c</FilePath>
+            </File>
+            <File>
+              <FileName>wdt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\wdt.c</FilePath>
+            </File>
+            <File>
+              <FileName>gpio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\gpio.c</FilePath>
+            </File>
+            <File>
+              <FileName>dmic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\dmic.c</FilePath>
+            </File>
+            <File>
+              <FileName>eflash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\eflash.c</FilePath>
+            </File>
+            <File>
+              <FileName>dmu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\dmu.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_wdtrst.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_wdtrst.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>simtest</GroupName>
+          <Files>
+            <File>
+              <FileName>eFlash_test.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\eFlash_test.c</FilePath>
+            </File>
+            <File>
+              <FileName>testbed.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\testbed.c</FilePath>
+            </File>
+            <File>
+              <FileName>vtasks.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\vtasks.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_i2c_wr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_i2c_wr.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_rst_spi0.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_rst_spi0.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_rst_spi1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_rst_spi1.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_rst_spi2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_rst_spi2.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_i2s_m_port.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_i2s_m_port.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_uart_rx_irt_byte0.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_uart_rx_irt_byte0.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_uart1_8bit_dw_mode.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_uart1_8bit_dw_mode.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_uart2_8bit_dw_mode.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_uart2_8bit_dw_mode.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_pwm0.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_pwm0.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_pwm1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_pwm1.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_otp_aes.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_otp_aes.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_wdt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_wdt.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_gpio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_gpio.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_dmic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_dmic.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_eflash_dma_wr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_eflash_dma_wr.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_dmu_perf .c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\test_dmu_perf .c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>dhry</GroupName>
+          <Files>
+            <File>
+              <FileName>dhry.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\simtest\dhry\dhry.h</FilePath>
+            </File>
+            <File>
+              <FileName>dhry_1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\dhry\dhry_1.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>2</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>2</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
+                    <v6Lang>0</v6Lang>
+                    <v6LangP>0</v6LangP>
+                    <vShortEn>2</vShortEn>
+                    <vShortWch>2</vShortWch>
+                    <v6Lto>0</v6Lto>
+                    <v6WtE>0</v6WtE>
+                    <VariousControls>
+                      <MiscControls>--no_inline --no_multifile -DMSC_CLOCK</MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
+            </File>
+            <File>
+              <FileName>dhry_2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\simtest\dhry\dhry_2.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>2</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>2</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <useXO>2</useXO>
+                    <v6Lang>0</v6Lang>
+                    <v6LangP>0</v6LangP>
+                    <vShortEn>2</vShortEn>
+                    <vShortWch>2</vShortWch>
+                    <v6Lto>0</v6Lto>
+                    <v6WtE>0</v6WtE>
+                    <VariousControls>
+                      <MiscControls>--no_inline --no_multifile -DMSC_CLOCK</MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
             </File>
           </Files>
         </Group>

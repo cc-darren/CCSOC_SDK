@@ -21,6 +21,7 @@
 
 
 extern void intc_init(void);
+extern void testbed(void);
 /*
  * MAIN FUNCTION
  ****************************************************************************************
@@ -97,8 +98,11 @@ void rw_main(void)
 
 int main(void)
 {
-    rw_main();
+    //rw_main();
+    
+    testbed();
 
-    return(0);
+    while(1);
+    //return(0);
 }
 
