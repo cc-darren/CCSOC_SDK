@@ -83,6 +83,7 @@ int test_eflash_dma_wr(void)
     //----- ef page read
     //0x800>>2 => 0x200 dword
     wr(GPIO_INTR_TYPE_REG, 0);
+    wr(EF_FLASHMODE_REG, 0x10);
     for (i=0; i<0x800; i+=4)
     {
         rd(dma_str_raddr + i, rdata);
