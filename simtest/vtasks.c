@@ -67,15 +67,18 @@ void test_init(void)
     //repeat(10) @(posedge `CHIP_CLK32K);
     delayns(10);
     #ifdef SCU_PLLCLK
-        //$display("@t %m MSG: setup SCUGEN REG. sysclk=100mhz", $time);
         byp=0;
         pd=1;
-	    divc0=8'd1;
-        divn=8'd5;
-        divm=8'd49;
-        `CHIP_CPU_BFM.ahbwr(`SCU_PLLCFG_REG, 3'd0, 4'd2, {6'd0, byp, pd, divc0, divm, divn} );
-        `CHIP_CPU_BFM.ahbwr(`SCU_CLKCFG0_REG, 3'd0, 4'd2, 32'h0000_0500);
-        `CHIP_CPU_BFM.ahbwr(`SCU_CLKCFG1_REG, 3'd0, 4'd2, 32'h0000_0101);
+	    divc0=0;
+        divn=8;
+        divm=20;
+        vco_div = 0;
+        //`CHIP_CPU_BFM.ahbwr(`SCU_PLLCFG_REG, 3'd0, 4'd2, {6'd0, byp, pd, divc0, divm, divn} );
+        wr(SCU_PLLCFG_REG, (0 | vco_div<<26 | byp<<25 | pd<<24 | divc0<<16 | divm<<8 | divn) );
+        //`CHIP_CPU_BFM.ahbwr(`SCU_CLKCFG0_REG, 3'd0, 4'd2, 32'h0000_0500);
+        wr(SCU_CLKCFG0_REG, 0x00000500);
+        //`CHIP_CPU_BFM.ahbwr(`SCU_CLKCFG1_REG, 3'd0, 4'd2, 32'h0000_0101);
+        wr(SCU_CLKCFG1_REG, 0x00000101);
     #else
      #ifdef SCU_CLK32K
              $display("@t %m MSG: setup SCUGEN REG. sysclk=32khz", $time);
@@ -84,7 +87,7 @@ void test_init(void)
 	 #else
              //$display("@t %m MSG: setup SCUGEN REG. sysclk=48mhz", $time);
              //`CHIP_CPU_BFM.ahbwr(`SCU_CLKCFG1_REG, 3'd0, 4'd2, 32'h0000_0101);
-             wr(SCU_CLKCFG1_REG, 0x00000101);
+             wr(SCU_CLKCFG1_REG, 0x00000301);
              //`CHIP_CPU_BFM.ahbwr(`SCU_CLKCFG0_REG, 3'd0, 4'd2, 32'h0000_0000);
              //*((volatile unsigned int *)(SCU_CLKCFG0_REG)) = 0x00000000;
              //wr(SCU_CLKCFG0_REG, 0x00000000);

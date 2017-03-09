@@ -131,6 +131,8 @@ void testbed(void)
 #endif
 
 #ifdef TEST_EF_DMA_WR
+#define SCU_PLLCLK      1
+#define FPGA            1
     test_eflash_dma_wr();
 #endif
 
