@@ -20,6 +20,7 @@
 //#define DHRYSTONE
 //#define TEST_WDTRST
 #define TEST_EF_DMA_WR
+//#define TEST_EF_RD
 
 
 extern void test_init(void);
@@ -42,6 +43,7 @@ extern int test_dmu_perf(void);
 extern void dhry_main(void);
 extern int test_wdtrst(void);
 extern int test_eflash_dma_wr(void);
+extern int test_eflash_rd(void);
 
 void testbed(void)
 {
@@ -132,6 +134,9 @@ void testbed(void)
     test_eflash_dma_wr();
 #endif
 
+#ifdef TEST_EF_RD
+    test_eflash_rd();
+#endif
 
     wr(GPIO_INTR_PRIO_REG, 0x1);    // notify sim to finish
 }

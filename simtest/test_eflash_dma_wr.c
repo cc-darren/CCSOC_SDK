@@ -44,6 +44,12 @@ int test_eflash_dma_wr(void)
 {
     void (*eFlashEntry)(void);
     
+    uint32_t saveMode[3];
+    
+    rd(EF_CONFIG_REG, saveMode[0]);
+    rd(EF_ACCESS_REG, saveMode[1]);
+    rd(EF_FLASHMODE_REG, saveMode[2]);
+
 #ifndef FPGA
     //---- ef page erase
     //$display("@%d, MSG: EF page erase", $time);
@@ -83,7 +89,11 @@ int test_eflash_dma_wr(void)
     //----- ef page read
     //0x800>>2 => 0x200 dword
     wr(GPIO_INTR_TYPE_REG, 0);
-    wr(EF_FLASHMODE_REG, 0x10);
+    
+    wr(EF_CONFIG_REG, saveMode[0]);
+    wr(EF_ACCESS_REG, saveMode[1]);
+    wr(EF_FLASHMODE_REG, saveMode[2]);
+
     for (i=0; i<0x800; i+=4)
     {
         rd(dma_str_raddr + i, rdata);
