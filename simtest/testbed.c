@@ -131,8 +131,7 @@ void testbed(void)
 #endif
 
 #ifdef TEST_EF_DMA_WR
-#define SCU_PLLCLK      1
-#define FPGA            1
+	//check whether we need to enable SCU_PLLCLK and FPGA in addr_map.h
     test_eflash_dma_wr();
 #endif
 

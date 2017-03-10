@@ -78,7 +78,7 @@ void test_init(void)
         //`CHIP_CPU_BFM.ahbwr(`SCU_CLKCFG0_REG, 3'd0, 4'd2, 32'h0000_0500);
         wr(SCU_CLKCFG0_REG, 0x00000500);
         //`CHIP_CPU_BFM.ahbwr(`SCU_CLKCFG1_REG, 3'd0, 4'd2, 32'h0000_0101);
-        wr(SCU_CLKCFG1_REG, 0x00000101);
+        wr(SCU_CLKCFG1_REG, 0x00000301);
     #else
      #ifdef SCU_CLK32K
              $display("@t %m MSG: setup SCUGEN REG. sysclk=32khz", $time);

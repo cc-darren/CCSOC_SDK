@@ -8,7 +8,8 @@
 
 //HW define
 #define CPU_BFM         1
-
+//#define SCU_PLLCLK      1
+//#define FPGA            1
 
 
 //// ------------------------------------
