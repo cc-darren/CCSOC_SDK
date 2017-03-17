@@ -29,10 +29,8 @@
 *===========================================================================/
 *  20170203 PAT initial version
 ******************************************************************************/
-#include "compiler.h"
-#include "register.h"
-#include "ll.h"
-#include "addr_map.h"
+#include "global.h"
+#include "cc6801_reg.h"
 
 volatile uint32_t DMU_INTR = 0;
 

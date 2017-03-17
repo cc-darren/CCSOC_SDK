@@ -29,10 +29,8 @@
 *===========================================================================/
 *  20170203 PAT initial version
 ******************************************************************************/
-#include "compiler.h"
-#include "register.h"
-#include "ll.h"
-#include "addr_map.h"
+#include "global.h"
+#include "cc6801_reg.h"
 
 volatile uint32_t SPI0_M_INTR = 0;
 volatile uint32_t SPI1_M_INTR = 0;
