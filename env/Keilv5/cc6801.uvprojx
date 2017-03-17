@@ -398,11 +398,6 @@
           <GroupName>asic</GroupName>
           <Files>
             <File>
-              <FileName>int.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801\int.c</FilePath>
-            </File>
-            <File>
               <FileName>spim.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\asic\6801\spim.c</FilePath>
@@ -992,11 +987,6 @@
         <Group>
           <GroupName>asic</GroupName>
           <Files>
-            <File>
-              <FileName>int.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801\int.c</FilePath>
-            </File>
             <File>
               <FileName>spim.c</FileName>
               <FileType>1</FileType>
