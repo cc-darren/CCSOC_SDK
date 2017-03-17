@@ -22,30 +22,6 @@
 //#include "arch.h"
 //#include "reg_intc.h"
 
-//PATTAYA: copied from cmsis_armcc.h
-/**
-  \brief   Get Priority Mask
-  \details Returns the current state of the priority mask bit from the Priority Mask Register.
-  \return               Priority Mask value
- */
-static __inline uint32_t __get_PRIMASK(void)
-{
-  register uint32_t __regPriMask         __asm("primask");
-  return(__regPriMask);
-}
-
-//PATTAYA: copied from cmsis_armcc.h
-/**
-  \brief   Set Priority Mask
-  \details Assigns the given value to the Priority Mask Register.
-  \param [in]    priMask  Priority Mask
- */
-static __inline void __set_PRIMASK(uint32_t priMask)
-{
-  register uint32_t __regPriMask         __asm("primask");
-  __regPriMask = (priMask);
-}
-
 /** @brief Enable interrupts globally in the system.
  * This macro must be used when the initialization phase is over and the interrupts
  * can start being handled by the system.

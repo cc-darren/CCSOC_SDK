@@ -10,6 +10,7 @@
       <TargetName>FPGA_M0p</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
+      <pArmCC>5060183::V5.06 update 2 (build 183)::ARMCC</pArmCC>
       <pCCUsed>5060183::V5.06 update 2 (build 183)::ARMCC</pCCUsed>
       <TargetOption>
         <TargetCommonOption>
@@ -81,7 +82,7 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>fromelf.exe --bincombined --output .\Objects\FPGA_M0p.bin .\Objects\FPGA_M0p.axf</UserProg1Name>
+            <UserProg1Name>fromelf.exe --bincombined --output .\Objects\@L.bin !L</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -131,11 +132,11 @@
             <UseTargetDll>1</UseTargetDll>
             <UseExternalTool>0</UseExternalTool>
             <RunIndependent>0</RunIndependent>
-            <UpdateFlashBeforeDebugging>1</UpdateFlashBeforeDebugging>
+            <UpdateFlashBeforeDebugging>0</UpdateFlashBeforeDebugging>
             <Capability>1</Capability>
             <DriverSelection>4099</DriverSelection>
           </Flash1>
-          <bUseTDR>1</bUseTDR>
+          <bUseTDR>0</bUseTDR>
           <Flash2>Segger\JL2CM3.dll</Flash2>
           <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
@@ -194,11 +195,11 @@
             <RwSelD>3</RwSelD>
             <CodeSel>0</CodeSel>
             <OptFeed>0</OptFeed>
-            <NoZi1>0</NoZi1>
+            <NoZi1>1</NoZi1>
             <NoZi2>0</NoZi2>
             <NoZi3>0</NoZi3>
-            <NoZi4>1</NoZi4>
-            <NoZi5>1</NoZi5>
+            <NoZi4>0</NoZi4>
+            <NoZi5>0</NoZi5>
             <Ro1Chk>0</Ro1Chk>
             <Ro2Chk>0</Ro2Chk>
             <Ro3Chk>0</Ro3Chk>
@@ -322,10 +323,10 @@
             <wLevel>2</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
-            <uC99>0</uC99>
+            <uC99>1</uC99>
             <useXO>0</useXO>
-            <v6Lang>1</v6Lang>
-            <v6LangP>1</v6LangP>
+            <v6Lang>0</v6Lang>
+            <v6LangP>0</v6LangP>
             <vShortEn>1</vShortEn>
             <vShortWch>1</vShortWch>
             <v6Lto>0</v6Lto>
@@ -334,7 +335,7 @@
               <MiscControls>--no_inline --no_multifile -DMSC_CLOCK</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\inc;..\..\platform\init\inc;..\..\simtest</IncludePath>
+              <IncludePath>..\..\inc;..\..\platform\init\inc;..\..\simtest;..\..\inc\CMSIS</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -455,111 +456,6 @@
               <FileName>dmu.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\asic\6801\dmu.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_wdtrst.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_wdtrst.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>simtest</GroupName>
-          <Files>
-            <File>
-              <FileName>eFlash_test.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\eFlash_test.c</FilePath>
-            </File>
-            <File>
-              <FileName>testbed.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\testbed.c</FilePath>
-            </File>
-            <File>
-              <FileName>vtasks.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\vtasks.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_i2c_wr.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_i2c_wr.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_rst_spi0.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_rst_spi0.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_rst_spi1.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_rst_spi1.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_rst_spi2.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_rst_spi2.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_i2s_m_port.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_i2s_m_port.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_uart_rx_irt_byte0.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_uart_rx_irt_byte0.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_uart1_8bit_dw_mode.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_uart1_8bit_dw_mode.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_uart2_8bit_dw_mode.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_uart2_8bit_dw_mode.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_pwm0.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_pwm0.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_pwm1.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_pwm1.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_otp_aes.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_otp_aes.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_wdt.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_wdt.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_gpio.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_gpio.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_dmic.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_dmic.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_eflash_dma_wr.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_eflash_dma_wr.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_dmu_perf .c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_dmu_perf .c</FilePath>
             </File>
           </Files>
         </Group>
@@ -682,10 +578,145 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>service</GroupName>
+        </Group>
+        <Group>
           <GroupName>::CMSIS</GroupName>
+          <GroupOption>
+            <CommonProperty>
+              <UseCPPCompiler>0</UseCPPCompiler>
+              <RVCTCodeConst>0</RVCTCodeConst>
+              <RVCTZI>0</RVCTZI>
+              <RVCTOtherData>0</RVCTOtherData>
+              <ModuleSelection>0</ModuleSelection>
+              <IncludeInBuild>0</IncludeInBuild>
+              <AlwaysBuild>2</AlwaysBuild>
+              <GenerateAssemblyFile>2</GenerateAssemblyFile>
+              <AssembleAssemblyFile>2</AssembleAssemblyFile>
+              <PublicsOnly>2</PublicsOnly>
+              <StopOnExitCode>11</StopOnExitCode>
+              <CustomArgument></CustomArgument>
+              <IncludeLibraryModules></IncludeLibraryModules>
+              <ComprImg>1</ComprImg>
+            </CommonProperty>
+            <GroupArmAds>
+              <Cads>
+                <interw>2</interw>
+                <Optim>0</Optim>
+                <oTime>2</oTime>
+                <SplitLS>2</SplitLS>
+                <OneElfS>2</OneElfS>
+                <Strict>2</Strict>
+                <EnumInt>2</EnumInt>
+                <PlainCh>2</PlainCh>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <wLevel>2</wLevel>
+                <uThumb>2</uThumb>
+                <uSurpInc>2</uSurpInc>
+                <uC99>2</uC99>
+                <useXO>2</useXO>
+                <v6Lang>0</v6Lang>
+                <v6LangP>0</v6LangP>
+                <vShortEn>2</vShortEn>
+                <vShortWch>2</vShortWch>
+                <v6Lto>0</v6Lto>
+                <v6WtE>0</v6WtE>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Cads>
+              <Aads>
+                <interw>2</interw>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <thumb>2</thumb>
+                <SplitLS>2</SplitLS>
+                <SwStkChk>2</SwStkChk>
+                <NoWarn>2</NoWarn>
+                <uSurpInc>2</uSurpInc>
+                <useXO>2</useXO>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Aads>
+            </GroupArmAds>
+          </GroupOption>
         </Group>
         <Group>
           <GroupName>::Device</GroupName>
+          <GroupOption>
+            <CommonProperty>
+              <UseCPPCompiler>0</UseCPPCompiler>
+              <RVCTCodeConst>0</RVCTCodeConst>
+              <RVCTZI>0</RVCTZI>
+              <RVCTOtherData>0</RVCTOtherData>
+              <ModuleSelection>0</ModuleSelection>
+              <IncludeInBuild>1</IncludeInBuild>
+              <AlwaysBuild>2</AlwaysBuild>
+              <GenerateAssemblyFile>2</GenerateAssemblyFile>
+              <AssembleAssemblyFile>2</AssembleAssemblyFile>
+              <PublicsOnly>2</PublicsOnly>
+              <StopOnExitCode>11</StopOnExitCode>
+              <CustomArgument></CustomArgument>
+              <IncludeLibraryModules></IncludeLibraryModules>
+              <ComprImg>1</ComprImg>
+            </CommonProperty>
+            <GroupArmAds>
+              <Cads>
+                <interw>2</interw>
+                <Optim>0</Optim>
+                <oTime>2</oTime>
+                <SplitLS>2</SplitLS>
+                <OneElfS>2</OneElfS>
+                <Strict>2</Strict>
+                <EnumInt>2</EnumInt>
+                <PlainCh>2</PlainCh>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <wLevel>2</wLevel>
+                <uThumb>2</uThumb>
+                <uSurpInc>2</uSurpInc>
+                <uC99>2</uC99>
+                <useXO>2</useXO>
+                <v6Lang>0</v6Lang>
+                <v6LangP>0</v6LangP>
+                <vShortEn>2</vShortEn>
+                <vShortWch>2</vShortWch>
+                <v6Lto>0</v6Lto>
+                <v6WtE>0</v6WtE>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Cads>
+              <Aads>
+                <interw>2</interw>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <thumb>2</thumb>
+                <SplitLS>2</SplitLS>
+                <SwStkChk>2</SwStkChk>
+                <NoWarn>2</NoWarn>
+                <uSurpInc>2</uSurpInc>
+                <useXO>2</useXO>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Aads>
+            </GroupArmAds>
+          </GroupOption>
         </Group>
       </Groups>
     </Target>
@@ -1139,111 +1170,6 @@
               <FileType>1</FileType>
               <FilePath>..\..\platform\asic\6801\dmu.c</FilePath>
             </File>
-            <File>
-              <FileName>test_wdtrst.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_wdtrst.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>simtest</GroupName>
-          <Files>
-            <File>
-              <FileName>eFlash_test.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\eFlash_test.c</FilePath>
-            </File>
-            <File>
-              <FileName>testbed.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\testbed.c</FilePath>
-            </File>
-            <File>
-              <FileName>vtasks.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\vtasks.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_i2c_wr.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_i2c_wr.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_rst_spi0.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_rst_spi0.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_rst_spi1.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_rst_spi1.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_rst_spi2.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_rst_spi2.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_i2s_m_port.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_i2s_m_port.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_uart_rx_irt_byte0.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_uart_rx_irt_byte0.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_uart1_8bit_dw_mode.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_uart1_8bit_dw_mode.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_uart2_8bit_dw_mode.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_uart2_8bit_dw_mode.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_pwm0.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_pwm0.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_pwm1.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_pwm1.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_otp_aes.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_otp_aes.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_wdt.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_wdt.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_gpio.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_gpio.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_dmic.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_dmic.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_eflash_dma_wr.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_eflash_dma_wr.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_dmu_perf .c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\simtest\test_dmu_perf .c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -1365,6 +1291,9 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>service</GroupName>
+        </Group>
+        <Group>
           <GroupName>::CMSIS</GroupName>
         </Group>
         <Group>
@@ -1380,20 +1309,23 @@
       <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="5.0.0" condition="Cortex-M ARMv8-M Device">
         <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.0.0-Beta4"/>
         <targetInfos>
-          <targetInfo name="FPGA_M0p"/>
+          <targetInfo excluded="1" name="FPGA_M0p"/>
           <targetInfo name="FPGA_M4f"/>
         </targetInfos>
       </component>
       <component Cclass="Device" Cgroup="Startup" Cvendor="ARM" Cversion="1.0.1" condition="ARMCM0+ CMSIS">
         <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.0.0-Beta4"/>
         <targetInfos>
-          <targetInfo name="FPGA_M0p"/>
-        </targetInfos>
-      </component>
-      <component Cclass="Device" Cgroup="Startup" Cvendor="ARM" Cversion="1.0.1" condition="ARMCM4 CMSIS">
-        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.0.0-Beta4"/>
-        <targetInfos>
-          <targetInfo name="FPGA_M4f"/>
+          <targetInfo name="FPGA_M0p">
+            <c>
+              <Define>__VTOR_PRESENT=1</Define>
+            </c>
+          </targetInfo>
+          <targetInfo name="FPGA_M4f">
+            <c>
+              <Define>__VTOR_PRESENT=1</Define>
+            </c>
+          </targetInfo>
         </targetInfos>
       </component>
     </components>

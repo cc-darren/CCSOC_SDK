@@ -98,9 +98,9 @@ void rw_main(void)
 
 int main(void)
 {
-    //rw_main();
+    //drvi_initialize();
     
-    testbed();
+    rw_main();
 
     while(1);
     //return(0);
