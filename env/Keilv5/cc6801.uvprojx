@@ -335,7 +335,7 @@
               <MiscControls>--no_inline --no_multifile -DMSC_CLOCK</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\inc;..\..\platform\init\inc;..\..\simtest;..\..\inc\CMSIS</IncludePath>
+              <IncludePath>..\..\inc;..\..\platform\init\inc;..\..\simtest;..\..\inc\CMSIS;..\..\platform\asic\6801</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
