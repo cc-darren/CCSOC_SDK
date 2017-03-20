@@ -129,21 +129,12 @@ Reset_Handler   PROC
                 EXPORT  Reset_Handler             [WEAK]
                 IMPORT  SystemInit
                 IMPORT  __main
-                ;LDR     R1, =0x00000200             ;
-                ;LDR     R0, =0x40000034
-                ;LDR     R0, [R0]
-                ;TST     R0, R1
-                ;BNE     go_to_M4
 
                 LDR     R0, =SystemInit
                 BLX     R0
                 LDR     R0, =__main
                 BX      R0
-;go_to_M4
-                ;LDR     R0, =__M4_entry+3
-                ;;BIC     R0, R0, 0x01
-                ;LDR     R0, [R0]
-                ;BX      R0
+
                 ENDP
 
 

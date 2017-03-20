@@ -23,8 +23,8 @@
  * limitations under the License.
  */
 
-#ifndef SYSTEM_ARMCM0plus_H
-#define SYSTEM_ARMCM0plus_H
+#ifndef SYSTEM_ARMCM_H
+#define SYSTEM_ARMCM_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -52,4 +52,4 @@ extern void SystemCoreClockUpdate (void);
 }
 #endif
 
-#endif /* SYSTEM_ARMCM0plus_H */
+#endif /* SYSTEM_ARMCM_H */

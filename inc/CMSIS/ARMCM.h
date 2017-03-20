@@ -1,7 +1,7 @@
 /**************************************************************************//**
- * @file     ARMCM0plus.h
+ * @file     ARMCM4_FP.h
  * @brief    CMSIS Core Peripheral Access Layer Header File for
- *           ARMCM0plus Device Series
+ *           ARMCM4 Device Series (configured for CM4 with FPU)
  * @version  V5.00
  * @date     02. March 2016
  ******************************************************************************/
@@ -23,8 +23,8 @@
  * limitations under the License.
  */
 
-#ifndef ARMCM0plus_H
-#define ARMCM0plus_H
+#ifndef ARMCM_H
+#define ARMCM_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -35,18 +35,18 @@ extern "C" {
 
 typedef enum IRQn
 {
-/* -------------------  Cortex-M0+ Processor Exceptions Numbers  ------------------ */
+/* -------------------  Cortex-M4/M0+ Processor Exceptions Numbers  ------------------- */
   NonMaskableInt_IRQn           = -14,      /*  2 Non Maskable Interrupt */
   HardFault_IRQn                = -13,      /*  3 HardFault Interrupt */
-
-
-
+  MemoryManagement_IRQn         = -12,      /*  4 Memory Management Interrupt */
+  BusFault_IRQn                 = -11,      /*  5 Bus Fault Interrupt */
+  UsageFault_IRQn               = -10,      /*  6 Usage Fault Interrupt */
   SVCall_IRQn                   =  -5,      /* 11 SV Call Interrupt */
-
+  DebugMonitor_IRQn             =  -4,      /* 12 Debug Monitor Interrupt */
   PendSV_IRQn                   =  -2,      /* 14 Pend SV Interrupt */
   SysTick_IRQn                  =  -1,      /* 15 System Tick Interrupt */
 
-/* ----------------------  ARMCM0 Specific Interrupt Numbers  --------------------- */
+/* ----------------------  cc6801 Specific Interrupt Numbers  --------------------- */
   SWI0_IRQn                     =   0,
   WDT_IRQn                      =   1,
   RTC_IRQn                      =   2,
@@ -108,17 +108,30 @@ typedef enum IRQn
   #warning Not supported compiler type
 #endif
 
+#define __VTOR_PRESENT            1         /* VTOR present */
 
-/* --------  Configuration of the Cortex-M0+ Processor and Core Peripherals  ------ */
-#define __CM0PLUS_REV             0x0000U   /* Core revision r0p0 */
-#define __MPU_PRESENT             0         /* MPU present or not */
-#define __VTOR_PRESENT            1         /* VTOR present or not */
-#define __NVIC_PRIO_BITS          2         /* Number of Bits used for Priority Levels */
-#define __Vendor_SysTickConfig    0         /* Set to 1 if different SysTick Config is used */
+#if defined (ARMCM4_FP)
+	/* --------  Configuration of the Cortex-M4 Processor and Core Peripherals  ------- */
+	#define __CM4_REV                 0x0001U   /* Core revision r0p1 */
+	#define __MPU_PRESENT             1         /* MPU present */
+	#define __NVIC_PRIO_BITS          3         /* Number of Bits used for Priority Levels */
+	#define __Vendor_SysTickConfig    0         /* Set to 1 if different SysTick Config is used */
+	#define __FPU_PRESENT             1         /* FPU present */
 
-#include "core_cm0plus.h"                   /* Processor and core peripherals */
-#include "system_ARMCM0plus.h"              /* System Header */
+	#include "core_cm4.h"                       /* Processor and core peripherals */
+#elif defined (ARMCM0P)
+	/* --------  Configuration of the Cortex-M0+ Processor and Core Peripherals  ------ */
+	#define __CM0PLUS_REV             0x0000U   /* Core revision r0p0 */
+	#define __MPU_PRESENT             0         /* MPU present or not */
+	#define __NVIC_PRIO_BITS          2         /* Number of Bits used for Priority Levels */
+	#define __Vendor_SysTickConfig    0         /* Set to 1 if different SysTick Config is used */
 
+	#include "core_cm0plus.h"                   /* Processor and core peripherals */
+#else
+  #error device not specified!
+#endif
+
+#include "system_ARMCM.h"                  /* System Header */
 
 /* ================================================================================ */
 /* ================       Device Specific Peripheral Section       ================ */
@@ -281,4 +294,4 @@ typedef struct
 }
 #endif
 
-#endif  /* ARMCM0plus_H */
+#endif  /* ARMCM_H */

@@ -54,12 +54,6 @@ void rw_main(void)
      */
 
 
-    
-    
-
-    // finally start interrupt handling
-    GLOBAL_INT_START();
-
     /*
      ************************************************************************************
      * Main loop
@@ -99,6 +93,9 @@ void rw_main(void)
 int main(void)
 {
     //drvi_initialize();
+    
+    //start interrupt handling
+    GLOBAL_INT_START();
     
     rw_main();
 

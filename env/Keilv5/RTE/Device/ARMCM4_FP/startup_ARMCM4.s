@@ -32,7 +32,7 @@
 ;   <o> Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ; </h>
 
-Stack_Size      EQU     0x00000400
+Stack_Size      EQU     0x00000800
 
                 AREA    STACK, NOINIT, READWRITE, ALIGN=3
 Stack_Mem       SPACE   Stack_Size
@@ -53,6 +53,11 @@ __heap_limit
                 PRESERVE8
                 THUMB
 
+;                AREA    WDTBIN, CODE, READONLY
+;                EXPORT  __WDTRST_entry
+;__WDTRST_entry
+;                INCBIN  ..\..\..\FPGA_M0p_wdtrst.bin    ;include WDT bin file
+
 
 ; Vector Table Mapped to Address 0 at Reset
 
@@ -65,27 +70,27 @@ __Vectors       DCD     __initial_sp              ; Top of Stack
                 DCD     Reset_Handler             ; Reset Handler
                 DCD     NMI_Handler               ; NMI Handler
                 DCD     HardFault_Handler         ; Hard Fault Handler
-                DCD     MemManage_Handler         ; MPU Fault Handler
-                DCD     BusFault_Handler          ; Bus Fault Handler
-                DCD     UsageFault_Handler        ; Usage Fault Handler
+                DCD     MemManage_Handler         ; MPU Fault Handler		(valid only for M4)
+                DCD     BusFault_Handler          ; Bus Fault Handler	 	(valid only for M4)
+                DCD     UsageFault_Handler        ; Usage Fault Handler  	(valid only for M4)
                 DCD     0                         ; Reserved
                 DCD     0                         ; Reserved
                 DCD     0                         ; Reserved
                 DCD     0                         ; Reserved
                 DCD     SVC_Handler               ; SVCall Handler
-                DCD     DebugMon_Handler          ; Debug Monitor Handler
+                DCD     DebugMon_Handler          ; Debug Monitor Handler	(valid only for M4)
                 DCD     0                         ; Reserved
                 DCD     PendSV_Handler            ; PendSV Handler
                 DCD     SysTick_Handler           ; SysTick Handler
 
                 ; External Interrupts
-                DCD     RTC_IRQHandler            ;  0:  Real Time Clock
+                DCD     SWI0_IRQHandler           ;  0:  Real Time Clock
                 DCD     WDT_IRQHandler            ;  1:  Watchdog Timer
-                DCD     TIM0_IRQHandler           ;  2:  Timer0 / Timer1
+                DCD     RTC_IRQHandler            ;  2:  Timer0 / Timer1
                 DCD     PWM0_IRQHandler           ;  3:  PWM0 Interrup
                 DCD     PWM1_IRQHandler           ;  4:  PWM1 Interrup
-                DCD     MCIB_IRQHandler           ;  5:  MCIb
-                DCD     UART0_IRQHandler          ;  6:  UART0 - DUT FPGA
+                DCD     WKTM0_IRQHandler          ;  5:  MCIb
+                DCD     WKTM1_IRQHandler          ;  6:  UART0 - DUT FPGA
                 DCD     SPI0_M_IRQHandler         ;  7:  SPI0 Master
                 DCD     SPI1_M_IRQHandler         ;  8:  SPI1 Master
                 DCD     SPI2_M_IRQHandler         ;  9:  SPI2 Master
@@ -104,12 +109,12 @@ __Vectors       DCD     __initial_sp              ; Top of Stack
                 DCD     I2S_TXDMA_IRQHandler      ; 22: I2S Tx DMA interrupt
                 DCD     I2S_IP_IRQHandler         ; 23: I2S Core interrupt
                 DCD     DMIC_IRQHandler           ; 24: DMIC interrupt
-                DCD     0                         ; 25: Reserved
+                DCD     BLE_IRQHandler            ; 25: Reserved
                 DCD     GPIO_IRQHandler           ; 26: GPIO interrupt
-                DCD     0                         ; 27: Reserved
+                DCD     CCU_IRQHandler            ; 27: Reserved
                 DCD     AES_IRQHandler            ; 28: AES interrupt
                 DCD     DMU_IRQHandler            ; 29: DMU interrupt
-                DCD     UART3_IRQHandler          ; 30: UART3    - CPU FPGA
+                DCD     SWI1_IRQHandler           ; 30: UART3    - CPU FPGA
                 DCD     EFLASH_IRQHandler         ; 31: SPI Touchscreen - CPU FPGA
 __Vectors_End
 
@@ -124,19 +129,12 @@ Reset_Handler   PROC
                 EXPORT  Reset_Handler             [WEAK]
                 IMPORT  SystemInit
                 IMPORT  __main
-                ;LDR     R1, =0x00000200             ;
-                ;LDR     R0, =0x40000034
-                ;LDR     R0, [R0]
-                ;TST     R0, R1
-                ;BEQ     go_to_M0
                 
                 LDR     R0, =SystemInit
                 BLX     R0
                 LDR     R0, =__main
                 BX      R0
-;go_to_M0
-                ;LDR     R0, =0x00000400
-                ;BX      R0
+
                 ENDP
 
 
@@ -186,52 +184,49 @@ SysTick_Handler PROC
 
 Default_Handler PROC
 
-                EXPORT  RTC_IRQHandler            [WEAK]
-                EXPORT  WDT_IRQHandler            [WEAK]
-                EXPORT  TIM0_IRQHandler           [WEAK]
-                EXPORT  PWM0_IRQHandler           [WEAK]
-                EXPORT  PWM1_IRQHandler           [WEAK]
-                EXPORT  MCIB_IRQHandler           [WEAK]
-                EXPORT  UART0_IRQHandler          [WEAK]
-                EXPORT  SPI0_M_IRQHandler         [WEAK]
-                EXPORT  SPI1_M_IRQHandler         [WEAK]
-                EXPORT  SPI2_M_IRQHandler         [WEAK]
-                EXPORT  UART2_IRQHandler          [WEAK]
-                EXPORT  UART3_IRQHandler          [WEAK]
-                EXPORT  UART4_IRQHandler          [WEAK]
-                EXPORT  UART0_RXDMA_IRQHandler    [WEAK]
-                EXPORT  UART0_TXDMA_IRQHandler    [WEAK]
-                EXPORT  UART0_IP_IRQHandler       [WEAK]
-                EXPORT  UART1_RXDMA_IRQHandler    [WEAK]
-                EXPORT  UART1_TXDMA_IRQHandler    [WEAK]
-                EXPORT  UART1_IP_IRQHandler       [WEAK]
-                EXPORT  UART2_RXDMA_IRQHandler    [WEAK]
-                EXPORT  UART2_TXDMA_IRQHandler    [WEAK]
-                EXPORT  UART2_IP_IRQHandler       [WEAK]
-                EXPORT  I2C0_M_IRQHandler         [WEAK]
-                EXPORT  I2C1_M_IRQHandler         [WEAK]
-                EXPORT  I2S_RXDMA_IRQHandler      [WEAK]
-                EXPORT  I2S_TXDMA_IRQHandler      [WEAK]
-                EXPORT  I2S_IP_IRQHandler         [WEAK]
-                EXPORT  DMIC_IRQHandler           [WEAK]
-                EXPORT  GPIO_IRQHandler           [WEAK]
-                EXPORT  AES_IRQHandler            [WEAK]
-                EXPORT  DMU_IRQHandler            [WEAK]
-                EXPORT  EFLASH_IRQHandler         [WEAK]
+                EXPORT  SWI0_IRQHandler             [WEAK]
+                EXPORT  WDT_IRQHandler              [WEAK]
+                EXPORT  RTC_IRQHandler              [WEAK]
+                EXPORT  PWM0_IRQHandler             [WEAK]
+                EXPORT  PWM1_IRQHandler             [WEAK]
+                EXPORT  WKTM0_IRQHandler            [WEAK]
+                EXPORT  WKTM1_IRQHandler            [WEAK]
+                EXPORT  SPI0_M_IRQHandler           [WEAK]
+                EXPORT  SPI1_M_IRQHandler           [WEAK]
+                EXPORT  SPI2_M_IRQHandler           [WEAK]
+                EXPORT  UART0_RXDMA_IRQHandler      [WEAK]
+                EXPORT  UART0_TXDMA_IRQHandler      [WEAK]
+                EXPORT  UART0_IP_IRQHandler         [WEAK]
+                EXPORT  UART1_RXDMA_IRQHandler      [WEAK]
+                EXPORT  UART1_TXDMA_IRQHandler      [WEAK]
+                EXPORT  UART1_IP_IRQHandler         [WEAK]
+                EXPORT  UART2_RXDMA_IRQHandler      [WEAK]
+                EXPORT  UART2_TXDMA_IRQHandler      [WEAK]
+                EXPORT  UART2_IP_IRQHandler         [WEAK]
+                EXPORT  I2C0_M_IRQHandler           [WEAK]
+                EXPORT  I2C1_M_IRQHandler           [WEAK]
+                EXPORT  I2S_RXDMA_IRQHandler        [WEAK]
+                EXPORT  I2S_TXDMA_IRQHandler        [WEAK]
+                EXPORT  I2S_IP_IRQHandler           [WEAK]
+                EXPORT  DMIC_IRQHandler             [WEAK]
+                EXPORT  BLE_IRQHandler              [WEAK]
+                EXPORT  GPIO_IRQHandler             [WEAK]
+                EXPORT  CCU_IRQHandler              [WEAK]
+                EXPORT  AES_IRQHandler              [WEAK]
+                EXPORT  DMU_IRQHandler              [WEAK]
+                EXPORT  SWI1_IRQHandler             [WEAK]
+                EXPORT  EFLASH_IRQHandler           [WEAK]
 
-RTC_IRQHandler
+SWI0_IRQHandler
 WDT_IRQHandler
-TIM0_IRQHandler
+RTC_IRQHandler
 PWM0_IRQHandler
 PWM1_IRQHandler
-MCIB_IRQHandler
-UART0_IRQHandler
+WKTM0_IRQHandler
+WKTM1_IRQHandler
 SPI0_M_IRQHandler
 SPI1_M_IRQHandler
 SPI2_M_IRQHandler
-UART2_IRQHandler
-UART3_IRQHandler
-UART4_IRQHandler
 UART0_RXDMA_IRQHandler
 UART0_TXDMA_IRQHandler
 UART0_IP_IRQHandler
@@ -247,9 +242,12 @@ I2S_RXDMA_IRQHandler
 I2S_TXDMA_IRQHandler
 I2S_IP_IRQHandler
 DMIC_IRQHandler
+BLE_IRQHandler
 GPIO_IRQHandler
+CCU_IRQHandler
 AES_IRQHandler
 DMU_IRQHandler
+SWI1_IRQHandler
 EFLASH_IRQHandler
                 B       .
 
