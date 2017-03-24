@@ -8,17 +8,15 @@
 *  contained herein may not be used or disclosed except with the written
 *  permission of Cloud Chip, Inc. (C) 2017
 ******************************************************************************/
-#ifndef _GLOBAL_H_
-#define _GLOBAL_H_
 
-#include "ll.h"
-#include "compiler.h"
-#include "error.h"
-#include "utility.h"
+#include "cc_delay.h"
 
-#define FALSE               (0)
-#define TRUE                (1)
-#define SUCCESS             TRUE
-#define FAIL                FALSE
-
-#endif //_GLOBAL_H_
+/*lint --e{438} "Variable not used" */
+void cc_delay_ms(uint32_t volatile number_of_ms)
+{
+    while(number_of_ms != 0)
+    {
+        number_of_ms--;
+        nrf_delay_us(999);
+    }
+}

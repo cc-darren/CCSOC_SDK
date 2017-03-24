@@ -22,7 +22,7 @@
 #define __STATIC static
 
 /// define the force inlining attribute for this compiler
-#define __INLINE __forceinline static
+//#define __INLINE __forceinline static
 
 /// define the IRQ handler attribute for this compiler
 #define __IRQ __irq

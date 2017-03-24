@@ -335,7 +335,7 @@
               <MiscControls>--no_inline --no_multifile -DMSC_CLOCK</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\inc;..\..\inc\CMSIS;..\..\platform\init\inc;..\..\platform\asic\6801</IncludePath>
+              <IncludePath>..\..\inc;..\..\inc\CMSIS;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\service\sw_timer;..\..\platform\drvi</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -380,24 +380,6 @@
         </Group>
         <Group>
           <GroupName>mmi</GroupName>
-        </Group>
-        <Group>
-          <GroupName>sensor</GroupName>
-        </Group>
-        <Group>
-          <GroupName>init</GroupName>
-          <Files>
-            <File>
-              <FileName>arch_main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\init\src\arch_main.c</FilePath>
-            </File>
-            <File>
-              <FileName>system_init.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\init\src\system_init.c</FilePath>
-            </File>
-          </Files>
         </Group>
         <Group>
           <GroupName>asic</GroupName>
@@ -460,7 +442,47 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>drvi</GroupName>
+          <Files>
+            <File>
+              <FileName>drvi_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\drvi\drvi_timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>drvi_init.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\drvi\drvi_init.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>init</GroupName>
+          <Files>
+            <File>
+              <FileName>arch_main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\init\src\arch_main.c</FilePath>
+            </File>
+            <File>
+              <FileName>system_init.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\init\src\system_init.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>sensor</GroupName>
+        </Group>
+        <Group>
           <GroupName>service</GroupName>
+          <Files>
+            <File>
+              <FileName>sw_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\sw_timer\sw_timer.c</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>::CMSIS</GroupName>
@@ -930,7 +952,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\inc;..\..\inc\CMSIS;..\..\platform\init\inc;..\..\platform\asic\6801</IncludePath>
+              <IncludePath>..\..\inc;..\..\inc\CMSIS;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\service\sw_timer</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -975,24 +997,6 @@
         </Group>
         <Group>
           <GroupName>mmi</GroupName>
-        </Group>
-        <Group>
-          <GroupName>sensor</GroupName>
-        </Group>
-        <Group>
-          <GroupName>init</GroupName>
-          <Files>
-            <File>
-              <FileName>arch_main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\init\src\arch_main.c</FilePath>
-            </File>
-            <File>
-              <FileName>system_init.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\init\src\system_init.c</FilePath>
-            </File>
-          </Files>
         </Group>
         <Group>
           <GroupName>asic</GroupName>
@@ -1055,7 +1059,47 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>drvi</GroupName>
+          <Files>
+            <File>
+              <FileName>drvi_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\drvi\drvi_timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>drvi_init.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\drvi\drvi_init.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>init</GroupName>
+          <Files>
+            <File>
+              <FileName>arch_main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\init\src\arch_main.c</FilePath>
+            </File>
+            <File>
+              <FileName>system_init.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\init\src\system_init.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>sensor</GroupName>
+        </Group>
+        <Group>
           <GroupName>service</GroupName>
+          <Files>
+            <File>
+              <FileName>sw_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\sw_timer\sw_timer.c</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>::CMSIS</GroupName>

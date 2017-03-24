@@ -90,7 +90,7 @@ void SystemInit (void)
 /******************************/
 
 #if defined (ARMCM4_FP)
-    NVIC_SetPriority(SWI0_IRQn       ,3);
+    NVIC_SetPriority(SWI0_IRQn       ,1);   //Based on Nordic sw timer, WKTM0 and SWI0 must have same priority
     NVIC_SetPriority(WDT_IRQn        ,6);
     NVIC_SetPriority(RTC_IRQn        ,6);
     NVIC_SetPriority(PWM0_IRQn       ,1);

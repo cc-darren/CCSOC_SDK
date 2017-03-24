@@ -1,9 +1,9 @@
 /**
  ****************************************************************************************
  *
- * @file drvi_timer.c
+ * @file drvi_init.c
  *
- * @brief HW timer interface for all SOC.
+ * @brief HW drivers initialize.
  *
  * Copyright (C) CloudChip 2017-2019
  *
@@ -12,10 +12,10 @@
  */
 #include "drvi_timer.h"
 
-void drvi_timer_init(void)
+void drvi_initialize(void)
 {
-    
-    
+    drvi_timer_init();
+
 }
 
 

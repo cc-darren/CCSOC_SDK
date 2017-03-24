@@ -37,15 +37,23 @@
  *          compiling, app_scheduler.h must be available in one of the compiler include paths.
  */
 
-#ifndef APP_TIMER_H__
-#define APP_TIMER_H__
+#ifndef SW_TIMER_H__
+#define SW_TIMER_H__
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include "app_error.h"
-#include "app_util.h"
-#include "compiler_abstraction.h"
+#include "global.h"
+#include "drvi_timer.h"
+//#include "app_error.h"
+//#include "app_util.h"
+//#include "compiler_abstraction.h"
+
+#define APP_ERROR_CHECK(x)
+
+
+
+
 
 #define APP_TIMER_CLOCK_FREQ         32768                      /**< Clock frequency of the RTC timer used to implement the app timer module. */
 #define APP_TIMER_MIN_TIMEOUT_TICKS  5                          /**< Minimum value of the timeout_ticks parameter of app_timer_start(). */
@@ -272,6 +280,6 @@ uint32_t app_timer_cnt_diff_compute(uint32_t   ticks_to,
                                     uint32_t   ticks_from,
                                     uint32_t * p_ticks_diff);
 
-#endif // APP_TIMER_H__
+#endif // SW_TIMER_H__
 
 /** @} */
