@@ -335,7 +335,7 @@
               <MiscControls>--no_inline --no_multifile -DMSC_CLOCK</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\inc;..\..\inc\CMSIS;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\service\sw_timer;..\..\platform\drvi</IncludePath>
+              <IncludePath>..\..\inc;..\..\inc\CMSIS;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -481,6 +481,26 @@
               <FileName>sw_timer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\service\sw_timer\sw_timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_fifo.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\fifo\app_fifo.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_trace.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\tracer\app_trace.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_uart_fifo.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\uart\app_uart_fifo.c</FilePath>
+            </File>
+            <File>
+              <FileName>retarget.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\uart\retarget.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -952,7 +972,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\inc;..\..\inc\CMSIS;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\service\sw_timer</IncludePath>
+              <IncludePath>..\..\inc;..\..\inc\CMSIS;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1098,6 +1118,26 @@
               <FileName>sw_timer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\service\sw_timer\sw_timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_fifo.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\fifo\app_fifo.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_trace.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\tracer\app_trace.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_uart_fifo.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\uart\app_uart_fifo.c</FilePath>
+            </File>
+            <File>
+              <FileName>retarget.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\uart\retarget.c</FilePath>
             </File>
           </Files>
         </Group>
