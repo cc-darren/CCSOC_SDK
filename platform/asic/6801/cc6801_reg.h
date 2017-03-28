@@ -471,16 +471,16 @@ typedef struct
 
 typedef struct
 {
-    //PWM interrupt
+    //PWM interrupt:0x400
     uint32_t  padding1:31;
     uint32_t  interrupt_status:1;
     uint32_t  padding2:1;
     uint32_t  interrupt_enable:1;
-    //PWM high counter load
+    //PWM high counter load:0x404
     uint32_t  pwmhighcounterload:32;
-    //PWM low counter load
+    //PWM low counter load:0x408
     uint32_t  pwmlowcounterload:32;
-    //PWM control
+    //PWM control:0x40C
     uint32_t  padding3:18;
     uint32_t  pwmconfig:14;
     uint32_t  padding4;
@@ -489,12 +489,55 @@ typedef struct
     uint32_t  pwmsingle;
     uint32_t  pwmoutputenable;
     uint32_t  reserved;
-    //PWM pre-scaler
+    //PWM pre-scaler:0x410
     uint32_t  padding5:15;
     uint32_t  pwmprescaler:17;
-    //PWM counter
+    //PWM counter:0x414
     uint32_t  pwmcounter:32;
 }S_regPWM;
+
+typedef struct
+{
+    //I2C interrupt:0x1100
+    uint32_t  padding1:12;
+    uint32_t  ms_resync_done_intr:1;
+    uint32_t  i2c_cd_err_intr:1;
+    uint32_t  i2c_err_ack_intr:1;
+    uint32_t  dma_done_intr:1;
+    uint32_t  padding2:12;
+    uint32_t  ms_resync_intr_en:1;
+    uint32_t  i2c_cd_err_intr_en:1;
+    uint32_t  i2c_err_ack_intr_en:1;
+    uint32_t  dma_done_intr_en:1;
+    //I2C DMA control:0x1108
+    uint32_t  dma_enable:1;
+    uint32_t  padding3:3;
+    uint32_t  rdata_byte_num:12;
+    uint32_t  dbus_burst:1;
+    uint32_t  padding4:3;
+    uint32_t  wdata_byte_num:12;
+    //I2C DMA write address:0x110C
+    uint32_t  padding5:15;
+    uint32_t  dma_str_waddr:17;
+    //I2C DMA read address:0x1110
+    uint32_t  padding6:15;
+    uint32_t  dma_str_raddr:17;
+    //I2C core configuration:0x1114
+    uint32_t  padding7:4;
+    uint32_t  ms_prescaler:12;
+    uint32_t  padding8:7;
+    uint32_t  ms_resync_bus:1;
+    uint32_t  cfg_i2c_mask:6;
+    uint32_t  cfg_core_select:2;
+    //I2C core ms configuration:0x1118
+    uint32_t  ms_word_addr:16;
+    uint32_t  padding9:1;
+    uint32_t  ms_slave_addr:7;
+    uint32_t  padding10:5;
+    uint32_t  ms_no_stop:1;
+    uint32_t  ms_addr_en:1;
+    uint32_t  ms_addr_16bit:1;
+}S_regI2C;
 
 typedef struct
 {

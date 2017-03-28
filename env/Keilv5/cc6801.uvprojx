@@ -473,6 +473,13 @@
         </Group>
         <Group>
           <GroupName>sensor</GroupName>
+          <Files>
+            <File>
+              <FileName>i2c_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\sensor\i2c_sensor.c</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>service</GroupName>
@@ -1110,6 +1117,13 @@
         </Group>
         <Group>
           <GroupName>sensor</GroupName>
+          <Files>
+            <File>
+              <FileName>i2c_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\sensor\i2c_sensor.c</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>service</GroupName>
