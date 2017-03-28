@@ -479,6 +479,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\platform\sensor\i2c_sensor.c</FilePath>
             </File>
+            <File>
+              <FileName>spi_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\sensor\spi_sensor.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1122,6 +1127,11 @@
               <FileName>i2c_sensor.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\sensor\i2c_sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>spi_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\sensor\spi_sensor.c</FilePath>
             </File>
           </Files>
         </Group>

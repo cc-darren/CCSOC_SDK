@@ -541,6 +541,41 @@ typedef struct
 
 typedef struct
 {
+    //SPI interrupt:0x00
+    uint32_t  padding1:14;
+    uint32_t  error_int_status:1;
+    uint32_t  event_int_status:1;
+    uint32_t  padding2:14;
+    uint32_t  error_int_en:1;
+    uint32_t  event_int_en:1;
+    //SPI control:0x04
+    uint32_t  padding3:7;
+    uint32_t  spi_m_en:1;
+    uint32_t  padding4:13;
+    uint32_t  cs_polarity:1;
+    uint32_t  cs:2;
+    uint32_t  padding5:6;
+    uint32_t  cpol:1;
+    uint32_t  cpha:1;
+    //SPI DMA control:0x08
+    uint32_t  padding6:7;
+    uint32_t  spi_m_dma_en:1;
+    uint32_t  padding7:4;
+    uint32_t  rbyte_swap:1;
+    uint32_t  wbyte_swap:1;
+    uint32_t  op_mode:2;
+    uint32_t  total_rbyte:8;
+    uint32_t  total_wbyte:8;
+    //DMA start write address:0x0C
+    uint32_t  padding8:15;
+    uint32_t  dma_str_waddr:17;
+    //DMA start read address:0x10
+    uint32_t  padding9:15;
+    uint32_t  dma_str_raddr:17;
+}S_regSPI;
+
+typedef struct
+{
     //remap control
     uint32_t  padding1:31;
     uint32_t  Rmap_en:1;
