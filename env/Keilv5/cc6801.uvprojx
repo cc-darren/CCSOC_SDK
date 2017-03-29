@@ -439,6 +439,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\platform\asic\6801\dmu.c</FilePath>
             </File>
+            <File>
+              <FileName>wktm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\wktm.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1005,7 +1010,7 @@
             </VariousControls>
           </Aads>
           <LDads>
-            <umfTarg>1</umfTarg>
+            <umfTarg>0</umfTarg>
             <Ropi>0</Ropi>
             <Rwpi>0</Rwpi>
             <noStLib>0</noStLib>
@@ -1014,7 +1019,7 @@
             <TextAddressRange>0x00000000</TextAddressRange>
             <DataAddressRange>0x20000000</DataAddressRange>
             <pXoBase></pXoBase>
-            <ScatterFile></ScatterFile>
+            <ScatterFile>.\FPGA_rom.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
             <Misc></Misc>
@@ -1087,6 +1092,11 @@
               <FileName>dmu.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\asic\6801\dmu.c</FilePath>
+            </File>
+            <File>
+              <FileName>wktm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\wktm.c</FilePath>
             </File>
           </Files>
         </Group>

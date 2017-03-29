@@ -144,7 +144,7 @@ static void rtc1_init(uint32_t prescaler)
     //NRF_RTC1->PRESCALER = prescaler;
     //NVIC_SetPriority(RTC1_IRQn, RTC1_IRQ_PRI);
     
-    drvi_timer_init();
+    drvi_timer0_init(SW_TimerIsrCallback);
 }
 
 
@@ -193,9 +193,10 @@ static __INLINE uint32_t rtc1_counter_get(void)
 {
     //return NRF_RTC1->COUNTER;
     
+    uint32_t cnt;
+    drvi_timer0_counterGet(&cnt);
     
-    
-    return 0;
+    return cnt;
 }
 
 
@@ -905,8 +906,10 @@ static uint32_t timer_stop_all_op_schedule(timer_user_id_t user_id)
  *
  * @details Checks for timeouts, and executes timeout handlers for expired timers.
  */
-void WKTM0_IRQHandler(void)
+void SW_TimerIsrCallback(void *para)
 {
+    UNUSED_PARAMETER(para);
+    
     // Clear all events (also unexpected ones)
     //NRF_RTC1->EVENTS_COMPARE[0] = 0;
     //NRF_RTC1->EVENTS_COMPARE[1] = 0;

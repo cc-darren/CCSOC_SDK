@@ -14,7 +14,7 @@
 
 void drvi_initialize(void)
 {
-    drvi_timer_init();
+    //drvi_timer0_init();
 
 }
 

@@ -21,4 +21,6 @@
 #define SUCCESS             TRUE
 #define FAIL                FALSE
 
+typedef void (*T_callback)(void* p);
+
 #endif //_GLOBAL_H_

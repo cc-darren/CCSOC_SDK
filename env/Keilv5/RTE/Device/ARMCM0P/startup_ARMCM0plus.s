@@ -84,38 +84,38 @@ __Vectors       DCD     __initial_sp              ; Top of Stack
                 DCD     SysTick_Handler           ; SysTick Handler
 
                 ; External Interrupts
-                DCD     SWI0_IRQHandler           ;  0:  Real Time Clock
-                DCD     WDT_IRQHandler            ;  1:  Watchdog Timer
-                DCD     RTC_IRQHandler            ;  2:  Timer0 / Timer1
-                DCD     PWM0_IRQHandler           ;  3:  PWM0 Interrup
-                DCD     PWM1_IRQHandler           ;  4:  PWM1 Interrup
-                DCD     WKTM0_IRQHandler          ;  5:  MCIb
-                DCD     WKTM1_IRQHandler          ;  6:  UART0 - DUT FPGA
-                DCD     SPI0_M_IRQHandler         ;  7:  SPI0 Master
-                DCD     SPI1_M_IRQHandler         ;  8:  SPI1 Master
-                DCD     SPI2_M_IRQHandler         ;  9:  SPI2 Master
-                DCD     UART0_RXDMA_IRQHandler    ; 10: UART0 Rx DMA interrupt
-                DCD     UART0_TXDMA_IRQHandler    ; 11: UART0 Tx DMA interrupt
-                DCD     UART0_IP_IRQHandler       ; 12: UART0 Core interrupt
-                DCD     UART1_RXDMA_IRQHandler    ; 13: UART1 Rx DMA interrupt
-                DCD     UART1_TXDMA_IRQHandler    ; 14: UART1 Tx DMA interrupt
-                DCD     UART1_IP_IRQHandler       ; 15: UART1 Core interrupt
-                DCD     UART2_RXDMA_IRQHandler    ; 16: UART2 Rx DMA interrupt
-                DCD     UART2_TXDMA_IRQHandler    ; 17: UART2 Tx DMA interrupt
-                DCD     UART2_IP_IRQHandler       ; 18: UART2 Core interrupt
-                DCD     I2C0_M_IRQHandler         ; 19: I2C0 ADC/DAC
-                DCD     I2C1_M_IRQHandler         ; 20: I2C1 ADC/DAC
-                DCD     I2S_RXDMA_IRQHandler      ; 21: I2S Rx DMA interrupt
-                DCD     I2S_TXDMA_IRQHandler      ; 22: I2S Tx DMA interrupt
-                DCD     I2S_IP_IRQHandler         ; 23: I2S Core interrupt
-                DCD     DMIC_IRQHandler           ; 24: DMIC interrupt
-                DCD     BLE_IRQHandler            ; 25: Reserved
-                DCD     GPIO_IRQHandler           ; 26: GPIO interrupt
-                DCD     CCU_IRQHandler            ; 27: Reserved
-                DCD     AES_IRQHandler            ; 28: AES interrupt
-                DCD     DMU_IRQHandler            ; 29: DMU interrupt
-                DCD     SWI1_IRQHandler           ; 30: UART3    - CPU FPGA
-                DCD     EFLASH_IRQHandler         ; 31: SPI Touchscreen - CPU FPGA
+                DCD     SWI0_IRQHandler           ;  0
+                DCD     WDT_IRQHandler            ;  1
+                DCD     RTC_IRQHandler            ;  2
+                DCD     PWM0_IRQHandler           ;  3
+                DCD     PWM1_IRQHandler           ;  4
+                DCD     WKTM0_IRQHandler          ;  5
+                DCD     WKTM1_IRQHandler          ;  6
+                DCD     SPI0_M_IRQHandler         ;  7
+                DCD     SPI1_M_IRQHandler         ;  8
+                DCD     SPI2_M_IRQHandler         ;  9
+                DCD     UART0_RXDMA_IRQHandler    ; 10
+                DCD     UART0_TXDMA_IRQHandler    ; 11
+                DCD     UART0_IP_IRQHandler       ; 12
+                DCD     UART1_RXDMA_IRQHandler    ; 13
+                DCD     UART1_TXDMA_IRQHandler    ; 14
+                DCD     UART1_IP_IRQHandler       ; 15
+                DCD     UART2_RXDMA_IRQHandler    ; 16
+                DCD     UART2_TXDMA_IRQHandler    ; 17
+                DCD     UART2_IP_IRQHandler       ; 18
+                DCD     I2C0_M_IRQHandler         ; 19
+                DCD     I2C1_M_IRQHandler         ; 20
+                DCD     I2S_RXDMA_IRQHandler      ; 21
+                DCD     I2S_TXDMA_IRQHandler      ; 22
+                DCD     I2S_IP_IRQHandler         ; 23
+                DCD     DMIC_IRQHandler           ; 24
+                DCD     BLE_IRQHandler            ; 25
+                DCD     GPIO_IRQHandler           ; 26
+                DCD     CCU_IRQHandler            ; 27
+                DCD     AES_IRQHandler            ; 28
+                DCD     DMU_IRQHandler            ; 29
+                DCD     SWI1_IRQHandler           ; 30
+                DCD     EFLASH_IRQHandler         ; 31
 __Vectors_End
 
 __Vectors_Size  EQU     __Vectors_End - __Vectors

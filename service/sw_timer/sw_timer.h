@@ -280,6 +280,9 @@ uint32_t app_timer_cnt_diff_compute(uint32_t   ticks_to,
                                     uint32_t   ticks_from,
                                     uint32_t * p_ticks_diff);
 
+
+void SW_TimerIsrCallback(void*);
+
 #endif // SW_TIMER_H__
 
 /** @} */

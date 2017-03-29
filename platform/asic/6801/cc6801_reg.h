@@ -32,8 +32,10 @@
 *  20170120 PAT initial version
 ******************************************************************************/
 
-#ifndef CC6801_H
-#define CC6801_H
+#ifndef _CC6801_REG_H_
+#define _CC6801_REG_H_
+
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -79,287 +81,318 @@ extern "C" {
 #define CLKPLL_PERIOD_DIV2          (10/2)
 #define CLK20M_PERIOD_DIV2          (50/2)
 
-//// ------------------------------------
-//// define
-//// ------------------------------------
-//// global
-#define CHIP_CLK32K                 topsys.XI_32K
-#define CHIP_CLK48M                 topsys.XI_48M
-#define CHIP_RSTN                   topsys.RESETN
-#define TOPSYS                      topsys
-#define TESTBED                     testbed
-#define CHIP_TOP                    topsys.chip
-#define CHIP_CORE1                  topsys.chip.core_domain1
-#define CHIP_CORE0                  topsys.chip.core_domain0
-#define CHIP_OTP_AES                topsys.chip.core_domain1.otp_aes_wrap
-#define CHIP_IC_EF                  topsys.chip.core_domain1.ic_ef_wrap
-#define CHIP_CORE_AO                topsys.chip.core_domain0.core_ao
-#define CHIP_DMIC                   `CHIP_CORE0.dmic_top_wrap
-#define CHIP_CPU_BFM                topsys.cpu_bfm.m_ahb_bfm
-
-//#define TB_INIT_DONE                `TESTBED.init_done
-#define CHIP_PLLCLK                 `CHIP_CORE1.PLL_CC6801.CO0
-#define CHIP_SYSCLK                 `CHIP_CORE0.sys_genclk
-#define CHIP_SYSRSTN                `CHIP_CORE0.sys_rstn
-
 
 // mem
-#define ROM_ADDR_BASE       0x00000000
-#define ROM_SIZE            0x00040000  // 128KB
-#define EF_BASE             0x10000000
-#define EF_SIZE             0x10040000  // 256KB
-#define SYSRAM_ADDR_BASE    0x20000000
-#define SYSRAM_SIZE         0x00018000  // 96KB
-#define DATARAM_ADDR_BASE   0x20020000
-#define DATARAM_SIZE        0x00002000  // 8KB
+#define ROM_ADDR_BASE               0x00000000
+#define ROM_SIZE                    0x00020000  // 128KB
+#define EF_BASE                     0x30000000
+#define EF_SIZE                     0x30040000  // 256KB
+#define SYSRAM_ADDR_BASE            0x20000000
+#define SYSRAM_SIZE                 0x00018000  // 96KB
+#define DATARAM_ADDR_BASE           0x20020000
+#define DATARAM_SIZE                0x00002000  // 8KB
 
 // mem read write test
-#define SYSRAM_TEST_ADDR_BASE   0x20010000
+#define SYSRAM_TEST_ADDR_BASE       0x20010000
 
 // io
-#define REG_SIZE            0x00000100  // 256B
-#define BLE_REG_SIZE        0x00020000  // 8k use 16k
-#define SCU_ADDR_BASE       0x40000000
-#define CKGEN_ADDR_BASE     0x40000100
-#define GPIO_ADDR_BASE      0x40000200
-#define WDT_ADDR_BASE       0x40000300
-#define PWM0_ADDR_BASE      0x40000400
-#define PWM1_ADDR_BASE      0x40000500
-#define WKTM0_ADDR_BASE     0x40000600
-#define WKTM1_ADDR_BASE     0x40000700
+#define REG_SIZE                    0x00000100  // 256B
+#define BLE_REG_SIZE                0x00020000  // 8k use 16k
+#define SCU_ADDR_BASE               0x40000000
+#define CKGEN_ADDR_BASE             0x40000100
+#define GPIO_ADDR_BASE              0x40000200
+#define WDT_ADDR_BASE               0x40000300
+#define PWM0_ADDR_BASE              0x40000400
+#define PWM1_ADDR_BASE              0x40000500
+#define WKTM0_ADDR_BASE             0x40000600
+#define WKTM1_ADDR_BASE             0x40000700
 
-#define RTC_ADDR_BASE       0x40000800
-#define I2S_ADDR_BASE       0x40000900
-#define DMIC_ADDR_BASE      0x40000a00
-#define SPI0_ADDR_BASE      0x40000b00
-#define SPI1_ADDR_BASE      0x40000c00
-#define SPI2_ADDR_BASE      0x40000d00
-#define UART0_ADDR_BASE     0x40000e00
-#define UART1_ADDR_BASE     0x40000f00
+#define RTC_ADDR_BASE               0x40000800
+#define I2S_ADDR_BASE               0x40000900
+#define DMIC_ADDR_BASE              0x40000a00
+#define SPI0_ADDR_BASE              0x40000b00
+#define SPI1_ADDR_BASE              0x40000c00
+#define SPI2_ADDR_BASE              0x40000d00
+#define UART0_ADDR_BASE             0x40000e00
+#define UART1_ADDR_BASE             0x40000f00
 
-#define UART2_ADDR_BASE     0x40001000
-#define I2C0_ADDR_BASE      0x40001100
-#define I2C1_ADDR_BASE      0x40001200
-#define DMU_ADDR_BASE       0x40001300
+#define UART2_ADDR_BASE             0x40001000
+#define I2C0_ADDR_BASE              0x40001100
+#define I2C1_ADDR_BASE              0x40001200
+#define DMU_ADDR_BASE               0x40001300
 
-#define EF_ADDR_BASE        0x40002000
-#define OTP_ADDR_BASE       0x40002100
-#define HS_ADDR_BASE        0x40002200
-#define PMU_ADDR_BASE       0x40002300
-#define AES_ADDR_BASE       0x40002400
-#define CCU_ADDR_BASE       0x40002500
+#define EF_ADDR_BASE                0x40002000
+#define OTP_ADDR_BASE               0x40002100
+#define HS_ADDR_BASE                0x40002200
+#define PMU_ADDR_BASE               0x40002300
+#define AES_ADDR_BASE               0x40002400
+#define CCU_ADDR_BASE               0x40002500
 
-#define BLE_ADDR_BASE       0x40004000
+#define BLE_ADDR_BASE               0x40004000
 
 // EF
-#define EF_INTERRUPT_REG        (EF_ADDR_BASE + 0x00000000)
-#define EF_CONFIG_REG           (EF_ADDR_BASE + 0x00000004)
-#define EF_ACCESS_REG           (EF_ADDR_BASE + 0x00000008)
-#define EF_WR_DATA0_REG         (EF_ADDR_BASE + 0x0000000c)
-#define EF_WR_DATA1_REG         (EF_ADDR_BASE + 0x00000010)
-#define EF_WR_DATA2_REG         (EF_ADDR_BASE + 0x00000014)
-#define EF_WR_DATA3_REG         (EF_ADDR_BASE + 0x00000018)
-#define EF_FLASHMODE_REG        (EF_ADDR_BASE + 0x0000001c)
-#define EF_RD_DATA0_REG         (EF_ADDR_BASE + 0x00000020)
-#define EF_RD_DATA1_REG         (EF_ADDR_BASE + 0x00000024)
-#define EF_REDUN_DATA_REG       (EF_ADDR_BASE + 0x00000028)
+#define EF_INTERRUPT_REG            (EF_ADDR_BASE + 0x00000000)
+#define EF_CONFIG_REG               (EF_ADDR_BASE + 0x00000004)
+#define EF_ACCESS_REG               (EF_ADDR_BASE + 0x00000008)
+#define EF_WR_DATA0_REG             (EF_ADDR_BASE + 0x0000000c)
+#define EF_WR_DATA1_REG             (EF_ADDR_BASE + 0x00000010)
+#define EF_WR_DATA2_REG             (EF_ADDR_BASE + 0x00000014)
+#define EF_WR_DATA3_REG             (EF_ADDR_BASE + 0x00000018)
+#define EF_FLASHMODE_REG            (EF_ADDR_BASE + 0x0000001c)
+#define EF_RD_DATA0_REG             (EF_ADDR_BASE + 0x00000020)
+#define EF_RD_DATA1_REG             (EF_ADDR_BASE + 0x00000024)
+#define EF_REDUN_DATA_REG           (EF_ADDR_BASE + 0x00000028)
 
-#define EF_TIMING0_REG          (EF_ADDR_BASE + 0x00000044)
-#define EF_TIMING1_REG          (EF_ADDR_BASE + 0x00000048)
-#define EF_TIMING2_REG          (EF_ADDR_BASE + 0x0000004c)
-#define EF_TIMING3_REG          (EF_ADDR_BASE + 0x00000050)
-#define EF_TIMING4_REG          (EF_ADDR_BASE + 0x00000054)
-#define EF_TIMING5_REG          (EF_ADDR_BASE + 0x00000058)
-#define EF_TIMING6_REG          (EF_ADDR_BASE + 0x0000005c)
+#define EF_TIMING0_REG              (EF_ADDR_BASE + 0x00000044)
+#define EF_TIMING1_REG              (EF_ADDR_BASE + 0x00000048)
+#define EF_TIMING2_REG              (EF_ADDR_BASE + 0x0000004c)
+#define EF_TIMING3_REG              (EF_ADDR_BASE + 0x00000050)
+#define EF_TIMING4_REG              (EF_ADDR_BASE + 0x00000054)
+#define EF_TIMING5_REG              (EF_ADDR_BASE + 0x00000058)
+#define EF_TIMING6_REG              (EF_ADDR_BASE + 0x0000005c)
 
-#define EF_DMA_CTRL_REG         (EF_ADDR_BASE + 0x00000060)
-#define EF_DMA_WADDR_REG        (EF_ADDR_BASE + 0x00000064)
-#define EF_DMA_RADDR_REG        (EF_ADDR_BASE + 0x00000068)
+#define EF_DMA_CTRL_REG             (EF_ADDR_BASE + 0x00000060)
+#define EF_DMA_WADDR_REG            (EF_ADDR_BASE + 0x00000064)
+#define EF_DMA_RADDR_REG            (EF_ADDR_BASE + 0x00000068)
 
 // SCU
-#define SCU_INTRCTRL_REG        (SCU_ADDR_BASE + 0x00000000)
-#define SCU_PLLLOCK_REG         (SCU_ADDR_BASE + 0x00000004)
-#define SCU_PLLRST_REG          (SCU_ADDR_BASE + 0x00000008)
-#define SCU_PLLCFG_REG          (SCU_ADDR_BASE + 0x0000000c)
-#define SCU_CLKCFG0_REG         (SCU_ADDR_BASE + 0x00000010)
-#define SCU_CLKCFG1_REG         (SCU_ADDR_BASE + 0x00000014)
-#define SCU_CHIPID_REG          (SCU_ADDR_BASE + 0x0000001c)
-#define SCU_ISOCTRL_REG         (SCU_ADDR_BASE + 0x00000020)
-#define SCU_PSOCTRL_REG         (SCU_ADDR_BASE + 0x00000024)
-#define SCU_RETCTRL_REG         (SCU_ADDR_BASE + 0x00000028)
-#define SCU_EXTAUX_REG          (SCU_ADDR_BASE + 0x0000002c)
-#define SCU_HSCLK_REG           (SCU_ADDR_BASE + 0x00000030)
-#define SCU_ICACHE_REG          (SCU_ADDR_BASE + 0x00000034)
-#define SCU_CLK32K_CAL_REG      (SCU_ADDR_BASE + 0x00000038)
-#define SCU_INTRMASK_REG        (SCU_ADDR_BASE + 0x0000003c)
-#define SCU_INTRINFO_REG        (SCU_ADDR_BASE + 0x00000040)
+#define SCU_INTRCTRL_REG            (SCU_ADDR_BASE + 0x00000000)
+#define SCU_PLLLOCK_REG             (SCU_ADDR_BASE + 0x00000004)
+#define SCU_PLLRST_REG              (SCU_ADDR_BASE + 0x00000008)
+#define SCU_PLLCFG_REG              (SCU_ADDR_BASE + 0x0000000c)
+#define SCU_CLKCFG0_REG             (SCU_ADDR_BASE + 0x00000010)
+#define SCU_CLKCFG1_REG             (SCU_ADDR_BASE + 0x00000014)
+#define SCU_CHIPID_REG              (SCU_ADDR_BASE + 0x0000001c)
+#define SCU_ISOCTRL_REG             (SCU_ADDR_BASE + 0x00000020)
+#define SCU_PSOCTRL_REG             (SCU_ADDR_BASE + 0x00000024)
+#define SCU_RETCTRL_REG             (SCU_ADDR_BASE + 0x00000028)
+#define SCU_EXTAUX_REG              (SCU_ADDR_BASE + 0x0000002c)
+#define SCU_HSCLK_REG               (SCU_ADDR_BASE + 0x00000030)
+#define SCU_ICACHE_REG              (SCU_ADDR_BASE + 0x00000034)
+#define SCU_CLK32K_CAL_REG          (SCU_ADDR_BASE + 0x00000038)
+#define SCU_INTRMASK_REG            (SCU_ADDR_BASE + 0x0000003c)
+#define SCU_INTRINFO_REG            (SCU_ADDR_BASE + 0x00000040)
 
 // CKGEN
-#define CKGEN_CFG1_REG          (CKGEN_ADDR_BASE + 0x00000004)
-#define CKGEN_CFG2_REG          (CKGEN_ADDR_BASE + 0x00000008)
-#define CKGEN_CFG3_REG          (CKGEN_ADDR_BASE + 0x0000000c)
-#define CKGEN_CFG4_REG          (CKGEN_ADDR_BASE + 0x00000010)
-#define CKGEN_CLKEN_REG         (CKGEN_ADDR_BASE + 0x00000014)
-#define CKGEN_SWRST_REG         (CKGEN_ADDR_BASE + 0x00000018)
-#define CKGEN_BLECLKSEL_REG     (CKGEN_ADDR_BASE + 0x0000001c)
+#define CKGEN_CFG1_REG              (CKGEN_ADDR_BASE + 0x00000004)
+#define CKGEN_CFG2_REG              (CKGEN_ADDR_BASE + 0x00000008)
+#define CKGEN_CFG3_REG              (CKGEN_ADDR_BASE + 0x0000000c)
+#define CKGEN_CFG4_REG              (CKGEN_ADDR_BASE + 0x00000010)
+#define CKGEN_CLKEN_REG             (CKGEN_ADDR_BASE + 0x00000014)
+#define CKGEN_SWRST_REG             (CKGEN_ADDR_BASE + 0x00000018)
+#define CKGEN_BLECLKSEL_REG         (CKGEN_ADDR_BASE + 0x0000001c)
 
 // GPIO
-#define GPIO_PAD_OUT_REG        (GPIO_ADDR_BASE + 0x00000000)
-#define GPIO_PAD_IN_REG         (GPIO_ADDR_BASE + 0x00000004)
-#define GPIO_PAD_OE_REG         (GPIO_ADDR_BASE + 0x00000008)
-#define GPIO_INTR_PRIO_REG      (GPIO_ADDR_BASE + 0x0000000c)
-#define GPIO_INTR_EN_REG        (GPIO_ADDR_BASE + 0x00000010)
-#define GPIO_INTR_STAT_REG      (GPIO_ADDR_BASE + 0x00000014)
-#define GPIO_INTR_TRIG_REG      (GPIO_ADDR_BASE + 0x00000018)
-#define GPIO_AUX_REG            (GPIO_ADDR_BASE + 0x0000001c)
-#define GPIO_INTR_TYPE_REG      (GPIO_ADDR_BASE + 0x00000020)
-#define GPIO_PAD_PULLUP_REG     (GPIO_ADDR_BASE + 0x00000024)
-#define GPIO_AUX_PORT_MODE_REG  (GPIO_ADDR_BASE + 0x00000028)
+#define GPIO_PAD_OUT_REG            (GPIO_ADDR_BASE + 0x00000000)
+#define GPIO_PAD_IN_REG             (GPIO_ADDR_BASE + 0x00000004)
+#define GPIO_PAD_OE_REG             (GPIO_ADDR_BASE + 0x00000008)
+#define GPIO_INTR_PRIO_REG          (GPIO_ADDR_BASE + 0x0000000c)
+#define GPIO_INTR_EN_REG            (GPIO_ADDR_BASE + 0x00000010)
+#define GPIO_INTR_STAT_REG          (GPIO_ADDR_BASE + 0x00000014)
+#define GPIO_INTR_TRIG_REG          (GPIO_ADDR_BASE + 0x00000018)
+#define GPIO_AUX_REG                (GPIO_ADDR_BASE + 0x0000001c)
+#define GPIO_INTR_TYPE_REG          (GPIO_ADDR_BASE + 0x00000020)
+#define GPIO_PAD_PULLUP_REG         (GPIO_ADDR_BASE + 0x00000024)
+#define GPIO_AUX_PORT_MODE_REG      (GPIO_ADDR_BASE + 0x00000028)
 
-#define GPIO1_PAD_OUT_REG       (GPIO_ADDR_BASE + 0x0000002c)
-#define GPIO1_PAD_IN_REG        (GPIO_ADDR_BASE + 0x00000030)
-#define GPIO1_PAD_OE_REG        (GPIO_ADDR_BASE + 0x00000034)
-#define GPIO1_INTR_PRIO_REG     (GPIO_ADDR_BASE + 0x00000038)
-#define GPIO1_INTR_EN_REG       (GPIO_ADDR_BASE + 0x0000003c)
-#define GPIO1_INTR_STAT_REG     (GPIO_ADDR_BASE + 0x00000040)
-#define GPIO1_INTR_TRIG_REG     (GPIO_ADDR_BASE + 0x00000044)
-#define GPIO1_AUX_REG           (GPIO_ADDR_BASE + 0x00000048)
-#define GPIO1_INTR_TYPE_REG     (GPIO_ADDR_BASE + 0x0000004c)
-#define GPIO1_PAD_PULLUP_REG    (GPIO_ADDR_BASE + 0x00000050)
-#define GPIO1_AUX_PORT_MODE_REG (GPIO_ADDR_BASE + 0x00000054)
+#define GPIO1_PAD_OUT_REG           (GPIO_ADDR_BASE + 0x0000002c)
+#define GPIO1_PAD_IN_REG            (GPIO_ADDR_BASE + 0x00000030)
+#define GPIO1_PAD_OE_REG            (GPIO_ADDR_BASE + 0x00000034)
+#define GPIO1_INTR_PRIO_REG         (GPIO_ADDR_BASE + 0x00000038)
+#define GPIO1_INTR_EN_REG           (GPIO_ADDR_BASE + 0x0000003c)
+#define GPIO1_INTR_STAT_REG         (GPIO_ADDR_BASE + 0x00000040)
+#define GPIO1_INTR_TRIG_REG         (GPIO_ADDR_BASE + 0x00000044)
+#define GPIO1_AUX_REG               (GPIO_ADDR_BASE + 0x00000048)
+#define GPIO1_INTR_TYPE_REG         (GPIO_ADDR_BASE + 0x0000004c)
+#define GPIO1_PAD_PULLUP_REG        (GPIO_ADDR_BASE + 0x00000050)
+#define GPIO1_AUX_PORT_MODE_REG     (GPIO_ADDR_BASE + 0x00000054)
 
 // SPI
-#define SPI0_INTR_REG           (SPI0_ADDR_BASE + 0x00000000)
-#define SPI0_CTRL_REG           (SPI0_ADDR_BASE + 0x00000004)
-#define SPI0_DMA_CTRL_REG       (SPI0_ADDR_BASE + 0x00000008)
-#define SPI0_DMA_WR_REG         (SPI0_ADDR_BASE + 0x0000000c)
-#define SPI0_DMA_RD_REG         (SPI0_ADDR_BASE + 0x00000010)
+#define SPI0_INTR_REG               (SPI0_ADDR_BASE + 0x00000000)
+#define SPI0_CTRL_REG               (SPI0_ADDR_BASE + 0x00000004)
+#define SPI0_DMA_CTRL_REG           (SPI0_ADDR_BASE + 0x00000008)
+#define SPI0_DMA_WR_REG             (SPI0_ADDR_BASE + 0x0000000c)
+#define SPI0_DMA_RD_REG             (SPI0_ADDR_BASE + 0x00000010)
 
-#define SPI1_INTR_REG           (SPI1_ADDR_BASE + 0x00000000)
-#define SPI1_CTRL_REG           (SPI1_ADDR_BASE + 0x00000004)
-#define SPI1_DMA_CTRL_REG       (SPI1_ADDR_BASE + 0x00000008)
-#define SPI1_DMA_WR_REG         (SPI1_ADDR_BASE + 0x0000000c)
-#define SPI1_DMA_RD_REG         (SPI1_ADDR_BASE + 0x00000010)
+#define SPI1_INTR_REG               (SPI1_ADDR_BASE + 0x00000000)
+#define SPI1_CTRL_REG               (SPI1_ADDR_BASE + 0x00000004)
+#define SPI1_DMA_CTRL_REG           (SPI1_ADDR_BASE + 0x00000008)
+#define SPI1_DMA_WR_REG             (SPI1_ADDR_BASE + 0x0000000c)
+#define SPI1_DMA_RD_REG             (SPI1_ADDR_BASE + 0x00000010)
 
-#define SPI1_INTR_REG           (SPI1_ADDR_BASE + 0x00000000)
-#define SPI1_CTRL_REG           (SPI1_ADDR_BASE + 0x00000004)
-#define SPI1_DMA_CTRL_REG       (SPI1_ADDR_BASE + 0x00000008)
-#define SPI1_DMA_WR_REG         (SPI1_ADDR_BASE + 0x0000000c)
-#define SPI1_DMA_RD_REG         (SPI1_ADDR_BASE + 0x00000010)
+#define SPI1_INTR_REG               (SPI1_ADDR_BASE + 0x00000000)
+#define SPI1_CTRL_REG               (SPI1_ADDR_BASE + 0x00000004)
+#define SPI1_DMA_CTRL_REG           (SPI1_ADDR_BASE + 0x00000008)
+#define SPI1_DMA_WR_REG             (SPI1_ADDR_BASE + 0x0000000c)
+#define SPI1_DMA_RD_REG             (SPI1_ADDR_BASE + 0x00000010)
 
 // WDT
-#define WDT_TIMER0_REG          (WDT_ADDR_BASE + 0x00000000)
-#define WDT_TIMER1_REG          (WDT_ADDR_BASE + 0x00000004)
-#define WDT_TIMER2_REG          (WDT_ADDR_BASE + 0x00000008)
-#define WDT_TIMER3_REG          (WDT_ADDR_BASE + 0x0000000c)
+#define WDT_TIMER0_REG              (WDT_ADDR_BASE + 0x00000000)
+#define WDT_TIMER1_REG              (WDT_ADDR_BASE + 0x00000004)
+#define WDT_TIMER2_REG              (WDT_ADDR_BASE + 0x00000008)
+#define WDT_TIMER3_REG              (WDT_ADDR_BASE + 0x0000000c)
 
 // RTC
-#define RTC_SEC_REG             (RTC_ADDR_BASE + 0x00000000)
-#define RTC_MIN_REG             (RTC_ADDR_BASE + 0x00000004)
-#define RTC_HRS_REG             (RTC_ADDR_BASE + 0x00000008)
-#define RTC_DOW_REG             (RTC_ADDR_BASE + 0x0000000c)
-#define RTC_DAY_REG             (RTC_ADDR_BASE + 0x00000010)
-#define RTC_MON_REG             (RTC_ADDR_BASE + 0x00000014)
-#define RTC_YRS_REG             (RTC_ADDR_BASE + 0x00000018)
+#define RTC_SEC_REG                 (RTC_ADDR_BASE + 0x00000000)
+#define RTC_MIN_REG                 (RTC_ADDR_BASE + 0x00000004)
+#define RTC_HRS_REG                 (RTC_ADDR_BASE + 0x00000008)
+#define RTC_DOW_REG                 (RTC_ADDR_BASE + 0x0000000c)
+#define RTC_DAY_REG                 (RTC_ADDR_BASE + 0x00000010)
+#define RTC_MON_REG                 (RTC_ADDR_BASE + 0x00000014)
+#define RTC_YRS_REG                 (RTC_ADDR_BASE + 0x00000018)
 
-#define RTC_ALM_SEC_REG         (RTC_ADDR_BASE + 0x0000001c)
-#define RTC_ALM_MIN_REG         (RTC_ADDR_BASE + 0x00000020)
-#define RTC_ALM_HRS_REG         (RTC_ADDR_BASE + 0x00000024)
-#define RTC_ALM_DOM_REG         (RTC_ADDR_BASE + 0x00000028)
-#define RTC_ALM_MON_REG         (RTC_ADDR_BASE + 0x0000002c)
+#define RTC_ALM_SEC_REG             (RTC_ADDR_BASE + 0x0000001c)
+#define RTC_ALM_MIN_REG             (RTC_ADDR_BASE + 0x00000020)
+#define RTC_ALM_HRS_REG             (RTC_ADDR_BASE + 0x00000024)
+#define RTC_ALM_DOM_REG             (RTC_ADDR_BASE + 0x00000028)
+#define RTC_ALM_MON_REG             (RTC_ADDR_BASE + 0x0000002c)
 
-#define RTC_ALM2_SEC_REG        (RTC_ADDR_BASE + 0x00000030)
-#define RTC_ALM2_MIN_REG        (RTC_ADDR_BASE + 0x00000034)
-#define RTC_ALM2_HRS_REG        (RTC_ADDR_BASE + 0x00000038)
-#define RTC_ALM2_DOM_REG        (RTC_ADDR_BASE + 0x0000003c)
-#define RTC_ALM2_MON_REG        (RTC_ADDR_BASE + 0x00000040)
+#define RTC_ALM2_SEC_REG            (RTC_ADDR_BASE + 0x00000030)
+#define RTC_ALM2_MIN_REG            (RTC_ADDR_BASE + 0x00000034)
+#define RTC_ALM2_HRS_REG            (RTC_ADDR_BASE + 0x00000038)
+#define RTC_ALM2_DOM_REG            (RTC_ADDR_BASE + 0x0000003c)
+#define RTC_ALM2_MON_REG            (RTC_ADDR_BASE + 0x00000040)
 
-#define RTC_CTRLA_REG           (RTC_ADDR_BASE + 0x00000044)
-#define RTC_CTRLB_REG           (RTC_ADDR_BASE + 0x00000048)
-#define RTC_CTRLC_REG           (RTC_ADDR_BASE + 0x00000050)
+#define RTC_CTRLA_REG               (RTC_ADDR_BASE + 0x00000044)
+#define RTC_CTRLB_REG               (RTC_ADDR_BASE + 0x00000048)
+#define RTC_CTRLC_REG               (RTC_ADDR_BASE + 0x00000050)
 
 // CCU
-#define CCU_INTR_REG            (CCU_ADDR_BASE + 0x00000000)
-#define CCU_DELTA_CNT_REG       (CCU_ADDR_BASE + 0x00000004)
-#define CCU_FDELTA_CNT_REG      (CCU_ADDR_BASE + 0x00000008)
+#define CCU_INTR_REG                (CCU_ADDR_BASE + 0x00000000)
+#define CCU_DELTA_CNT_REG           (CCU_ADDR_BASE + 0x00000004)
+#define CCU_FDELTA_CNT_REG          (CCU_ADDR_BASE + 0x00000008)
 
 // UART
-#define UART0_INTR_REG             (UART0_ADDR_BASE + 0x00000000)
-#define UART0_DMA_CTRL_REG         (UART0_ADDR_BASE + 0x00000004)
-#define UART0_DMA_RADDR_START_REG  (UART0_ADDR_BASE + 0x00000008)
-#define UART0_DMA_RADDR_END_REG    (UART0_ADDR_BASE + 0x0000000C)
-#define UART0_DMA_RDEN_REG         (UART0_ADDR_BASE + 0x00000010)
-#define UART0_DMA_WADDR_START_REG  (UART0_ADDR_BASE + 0x00000014)
-#define UART0_DMA_WADDR_END_REG    (UART0_ADDR_BASE + 0x00000018)
-#define UART0_DMA_WR_EN_REG        (UART0_ADDR_BASE + 0x0000001C)
-#define UART0_DMA_DBUSADDR_RX_REG  (UART0_ADDR_BASE + 0x00000020)
-#define UART0_DMA_DBUSADDR_TX_REG  (UART0_ADDR_BASE + 0x00000024)
-#define UART0_DMA_AGR_RX_REG       (UART0_ADDR_BASE + 0x00000028)
-#define UART0_UnTBUF_REG           (UART0_ADDR_BASE + 0x00000080)
-#define UART0_UnRBUF_REG           (UART0_ADDR_BASE + 0x00000084)
-#define UART0_UnICTRL_REG          (UART0_ADDR_BASE + 0x00000088)
-#define UART0_UnSTAT_REG           (UART0_ADDR_BASE + 0x0000008C)
-#define UART0_UnFRS_REG            (UART0_ADDR_BASE + 0x00000090)
-#define UART0_UnMDSL_REG           (UART0_ADDR_BASE + 0x00000094)
-#define UART0_UnBAUD_REG           (UART0_ADDR_BASE + 0x00000098)
-#define UART0_UnPSR_REG            (UART0_ADDR_BASE + 0x0000009C)
-#define UART0_UnOVR_REG            (UART0_ADDR_BASE + 0x000000A0)
-#define UART0_UnMDSL2_REG          (UART0_ADDR_BASE + 0x000000A4)
-#define UART0_UnSPOS_REG           (UART0_ADDR_BASE + 0x000000A8)
-#define UART0_UnWPSRH_REG          (UART0_ADDR_BASE + 0x000000AC)
-#define UART0_UnWPSRL_REG          (UART0_ADDR_BASE + 0x000000B0)
+#define UART0_INTR_REG              (UART0_ADDR_BASE + 0x00000000)
+#define UART0_DMA_CTRL_REG          (UART0_ADDR_BASE + 0x00000004)
+#define UART0_DMA_RADDR_START_REG   (UART0_ADDR_BASE + 0x00000008)
+#define UART0_DMA_RADDR_END_REG     (UART0_ADDR_BASE + 0x0000000C)
+#define UART0_DMA_RDEN_REG          (UART0_ADDR_BASE + 0x00000010)
+#define UART0_DMA_WADDR_START_REG   (UART0_ADDR_BASE + 0x00000014)
+#define UART0_DMA_WADDR_END_REG     (UART0_ADDR_BASE + 0x00000018)
+#define UART0_DMA_WR_EN_REG         (UART0_ADDR_BASE + 0x0000001C)
+#define UART0_DMA_DBUSADDR_RX_REG   (UART0_ADDR_BASE + 0x00000020)
+#define UART0_DMA_DBUSADDR_TX_REG   (UART0_ADDR_BASE + 0x00000024)
+#define UART0_DMA_AGR_RX_REG        (UART0_ADDR_BASE + 0x00000028)
+#define UART0_UnTBUF_REG            (UART0_ADDR_BASE + 0x00000080)
+#define UART0_UnRBUF_REG            (UART0_ADDR_BASE + 0x00000084)
+#define UART0_UnICTRL_REG           (UART0_ADDR_BASE + 0x00000088)
+#define UART0_UnSTAT_REG            (UART0_ADDR_BASE + 0x0000008C)
+#define UART0_UnFRS_REG             (UART0_ADDR_BASE + 0x00000090)
+#define UART0_UnMDSL_REG            (UART0_ADDR_BASE + 0x00000094)
+#define UART0_UnBAUD_REG            (UART0_ADDR_BASE + 0x00000098)
+#define UART0_UnPSR_REG             (UART0_ADDR_BASE + 0x0000009C)
+#define UART0_UnOVR_REG             (UART0_ADDR_BASE + 0x000000A0)
+#define UART0_UnMDSL2_REG           (UART0_ADDR_BASE + 0x000000A4)
+#define UART0_UnSPOS_REG            (UART0_ADDR_BASE + 0x000000A8)
+#define UART0_UnWPSRH_REG           (UART0_ADDR_BASE + 0x000000AC)
+#define UART0_UnWPSRL_REG           (UART0_ADDR_BASE + 0x000000B0)
 
-#define UART1_UnBAUD_REG        (UART1_ADDR_BASE + 0x00000018)
-#define UART1_UnPSR_REG         (UART1_ADDR_BASE + 0x0000001c)
-#define UART1_UnOVR_REG         (UART1_ADDR_BASE + 0x00000020)
+#define UART1_UnBAUD_REG            (UART1_ADDR_BASE + 0x00000018)
+#define UART1_UnPSR_REG             (UART1_ADDR_BASE + 0x0000001c)
+#define UART1_UnOVR_REG             (UART1_ADDR_BASE + 0x00000020)
 
-#define UART2_UnBAUD_REG        (UART2_ADDR_BASE + 0x00000018)
-#define UART2_UnPSR_REG         (UART2_ADDR_BASE + 0x0000001c)
-#define UART2_UnOVR_REG         (UART2_ADDR_BASE + 0x00000020)
+#define UART2_UnBAUD_REG            (UART2_ADDR_BASE + 0x00000018)
+#define UART2_UnPSR_REG             (UART2_ADDR_BASE + 0x0000001c)
+#define UART2_UnOVR_REG             (UART2_ADDR_BASE + 0x00000020)
 
 // HS
-#define HS_CONFIG_REG           (HS_ADDR_BASE + 0x00000000)
-#define HS_STS_REG              (HS_ADDR_BASE + 0x00000004)
-#define HS_DR_PDN_REG           (HS_ADDR_BASE + 0x00000008)
-#define HS_DR0_PUP_REG          (HS_ADDR_BASE + 0x0000000c)
-#define HS_DR0_PUP1_REG         (HS_ADDR_BASE + 0x00000010)
-#define HS_DR0_INTR_REG         (HS_ADDR_BASE + 0x00000014)
-#define HS_DR1_PUP_REG          (HS_ADDR_BASE + 0x00000018)
-#define HS_DR1_PUP1_REG         (HS_ADDR_BASE + 0x0000001c)
-#define HS_DR1_INTR_REG         (HS_ADDR_BASE + 0x00000020)
-#define HS_DR2_PUP_REG          (HS_ADDR_BASE + 0x00000024)
-#define HS_DR2_PUP1_REG         (HS_ADDR_BASE + 0x00000028)
-#define HS_DR2_INTR_REG         (HS_ADDR_BASE + 0x0000002c)
-#define HS_SCRATCH_BASE_REG     (HS_ADDR_BASE + 0x00000030)
+#define HS_CONFIG_REG               (HS_ADDR_BASE + 0x00000000)
+#define HS_STS_REG                  (HS_ADDR_BASE + 0x00000004)
+#define HS_DR_PDN_REG               (HS_ADDR_BASE + 0x00000008)
+#define HS_DR0_PUP_REG              (HS_ADDR_BASE + 0x0000000c)
+#define HS_DR0_PUP1_REG             (HS_ADDR_BASE + 0x00000010)
+#define HS_DR0_INTR_REG             (HS_ADDR_BASE + 0x00000014)
+#define HS_DR1_PUP_REG              (HS_ADDR_BASE + 0x00000018)
+#define HS_DR1_PUP1_REG             (HS_ADDR_BASE + 0x0000001c)
+#define HS_DR1_INTR_REG             (HS_ADDR_BASE + 0x00000020)
+#define HS_DR2_PUP_REG              (HS_ADDR_BASE + 0x00000024)
+#define HS_DR2_PUP1_REG             (HS_ADDR_BASE + 0x00000028)
+#define HS_DR2_INTR_REG             (HS_ADDR_BASE + 0x0000002c)
+#define HS_SCRATCH_BASE_REG         (HS_ADDR_BASE + 0x00000030)
 
-#define AES_INTR_REG            (AES_ADDR_BASE + 0x00000000)
-#define AES_CTRL_REG            (AES_ADDR_BASE + 0x00000004)
-#define AES_DMA_CTRL_REG        (AES_ADDR_BASE + 0x00000008)
-#define AES_DMA_WADDR_REG       (AES_ADDR_BASE + 0x0000000c)
-#define AES_DMA_RADDR_REG       (AES_ADDR_BASE + 0x00000010)
-
-
+#define AES_INTR_REG                (AES_ADDR_BASE + 0x00000000)
+#define AES_CTRL_REG                (AES_ADDR_BASE + 0x00000004)
+#define AES_DMA_CTRL_REG            (AES_ADDR_BASE + 0x00000008)
+#define AES_DMA_WADDR_REG           (AES_ADDR_BASE + 0x0000000c)
+#define AES_DMA_RADDR_REG           (AES_ADDR_BASE + 0x00000010)
 
 
-typedef struct S_regSCU
+
+/******************************/
+/* cc6801 register definition */
+/******************************/
+typedef union U_regSCU
 {
-    //cancelled:0x00
-    uint32_t  padding1;
-    //ADC parameter:0x04
-    uint32_t  padding2:8;
-    uint32_t  VBG12:1;
-    uint32_t  ADC:7;
-    uint32_t  padding3:5;
-    uint32_t  BRG_SEL:3;
-    uint32_t  padding4:5;
-    uint32_t  ADC0TS1:1;
-    uint32_t  PD_AD_ONLY:1;
-    uint32_t  PD:1;
-    //PLL assert/de-assert:0x08
-    uint32_t  padding5:31;
-    uint32_t  PLL_reset:1;
+    struct
+    {
+        uint32_t reserved0;
+        uint32_t adc;
+        uint32_t pllReset;
+        uint32_t pllConfig;
+        uint32_t clkConfig0;
+        uint32_t clkConfig1;
+        uint32_t reserved1;
+        uint32_t chipID;
+        uint32_t isolationEn;
+        uint32_t shutOff;
+        uint32_t retentionEn;
+        uint32_t extAuxSel;
+        uint32_t codeRemap;
+        uint32_t cacheBootCtrl;
+        uint32_t clk32Calib;
+        uint32_t chipIntEn;
+        uint32_t chipIntSts;
+    }dw;    //double word
 
-}S_regSCU;
+    struct
+    {
+        //PATTAYA: not ready yet
+        uint32_t padding0;
+    }bf;    //bit-field
+}U_regSCU;
+
+typedef union U_regPWMWKTM
+{
+    struct
+    {
+        uint32_t interrupt;
+        uint32_t highCounter;
+        uint32_t lowCounter;
+        uint32_t ctrl;
+        uint32_t prescaler;
+        uint32_t counter;
+    }dw;    //double word
+
+    struct
+    {
+        uint32_t reserved0:15;
+        uint32_t intSts:1;          //write 1 clear
+        uint32_t reserved1:15;
+        uint32_t intEn:1;           //0:disable, 1:enable
+
+        uint32_t highCounter;
+
+        uint32_t lowCounter;
+
+        uint32_t reserved2:15;
+        uint32_t pwmTimerSel:1;     //0:PWM, 1:Timer
+        uint32_t reserved3:4;
+        uint32_t clear:1;           //0:un-clear, 1:clear;
+        uint32_t enable:1;          //0:disable, 1:enable
+        uint32_t repeat:1;          //0:repeat, 1:one-shot
+        uint32_t pwmOutEn:1;        //0:disable, 1:enable
+        uint32_t reserved4:8;
+
+        uint32_t reserved5:24;
+        uint32_t prescaler:8;       //0,1:no pre-scaler, 2~255: pre-scaler
+
+        uint32_t counter;           //read counter value
+    }bf;    //bit-field
+}U_regPWMWKTM;
+
+
+
 
 typedef struct
 {
@@ -469,32 +502,6 @@ typedef struct
     uint8_t   unwpsrl:8;
 }S_regUART;
 
-typedef struct
-{
-    //PWM interrupt:0x400
-    uint32_t  padding1:31;
-    uint32_t  interrupt_status:1;
-    uint32_t  padding2:1;
-    uint32_t  interrupt_enable:1;
-    //PWM high counter load:0x404
-    uint32_t  pwmhighcounterload:32;
-    //PWM low counter load:0x408
-    uint32_t  pwmlowcounterload:32;
-    //PWM control:0x40C
-    uint32_t  padding3:18;
-    uint32_t  pwmconfig:14;
-    uint32_t  padding4;
-    uint32_t  pwmclear;
-    uint32_t  pwmenable;
-    uint32_t  pwmsingle;
-    uint32_t  pwmoutputenable;
-    uint32_t  reserved;
-    //PWM pre-scaler:0x410
-    uint32_t  padding5:15;
-    uint32_t  pwmprescaler:17;
-    //PWM counter:0x414
-    uint32_t  pwmcounter:32;
-}S_regPWM;
 
 typedef struct
 {
@@ -596,10 +603,12 @@ typedef struct
 
 
 
-#define regSCU      ((S_regSCU*) SCU_ADDR_BASE)
-#define regBLE      ((S_regBLe*) BLE_ADDR_BASE)
-
-
+#define regSCU      ((U_regSCU         *) SCU_ADDR_BASE)
+#define regBLE      ((S_regBLe         *) BLE_ADDR_BASE)
+#define regPWM0     ((U_regPWMWKTM     *) PWM0_ADDR_BASE)
+#define regPWM1     ((U_regPWMWKTM     *) PWM1_ADDR_BASE)
+#define regWKTM0    ((U_regPWMWKTM     *) WKTM0_ADDR_BASE)
+#define regWKTM1    ((U_regPWMWKTM     *) WKTM1_ADDR_BASE)
 
 
 
@@ -607,5 +616,5 @@ typedef struct
 }
 #endif
 
-#endif  /* CC6801_H */
+#endif  // _CC6801_REG_H_
 
