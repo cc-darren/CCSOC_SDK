@@ -391,8 +391,45 @@ typedef union U_regPWMWKTM
     }bf;    //bit-field
 }U_regPWMWKTM;
 
+typedef union U_regGPIO
+{
+    struct
+    {
+        uint32_t input;
+        uint32_t output;
+        uint32_t outputEn;
+        uint32_t intAct;            //0:high, 1:low
+        uint32_t intEn;             //0:disable, 1:enable
+        uint32_t intSts;
+        uint32_t intTrig;
+        uint32_t pinmux;
+        uint32_t intType;           //0:level change, 1:single edge
+        uint32_t puEn;              //0:disable, 1:enable
+        uint32_t portModeSel;
+    }dw;    //double word
 
-
+    struct
+    {
+        uint32_t input;
+        uint32_t output;
+        uint32_t outputEn;
+        uint32_t intAct;
+        uint32_t intEn;
+        uint32_t intSts;
+        uint32_t intTrig;
+        uint32_t pinmux;
+        uint32_t intType;
+        uint32_t puEn;
+        uint32_t pmSel7:4;
+        uint32_t pmSel6:4;
+        uint32_t pmSel5:4;
+        uint32_t pmSel4:4;
+        uint32_t pmSel3:4;
+        uint32_t pmSel2:4;
+        uint32_t pmSel1:4;
+        uint32_t pmSel0:4;
+    }bf;    //bit-field
+}U_regGPIO;
 
 typedef struct
 {
@@ -609,8 +646,8 @@ typedef struct
 #define regPWM1     ((U_regPWMWKTM     *) PWM1_ADDR_BASE)
 #define regWKTM0    ((U_regPWMWKTM     *) WKTM0_ADDR_BASE)
 #define regWKTM1    ((U_regPWMWKTM     *) WKTM1_ADDR_BASE)
-
-
+#define regGPIO0    ((U_regGPIO        *) GPIO_ADDR_BASE)
+#define regGPIO1    ((U_regGPIO        *) (GPIO_ADDR_BASE + 0x0000002c))
 
 #ifdef __cplusplus
 }

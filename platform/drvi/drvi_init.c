@@ -11,11 +11,12 @@
  ****************************************************************************************
  */
 #include "drvi_timer.h"
+#include "drvi_gpio.h"
 
 void drvi_initialize(void)
 {
     //drvi_timer0_init();
-
+    drvi_gpio_pinmux_init();
 }
 
 
