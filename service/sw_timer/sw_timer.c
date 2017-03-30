@@ -154,12 +154,13 @@ static void rtc1_start(void)
 {
     //NRF_RTC1->EVTENSET = RTC_EVTEN_COMPARE0_Msk;
     //NRF_RTC1->INTENSET = RTC_INTENSET_COMPARE0_Msk;
-
-    //NVIC_ClearPendingIRQ(RTC1_IRQn);
-    //NVIC_EnableIRQ(RTC1_IRQn);
+    
+    NVIC_ClearPendingIRQ(WKTM0_IRQn);
+    NVIC_EnableIRQ(WKTM0_IRQn);
 
     //NRF_RTC1->TASKS_START = 1;
-    //nrf_delay_us(MAX_RTC_TASKS_DELAY);
+    drvi_timer0_start();
+    cc_delay_us(MAX_RTC_TASKS_DELAY);
 
     m_rtc1_running = true;
 }
@@ -169,17 +170,19 @@ static void rtc1_start(void)
  */
 static void rtc1_stop(void)
 {
-    //NVIC_DisableIRQ(RTC1_IRQn);
+    NVIC_DisableIRQ(WKTM0_IRQn);
 
     //NRF_RTC1->EVTENCLR = RTC_EVTEN_COMPARE0_Msk;
     //NRF_RTC1->INTENCLR = RTC_INTENSET_COMPARE0_Msk;
 
     //NRF_RTC1->TASKS_STOP = 1;
-    //nrf_delay_us(MAX_RTC_TASKS_DELAY);
+    drvi_timer0_stop();
+    cc_delay_us(MAX_RTC_TASKS_DELAY);
 
     //NRF_RTC1->TASKS_CLEAR = 1;
+    drvi_timer0_counterClear();
     m_ticks_latest        = 0;
-    //nrf_delay_us(MAX_RTC_TASKS_DELAY);
+    cc_delay_us(MAX_RTC_TASKS_DELAY);
 
     m_rtc1_running = false;
 }
@@ -218,6 +221,7 @@ static __INLINE uint32_t ticks_diff_get(uint32_t ticks_now, uint32_t ticks_old)
 static __INLINE void rtc1_compare0_set(uint32_t value)
 {
     //NRF_RTC1->CC[0] = value;
+    drvi_timer0_counterLoad(value);
 }
 
 
@@ -308,8 +312,8 @@ static void timer_list_remove(timer_node_t * p_timer)
         // No more timers in the list. Reset RTC1 in case Start timer operations are present in the queue.
         if (mp_timer_id_head == NULL)
         {
-            //ppp: TODO
             //NRF_RTC1->TASKS_CLEAR = 1;
+            drvi_timer0_counterClear();
             m_ticks_latest        = 0;
             m_rtc1_reset          = true;
         }

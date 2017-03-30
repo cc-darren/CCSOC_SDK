@@ -22,8 +22,15 @@
 #include "sw_timer.h"
 
 
-#define APP_TIMER_PRESCALER             0                                           /**< Value of the RTC1 PRESCALER register. */
-#define APP_TIMER_OP_QUEUE_SIZE         4                                           /**< Size of timer operation queues. */
+#define APP_TIMER_PRESCALER                     0                                           /**< Value of the RTC1 PRESCALER register. */
+#define APP_TIMER_OP_QUEUE_SIZE                 4                                           /**< Size of timer operation queues. */
+
+#define SPEED_AND_CADENCE_MEAS_INTERVAL         APP_TIMER_TICKS(1000,   APP_TIMER_PRESCALER)
+#define BATTERY_LEVEL_MEAS_INTERVAL             APP_TIMER_TICKS(60000,  APP_TIMER_PRESCALER)
+#define LED_BLINKING_PERIOD                     APP_TIMER_TICKS(180000, APP_TIMER_PRESCALER)
+#define MAG_READ_PERIOD                         APP_TIMER_TICKS(20,     APP_TIMER_PRESCALER)     //20ms for ODR=50
+#define FIFO_READ_PERIOD                        APP_TIMER_TICKS(640,    APP_TIMER_PRESCALER)     //640ms for 32depth*20ms
+#define SYSTEM_IDLE_INTERVAL                    APP_TIMER_TICKS(276000, APP_TIMER_PRESCALER)
 
 
 APP_TIMER_DEF(m_idle_timer_id);
@@ -34,34 +41,48 @@ APP_TIMER_DEF(m_mag_read_id);
 APP_TIMER_DEF(m_fifo_read_id);
 
 
+volatile uint32_t systemIdleCnt = 0;
+volatile uint32_t batteryLevelCnt = 0;
+volatile uint32_t cscMeasCnt = 0;
+volatile uint32_t ledBlinkCnt = 0;
+volatile uint32_t magReadCnt = 0;
+volatile uint32_t fifoReadCnt = 0;
+
+
 static void system_idle_timeout_handler(void * p_context)
 {
     UNUSED_PARAMETER(p_context);
+    systemIdleCnt++;
 }
 
 static void battery_level_meas_timeout_handler(void * p_context)
 {
     UNUSED_PARAMETER(p_context);
+    batteryLevelCnt++;
 }
 
 static void csc_meas_timeout_handler(void * p_context)
 {
     UNUSED_PARAMETER(p_context);
+    cscMeasCnt++;
 }
 
 static void led_blinking_handler(void * p_context)
 {
     UNUSED_PARAMETER(p_context);
+    ledBlinkCnt++;
 }
 
 static void mag_read_handler(void * p_context)
 {
     UNUSED_PARAMETER(p_context);
+    magReadCnt++;
 }
 
 static void fifo_read_handler(void *p_context)
 {
     UNUSED_PARAMETER(p_context);
+    fifoReadCnt++;
 }
 
 
@@ -134,6 +155,30 @@ void rw_main(void)
     }
 }
 
+static void timers_start_test(void)
+{
+    uint32_t err_code;
+
+    err_code = app_timer_start(m_csc_meas_timer_id, SPEED_AND_CADENCE_MEAS_INTERVAL, NULL);
+    APP_ERROR_CHECK(err_code);
+
+    err_code = app_timer_start(m_battery_timer_id, BATTERY_LEVEL_MEAS_INTERVAL, NULL);
+    APP_ERROR_CHECK(err_code);
+
+    err_code = app_timer_start(m_led_blinking_id, LED_BLINKING_PERIOD, NULL);
+    APP_ERROR_CHECK(err_code);
+
+    err_code = app_timer_start(m_idle_timer_id, SYSTEM_IDLE_INTERVAL, NULL);
+    APP_ERROR_CHECK(err_code);
+
+    err_code = app_timer_start(m_mag_read_id, MAG_READ_PERIOD, NULL);
+    APP_ERROR_CHECK(err_code);
+
+    err_code = app_timer_start(m_fifo_read_id, FIFO_READ_PERIOD, NULL);
+    APP_ERROR_CHECK(err_code);
+
+}
+
 static void timers_init(void)
 {
 
@@ -182,6 +227,7 @@ int main(void)
     drvi_initialize();
 
     timers_init();
+    timers_start_test();
 
     //start interrupt handling
     GLOBAL_INT_START();

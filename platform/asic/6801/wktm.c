@@ -63,6 +63,28 @@ void WKTM1_IRQHandler(void)
     }
 }
 
+void cc6801_timer0_loadPrescaler(uint32_t prescaler)
+{
+    //0 and 1 : no pre-scaler. 2~255 : pre-scaler
+    regWKTM0->bf.prescaler = prescaler;
+}
+
+void cc6801_timer1_loadPrescaler(uint32_t prescaler)
+{
+    //0 and 1 : no pre-scaler. 2~255 : pre-scaler
+    regWKTM1->bf.prescaler = prescaler;
+}
+
+void cc6801_timer0_counterLoad(uint32_t cnt)
+{
+    regWKTM0->dw.highCounter = cnt;
+}
+
+void cc6801_timer1_counterLoad(uint32_t cnt)
+{
+    regWKTM1->dw.highCounter = cnt;
+}
+
 void cc6801_timer0_init(T_callback handler)
 {
     regWKTM0->bf.intSts = 1;        //clear interrupt;
@@ -74,6 +96,8 @@ void cc6801_timer0_init(T_callback handler)
     regWKTM0->bf.enable = 0;
     regWKTM0->bf.repeat = 1;        //default one-shot
     regWKTM0->bf.pwmOutEn = 0;      //this is timer, no PWM output
+    
+    regWKTM0->bf.prescaler = 0;     //default to highest clock
     
     //register timer0 callback function
     timer0_callback_handler = handler;
@@ -95,21 +119,35 @@ void cc6801_timer1_init(T_callback handler)
     timer1_callback_handler = handler;
 }
 
+void cc6801_timer0_counterClear(void)
+{
+    regWKTM1->bf.clear = 1;
+    //Keep clear bit to 1 to make counter value always 0
+    //start timer API will clear clear_bit
+}
+
 void cc6801_timer0_counterGet(uint32_t *cnt)
 {
     *cnt = regWKTM0->dw.counter;
 }
 
-void cc6801_timer0_start()
+void cc6801_timer0_start(void)
 {
-    
-    
+    regWKTM0->bf.intEn = 1;                 //enable interrupt;
+    regWKTM0->dw.highCounter = 0xFFFFFF;    //default load 24bit counter to match Nordic design
+    regWKTM0->bf.clear = 0;
+    regWKTM0->bf.enable = 1;
+    regWKTM0->bf.repeat = 0;                //start from repeat mode
 }
 
-void cc6801_timer0_stop()
+void cc6801_timer0_stop(void)
 {
+    regWKTM1->bf.intSts = 1;        //clear interrupt;
+    regWKTM1->bf.intEn = 0;         //default disable interrupt;
+    regWKTM1->bf.enable = 0;
+    regWKTM1->bf.repeat = 1;        //default one-shot
     
-    
+    //Note: stop timer won't clear counter value
 }
 
 
