@@ -25,12 +25,12 @@
 #define APP_TIMER_PRESCALER                     0                                           /**< Value of the RTC1 PRESCALER register. */
 #define APP_TIMER_OP_QUEUE_SIZE                 4                                           /**< Size of timer operation queues. */
 
-#define SPEED_AND_CADENCE_MEAS_INTERVAL         APP_TIMER_TICKS(1000,   APP_TIMER_PRESCALER)
-#define BATTERY_LEVEL_MEAS_INTERVAL             APP_TIMER_TICKS(60000,  APP_TIMER_PRESCALER)
-#define LED_BLINKING_PERIOD                     APP_TIMER_TICKS(180000, APP_TIMER_PRESCALER)
-#define MAG_READ_PERIOD                         APP_TIMER_TICKS(20,     APP_TIMER_PRESCALER)     //20ms for ODR=50
-#define FIFO_READ_PERIOD                        APP_TIMER_TICKS(640,    APP_TIMER_PRESCALER)     //640ms for 32depth*20ms
-#define SYSTEM_IDLE_INTERVAL                    APP_TIMER_TICKS(276000, APP_TIMER_PRESCALER)
+#define SPEED_AND_CADENCE_MEAS_INTERVAL         APP_TIMER_TICKS(300,   APP_TIMER_PRESCALER)
+#define BATTERY_LEVEL_MEAS_INTERVAL             APP_TIMER_TICKS(400,  APP_TIMER_PRESCALER)
+#define LED_BLINKING_PERIOD                     APP_TIMER_TICKS(500, APP_TIMER_PRESCALER)
+#define MAG_READ_PERIOD                         APP_TIMER_TICKS(700,     APP_TIMER_PRESCALER)     //20ms for ODR=50
+#define FIFO_READ_PERIOD                        APP_TIMER_TICKS(800,    APP_TIMER_PRESCALER)     //640ms for 32depth*20ms
+#define SYSTEM_IDLE_INTERVAL                    APP_TIMER_TICKS(1100, APP_TIMER_PRESCALER)
 
 
 APP_TIMER_DEF(m_idle_timer_id);
@@ -41,48 +41,48 @@ APP_TIMER_DEF(m_mag_read_id);
 APP_TIMER_DEF(m_fifo_read_id);
 
 
-volatile uint32_t systemIdleCnt = 0;
-volatile uint32_t batteryLevelCnt = 0;
-volatile uint32_t cscMeasCnt = 0;
-volatile uint32_t ledBlinkCnt = 0;
-volatile uint32_t magReadCnt = 0;
-volatile uint32_t fifoReadCnt = 0;
+volatile uint32_t Cnt1100 = 0;
+volatile uint32_t Cnt400 = 0;
+volatile uint32_t Cnt300 = 0;
+volatile uint32_t Cnt500 = 0;
+volatile uint32_t Cnt700 = 0;
+volatile uint32_t Cnt800 = 0;
 
 
 static void system_idle_timeout_handler(void * p_context)
 {
     UNUSED_PARAMETER(p_context);
-    systemIdleCnt++;
+    Cnt1100++;
 }
 
 static void battery_level_meas_timeout_handler(void * p_context)
 {
     UNUSED_PARAMETER(p_context);
-    batteryLevelCnt++;
+    Cnt400++;
 }
 
 static void csc_meas_timeout_handler(void * p_context)
 {
     UNUSED_PARAMETER(p_context);
-    cscMeasCnt++;
+    Cnt300++;
 }
 
 static void led_blinking_handler(void * p_context)
 {
     UNUSED_PARAMETER(p_context);
-    ledBlinkCnt++;
+    Cnt500++;
 }
 
 static void mag_read_handler(void * p_context)
 {
     UNUSED_PARAMETER(p_context);
-    magReadCnt++;
+    Cnt700++;
 }
 
 static void fifo_read_handler(void *p_context)
 {
     UNUSED_PARAMETER(p_context);
-    fifoReadCnt++;
+    Cnt800++;
 }
 
 
@@ -127,37 +127,13 @@ void rw_main(void)
 
     while(1)
     {
-        uint32_t i;
-        uint32_t size = 0x100;
-        uint32_t *romAddr   = (uint32_t*)0x00000E0;
-        //uint32_t *eFlashAddr= (uint32_t*)0x10030000;
-        uint32_t *sRamAddr  = (uint32_t*)0x20008000;
-        uint32_t *dRamAddr  = (uint32_t*)0x20011000;
-
-        //memset(sRamAddr, 0x55, size);
-        memcpy(sRamAddr, romAddr, size);
-        //memcpy(sRamAddr, eFlashAddr, size);
-        memcpy(dRamAddr, sRamAddr, size);
-
-        for(i=0;i<(size>>2);i++)
-        {
-            if(*(dRamAddr+i) != *(sRamAddr+i))
-            {
-                *((volatile unsigned int *)(0x40000220)) = i;
-            }
-        }
-
-        //finish testing
-        *((volatile unsigned int *)(0x4000020C)) = 1;
-
-
         WFI();
     }
 }
 
 static void timers_start_test(void)
 {
-    uint32_t err_code;
+    volatile uint32_t err_code;
 
     err_code = app_timer_start(m_csc_meas_timer_id, SPEED_AND_CADENCE_MEAS_INTERVAL, NULL);
     APP_ERROR_CHECK(err_code);
@@ -187,7 +163,7 @@ static void timers_init(void)
 
     // Create idle timers.
     app_timer_create(&m_idle_timer_id,
-                     APP_TIMER_MODE_SINGLE_SHOT,
+                     APP_TIMER_MODE_REPEATED,
                      system_idle_timeout_handler);
 
 
@@ -204,7 +180,7 @@ static void timers_init(void)
 
     // Create led timer.
     app_timer_create(&m_led_blinking_id,
-                     APP_TIMER_MODE_SINGLE_SHOT,
+                     APP_TIMER_MODE_REPEATED,
                      led_blinking_handler);
 
     // Create Mag_Read timer

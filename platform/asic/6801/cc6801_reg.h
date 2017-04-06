@@ -366,26 +366,27 @@ typedef union U_regPWMWKTM
 
     struct
     {
-        uint32_t reserved0:15;
-        uint32_t intSts:1;          //write 1 clear
-        uint32_t reserved1:15;
         uint32_t intEn:1;           //0:disable, 1:enable
+        uint32_t reserved1:15;
+        uint32_t intSts:1;          //write 1 clear
+        uint32_t reserved0:15;
 
         uint32_t highCounter;
 
         uint32_t lowCounter;
 
-        uint32_t reserved2:15;
-        uint32_t pwmTimerSel:1;     //0:PWM, 1:Timer
-        uint32_t reserved3:4;
-        uint32_t clear:1;           //0:un-clear, 1:clear;
-        uint32_t enable:1;          //0:disable, 1:enable
-        uint32_t repeat:1;          //0:repeat, 1:one-shot
-        uint32_t pwmOutEn:1;        //0:disable, 1:enable
         uint32_t reserved4:8;
+        uint32_t pwmOutEn:1;        //0:disable, 1:enable
+        uint32_t repeat:1;          //0:repeat, 1:one-shot
+        uint32_t enable:1;          //0:disable, 1:enable
+        uint32_t clear:1;           //0:un-clear, 1:clear;
+        uint32_t reserved3:4;
+        uint32_t pwmTimerSel:1;     //0:PWM, 1:Timer
+        uint32_t reserved2:15;
+			
 
-        uint32_t reserved5:24;
         uint32_t prescaler:8;       //0,1:no pre-scaler, 2~255: pre-scaler
+        uint32_t reserved5:24;
 
         uint32_t counter;           //read counter value
     }bf;    //bit-field
