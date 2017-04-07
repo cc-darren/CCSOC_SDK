@@ -335,7 +335,7 @@
               <MiscControls>--no_inline --no_multifile -DMSC_CLOCK</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\inc;..\..\inc\CMSIS;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart</IncludePath>
+              <IncludePath>..\..\inc;..\..\inc\CMSIS;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\platform\sensor;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -479,6 +479,11 @@
         <Group>
           <GroupName>sensor</GroupName>
           <Files>
+            <File>
+              <FileName>ak09912.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\sensor\ak09912.c</FilePath>
+            </File>
             <File>
               <FileName>i2c_sensor.c</FileName>
               <FileType>1</FileType>
@@ -1133,6 +1138,11 @@
         <Group>
           <GroupName>sensor</GroupName>
           <Files>
+            <File>
+              <FileName>ak09912.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\sensor\ak09912.c</FilePath>
+            </File>
             <File>
               <FileName>i2c_sensor.c</FileName>
               <FileType>1</FileType>

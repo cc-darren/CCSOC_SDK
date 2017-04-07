@@ -29,8 +29,7 @@
 *===========================================================================/
 *  20170203 PAT initial version
 ******************************************************************************/
-#include "global.h"
-#include "cc6801_reg.h"
+
 #include "spim.h"
 
 volatile uint32_t SPI0_M_INTR = 0;
@@ -166,6 +165,7 @@ static int spim_xfer(U_regSPI                * p_spim,
     cc_spim_event_clear(p_spim);
 
     while(!SPI0_M_INTR);
+    SPI0_M_INTR = 0;
 
     return CC_SUCCESS;
 }

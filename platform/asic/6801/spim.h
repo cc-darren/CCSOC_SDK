@@ -74,7 +74,7 @@ typedef struct
 #define CC_DRV_SPI_DEFAULT_CONFIG(id)                       \
 {                                                            \
     .mode         = CC_SPIM_MODE_0,                      \
-    .bit_order    = CC_SPIM_BIT_ORDER_LSB_FIRST,         \
+    .bit_order    = CC_SPIM_BIT_ORDER_MSB_FIRST,         \
 }
 
 /**

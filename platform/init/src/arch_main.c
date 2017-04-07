@@ -20,7 +20,8 @@
 #include "ll.h"
 #include "drvi_init.h"
 #include "sw_timer.h"
-
+#include "ak09912.h"
+#include "spi_sensor.h"
 
 #define APP_TIMER_PRESCALER                     0                                           /**< Value of the RTC1 PRESCALER register. */
 #define APP_TIMER_OP_QUEUE_SIZE                 4                                           /**< Size of timer operation queues. */
@@ -48,6 +49,7 @@ volatile uint32_t Cnt500 = 0;
 volatile uint32_t Cnt700 = 0;
 volatile uint32_t Cnt800 = 0;
 
+unsigned char init_done = 0;
 
 static void system_idle_timeout_handler(void * p_context)
 {
@@ -198,6 +200,16 @@ static void timers_init(void)
 
 }
 
+void sensor_init(void)
+{
+    if(init_done == 0)
+    {
+        spi_init(0);
+        MAG_Init();
+        init_done = 1;
+    }
+}
+
 int main(void)
 {
     drvi_initialize();
@@ -208,6 +220,7 @@ int main(void)
     //start interrupt handling
     GLOBAL_INT_START();
 
+    sensor_init();
     rw_main();
 
     while(1);
