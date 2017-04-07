@@ -34,11 +34,116 @@
 
 volatile uint32_t GPIO_INTR = 0;
 
+static cc6801_irq_handler cc6801_isr[NUMBER_OF_PINS] = {0};
+
 void GPIO_IRQHandler(void)
 {
-    wr(GPIO_ADDR_BASE+0x10, 0x00000000);   // clear interrupt
-    wr(GPIO_ADDR_BASE+0x3c, 0x00000000);   // clear interrupt
+    uint32_t pin_number;
+    cc6801_irq_handler callback;
+
+    volatile unsigned int int_status;
+    unsigned int    mask;
+
+    //get vectors
+    int_status = *((volatile unsigned int *)(regGPIO0->dw.intTrig));
+
+    while(int_status)
+    {
+        mask = int_status & (~int_status+1);
+        switch(mask)
+        {
+            case 0x00000001: pin_number = 0;    break;
+            case 0x00000002: pin_number = 1;    break;
+            case 0x00000004: pin_number = 2;    break;
+            case 0x00000008: pin_number = 3;    break;
+            case 0x00000010: pin_number = 4;    break;
+            case 0x00000020: pin_number = 5;    break;
+            case 0x00000040: pin_number = 6;    break;
+            case 0x00000080: pin_number = 7;    break;
+            case 0x00000100: pin_number = 8;    break;
+            case 0x00000200: pin_number = 9;    break;
+            case 0x00000400: pin_number = 10;   break;
+            case 0x00000800: pin_number = 11;   break;
+            case 0x00001000: pin_number = 12;   break;
+            case 0x00002000: pin_number = 13;   break;
+            case 0x00004000: pin_number = 14;   break;
+            case 0x00008000: pin_number = 15;   break;
+            case 0x00010000: pin_number = 16;   break;
+            case 0x00020000: pin_number = 17;   break;
+            case 0x00040000: pin_number = 18;   break;
+            case 0x00080000: pin_number = 19;   break;
+            case 0x00100000: pin_number = 20;   break;
+            case 0x00200000: pin_number = 21;   break;
+            case 0x00400000: pin_number = 22;   break;
+            case 0x00800000: pin_number = 23;   break;
+            case 0x01000000: pin_number = 24;   break;
+            case 0x02000000: pin_number = 25;   break;
+            case 0x04000000: pin_number = 26;   break;
+            case 0x08000000: pin_number = 27;   break;
+            case 0x10000000: pin_number = 28;   break;
+            case 0x20000000: pin_number = 29;   break;
+            case 0x40000000: pin_number = 30;   break;
+            case 0x80000000: pin_number = 31;   break;
+            default: break;
+        }
+
+        callback = cc6801_isr[pin_number];
+        if (callback)
+            callback();
+
+        //Write 1 clear interrupt
+        *((volatile unsigned int *)(regGPIO0->dw.intTrig)) = mask;
+        int_status &= ~mask;
+    }
+
+    int_status = *((volatile unsigned int *)(regGPIO1->dw.intTrig));
+
+    while(int_status)
+    {
+        mask = int_status & (~int_status+1);
+        switch(mask)
+        {
+            case 0x00000001: pin_number = 32;   break;
+            case 0x00000002: pin_number = 33;   break;
+            case 0x00000004: pin_number = 34;   break;
+            case 0x00000008: pin_number = 35;   break;
+            case 0x00000010: pin_number = 36;   break;
+            case 0x00000020: pin_number = 37;   break;
+            case 0x00000040: pin_number = 38;   break;
+            case 0x00000080: pin_number = 39;   break;
+            case 0x00000100: pin_number = 40;   break;
+            case 0x00000200: pin_number = 41;   break;
+            case 0x00000400: pin_number = 42;   break;
+            case 0x00000800: pin_number = 43;   break;
+            case 0x00001000: pin_number = 44;   break;
+            case 0x00002000: pin_number = 45;   break;
+            case 0x00004000: pin_number = 46;   break;
+            case 0x00008000: pin_number = 47;   break;
+            default: break;
+        }
+
+        callback = cc6801_isr[pin_number];
+        if (callback)
+            callback();
+
+        //Write 1 clear interrupt
+        *((volatile unsigned int *)(regGPIO1->dw.intTrig)) = mask;
+        int_status &= ~mask;
+    }
+
     GPIO_INTR = 1;
+}
+
+void cc6801_request_irq(uint32_t pin_number,
+                                          cc6801_irq_handler callback,
+                                          cc6801_irq_type_t type,
+                                          cc6801_irq_polarity_t polarity)
+{
+    cc6801_isr[pin_number] = callback;
+
+    REG_GPIO(pin_number)->dw.intTrig |= (1UL << PIN(pin_number));
+    REG_GPIO(pin_number)->dw.intType |= (type << PIN(pin_number));
+    REG_GPIO(pin_number)->dw.intPolarity |= (polarity << PIN(pin_number));
 }
 
 #define DEFAULT_PINMUX(_pupd, _pinmux, _io, _od)  \
@@ -81,24 +186,24 @@ static struct cc6801_gpio_config cc6801_fpga_pinmux[] =
     DEFAULT_PINMUX(PULL_DOWN, ENABLE, INPUT,  NOPULL),        //SPI2_DI,
     DEFAULT_PINMUX(PULL_DOWN, ENABLE, OUTPUT, HIGH),          //DMIC_CLK,
     DEFAULT_PINMUX(PULL_DOWN, ENABLE, INPUT,  NOPULL),        //DMIC_DI,
-    DEFAULT_PINMUX(PULL_DOWN, ENABLE, OUTPUT, HIGH),          //GPIO,
-    DEFAULT_PINMUX(PULL_DOWN, ENABLE, OUTPUT, HIGH),          //GPIO,
+    DEFAULT_PINMUX(PULL_DOWN,DISABLE, OUTPUT, HIGH),          //GPIO_14,
+    DEFAULT_PINMUX(PULL_DOWN,DISABLE, OUTPUT, HIGH),          //GPIO_15,
     DEFAULT_PINMUX(PULL_DOWN, ENABLE, OUTPUT, HIGH),          //I2C1_SCL,
     DEFAULT_PINMUX(PULL_DOWN, ENABLE, OUTPUT, HIGH),          //I2C1_SDA,
-    DEFAULT_PINMUX(PULL_DOWN, ENABLE, OUTPUT, HIGH),          //GPIO,
-    DEFAULT_PINMUX(PULL_DOWN, ENABLE, OUTPUT, HIGH),          //GPIO,
+    DEFAULT_PINMUX(PULL_DOWN,DISABLE, OUTPUT, HIGH),          //GPIO_18,
+    DEFAULT_PINMUX(PULL_DOWN,DISABLE, OUTPUT, HIGH),          //GPIO_19,
     DEFAULT_PINMUX(PULL_DOWN, ENABLE, OUTPUT, HIGH),          //I2C0_SCL,
     DEFAULT_PINMUX(PULL_DOWN, ENABLE, OUTPUT, HIGH),          //I2C0_SDA,
-    DEFAULT_PINMUX(PULL_DOWN, ENABLE, OUTPUT, HIGH),          //GPIO,
-    DEFAULT_PINMUX(PULL_DOWN, ENABLE, OUTPUT, HIGH),          //GPIO,
+    DEFAULT_PINMUX(PULL_DOWN,DISABLE, OUTPUT, HIGH),          //GPIO_22,
+    DEFAULT_PINMUX(PULL_DOWN,DISABLE, OUTPUT, HIGH),          //GPIO_23,
     DEFAULT_PINMUX(PULL_DOWN, ENABLE, OUTPUT, HIGH),          //UART0_TX,
     DEFAULT_PINMUX(PULL_DOWN, ENABLE, OUTPUT, HIGH),          //UART0_RTS,
     DEFAULT_PINMUX(PULL_DOWN, ENABLE, INPUT,  NOPULL),        //UART0_CTS,
     DEFAULT_PINMUX(PULL_DOWN, ENABLE, INPUT,  NOPULL),        //UART0_RX,
     DEFAULT_PINMUX(PULL_DOWN, ENABLE, OUTPUT, HIGH),          //PWM0,
     DEFAULT_PINMUX(PULL_DOWN, ENABLE, OUTPUT, HIGH),          //PWM1,
-    DEFAULT_PINMUX(PULL_DOWN, ENABLE, OUTPUT, HIGH),          //GPIO,
-    DEFAULT_PINMUX(PULL_DOWN, ENABLE, OUTPUT, HIGH),          //GPIO,
+    DEFAULT_PINMUX(PULL_DOWN,DISABLE, OUTPUT, HIGH),          //GPIO_30,
+    DEFAULT_PINMUX(PULL_DOWN,DISABLE, OUTPUT, HIGH),          //GPIO_31,
     DEFAULT_PINMUX(PULL_DOWN, ENABLE, OUTPUT, HIGH),          //I2S_CLK,
     DEFAULT_PINMUX(PULL_DOWN, ENABLE, OUTPUT, HIGH),          //I2S_WS,
     DEFAULT_PINMUX(PULL_DOWN, ENABLE, OUTPUT, HIGH),          //I2S_DO,
@@ -111,10 +216,10 @@ static struct cc6801_gpio_config cc6801_fpga_pinmux[] =
     DEFAULT_PINMUX(PULL_DOWN, ENABLE, OUTPUT, HIGH),          //UART2_RTS,
     DEFAULT_PINMUX(PULL_DOWN, ENABLE, INPUT,  NOPULL),        //UART2_CTS,
     DEFAULT_PINMUX(PULL_DOWN, ENABLE, INPUT,  NOPULL),        //UART2_RX,
-    DEFAULT_PINMUX(PULL_DOWN, ENABLE, OUTPUT, HIGH),          //GPIO,
-    DEFAULT_PINMUX(PULL_DOWN, ENABLE, OUTPUT, HIGH),          //GPIO,
-    DEFAULT_PINMUX(PULL_DOWN, ENABLE, OUTPUT, HIGH),          //GPIO,
-    DEFAULT_PINMUX(PULL_DOWN, ENABLE, OUTPUT, HIGH),          //GPIO,
+    DEFAULT_PINMUX(PULL_DOWN,DISABLE, OUTPUT, HIGH),          //GPIO_44,
+    DEFAULT_PINMUX(PULL_DOWN,DISABLE, OUTPUT, HIGH),          //GPIO_45,
+    DEFAULT_PINMUX(PULL_DOWN,DISABLE, OUTPUT, HIGH),          //GPIO_46,
+    DEFAULT_PINMUX(PULL_DOWN,DISABLE, OUTPUT, HIGH),          //GPIO_47,
 };
 
 static void cc6801_gpio_pinmux_config(uint8_t pin, const struct cc6801_gpio_config *config)

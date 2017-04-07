@@ -61,52 +61,52 @@ void SPI2_M_IRQHandler(void)
 #define SPIM_CONFIG_CPHA_NO_PHASE_SHIFT (0UL) /*!< Sample on leading edge of the clock. Shift serial data on trailing edge. */
 #define SPIM_CONFIG_CPHA_PHASE_SHIFT (1UL) /*!< Sample on trailing edge of the clock. Shift serial data on leading edge. */
 
-__STATIC_INLINE void cc_spim_tx_buffer_set(S_regSPI * p_spim,
+__STATIC_INLINE void cc_spim_tx_buffer_set(U_regSPI * p_spim,
                                             uint8_t const * p_buffer,
                                             uint8_t         length)
 {
-    p_spim->dma_str_waddr = (uint32_t)p_buffer;
-    p_spim->total_wbyte = length;
+    p_spim->bf.dma_str_waddr = (uint32_t)p_buffer;
+    p_spim->bf.total_wbyte = length;
 }
 
-__STATIC_INLINE void cc_spim_rx_buffer_set(S_regSPI * p_spim,
+__STATIC_INLINE void cc_spim_rx_buffer_set(U_regSPI * p_spim,
                                             uint8_t const * p_buffer,
                                             uint8_t   length)
 {
-    p_spim->dma_str_raddr = (uint32_t)p_buffer;
-    p_spim->total_rbyte = length;
+    p_spim->bf.dma_str_raddr = (uint32_t)p_buffer;
+    p_spim->bf.total_rbyte = length;
 }
 
-__STATIC_INLINE void cc_spim_event_clear(S_regSPI * p_spim)
+__STATIC_INLINE void cc_spim_event_clear(U_regSPI * p_spim)
 {
-    p_spim->error_int_status = 1;
-    p_spim->event_int_status = 1;
+    p_spim->bf.error_int_status = 1;
+    p_spim->bf.event_int_status = 1;
 }
 
-__STATIC_INLINE void cc_spim_configure(S_regSPI * p_spim,
+__STATIC_INLINE void cc_spim_configure(U_regSPI * p_spim,
                                         cc_spim_mode_t spi_mode,
                                         cc_spim_bit_order_t spi_bit_order)
 {
-    p_spim->wbyte_swap = spi_bit_order;
-    p_spim->rbyte_swap = spi_bit_order;
+    p_spim->bf.wbyte_swap = spi_bit_order;
+    p_spim->bf.rbyte_swap = spi_bit_order;
 
     switch (spi_mode)
     {
         case CC_SPIM_MODE_0:
-            p_spim->cpol = SPIM_CONFIG_CPOL_RISE_EDGE;
-            p_spim->cpha = SPIM_CONFIG_CPHA_NO_PHASE_SHIFT;
+            p_spim->bf.cpol = SPIM_CONFIG_CPOL_RISE_EDGE;
+            p_spim->bf.cpha = SPIM_CONFIG_CPHA_NO_PHASE_SHIFT;
             break;
         case CC_SPIM_MODE_1:
-            p_spim->cpol = SPIM_CONFIG_CPOL_RISE_EDGE;
-            p_spim->cpha = SPIM_CONFIG_CPHA_PHASE_SHIFT;
+            p_spim->bf.cpol = SPIM_CONFIG_CPOL_RISE_EDGE;
+            p_spim->bf.cpha = SPIM_CONFIG_CPHA_PHASE_SHIFT;
             break;
         case CC_SPIM_MODE_2:
-            p_spim->cpol = SPIM_CONFIG_CPOL_FALL_EDGE;
-            p_spim->cpha = SPIM_CONFIG_CPHA_NO_PHASE_SHIFT;
+            p_spim->bf.cpol = SPIM_CONFIG_CPOL_FALL_EDGE;
+            p_spim->bf.cpha = SPIM_CONFIG_CPHA_NO_PHASE_SHIFT;
             break;
         case CC_SPIM_MODE_3:
-            p_spim->cpol = SPIM_CONFIG_CPOL_FALL_EDGE;
-            p_spim->cpha = SPIM_CONFIG_CPHA_PHASE_SHIFT;
+            p_spim->bf.cpol = SPIM_CONFIG_CPOL_FALL_EDGE;
+            p_spim->bf.cpha = SPIM_CONFIG_CPHA_PHASE_SHIFT;
             break;
         default:
             break;
@@ -118,7 +118,7 @@ int cc_drv_spi_init(cc_drv_spi_t const * const p_instance,
                             cc_drv_spi_config_t const * p_config,
                             cc_drv_spi_handler_t handler)
 {
-    S_regSPI * p_spim = p_instance->p_registers;
+    U_regSPI * p_spim = p_instance->p_registers;
 
     //TODO: SPI pin configuration
 
@@ -126,13 +126,13 @@ int cc_drv_spi_init(cc_drv_spi_t const * const p_instance,
         (cc_spim_mode_t)p_config->mode,
         (cc_spim_bit_order_t)p_config->bit_order);
 
-    p_spim->cs_polarity = 1;
-    p_spim->spi_m_en = 1;
+    p_spim->bf.cs_polarity = 1;
+    p_spim->bf.spi_m_en = 1;
 
-    p_spim->error_int_en = 1;
-    p_spim->event_int_en = 1;
+    p_spim->bf.error_int_en = 1;
+    p_spim->bf.event_int_en = 1;
 
-    p_spim->spi_m_dma_en = 1;
+    p_spim->bf.spi_m_dma_en = 1;
 
     return CC_SUCCESS;
 }
@@ -156,7 +156,7 @@ int cc_drv_spi_transfer(cc_drv_spi_t const * const p_instance,
     return cc_drv_spi_xfer(p_instance, &xfer_desc, 0);
 }
 
-static int spim_xfer(S_regSPI                * p_spim,
+static int spim_xfer(U_regSPI                * p_spim,
                            cc_drv_spi_xfer_desc_t const * p_xfer_desc,
                            uint32_t                        flags)
 {

@@ -63,10 +63,6 @@ typedef enum
  */
 typedef struct
 {
-    uint8_t                 rx_pin_no;    /**< RX pin number. */
-    uint8_t                 tx_pin_no;    /**< TX pin number. */
-    uint8_t                 rts_pin_no;   /**< RTS pin number, only used if flow control is enabled. */
-    uint8_t                 cts_pin_no;   /**< CTS pin number, only used if flow control is enabled. */
     app_uart_flow_control_t flow_control; /**< Flow control setting, if flow control is used, the system will use low power UART mode, based on CTS signal. */
     bool                    use_parity;   /**< Even parity if TRUE, no parity if FALSE. */
     uint32_t                baud_rate;    /**< Baud rate configuration. */

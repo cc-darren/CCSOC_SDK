@@ -17,17 +17,9 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-#define CC_SPI0                       ((S_regSPI           *) SPI0_ADDR_BASE)
-
-/* SPI */
-#define SPI0_CONFIG_SCK_PIN         6////3
-#define SPI0_CONFIG_MOSI_PIN        5////1
-#define SPI0_CONFIG_MISO_PIN        4////2
-#define SPI0_CS_PIN                 3////4
-
 #define SPI0_INSTANCE_INDEX 0
 
-#define CC_DRV_SPI_PERIPHERAL(id)  (void *)CC_SPI##id
+#define CC_DRV_SPI_PERIPHERAL(id)  (void *)regSPI##id
 
 /**
  * @brief SPI master driver instance data structure.
@@ -46,13 +38,6 @@ typedef struct
     .p_registers  = CC_DRV_SPI_PERIPHERAL(id),         \
     .drv_inst_idx = SPI##id##_INSTANCE_INDEX, \
 }
-
-/**
- * @brief This value can be provided instead of a pin number for signals MOSI,
- *        MISO, and Slave Select to specify that the given signal is not used and
- *        therefore does not need to be connected to a pin.
- */
-#define CC_DRV_SPI_PIN_NOT_USED  0xFF
 
 /**
  * @brief SPI modes.
@@ -79,20 +64,6 @@ typedef enum
  */
 typedef struct
 {
-    uint8_t sck_pin;      ///< SCK pin number.
-    uint8_t mosi_pin;     ///< MOSI pin number (optional).
-                          /**< Set to @ref CC_DRV_SPI_PIN_NOT_USED
-                           *   if this signal is not needed. */
-    uint8_t miso_pin;     ///< MISO pin number (optional).
-                          /**< Set to @ref CC_DRV_SPI_PIN_NOT_USED
-                           *   if this signal is not needed. */
-    uint8_t ss_pin;       ///< Slave Select pin number (optional).
-                          /**< Set to @ref CC_DRV_SPI_PIN_NOT_USED
-                           *   if this signal is not needed. The driver
-                           *   supports only active low for this signal.
-                           *   If the signal should be active high,
-                           *   it must be controlled externally. */
-    uint8_t irq_priority; ///< Interrupt priority.
     cc_spim_mode_t      mode;      ///< SPI mode.
     cc_spim_bit_order_t bit_order; ///< SPI bit order.
 } cc_drv_spi_config_t;
@@ -102,10 +73,6 @@ typedef struct
  */
 #define CC_DRV_SPI_DEFAULT_CONFIG(id)                       \
 {                                                            \
-    .sck_pin      = SPI##id##_CONFIG_SCK_PIN,      \
-    .mosi_pin     = SPI##id##_CONFIG_MOSI_PIN,     \
-    .miso_pin     = SPI##id##_CONFIG_MISO_PIN,     \
-    .ss_pin       = CC_DRV_SPI_PIN_NOT_USED,                \
     .mode         = CC_SPIM_MODE_0,                      \
     .bit_order    = CC_SPIM_BIT_ORDER_LSB_FIRST,         \
 }

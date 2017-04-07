@@ -38,14 +38,12 @@ void spi_init (uint8_t spi_id)
     if(spi_id == 0)
     {
         cc_drv_spi_config_t spi0_config = CC_DRV_SPI_DEFAULT_CONFIG(0);
-        spi0_config.ss_pin = SPI0_CS_PIN;
         cc_drv_spi_init(&spi0, &spi0_config, spi_event_handler);
     }
 #if SPI1_ENABLED
     else
     {
         cc_drv_spi_config_t spi1_config = CC_DRV_SPI_DEFAULT_CONFIG(1);
-        spi1_config.ss_pin = SPI1_CS_PIN;
         cc_drv_spi_init(&spi1, &spi1_config, spi_event_handler);
     }
 #endif

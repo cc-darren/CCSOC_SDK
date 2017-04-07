@@ -47,7 +47,6 @@ typedef enum
     CC6801_GPIO_PORT_MODE_11,
 } cc6801_gpio_port_mode_t;
 
-#if 0
 #define CC6801_GPIO_PIN_0               0
 #define CC6801_GPIO_PIN_1               1
 #define CC6801_GPIO_PIN_2               2
@@ -97,6 +96,7 @@ typedef enum
 #define CC6801_GPIO_PIN_46              46
 #define CC6801_GPIO_PIN_47              47
 
+#if 0
 typedef enum {
     CC6801_GPIO_FUNC_GPIO              = 0,
     CC6801_GPIO_FUNC_SPI0_CLK             ,
@@ -162,6 +162,21 @@ typedef enum
     CC6801_GPIO_DIR_INPUT = 0,
     CC6801_GPIO_DIR_OUTPUT,
 } cc6801_gpio_dir_t;
+
+typedef enum
+{
+  CC6801_IRQ_POLARITY_HIGH,       ///<  Low to high.
+  CC6801_IRQ_POLARITY_LOW,        ///<  High to low.
+} cc6801_irq_polarity_t;
+
+
+typedef enum
+{
+  CC6801_IRQ_TYPE_LEVEL,       ///<  Low to high.
+  CC6801_IRQ_TYPE_EDGE,        ///<  High to low.
+} cc6801_irq_type_t;
+
+typedef void (*cc6801_irq_handler)(void);
 
 struct cc6801_gpio_config
 {
@@ -230,5 +245,19 @@ __STATIC_INLINE void cc6801_gpio_set_port_mode(U_regGPIO *p_group, uint8_t port,
                                         CC6801_GPIO_PORT_MODE_MASK(port));
 }
 
+__STATIC_INLINE void cc6801_enable_irq(uint32_t pin_number)
+{
+    REG_GPIO(pin_number)->dw.intEn |= (1UL << PIN(pin_number));
+}
+
+__STATIC_INLINE void cc6801_disable_irq(uint32_t pin_number)
+{
+    REG_GPIO(pin_number)->dw.intEn |= (0UL << PIN(pin_number));
+}
+
+void cc6801_request_irq(uint32_t pin_number,
+                                          cc6801_irq_handler callback,
+                                          cc6801_irq_type_t type,
+                                          cc6801_irq_polarity_t polarity);
 
 #endif //_GPIO_H_

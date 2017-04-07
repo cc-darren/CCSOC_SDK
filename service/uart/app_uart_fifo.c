@@ -117,10 +117,6 @@ uint32_t app_uart_init(const app_uart_comm_params_t * p_comm_params,
     config.hwfc = (p_comm_params->flow_control == APP_UART_FLOW_CONTROL_DISABLED) ?
             CC_UART_HWFC_DISABLED : CC_UART_HWFC_ENABLED;
     config.parity = p_comm_params->use_parity ? CC_UART_PARITY_INCLUDED : CC_UART_PARITY_EXCLUDED;
-    config.pselcts = p_comm_params->cts_pin_no;
-    config.pselrts = p_comm_params->rts_pin_no;
-    config.pselrxd = p_comm_params->rx_pin_no;
-    config.pseltxd = p_comm_params->tx_pin_no;
 
     err_code = cc_drv_uart_init(&config, uart_event_handler);
 

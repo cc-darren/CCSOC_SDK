@@ -12,13 +12,12 @@
 #ifndef _UART_H
 #define _UART_H
 
+#include "global.h"
+#include "cc6801_reg.h"
+
 #define UART0_CONFIG_HWFC         CC_UART_HWFC_DISABLED
 #define UART0_CONFIG_PARITY       CC_UART_PARITY_EXCLUDED
 #define UART0_CONFIG_BAUDRATE     CC_UART_BAUDRATE_115200
-#define UART0_CONFIG_PSEL_TXD 7
-#define UART0_CONFIG_PSEL_RXD 8
-#define UART0_CONFIG_PSEL_CTS 0		//no use in Cadence
-#define UART0_CONFIG_PSEL_RTS 0		//no use in Cadence
 
 /**
  * @enum cc_uart_parity_t
@@ -76,10 +75,6 @@ typedef enum
 /**@brief Structure for UART configuration. */
 typedef struct
 {
-    uint32_t            pseltxd;            ///< TXD pin number.
-    uint32_t            pselrxd;            ///< RXD pin number.
-    uint32_t            pselcts;            ///< CTS pin number.
-    uint32_t            pselrts;            ///< RTS pin number.
     void *              p_context;          ///< Context passed to interrupt handler.
     cc_uart_hwfc_t     hwfc;               ///< Flow control configuration.
     cc_uart_parity_t   parity;             ///< Parity configuration.
@@ -89,10 +84,6 @@ typedef struct
 /**@brief UART default configuration. */
 #define CC_DRV_UART_DEFAULT_CONFIG                                                   \
     {                                                                                 \
-        .pseltxd            = UART0_CONFIG_PSEL_TXD,                                  \
-        .pselrxd            = UART0_CONFIG_PSEL_RXD,                                  \
-        .pselcts            = UART0_CONFIG_PSEL_CTS,                                  \
-        .pselrts            = UART0_CONFIG_PSEL_RTS,                                  \
         .p_context          = NULL,                                                   \
         .hwfc               = UART0_CONFIG_HWFC,                                      \
         .parity             = UART0_CONFIG_PARITY,                                    \

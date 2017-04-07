@@ -399,7 +399,7 @@ typedef union U_regGPIO
         uint32_t input;
         uint32_t output;
         uint32_t outputEn;
-        uint32_t intAct;            //0:high, 1:low
+        uint32_t intPolarity;       //0:high, 1:low
         uint32_t intEn;             //0:disable, 1:enable
         uint32_t intSts;
         uint32_t intTrig;
@@ -432,114 +432,168 @@ typedef union U_regGPIO
     }bf;    //bit-field
 }U_regGPIO;
 
-typedef struct
+typedef union U_regUARTDMA
 {
-    //UART interrupt:0x00
-    uint32_t  padding1:14;
-    uint32_t  rx_dma_done_intr:1;
-    uint32_t  tx_dma_done_intr:1;
-    uint32_t  padding2:14;
-    uint32_t  tx_dma_done_intr_en:1;
-    uint32_t  rx_dma_done_intr_en:1;
-    //UART DMA bytenum control:0x04
-    uint32_t  padding3:8;
-    uint32_t  dma_txbyte_num:8;
-    uint32_t  padding4:8;
-    uint32_t  dma_rxbyte_num:8;
-    //UART DMA read start:0x08
-    uint32_t  padding5:15;
-    uint32_t  dma_rxstrart_addr:17;
-    //UART DMA read end:0x0C
-    uint32_t  padding6:15;
-    uint32_t  dma_rxend_addr:17;
-    //UART DMA read enable:0x10
-    uint32_t  padding7:15;
-    uint32_t  rx_b_endian:1;
-    uint32_t  padding8:7;
-    uint32_t  rx_flush:1;
-    uint32_t  padding9:7;
-    uint32_t  dma_rxen:1;
-    //UART DMA write start:0x14
-    uint32_t  padding10:15;
-    uint32_t  dma_txstrart_addr:17;
-    //UART DMA write end:0x18
-    uint32_t  padding11:15;
-    uint32_t  dma_txend_addr:17;
-    //UART DMA write enable:0x1C
-    uint32_t  padding12:15;
-    uint32_t  tx_b_endian:1;
-    uint32_t  padding13:7;
-    uint32_t  tx_flush:1;
-    uint32_t  padding14:7;
-    uint32_t  dma_txen:1;
-    //UART DMA DBUS rx:0x20
-    uint32_t  padding15:15;
-    uint32_t  dbus_rx_addr:17;
-    //UART DMA DBUS tx:0x24
-    uint32_t  padding16:15;
-    uint32_t  dbus_tx_addr:17;
-    //UART DMA rx aggregated byteword:0x28
-    uint32_t  rx_data:24;
-    uint32_t  padding17:6;
-    uint32_t  rx_pbcnt:2;
-    //UART UnTBUF:0x80
-    uint8_t   untbuf;
-    //UART UnRBUF:0x84
-    uint8_t   unrbuf;
-    //UART UnCTRL:0x88
-    uint8_t   uneei:1;
-    uint8_t   uneri:1;
-    uint8_t   uneti:1;
-    uint8_t   unefci:1;
-    uint8_t   uncts:1;
-    uint8_t   undcts:1;
-    uint8_t   unrbf:1;
-    uint8_t   untbe:1;
-    //UART UnSTAT:0x8C
-    uint8_t   padding18:1;
-    uint8_t   unxmip:1;
-    uint8_t   unrb9:1;
-    uint8_t   unbkd:1;
-    uint8_t   unerr:1;
-    uint8_t   undoe:1;
-    uint8_t   unfe:1;
-    uint8_t   unpe:1;
-    //UART UnFRS:0x90
-    uint8_t   padding19:1;
-    uint8_t   unpen:1;
-    uint8_t   unpsel:2;
-    uint8_t   unxb9:1;
-    uint8_t   unstp:1;
-    uint8_t   unchar:2;
-    //UART UnMDSL:0x94
-    uint8_t   unrts:1;
-    uint8_t   unfce:1;
-    uint8_t   unerd:1;
-    uint8_t   unetd:1;
-    uint8_t   uncks:1;
-    uint8_t   unbrk:1;
-    uint8_t   unatn:1;
-    uint8_t   unmod:1;
-    //UART UnBAUD:0x98
-    uint8_t   undiv_lower:8;
-    //UART UnPSR:0x9C
-    uint8_t   unpsc:4;
-    uint8_t   undiv_upper:4;
-    //UART UnOVR:0xA0
-    uint8_t   padding20:4;
-    uint8_t   unovr:4;
-    //UART UnMDSL2:0xA4
-    uint8_t   padding21:7;
-    uint8_t   unsmd:1;
-    //UART UnSPOS:0xA8
-    uint8_t   padding22:4;
-    uint8_t   unsamp:4;
-    //UART UnWPSRH:0xAC
-    uint8_t   unwpsrh:8;
-    //UART UnWPSRL:0xB0
-    uint8_t   unwpsrl:8;
-}S_regUART;
+    struct
+    {
+        uint32_t interrupt;
+        uint32_t dmaByteNum;
+        uint32_t dmaRxStart;
+        uint32_t dmaRxEnd;
+        uint32_t dmaRxEn;
+        uint32_t dmaTxStart;
+        uint32_t dmaTxEnd;
+        uint32_t dmaTxEn;
+        uint32_t dmaDbusRx;
+        uint32_t dmaDbusTx;
+        uint32_t dmaRxByteCnt;
+    }dw;    //double word
 
+    struct
+    {
+        //UART interrupt:0x00
+        uint32_t  rx_dma_done_intr_en:1;
+        uint32_t  tx_dma_done_intr_en:1;
+        uint32_t  padding1:14;
+        uint32_t  tx_dma_done_intr:1;
+        uint32_t  rx_dma_done_intr:1;
+        uint32_t  padding2:14;
+        //UART DMA bytenum control:0x04
+        uint32_t  dma_rxbyte_num:8;
+        uint32_t  padding3:8;
+        uint32_t  dma_txbyte_num:8;
+        uint32_t  padding4:8;
+        //UART DMA read start:0x08
+        uint32_t  dma_rxstrart_addr:17;
+        uint32_t  padding5:15;
+        //UART DMA read end:0x0C
+        uint32_t  dma_rxend_addr:17;
+        uint32_t  padding6:15;
+        //UART DMA read enable:0x10
+        uint32_t  dma_rxen:1;
+        uint32_t  padding7:7;
+        uint32_t  rx_flush:1;
+        uint32_t  padding8:7;
+        uint32_t  rx_b_endian:1;
+        uint32_t  padding9:15;
+        //UART DMA write start:0x14
+        uint32_t  dma_txstrart_addr:17;
+        uint32_t  padding10:15;
+        //UART DMA write end:0x18
+        uint32_t  dma_txend_addr:17;
+        uint32_t  padding11:15;
+        //UART DMA write enable:0x1C
+        uint32_t  dma_txen:1;
+        uint32_t  padding12:7;
+        uint32_t  tx_flush:1;
+        uint32_t  padding13:7;
+        uint32_t  tx_b_endian:1;
+        uint32_t  padding14:15;
+        //UART DMA DBUS rx:0x20
+        uint32_t  dbus_rx_addr:17;
+        uint32_t  padding15:15;
+        //UART DMA DBUS tx:0x24
+        uint32_t  dbus_tx_addr:17;
+        uint32_t  padding16:15;
+        //UART DMA rx aggregated byteword:0x28
+        uint32_t  rx_pbcnt:2;
+        uint32_t  padding17:6;
+        uint32_t  rx_data:24;
+    }bf;    //bit-field
+}U_regUARTDMA;
+
+typedef union U_regUARTCTRL
+{
+    struct
+    {
+        uint32_t bufTx;
+        uint32_t bufRx;
+        uint32_t ictrl;
+        uint32_t stat;
+        uint32_t frs;
+        uint32_t mdsl;
+        uint32_t baud;
+        uint32_t psr;
+        uint32_t ovr;
+        uint32_t mdsl2;
+        uint32_t spos;
+        uint32_t wpsrh;
+        uint32_t wpsrl;
+    }dw;    //double word
+
+    struct
+    {
+        //UART UnTBUF:0x80
+        uint32_t   untbuf:8;
+        uint32_t   padding1:24;
+        //UART UnRBUF:0x84
+        uint32_t   unrbuf:8;
+        uint32_t   padding2:24;
+        //UART UnCTRL:0x88
+        uint32_t   untbe:1;
+        uint32_t   unrbf:1;
+        uint32_t   undcts:1;
+        uint32_t   uncts:1;
+        uint32_t   unefci:1;
+        uint32_t   uneti:1;
+        uint32_t   uneri:1;
+        uint32_t   uneei:1;
+        uint32_t   padding3:24;
+        //UART UnSTAT:0x8C
+        uint32_t   unpe:1;
+        uint32_t   unfe:1;
+        uint32_t   undoe:1;
+        uint32_t   unerr:1;
+        uint32_t   unbkd:1;
+        uint32_t   unrb9:1;
+        uint32_t   unxmip:1;
+        uint32_t   padding4:1;
+        uint32_t   padding5:24;
+        //UART UnFRS:0x90
+        uint32_t   unchar:2;
+        uint32_t   unstp:1;
+        uint32_t   unxb9:1;
+        uint32_t   unpsel:2;
+        uint32_t   unpen:1;
+        uint32_t   padding6:1;
+        uint32_t   padding7:24;
+        //UART UnMDSL:0x94
+        uint32_t   unmod:1;
+        uint32_t   unatn:1;
+        uint32_t   unbrk:1;
+        uint32_t   uncks:1;
+        uint32_t   unetd:1;
+        uint32_t   unerd:1;
+        uint32_t   unfce:1;
+        uint32_t   unrts:1;
+        uint32_t   padding8:24;
+        //UART UnBAUD:0x98
+        uint32_t   undiv_lower:8;
+        uint32_t   padding9:24;
+        //UART UnPSR:0x9C
+        uint32_t   undiv_upper:4;
+        uint32_t   unpsc:4;
+        uint32_t   padding10:24;
+        //UART UnOVR:0xA0
+        uint32_t   unovr:4;
+        uint32_t   padding11:4;
+        uint32_t   padding12:24;
+        //UART UnMDSL2:0xA4
+        uint32_t   unsmd:1;
+        uint32_t   padding13:7;
+        uint32_t   padding14:24;
+        //UART UnSPOS:0xA8
+        uint32_t   unsamp:4;
+        uint32_t   padding15:4;
+        uint32_t   padding16:24;
+        //UART UnWPSRH:0xAC
+        uint32_t   unwpsrh:8;
+        uint32_t   padding17:24;
+        //UART UnWPSRL:0xB0
+        uint32_t   unwpsrl:8;
+        uint32_t   padding18:24;
+    }bf;    //bit-field
+}U_regUARTCTRL;
 
 typedef struct
 {
@@ -584,40 +638,60 @@ typedef struct
     uint32_t  ms_addr_16bit:1;
 }S_regI2C;
 
-typedef struct
+typedef union U_regSPI
 {
-    //SPI interrupt:0x00
-    uint32_t  padding1:14;
-    uint32_t  error_int_status:1;
-    uint32_t  event_int_status:1;
-    uint32_t  padding2:14;
-    uint32_t  error_int_en:1;
-    uint32_t  event_int_en:1;
-    //SPI control:0x04
-    uint32_t  padding3:7;
-    uint32_t  spi_m_en:1;
-    uint32_t  padding4:13;
-    uint32_t  cs_polarity:1;
-    uint32_t  cs:2;
-    uint32_t  padding5:6;
-    uint32_t  cpol:1;
-    uint32_t  cpha:1;
-    //SPI DMA control:0x08
-    uint32_t  padding6:7;
-    uint32_t  spi_m_dma_en:1;
-    uint32_t  padding7:4;
-    uint32_t  rbyte_swap:1;
-    uint32_t  wbyte_swap:1;
-    uint32_t  op_mode:2;
-    uint32_t  total_rbyte:8;
-    uint32_t  total_wbyte:8;
-    //DMA start write address:0x0C
-    uint32_t  padding8:15;
-    uint32_t  dma_str_waddr:17;
-    //DMA start read address:0x10
-    uint32_t  padding9:15;
-    uint32_t  dma_str_raddr:17;
-}S_regSPI;
+    struct
+    {
+        uint32_t bufTx;
+        uint32_t bufRx;
+        uint32_t ictrl;
+        uint32_t stat;
+        uint32_t frs;
+        uint32_t mdsl;
+        uint32_t baud;
+        uint32_t psr;
+        uint32_t ovr;
+        uint32_t mdsl2;
+        uint32_t spos;
+        uint32_t wpsrh;
+        uint32_t wpsrl;
+    }dw;    //double word
+
+    struct
+    {
+        //SPI interrupt:0x00
+        uint32_t  event_int_en:1;
+        uint32_t  error_int_en:1;
+        uint32_t  padding1:14;
+        uint32_t  event_int_status:1;
+        uint32_t  error_int_status:1;
+        uint32_t  padding2:14;
+        //SPI control:0x04
+        uint32_t  cpha:1;
+        uint32_t  cpol:1;
+        uint32_t  padding3:6;
+        uint32_t  cs:2;
+        uint32_t  cs_polarity:1;
+        uint32_t  padding4:13;
+        uint32_t  spi_m_en:1;
+        uint32_t  padding5:7;
+        //SPI DMA control:0x08
+        uint32_t  total_wbyte:8;
+        uint32_t  total_rbyte:8;
+        uint32_t  op_mode:2;
+        uint32_t  wbyte_swap:1;
+        uint32_t  rbyte_swap:1;
+        uint32_t  padding6:4;
+        uint32_t  spi_m_dma_en:1;
+        uint32_t  padding7:7;
+        //DMA start write address:0x0C
+        uint32_t  dma_str_waddr:17;
+        uint32_t  padding8:15;
+        //DMA start read address:0x10
+        uint32_t  dma_str_raddr:17;
+        uint32_t  padding9:15;
+    }bf;    //bit-field
+}U_regSPI;
 
 typedef struct
 {
@@ -641,14 +715,17 @@ typedef struct
 
 
 
-#define regSCU      ((U_regSCU         *) SCU_ADDR_BASE)
-#define regBLE      ((S_regBLe         *) BLE_ADDR_BASE)
-#define regPWM0     ((U_regPWMWKTM     *) PWM0_ADDR_BASE)
-#define regPWM1     ((U_regPWMWKTM     *) PWM1_ADDR_BASE)
-#define regWKTM0    ((U_regPWMWKTM     *) WKTM0_ADDR_BASE)
-#define regWKTM1    ((U_regPWMWKTM     *) WKTM1_ADDR_BASE)
-#define regGPIO0    ((U_regGPIO        *) GPIO_ADDR_BASE)
-#define regGPIO1    ((U_regGPIO        *) (GPIO_ADDR_BASE + 0x0000002c))
+#define regSCU          ((U_regSCU         *) SCU_ADDR_BASE)
+#define regBLE          ((S_regBLE         *) BLE_ADDR_BASE)
+#define regPWM0         ((U_regPWMWKTM     *) PWM0_ADDR_BASE)
+#define regPWM1         ((U_regPWMWKTM     *) PWM1_ADDR_BASE)
+#define regWKTM0        ((U_regPWMWKTM     *) WKTM0_ADDR_BASE)
+#define regWKTM1        ((U_regPWMWKTM     *) WKTM1_ADDR_BASE)
+#define regGPIO0        ((U_regGPIO        *) GPIO_ADDR_BASE)
+#define regGPIO1        ((U_regGPIO        *) (GPIO_ADDR_BASE + 0x0000002c))
+#define regUART0DMA     ((U_regUARTDMA     *) UART0_ADDR_BASE)
+#define regUART0CTRL    ((U_regUARTCTRL    *) (UART0_ADDR_BASE + 0x00000080))
+#define regSPI0         ((U_regSPI         *) SPI0_ADDR_BASE)
 
 #ifdef __cplusplus
 }

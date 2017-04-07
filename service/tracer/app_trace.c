@@ -26,21 +26,12 @@
     #define UART_RX_BUF_SIZE 1                           /**< UART RX buffer size. */
 #endif
 
-#define RX_PIN_NUMBER  8
-#define TX_PIN_NUMBER  6
-#define CTS_PIN_NUMBER 7
-#define RTS_PIN_NUMBER 5
-
 void app_trace_init(void)
 {
     uint32_t err_code = SUCCESS;
 
     const app_uart_comm_params_t comm_params =
     {
-        RX_PIN_NUMBER,
-        TX_PIN_NUMBER,
-        RTS_PIN_NUMBER,
-        CTS_PIN_NUMBER,
         APP_UART_FLOW_CONTROL_DISABLED,
         false,
         APP_UART_BAUDRATE_115200
