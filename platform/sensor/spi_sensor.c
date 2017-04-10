@@ -13,8 +13,10 @@
 #include "spi_sensor.h"
 
 //#define SINGLE_WR
+#define SPI1_ENABLED 1
 
 static const cc_drv_spi_t spi0 = CC_DRV_SPI_INSTANCE(0);  /**< SPI instance. */
+static const cc_drv_spi_t spi1 = CC_DRV_SPI_INSTANCE(1);  /**< SPI instance. */
 
 static volatile bool spi_xfer_done;  /**< Flag used to indicate that SPI instance completed the transfer. */
 static uint8_t m_rx_buf[32];
@@ -50,22 +52,6 @@ void spi_init (uint8_t spi_id)
 
 }
 
-void spi_data_read_new(uint8_t reg_addr, uint8_t *reg_data, uint8_t cnt)
-{
-    //bit7=1 read transaction, 0 write trancaction
-    //bit6=0 single read, 1 multiple read
-    m_tx_buf[0] = reg_addr | 0xC0;
-
-    cc_drv_spi_transfer(&spi0, m_tx_buf, 1, reg_data, cnt+1);
-
-    while (!spi_xfer_done)
-    {
-        __WFE();
-    }
-    spi_xfer_done = false;
-
-}
-
 void spi_data_read(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data, uint8_t cnt, uint8_t spi_id)
 {
     int i;
@@ -82,16 +68,18 @@ void spi_data_read(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data, uint8_
         cc_drv_spi_transfer(&spi0, m_tx_buf, 1, m_rx_buf, cnt+1);
 #if SPI1_ENABLED
     else
-        cc_drv_spi_transfer(&spi1, m_tx_buf, 1, m_rx_buf, cnt+1);
+        cc_drv_spi_transfer(&spi1, m_tx_buf, 1, m_rx_buf, cnt);
 #endif
 
+#if 0
     while (!spi_xfer_done)
     {
         __WFE();
     }
     spi_xfer_done = false;
+#endif
 
-    for(i=1;i<cnt+1;i++)
+    for(i=0;i<cnt;i++)
     {
         *reg_data = m_rx_buf[i];
         reg_data++;
@@ -140,12 +128,13 @@ void spi_data_write(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data, uint8
 #endif
 
 #endif
+#if 0
     while (!spi_xfer_done)
     {
         __WFE();
     }
     spi_xfer_done = false;
-
+#endif
 }
 
 

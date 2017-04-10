@@ -20,7 +20,8 @@
 #include "ll.h"
 #include "drvi_init.h"
 #include "sw_timer.h"
-#include "ak09912.h"
+//#include "ak09912.h"
+#include "LSM6DS3_ACC_GYRO_driver.h"
 #include "spi_sensor.h"
 
 #define APP_TIMER_PRESCALER                     0                                           /**< Value of the RTC1 PRESCALER register. */
@@ -204,8 +205,9 @@ void sensor_init(void)
 {
     if(init_done == 0)
     {
-        spi_init(0);
-        MAG_Init();
+        spi_init(1);
+        ACC_Init();
+        //MAG_Init();
         init_done = 1;
     }
 }
@@ -219,6 +221,7 @@ int main(void)
 
     //start interrupt handling
     GLOBAL_INT_START();
+    printf("\r\n== CC6801 Start ==\r\n");
 
     sensor_init();
     rw_main();

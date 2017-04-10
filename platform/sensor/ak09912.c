@@ -54,6 +54,14 @@ u8_t AK09912_MAG_WriteReg(u8_t Reg, u8_t Data) {
   //return 1;
 }
 /* Private functions ---------------------------------------------------------*/
+status_t AK09912_MAG_GetAKMID(u8_t *id)
+{
+    if( !AK09912_MAG_ReadReg(AK09912_AKM_ID, id))
+        return MEMS_ERROR;
+    else
+        return MEMS_SUCCESS;
+}
+
 status_t AK09912_MAG_GetID(u8_t *id)
 {
     if( !AK09912_MAG_ReadReg(AK09912_MAG_ID, id))
@@ -80,6 +88,9 @@ status_t AK09912_MAG_SetMode(AK09912_MAG_MODE_t ov){
   value |= ov;		
 
   if( !AK09912_MAG_WriteReg(AK09912_MAG_CNTL2, value) )
+    return MEMS_ERROR;
+  
+  if( !AK09912_MAG_ReadReg(AK09912_MAG_CNTL2, &value) )
     return MEMS_ERROR;
 
   return MEMS_SUCCESS;
@@ -193,6 +204,22 @@ status_t AK09912_MAG_MeasOverFlow(AK09912_MAG_HOFL_t *value){
   return MEMS_SUCCESS;
 }
 
+status_t AK09912_MAG_GetST1Stat(u8_t *value){
+
+  if( !AK09912_MAG_ReadReg(AK09912_MAG_ST1, (u8_t *)value) )
+    return MEMS_ERROR;
+
+  return MEMS_SUCCESS;
+}
+
+status_t AK09912_MAG_GetST2Stat(u8_t *value){
+
+  if( !AK09912_MAG_ReadReg(AK09912_MAG_ST2, (u8_t *)value) )
+    return MEMS_ERROR;
+
+  return MEMS_SUCCESS;
+}
+
 /*******************************************************************************
 * Function Name  : AK09912_MAG_MeasOverRun
 * Description    : AK09912_MAG  measure overflow
@@ -239,12 +266,21 @@ status_t AK09912_MAG_Data_Ready(AK09912_MAG_DOR_DRDY_t *value){
 status_t AK09912_MAG_GetMagRaw(AxesRaw_t* buff) {
   u8_t valueL;
   u8_t valueH;
-  AK09912_MAG_DOR_DRDY_t tmp = AK09912_MAG_DOR_DRDY_DEFAULT;
+  u8_t stat = 0;
 
-  while (tmp != AK09912_MAG_DRDY)
-  {
-     AK09912_MAG_Data_Ready(&tmp);
-  }
+  //do {
+  //  AK09912_MAG_Data_Ready(&stat);
+  //} while (stat != AK09912_MAG_DRDY);
+
+  //while (tmp != AK09912_MAG_DRDY && tmp != AK09912_MAG_DOR)
+  //{
+  //   AK09912_MAG_Data_Ready(&tmp);
+  //}
+	
+//  do{  
+//    AK09912_MAG_ReadReg(AK09912_MAG_ST1, &stat);
+//  } while ((stat & 0x03) == 0);
+  
 	
   if( !AK09912_MAG_ReadReg(AK09912_MAG_HXL, &valueL) )
       return MEMS_ERROR;
@@ -269,6 +305,10 @@ status_t AK09912_MAG_GetMagRaw(AxesRaw_t* buff) {
       return MEMS_ERROR;
   
   buff->AXIS_Z = (i16_t)( (valueH << 8) | valueL );
+
+  AK09912_MAG_GetST1Stat(&stat);
+  AK09912_MAG_GetST2Stat(&stat);
+
   return MEMS_SUCCESS;  
 }
 
@@ -318,27 +358,44 @@ status_t AK09912_MAG_AdjValue(AxesAdj_t* buff) {
 }
 
 
-
 status_t AK09912_MAG_Init(void)
 {
 	status_t response;
     u8_t id;
 
- //set SPI interface
- AK09912_MAG_I2CDisable(AK09912_MAG_I2C_DISABLE);
+ response = AK09912_MAG_GetAKMID(&id);
+ if(id != AKM_COMPANY_ID) {
+     return MEMS_ERROR;
+ }
 
  response = AK09912_MAG_GetID(&id);
  if(id != AK09912_MAG_WHO_AM_I) {
      return MEMS_ERROR;
  }
+  
+ //Disable I2C interface
+ AK09912_MAG_I2CDisable(AK09912_MAG_I2C_DISABLE);
+
  //Initialize Magnetometer 
  response = AK09912_MAG_SetMode(AK09912_MAG_DO_100_Hz);
+ //response = AK09912_MAG_SetMode(AK09912_MAG_DO_10_Hz);
  if(response==MEMS_ERROR) return response; //manage here comunication error
 
  return MEMS_SUCCESS;
 
 }
 
+status_t AK09912_MAG_SLEEP(void)
+{
+
+	status_t response;
+
+ response = AK09912_MAG_SetMode(AK09912_MAG_POWER_DOWN);
+ if(response==MEMS_ERROR) return response; //manage here comunication error
+
+ return MEMS_SUCCESS;
+
+}
 
 
 

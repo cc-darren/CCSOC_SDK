@@ -118,7 +118,9 @@ typedef enum {
 
 /* Registers Name ------------------------------------------------------------------------*/
 #define     AK09912_MAG_WHO_AM_I    0x04
+#define     AKM_COMPANY_ID    0x48
 
+#define 	AK09912_AKM_ID      0x00
 #define 	AK09912_MAG_ID      0x01
 #define 	AK09912_MAG_ST1     0x10
 #define 	AK09912_MAG_HXL		0x11
@@ -157,6 +159,21 @@ typedef enum {
 
 #endif /*__SHARED__CONSTANTS*/
 
+
+#define AKM_RST_MASK (1<<AKM_RST_PIN)
+#define AKM_RST_INV_MASK AKM_RST_MASK
+
+#define AKM_RST_CONFIGURE(akm_rst_mask) do { uint32_t pin;                  \
+                                  for (pin = 0; pin < 32; pin++) \
+                                      if ( (akm_rst_mask) & (1 << pin) )   \
+                                          nrf_gpio_cfg_output(pin); } while (0)
+
+#define AKM_RST_OFF(akm_rst_mask) do {  NRF_GPIO->OUTSET = (akm_rst_mask) & (AKM_RST_MASK & AKM_RST_INV_MASK); \
+                            NRF_GPIO->OUTCLR = (akm_rst_mask) & (AKM_RST_MASK & ~AKM_RST_INV_MASK); } while (0)
+
+#define AKM_RST_ON(akm_rst_mask) do {  NRF_GPIO->OUTCLR = (akm_rst_mask) & (AKM_RST_MASK & AKM_RST_INV_MASK); \
+                           NRF_GPIO->OUTSET = (akm_rst_mask) & (AKM_RST_MASK & ~AKM_RST_INV_MASK); } while (0)
+
 /************** I2C Address *****************/
 
 #define AK09912_MAG_MEMS_I2C_ADDRESS         0x0C
@@ -166,6 +183,8 @@ typedef enum {
 /**********Sensor Configuration Functions***********/
 status_t AK09912_MAG_SetMode(AK09912_MAG_MODE_t ov);
 status_t AK09912_MAG_TemperatureEN(AK09912_MAG_TEMP_EN_t ov);
+status_t AK09912_MAG_GetST1Stat(u8_t *value);
+status_t AK09912_MAG_GetST2Stat(u8_t *value);
 status_t AK09912_MAG_MeasOverFlow(AK09912_MAG_HOFL_t *value);
 status_t AK09912_MAG_MeasOverRun(AK09912_MAG_DOR_DRDY_t *value);
 status_t AK09912_MAG_Data_Ready(AK09912_MAG_DOR_DRDY_t *value);
@@ -184,6 +203,8 @@ u8_t AK09912_MAG_ReadReg(u8_t Reg, u8_t* Data);
 u8_t AK09912_MAG_WriteReg(u8_t Reg, u8_t Data);
 
 status_t AK09912_MAG_Init(void);
+status_t AK09912_MAG_SLEEP(void);
+
 
 #endif /* __AK09912_MAG_H */
 

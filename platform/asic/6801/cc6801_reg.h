@@ -352,6 +352,116 @@ typedef union U_regSCU
     }bf;    //bit-field
 }U_regSCU;
 
+typedef union U_regCKGEN
+{
+    struct
+    {
+        uint32_t reserved0;
+        uint32_t clkCfg1;
+        uint32_t clkCfg2;
+        uint32_t clkCfg3;
+        uint32_t clkCfg4;
+        uint32_t clkEn;
+        uint32_t swReset;
+        uint32_t bleClkSel;
+    }dw;    //double word
+
+    struct
+    {
+        uint32_t reserved0:32;
+        uint32_t bleClkDiv:5;
+        uint32_t bleLowFreqClkSel:1;
+        uint32_t reserved1:2;
+        uint32_t wktClkDiv:5;
+        uint32_t wktLowFreqClkSel:1;
+        uint32_t reserved2:2;
+        uint32_t gpioClkDiv:5;
+        uint32_t gpioLowFreqClkSel:1;
+        uint32_t reserved3:2;
+        uint32_t wdtClkDiv:5;
+        uint32_t wdtLowFreqClkSel:1;
+        uint32_t reserved4:2;
+        uint32_t pwmClkDiv:5;
+        uint32_t pwmLowFreqClkSel:1;
+        uint32_t reserved5:2;
+        uint32_t i2cClkDiv:5;
+        uint32_t i2cLowFreqClkSel:1;
+        uint32_t reserved6:2;
+        uint32_t i2sClkDiv:5;
+        uint32_t i2sLowFreqClkSel:1;
+        uint32_t reserved7:2;
+        uint32_t dmicClkDiv:5;
+        uint32_t dmicLowFreqClkSel:1;
+        uint32_t reserved8:2;
+        uint32_t uartClkDiv:5;
+        uint32_t uartLowFreqClkSel:1;
+        uint32_t reserved9:2;
+        uint32_t spi0ClkDiv:5;
+        uint32_t spi0LowFreqClkSel:1;
+        uint32_t reserved10:2;
+        uint32_t spi1ClkDiv:5;
+        uint32_t spi1LowFreqClkSel:1;
+        uint32_t reserved11:2;
+        uint32_t spi2ClkDiv:5;
+        uint32_t spi2LowFreqClkSel:1;
+        uint32_t reserved12:2;
+        uint32_t ClkDiv:5;
+        uint32_t LowFreqClkSel:1;
+        uint32_t reserved13:26;
+        uint32_t reserved14:1;
+        uint32_t bleClkEn:1;
+        uint32_t wktm0ClkEn:1;
+        uint32_t wktm1ClkEn:1;
+        uint32_t gpio0ClkEn:1;
+        uint32_t wdtClkEn:1;
+        uint32_t pwm0ClkEn:1;
+        uint32_t pwm1ClkEn:1;
+        uint32_t i2c0ClkEn:1;
+        uint32_t i2c1ClkEn:1;
+        uint32_t i2sClkEn:1;
+        uint32_t dmicClkEn:1;
+        uint32_t uart0ClkEn:1;
+        uint32_t uart1ClkEn:1;
+        uint32_t uart2ClkEn:1;
+        uint32_t spim0ClkEn:1;
+        uint32_t spim1ClkEn:1;
+        uint32_t spim2ClkEn:1;
+        uint32_t ccuClkEn:1;
+        uint32_t rtcClkEn:1;
+        uint32_t reserved15:4;
+        uint32_t dmuClkEn:1;
+        uint32_t reserved16:7;
+        uint32_t reserved17:1;
+        uint32_t bleSwRst:1;
+        uint32_t wktm0SwRst:1;
+        uint32_t wktm1SwRst:1;
+        uint32_t gpio0SwRst:1;
+        uint32_t wdtSwRst:1;
+        uint32_t pwm0SwRst:1;
+        uint32_t pwm1SwRst:1;
+        uint32_t i2c0SwRst:1;
+        uint32_t i2c1SwRst:1;
+        uint32_t i2sSwRst:1;
+        uint32_t dmicSwRst:1;
+        uint32_t uart0SwRst:1;
+        uint32_t uart1SwRst:1;
+        uint32_t uart2SwRst:1;
+        uint32_t spim0SwRst:1;
+        uint32_t spim1SwRst:1;
+        uint32_t spim2SwRst:1;
+        uint32_t ccuSwRst:1;
+        uint32_t rtcSwRst:1;
+        uint32_t sys0SwRst:1;
+        uint32_t aesSwRst:1;
+        uint32_t sys1SwRst:1;
+        uint32_t bleTimingGenSwRst:4;
+        uint32_t dmuSwRst:1;
+        uint32_t reserved18:7;
+        uint32_t clkSel:6;
+        uint32_t reserved19:26;
+    }bf;    //bit-field
+}U_regCKGEN;
+
 typedef union U_regPWMWKTM
 {
     struct
@@ -716,6 +826,7 @@ typedef struct
 
 
 #define regSCU          ((U_regSCU         *) SCU_ADDR_BASE)
+#define regCKGEN        ((U_regCKGEN       *) CKGEN_ADDR_BASE)
 #define regBLE          ((S_regBLE         *) BLE_ADDR_BASE)
 #define regPWM0         ((U_regPWMWKTM     *) PWM0_ADDR_BASE)
 #define regPWM1         ((U_regPWMWKTM     *) PWM1_ADDR_BASE)
@@ -726,6 +837,7 @@ typedef struct
 #define regUART0DMA     ((U_regUARTDMA     *) UART0_ADDR_BASE)
 #define regUART0CTRL    ((U_regUARTCTRL    *) (UART0_ADDR_BASE + 0x00000080))
 #define regSPI0         ((U_regSPI         *) SPI0_ADDR_BASE)
+#define regSPI1         ((U_regSPI         *) SPI1_ADDR_BASE)
 
 #ifdef __cplusplus
 }

@@ -18,6 +18,7 @@
 #include <stdbool.h>
 
 #define SPI0_INSTANCE_INDEX 0
+#define SPI1_INSTANCE_INDEX 1
 
 #define CC_DRV_SPI_PERIPHERAL(id)  (void *)regSPI##id
 
