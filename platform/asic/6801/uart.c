@@ -115,7 +115,9 @@ __STATIC_INLINE void cc_uart_config_baudrate(U_regUARTCTRL  * p_reg, cc_uart_bau
       case CC_UART_BAUDRATE_4800:
         break;
       case CC_UART_BAUDRATE_9600:
-        p_reg->bf.undiv_lower = 0x7c;
+        //FPGA DEMO setting, clk=16M
+        p_reg->bf.undiv_lower = 0x29;
+        //p_reg->bf.undiv_lower = 0x7c;
         p_reg->bf.undiv_upper = 0x0;
         p_reg->bf.unpsc = 0x4;
         p_reg->bf.unovr = 0x10;
@@ -131,7 +133,9 @@ __STATIC_INLINE void cc_uart_config_baudrate(U_regUARTCTRL  * p_reg, cc_uart_bau
       case CC_UART_BAUDRATE_56000:
         break;
       case CC_UART_BAUDRATE_115200:
-        p_reg->bf.undiv_lower = 0x10;
+        //FPGA DEMO setting, clk=16M
+        p_reg->bf.undiv_lower = 0x05;
+        //p_reg->bf.undiv_lower = 0x10;
         p_reg->bf.undiv_upper = 0x0;
         p_reg->bf.unpsc = 0x6;
         p_reg->bf.unovr = 0x7;
@@ -152,6 +156,7 @@ __STATIC_INLINE void cc_uart_config_baudrate(U_regUARTCTRL  * p_reg, cc_uart_bau
 
 }
 
+#if 0
 __STATIC_INLINE void cc_uart_dma_flush_tx(U_regUARTDMA * p_reg, uint8_t flush)
 {
     p_reg->bf.tx_flush = flush;
@@ -162,6 +167,7 @@ __STATIC_INLINE void cc_uart_dma_enable_tx(U_regUARTDMA * p_reg, uint8_t enable)
 {
     p_reg->bf.dma_txen = enable;
 }
+#endif
 
 __STATIC_INLINE void cc_uart_int_enable_tx(U_regUARTDMA * p_reg, uint8_t enable)
 {
@@ -204,8 +210,9 @@ void cc_drv_uart_rx_enable(void)
 {
 }
 
-void tx_byte(U_regUARTDMA * p_reg, uint8_t const * const tx_buffer, uint8_t length)
+void tx_byte(U_regUARTDMA * p_reg, uint8_t const * tx_buffer, uint8_t length)
 {
+#if 0 //DMA can't receive int, use TxBUFF
     p_reg->bf.dma_txbyte_num = length;
 
     //DMA tx start address
@@ -213,12 +220,20 @@ void tx_byte(U_regUARTDMA * p_reg, uint8_t const * const tx_buffer, uint8_t leng
 
     //DMA tx end address
     p_reg->bf.dma_txend_addr = (uint32_t)tx_buffer+length;
+#endif
+
+    while (*tx_buffer)
+    {
+        regUART0CTRL->dw.bufTx = *tx_buffer++;
+        while(!regUART0CTRL->bf.untbe);
+    }
 }
 
 int cc_drv_uart_tx(uint8_t const * const p_data, uint8_t length)
 {
     bool err_code = CC_SUCCESS;
 
+#if 0 //DMA can't receive int, use TxBUFF
     //Flush tx dma buffer
     cc_uart_dma_flush_tx(regUART0DMA, 1);
     //Write data
@@ -229,6 +244,9 @@ int cc_drv_uart_tx(uint8_t const * const p_data, uint8_t length)
     //UART0 busy waiting until transfer done
     while(!UART0_TXDM_INTR);
     UART0_TXDM_INTR = 0;
+#endif
+    //Write data
+    tx_byte(regUART0DMA, p_data, length);
 
     return err_code;
 }
