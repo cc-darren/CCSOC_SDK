@@ -196,7 +196,7 @@ __STATIC_INLINE void cc6801_gpio_set_dir(uint32_t pin_number, cc6801_gpio_dir_t 
     }
     else
     {
-        REG_GPIO(pin_number)->dw.outputEn &= (0UL << PIN(pin_number));
+        REG_GPIO(pin_number)->dw.outputEn &= ~(1UL << PIN(pin_number));
     }
 }
 
@@ -207,7 +207,7 @@ __STATIC_INLINE void cc6801_gpio_set(uint32_t pin_number)
 
 __STATIC_INLINE void cc6801_gpio_clear(uint32_t pin_number)
 {
-    REG_GPIO(pin_number)->dw.output &= (0UL << PIN(pin_number));
+    REG_GPIO(pin_number)->dw.output &= ~(1UL << PIN(pin_number));
 }
 
 __STATIC_INLINE uint32_t cc6801_gpio_read(uint32_t pin_number)
@@ -232,10 +232,21 @@ __STATIC_INLINE void cc6801_gpio_set_pullup(uint32_t pin_number)
     REG_GPIO(pin_number)->dw.puEn |= (1UL << PIN(pin_number));
 }
 
+__STATIC_INLINE void cc6801_gpio_clear_pullup(uint32_t pin_number)
+{
+    REG_GPIO(pin_number)->dw.puEn &= ~(1UL << PIN(pin_number));
+}
+
 __STATIC_INLINE void cc6801_gpio_set_pinmux(uint32_t pin_number)
 {
     REG_GPIO(pin_number)->dw.pinmux |= (1UL << PIN(pin_number));
 }
+
+__STATIC_INLINE void cc6801_gpio_clear_pinmux(uint32_t pin_number)
+{
+    REG_GPIO(pin_number)->dw.pinmux &= ~(1UL << PIN(pin_number));
+}
+
 
 __STATIC_INLINE void cc6801_gpio_set_port_mode(U_regGPIO *p_group, uint8_t port,
                                                         cc6801_gpio_port_mode_t mode)

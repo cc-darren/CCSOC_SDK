@@ -231,6 +231,8 @@ static void cc6801_gpio_pinmux_config(uint8_t pin, const struct cc6801_gpio_conf
 
     if (pinmux)
         cc6801_gpio_set_pinmux(pin);
+    else
+        cc6801_gpio_clear_pinmux(pin);
 
     if (io)
     {
@@ -238,10 +240,13 @@ static void cc6801_gpio_pinmux_config(uint8_t pin, const struct cc6801_gpio_conf
         if (od)
             cc6801_gpio_write(pin, od);
     }
+    else
+        cc6801_gpio_set_dir(pin, CC6801_GPIO_DIR_INPUT);
 
     if (pupd)
         cc6801_gpio_set_pullup(pin);
-
+    else
+        cc6801_gpio_clear_pullup(pin);
 }
 
 void cc6801_gpio_pinmux_config_table(const struct cc6801_gpio_config *config, int len)
