@@ -24,8 +24,8 @@ static __INLINE uint32_t fifo_length(app_fifo_t * const fifo)
 
 
 static app_uart_event_handler_t   m_event_handler;            /**< Event handler function. */
+__align(4) static uint8_t tx_tmp;
 static uint8_t tx_buffer[1];
-static uint8_t tx_tmp;
 static uint8_t rx_buffer[1];
 
 static app_fifo_t                  m_rx_fifo;                               /**< RX FIFO buffer for storing data received on the UART until the application fetches them using app_uart_get(). */

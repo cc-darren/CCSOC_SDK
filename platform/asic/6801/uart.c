@@ -32,6 +32,8 @@
 
 #include "uart.h"
 
+#define UART_DMA_ENABLE 1
+
 volatile uint32_t UART0_RXDM_INTR = 0;
 volatile uint32_t UART0_TXDM_INTR = 0;
 volatile uint32_t UART1_RXDM_INTR = 0;
@@ -156,7 +158,6 @@ __STATIC_INLINE void cc_uart_config_baudrate(U_regUARTCTRL  * p_reg, cc_uart_bau
 
 }
 
-#if 0
 __STATIC_INLINE void cc_uart_dma_flush_tx(U_regUARTDMA * p_reg, uint8_t flush)
 {
     p_reg->bf.tx_flush = flush;
@@ -167,7 +168,6 @@ __STATIC_INLINE void cc_uart_dma_enable_tx(U_regUARTDMA * p_reg, uint8_t enable)
 {
     p_reg->bf.dma_txen = enable;
 }
-#endif
 
 __STATIC_INLINE void cc_uart_int_enable_tx(U_regUARTDMA * p_reg, uint8_t enable)
 {
@@ -212,30 +212,27 @@ void cc_drv_uart_rx_enable(void)
 
 void tx_byte(U_regUARTDMA * p_reg, uint8_t const * tx_buffer, uint8_t length)
 {
-#if 0 //DMA can't receive int, use TxBUFF
-    p_reg->bf.dma_txbyte_num = length;
-
+#if UART_DMA_ENABLE
+    p_reg->bf.dma_txbyte_num = length-1;
     //DMA tx start address
     p_reg->bf.dma_txstrart_addr = (uint32_t)tx_buffer;
 
     //DMA tx end address
     p_reg->bf.dma_txend_addr = (uint32_t)tx_buffer+length;
-#endif
-
+#else
     while (*tx_buffer)
     {
         regUART0CTRL->dw.bufTx = *tx_buffer++;
         while(!regUART0CTRL->bf.untbe);
     }
+#endif
 }
 
 int cc_drv_uart_tx(uint8_t const * const p_data, uint8_t length)
 {
     bool err_code = CC_SUCCESS;
 
-#if 0 //DMA can't receive int, use TxBUFF
-    //Flush tx dma buffer
-    cc_uart_dma_flush_tx(regUART0DMA, 1);
+#if UART_DMA_ENABLE
     //Write data
     tx_byte(regUART0DMA, p_data, length);
     //DMA tx enable
@@ -244,10 +241,10 @@ int cc_drv_uart_tx(uint8_t const * const p_data, uint8_t length)
     //UART0 busy waiting until transfer done
     while(!UART0_TXDM_INTR);
     UART0_TXDM_INTR = 0;
-#endif
+#else
     //Write data
     tx_byte(regUART0DMA, p_data, length);
-
+#endif
     return err_code;
 }
 

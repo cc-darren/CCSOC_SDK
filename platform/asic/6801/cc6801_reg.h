@@ -564,50 +564,49 @@ typedef union U_regUARTDMA
         //UART interrupt:0x00
         uint32_t  rx_dma_done_intr_en:1;
         uint32_t  tx_dma_done_intr_en:1;
-        uint32_t  padding1:14;
+        uint32_t  reserved0:14;
         uint32_t  tx_dma_done_intr:1;
         uint32_t  rx_dma_done_intr:1;
-        uint32_t  padding2:14;
+        uint32_t  reserved1:14;
         //UART DMA bytenum control:0x04
         uint32_t  dma_rxbyte_num:8;
-        uint32_t  padding3:8;
         uint32_t  dma_txbyte_num:8;
-        uint32_t  padding4:8;
+        uint32_t  reserved2:16;
         //UART DMA read start:0x08
         uint32_t  dma_rxstrart_addr:17;
-        uint32_t  padding5:15;
+        uint32_t  reserved3:15;
         //UART DMA read end:0x0C
         uint32_t  dma_rxend_addr:17;
-        uint32_t  padding6:15;
+        uint32_t  reserved4:15;
         //UART DMA read enable:0x10
         uint32_t  dma_rxen:1;
-        uint32_t  padding7:7;
+        uint32_t  reserved5:7;
         uint32_t  rx_flush:1;
-        uint32_t  padding8:7;
+        uint32_t  reserved6:7;
         uint32_t  rx_b_endian:1;
-        uint32_t  padding9:15;
+        uint32_t  reserved7:15;
         //UART DMA write start:0x14
         uint32_t  dma_txstrart_addr:17;
-        uint32_t  padding10:15;
+        uint32_t  reserved8:15;
         //UART DMA write end:0x18
         uint32_t  dma_txend_addr:17;
-        uint32_t  padding11:15;
+        uint32_t  reserved9:15;
         //UART DMA write enable:0x1C
         uint32_t  dma_txen:1;
-        uint32_t  padding12:7;
+        uint32_t  reserved10:7;
         uint32_t  tx_flush:1;
-        uint32_t  padding13:7;
+        uint32_t  reserved11:7;
         uint32_t  tx_b_endian:1;
-        uint32_t  padding14:15;
+        uint32_t  reserved12:15;
         //UART DMA DBUS rx:0x20
         uint32_t  dbus_rx_addr:17;
-        uint32_t  padding15:15;
+        uint32_t  reserved13:15;
         //UART DMA DBUS tx:0x24
         uint32_t  dbus_tx_addr:17;
-        uint32_t  padding16:15;
+        uint32_t  reserved14:15;
         //UART DMA rx aggregated byteword:0x28
         uint32_t  rx_pbcnt:2;
-        uint32_t  padding17:6;
+        uint32_t  reserved15:6;
         uint32_t  rx_data:24;
     }bf;    //bit-field
 }U_regUARTDMA;
@@ -635,10 +634,10 @@ typedef union U_regUARTCTRL
     {
         //UART UnTBUF:0x80
         uint32_t   untbuf:8;
-        uint32_t   padding1:24;
+        uint32_t   reserved0:24;
         //UART UnRBUF:0x84
         uint32_t   unrbuf:8;
-        uint32_t   padding2:24;
+        uint32_t   reserved1:24;
         //UART UnCTRL:0x88
         uint32_t   untbe:1;
         uint32_t   unrbf:1;
@@ -648,7 +647,7 @@ typedef union U_regUARTCTRL
         uint32_t   uneti:1;
         uint32_t   uneri:1;
         uint32_t   uneei:1;
-        uint32_t   padding3:24;
+        uint32_t   reserved2:24;
         //UART UnSTAT:0x8C
         uint32_t   unpe:1;
         uint32_t   unfe:1;
@@ -657,16 +656,16 @@ typedef union U_regUARTCTRL
         uint32_t   unbkd:1;
         uint32_t   unrb9:1;
         uint32_t   unxmip:1;
-        uint32_t   padding4:1;
-        uint32_t   padding5:24;
+        uint32_t   reserved3:1;
+        uint32_t   reserved4:24;
         //UART UnFRS:0x90
         uint32_t   unchar:2;
         uint32_t   unstp:1;
         uint32_t   unxb9:1;
         uint32_t   unpsel:2;
         uint32_t   unpen:1;
-        uint32_t   padding6:1;
-        uint32_t   padding7:24;
+        uint32_t   reserved5:1;
+        uint32_t   reserved6:24;
         //UART UnMDSL:0x94
         uint32_t   unmod:1;
         uint32_t   unatn:1;
@@ -676,32 +675,32 @@ typedef union U_regUARTCTRL
         uint32_t   unerd:1;
         uint32_t   unfce:1;
         uint32_t   unrts:1;
-        uint32_t   padding8:24;
+        uint32_t   reserved7:24;
         //UART UnBAUD:0x98
         uint32_t   undiv_lower:8;
-        uint32_t   padding9:24;
+        uint32_t   reserved8:24;
         //UART UnPSR:0x9C
         uint32_t   undiv_upper:4;
         uint32_t   unpsc:4;
-        uint32_t   padding10:24;
+        uint32_t   reserved9:24;
         //UART UnOVR:0xA0
         uint32_t   unovr:4;
-        uint32_t   padding11:4;
-        uint32_t   padding12:24;
+        uint32_t   reserved10:4;
+        uint32_t   reserved11:24;
         //UART UnMDSL2:0xA4
         uint32_t   unsmd:1;
-        uint32_t   padding13:7;
-        uint32_t   padding14:24;
+        uint32_t   reserved12:7;
+        uint32_t   reserved13:24;
         //UART UnSPOS:0xA8
         uint32_t   unsamp:4;
-        uint32_t   padding15:4;
-        uint32_t   padding16:24;
+        uint32_t   reserved14:4;
+        uint32_t   reserved15:24;
         //UART UnWPSRH:0xAC
         uint32_t   unwpsrh:8;
-        uint32_t   padding17:24;
+        uint32_t   reserved16:24;
         //UART UnWPSRL:0xB0
         uint32_t   unwpsrl:8;
-        uint32_t   padding18:24;
+        uint32_t   reserved17:24;
     }bf;    //bit-field
 }U_regUARTCTRL;
 
