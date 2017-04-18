@@ -12,12 +12,14 @@
  */
 #include <stddef.h>
 #include "drvi_timer.h"
+#include "drvi_pwm.h"
 #include "drvi_gpio.h"
 
 void drvi_initialize(void)
 {
     drvi_timer0_init((void*)NULL);
     drvi_gpio_pinmux_init();
+    drvi_pwm0_init((void*)NULL);
 }
 
 

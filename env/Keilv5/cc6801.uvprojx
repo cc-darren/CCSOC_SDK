@@ -459,6 +459,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\platform\drvi\drvi_init.c</FilePath>
             </File>
+            <File>
+              <FileName>drvi_pwm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\drvi\drvi_pwm.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1122,6 +1127,11 @@
               <FileName>drvi_init.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\drvi\drvi_init.c</FilePath>
+            </File>
+            <File>
+              <FileName>drvi_pwm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\drvi\drvi_pwm.c</FilePath>
             </File>
           </Files>
         </Group>

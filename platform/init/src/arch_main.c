@@ -52,6 +52,8 @@ volatile uint32_t Cnt800 = 0;
 
 unsigned char init_done = 0;
 
+extern void pwm_start_test(void);
+
 static void system_idle_timeout_handler(void * p_context)
 {
     UNUSED_PARAMETER(p_context);
@@ -201,6 +203,7 @@ static void timers_init(void)
 
 }
 
+
 void sensor_init(void)
 {
     if(init_done == 0)
@@ -215,6 +218,8 @@ void sensor_init(void)
 int main(void)
 {
     drvi_initialize();
+
+    pwm_start_test();
 
     timers_init();
     timers_start_test();
