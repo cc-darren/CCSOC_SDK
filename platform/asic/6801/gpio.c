@@ -45,7 +45,7 @@ void GPIO_IRQHandler(void)
     unsigned int    mask;
 
     //get vectors
-    int_status = *((volatile unsigned int *)(regGPIO0->dw.intTrig));
+    int_status = *((volatile unsigned int *)(&regGPIO0->dw.intSts));
 
     while(int_status)
     {
@@ -92,11 +92,11 @@ void GPIO_IRQHandler(void)
             callback();
 
         //Write 1 clear interrupt
-        *((volatile unsigned int *)(regGPIO0->dw.intTrig)) = mask;
+        *((volatile unsigned int *)(&regGPIO0->dw.intSts)) = mask;
         int_status &= ~mask;
     }
 
-    int_status = *((volatile unsigned int *)(regGPIO1->dw.intTrig));
+    int_status = *((volatile unsigned int *)(&regGPIO1->dw.intSts));
 
     while(int_status)
     {
@@ -127,7 +127,7 @@ void GPIO_IRQHandler(void)
             callback();
 
         //Write 1 clear interrupt
-        *((volatile unsigned int *)(regGPIO1->dw.intTrig)) = mask;
+        *((volatile unsigned int *)(&regGPIO1->dw.intSts)) = mask;
         int_status &= ~mask;
     }
 
