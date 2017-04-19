@@ -15,9 +15,9 @@
 #include <stdint.h>
 
 void spi_init (uint8_t spi_id);
-void spi_data_read(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data, uint8_t cnt, uint8_t spi_id);
-void spi_data_write(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data, uint8_t cnt, uint8_t spi_id);
-
+void spi_data_read(uint8_t reg_addr, uint8_t *reg_data, uint8_t cnt, uint8_t spi_id);
+void spi_data_write(uint8_t reg_addr, uint8_t *reg_data, uint8_t cnt, uint8_t spi_id);
+void spi_data_write_then_read(uint8_t reg_addr, uint8_t *reg_data, uint8_t cnt, uint8_t spi_id);
 
 #endif
 

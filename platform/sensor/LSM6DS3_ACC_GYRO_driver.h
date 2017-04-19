@@ -97,6 +97,7 @@ typedef enum
 /* Exported macro ------------------------------------------------------------*/
 //ACC sensor interface
 #define ACC_Init()                                     LSM6DS3_X_Init()
+#define ACC_Data_Get(x,y)                              LSM6DS3_ACC_GYRO_GetRawAccData(x,y)
 
 
 /* Exported constants --------------------------------------------------------*/

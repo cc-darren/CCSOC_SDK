@@ -158,12 +158,6 @@ __STATIC_INLINE void cc_uart_config_baudrate(U_regUARTCTRL  * p_reg, cc_uart_bau
 
 }
 
-__STATIC_INLINE void cc_uart_dma_flush_tx(U_regUARTDMA * p_reg, uint8_t flush)
-{
-    p_reg->bf.tx_flush = flush;
-
-}
-
 __STATIC_INLINE void cc_uart_dma_enable_tx(U_regUARTDMA * p_reg, uint8_t enable)
 {
     p_reg->bf.dma_txen = enable;
@@ -175,6 +169,12 @@ __STATIC_INLINE void cc_uart_int_enable_tx(U_regUARTDMA * p_reg, uint8_t enable)
 }
 
 #if 0
+__STATIC_INLINE void cc_uart_dma_flush_tx(U_regUARTDMA * p_reg, uint8_t flush)
+{
+    p_reg->bf.tx_flush = flush;
+
+}
+
 __STATIC_INLINE void cc_uart_int_enable_rx(U_regUARTDMA * p_reg, uint8_t enable)
 {
     p_reg->rx_dma_done_intr_en = enable;
@@ -235,12 +235,14 @@ int cc_drv_uart_tx(uint8_t const * const p_data, uint8_t length)
 #if UART_DMA_ENABLE
     //Write data
     tx_byte(regUART0DMA, p_data, length);
+    NVIC_EnableIRQ(UART0_TXDMA_IRQn);
     //DMA tx enable
     cc_uart_dma_enable_tx(regUART0DMA, 1);
 
     //UART0 busy waiting until transfer done
     while(!UART0_TXDM_INTR);
     UART0_TXDM_INTR = 0;
+    NVIC_DisableIRQ(UART0_TXDMA_IRQn);
 #else
     //Write data
     tx_byte(regUART0DMA, p_data, length);

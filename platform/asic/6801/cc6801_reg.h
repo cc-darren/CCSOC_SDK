@@ -751,19 +751,11 @@ typedef union U_regSPI
 {
     struct
     {
-        uint32_t bufTx;
-        uint32_t bufRx;
-        uint32_t ictrl;
-        uint32_t stat;
-        uint32_t frs;
-        uint32_t mdsl;
-        uint32_t baud;
-        uint32_t psr;
-        uint32_t ovr;
-        uint32_t mdsl2;
-        uint32_t spos;
-        uint32_t wpsrh;
-        uint32_t wpsrl;
+        uint32_t spiInt;
+        uint32_t spiCtrl;
+        uint32_t DmaCtrl;
+        uint32_t wAddr;
+        uint32_t rAddr;
     }dw;    //double word
 
     struct
@@ -771,34 +763,34 @@ typedef union U_regSPI
         //SPI interrupt:0x00
         uint32_t  event_int_en:1;
         uint32_t  error_int_en:1;
-        uint32_t  padding1:14;
+        uint32_t  reserved0:14;
         uint32_t  event_int_status:1;
         uint32_t  error_int_status:1;
-        uint32_t  padding2:14;
+        uint32_t  reserved1:14;
         //SPI control:0x04
         uint32_t  cpha:1;
         uint32_t  cpol:1;
-        uint32_t  padding3:6;
+        uint32_t  reserved2:6;
         uint32_t  cs:2;
         uint32_t  cs_polarity:1;
-        uint32_t  padding4:13;
+        uint32_t  reserved3:13;
         uint32_t  spi_m_en:1;
-        uint32_t  padding5:7;
+        uint32_t  reserved4:7;
         //SPI DMA control:0x08
         uint32_t  total_wbyte:8;
         uint32_t  total_rbyte:8;
         uint32_t  op_mode:2;
         uint32_t  wbyte_swap:1;
         uint32_t  rbyte_swap:1;
-        uint32_t  padding6:4;
+        uint32_t  reserved5:4;
         uint32_t  spi_m_dma_en:1;
-        uint32_t  padding7:7;
+        uint32_t  reserved6:7;
         //DMA start write address:0x0C
         uint32_t  dma_str_waddr:17;
-        uint32_t  padding8:15;
+        uint32_t  reserved7:15;
         //DMA start read address:0x10
         uint32_t  dma_str_raddr:17;
-        uint32_t  padding9:15;
+        uint32_t  reserved8:15;
     }bf;    //bit-field
 }U_regSPI;
 
@@ -837,6 +829,7 @@ typedef struct
 #define regUART0CTRL    ((U_regUARTCTRL    *) (UART0_ADDR_BASE + 0x00000080))
 #define regSPI0         ((U_regSPI         *) SPI0_ADDR_BASE)
 #define regSPI1         ((U_regSPI         *) SPI1_ADDR_BASE)
+#define regSPI2         ((U_regSPI         *) SPI2_ADDR_BASE)
 
 #ifdef __cplusplus
 }

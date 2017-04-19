@@ -335,7 +335,7 @@
               <MiscControls>--no_inline --no_multifile -DMSC_CLOCK</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\inc;..\..\inc\CMSIS;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\platform\sensor;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart</IncludePath>
+              <IncludePath>..\..\algo\8bit_ped_50hz;..\..\inc;..\..\inc\CMSIS;..\..\mmi;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\platform\sensor;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -376,10 +376,27 @@
       </TargetOption>
       <Groups>
         <Group>
+          <GroupName>algo</GroupName>
+          <Files>
+            <File>
+              <FileName>FP_PED_8Bit.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\algo\8bit_ped_50hz\FP_PED_8Bit.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>ble</GroupName>
         </Group>
         <Group>
           <GroupName>mmi</GroupName>
+          <Files>
+            <File>
+              <FileName>appDisplay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\mmi\appDisplay.c</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>asic</GroupName>
@@ -490,19 +507,29 @@
               <FilePath>..\..\platform\sensor\ak09912.c</FilePath>
             </File>
             <File>
-              <FileName>LSM6DS3_ACC_GYRO_driver.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\sensor\LSM6DS3_ACC_GYRO_driver.c</FilePath>
-            </File>
-            <File>
               <FileName>i2c_sensor.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\sensor\i2c_sensor.c</FilePath>
             </File>
             <File>
+              <FileName>LSM6DS3_ACC_GYRO_driver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\sensor\LSM6DS3_ACC_GYRO_driver.c</FilePath>
+            </File>
+            <File>
+              <FileName>spi_oled.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\sensor\spi_oled.c</FilePath>
+            </File>
+            <File>
               <FileName>spi_sensor.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\sensor\spi_sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>ssd1306_oled_driver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\sensor\ssd1306_oled_driver.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1045,10 +1072,27 @@
       </TargetOption>
       <Groups>
         <Group>
+          <GroupName>algo</GroupName>
+          <Files>
+            <File>
+              <FileName>FP_PED_8Bit.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\algo\8bit_ped_50hz\FP_PED_8Bit.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>ble</GroupName>
         </Group>
         <Group>
           <GroupName>mmi</GroupName>
+          <Files>
+            <File>
+              <FileName>appDisplay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\mmi\appDisplay.c</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>asic</GroupName>
@@ -1159,19 +1203,29 @@
               <FilePath>..\..\platform\sensor\ak09912.c</FilePath>
             </File>
             <File>
-              <FileName>LSM6DS3_ACC_GYRO_driver.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\sensor\LSM6DS3_ACC_GYRO_driver.c</FilePath>
-            </File>
-            <File>
               <FileName>i2c_sensor.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\sensor\i2c_sensor.c</FilePath>
             </File>
             <File>
+              <FileName>LSM6DS3_ACC_GYRO_driver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\sensor\LSM6DS3_ACC_GYRO_driver.c</FilePath>
+            </File>
+            <File>
+              <FileName>spi_oled.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\sensor\spi_oled.c</FilePath>
+            </File>
+            <File>
               <FileName>spi_sensor.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\sensor\spi_sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>ssd1306_oled_driver.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\sensor\ssd1306_oled_driver.c</FilePath>
             </File>
           </Files>
         </Group>

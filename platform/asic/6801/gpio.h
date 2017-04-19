@@ -146,9 +146,9 @@ typedef enum
 
 typedef enum
 {
+    CC6801_GPIO_INPUT_NOPULL = 0,
     CC6801_GPIO_OUTPUT_LOW = 0,
     CC6801_GPIO_OUTPUT_HIGH,
-    CC6801_GPIO_INPUT_NOPULL,
 } cc6801_gpio_drive_t;
 
 typedef enum
@@ -212,7 +212,7 @@ __STATIC_INLINE void cc6801_gpio_clear(uint32_t pin_number)
 
 __STATIC_INLINE uint32_t cc6801_gpio_read(uint32_t pin_number)
 {
-    return (REG_GPIO(pin_number)->dw.input);
+    return ((REG_GPIO(pin_number)->dw.input) >> PIN(pin_number)) & 1UL;
 }
 
 __STATIC_INLINE void cc6801_gpio_write(uint32_t pin_number, uint32_t value)

@@ -65,7 +65,7 @@ __STATIC_INLINE void cc_spim_tx_buffer_set(U_regSPI * p_spim,
                                             uint8_t         length)
 {
     p_spim->bf.dma_str_raddr = (uint32_t)p_buffer;
-    p_spim->bf.total_rbyte = length-1;
+    p_spim->bf.total_wbyte = length-1;
 }
 
 __STATIC_INLINE void cc_spim_rx_buffer_set(U_regSPI * p_spim,
@@ -73,7 +73,7 @@ __STATIC_INLINE void cc_spim_rx_buffer_set(U_regSPI * p_spim,
                                             uint8_t   length)
 {
     p_spim->bf.dma_str_waddr = (uint32_t)p_buffer;
-    p_spim->bf.total_wbyte = length-1;
+    p_spim->bf.total_rbyte = length-1;
 }
 
 __STATIC_INLINE void cc_spim_event_clear(U_regSPI * p_spim)
@@ -119,7 +119,9 @@ int cc_drv_spi_init(cc_drv_spi_t const * const p_instance,
 {
     U_regSPI * p_spim = p_instance->p_registers;
 
+    regCKGEN->bf.spi0ClkDiv = 2;
     regCKGEN->bf.spi1ClkDiv = 2;
+    regCKGEN->bf.spi2ClkDiv = 2;
 
     cc_spim_configure(p_spim,
         (cc_spim_mode_t)p_config->mode,
@@ -138,7 +140,33 @@ void cc_drv_spi_uninit(cc_drv_spi_t const * const p_instance)
 {
 }
 
-int cc_drv_spi_transfer(cc_drv_spi_t const * const p_instance,
+int cc_drv_spi_write(cc_drv_spi_t const * const p_instance,
+                                uint8_t const * p_tx_buffer,
+                                uint8_t         tx_buffer_length)
+{
+    cc_drv_spi_xfer_desc_t xfer_desc =
+    {
+        xfer_desc.p_tx_buffer = p_tx_buffer,
+        xfer_desc.tx_length   = tx_buffer_length,
+    };
+
+    return cc_drv_spi_transfer(p_instance, &xfer_desc);
+}
+
+int cc_drv_spi_read(cc_drv_spi_t const * const p_instance,
+                                uint8_t       * p_rx_buffer,
+                                uint8_t         rx_buffer_length)
+{
+    cc_drv_spi_xfer_desc_t xfer_desc =
+    {
+        xfer_desc.p_rx_buffer = p_rx_buffer,
+        xfer_desc.rx_length   = rx_buffer_length,
+    };
+
+    return cc_drv_spi_transfer(p_instance, &xfer_desc);
+}
+
+int cc_drv_spi_write_then_read(cc_drv_spi_t const * const p_instance,
                                 uint8_t const * p_tx_buffer,
                                 uint8_t         tx_buffer_length,
                                 uint8_t       * p_rx_buffer,
@@ -150,19 +178,24 @@ int cc_drv_spi_transfer(cc_drv_spi_t const * const p_instance,
     xfer_desc.tx_length   = tx_buffer_length;
     xfer_desc.rx_length   = rx_buffer_length;
 
-    return cc_drv_spi_xfer(p_instance, &xfer_desc, 0);
+    return cc_drv_spi_transfer(p_instance, &xfer_desc);
 }
 
-static int spim_xfer(U_regSPI                * p_spim,
-                           cc_drv_spi_xfer_desc_t const * p_xfer_desc,
-                           uint32_t                        flags)
+static int spim0_xfer(U_regSPI * p_spim)
 {
-    cc_spim_tx_buffer_set(p_spim, p_xfer_desc->p_tx_buffer, p_xfer_desc->tx_length);
-    cc_spim_rx_buffer_set(p_spim, p_xfer_desc->p_rx_buffer, p_xfer_desc->rx_length);
+    NVIC_EnableIRQ(SPI0_M_IRQn);
 
-    p_spim->bf.op_mode = 2;
+    p_spim->bf.spi_m_dma_en = 1;
 
-    cc_spim_event_clear(p_spim);
+    while(!SPI0_M_INTR);
+    SPI0_M_INTR = 0;
+
+    NVIC_DisableIRQ(SPI0_M_IRQn);
+    return CC_SUCCESS;
+}
+
+static int spim1_xfer(U_regSPI * p_spim)
+{
     NVIC_EnableIRQ(SPI1_M_IRQn);
 
     p_spim->bf.spi_m_dma_en = 1;
@@ -174,9 +207,63 @@ static int spim_xfer(U_regSPI                * p_spim,
     return CC_SUCCESS;
 }
 
-int cc_drv_spi_xfer(cc_drv_spi_t     const * const p_instance,
-                            cc_drv_spi_xfer_desc_t const * p_xfer_desc,
-                            uint32_t                        flags)
+static int spim2_xfer(U_regSPI * p_spim)
 {
-    return spim_xfer(p_instance->p_registers,  p_xfer_desc, flags);
+    NVIC_EnableIRQ(SPI2_M_IRQn);
+
+    p_spim->bf.spi_m_dma_en = 1;
+
+    while(!SPI2_M_INTR);
+    SPI2_M_INTR = 0;
+
+    NVIC_DisableIRQ(SPI2_M_IRQn);
+    return CC_SUCCESS;
 }
+
+
+int cc_drv_spi_transfer(cc_drv_spi_t     const * const p_instance,
+                                 cc_drv_spi_xfer_desc_t const * p_xfer_desc)
+{
+    U_regSPI *reg = p_instance->p_registers;
+    int  intance = p_instance->drv_inst_idx;
+    int  (*spim_xfer)(U_regSPI * p_spim);
+
+    if ((p_xfer_desc->p_tx_buffer) && (p_xfer_desc->p_rx_buffer))
+    {
+        reg->bf.op_mode = CC_SPIM_OP_MODE_WRITE_THEN_READ;
+        cc_spim_tx_buffer_set(reg, p_xfer_desc->p_tx_buffer, p_xfer_desc->tx_length);
+        cc_spim_rx_buffer_set(reg, p_xfer_desc->p_rx_buffer, p_xfer_desc->rx_length);
+}
+    else if (p_xfer_desc->p_tx_buffer)
+    {
+        reg->bf.op_mode = CC_SPIM_OP_MODE_WRITE;
+        cc_spim_tx_buffer_set(reg, p_xfer_desc->p_tx_buffer, p_xfer_desc->tx_length);
+    }
+    else if (p_xfer_desc->p_rx_buffer)
+    {
+        reg->bf.op_mode = CC_SPIM_OP_MODE_READ;
+        cc_spim_rx_buffer_set(reg, p_xfer_desc->p_rx_buffer, p_xfer_desc->rx_length);
+    }
+    else
+        return CC_ERROR_INVALID_ADDR;
+
+    switch (intance)
+    {
+        case 0:
+            spim_xfer = spim0_xfer;
+            break;
+        case 1:
+            spim_xfer = spim1_xfer;
+            break;
+        case 2:
+            spim_xfer = spim2_xfer;
+            break;
+        default:
+            break;
+    }
+
+    cc_spim_event_clear(reg);
+
+    return spim_xfer(reg);
+}
+

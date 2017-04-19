@@ -19,6 +19,7 @@
 
 #define SPI0_INSTANCE_INDEX 0
 #define SPI1_INSTANCE_INDEX 1
+#define SPI2_INSTANCE_INDEX 2
 
 #define CC_DRV_SPI_PERIPHERAL(id)  (void *)regSPI##id
 
@@ -61,6 +62,16 @@ typedef enum
 } cc_spim_bit_order_t;
 
 /**
+ * @brief SPI operation mode.
+ */
+typedef enum
+{
+    CC_SPIM_OP_MODE_WRITE,
+    CC_SPIM_OP_MODE_READ,
+    CC_SPIM_OP_MODE_WRITE_THEN_READ
+} cc_spim_op_mode_t;
+
+/**
  * @brief SPI master driver instance configuration structure.
  */
 typedef struct
@@ -72,7 +83,7 @@ typedef struct
 /**
  * @brief SPI master instance default configuration.
  */
-#define CC_DRV_SPI_DEFAULT_CONFIG(id)                       \
+#define CC_DRV_SPI_DEFAULT_CONFIG()                       \
 {                                                            \
     .mode         = CC_SPIM_MODE_0,                      \
     .bit_order    = CC_SPIM_BIT_ORDER_MSB_FIRST,         \
@@ -139,6 +150,14 @@ int cc_drv_spi_init(cc_drv_spi_t const * const p_instance,
  */
 void cc_drv_spi_uninit(cc_drv_spi_t const * const p_instance);
 
+int cc_drv_spi_write(cc_drv_spi_t const * const p_instance,
+                      uint8_t const * p_tx_buffer,
+                      uint8_t         tx_buffer_length);
+
+int cc_drv_spi_read(cc_drv_spi_t const * const p_instance,
+                     uint8_t       * p_rx_buffer,
+                     uint8_t         rx_buffer_length);
+
 /**
  * @brief Function for starting the SPI data transfer.
  *
@@ -165,7 +184,7 @@ void cc_drv_spi_uninit(cc_drv_spi_t const * const p_instance);
  * @retval CC_ERROR_INVALID_ADDR If the provided buffers are not placed in the Data
  *                                RAM region.
  */
-int cc_drv_spi_transfer(cc_drv_spi_t const * const p_instance,
+int cc_drv_spi_write_then_read(cc_drv_spi_t const * const p_instance,
                                 uint8_t const * p_tx_buffer,
                                 uint8_t         tx_buffer_length,
                                 uint8_t       * p_rx_buffer,
@@ -213,8 +232,7 @@ int cc_drv_spi_transfer(cc_drv_spi_t const * const p_instance,
  * @retval CC_ERROR_INVALID_ADDR  If the provided buffers are not placed in the Data
  *                                 RAM region.
  */
-int cc_drv_spi_xfer(cc_drv_spi_t     const * const p_instance,
-                            cc_drv_spi_xfer_desc_t const * p_xfer_desc,
-                            uint32_t                        flags);
+int cc_drv_spi_transfer(cc_drv_spi_t     const * const p_instance,
+                            cc_drv_spi_xfer_desc_t const * p_xfer_desc);
 
 #endif // _SPIM_H__

@@ -70,7 +70,7 @@ static status_t LSM6DS3_ACC_GYRO_WriteReg(void *handle, u8_t Reg, u8_t Data);
 static status_t LSM6DS3_ACC_GYRO_ReadReg(void *handle, u8_t Reg, u8_t *Data)
 {
 
-  spi_data_read(0x00, Reg, Data, 1, 1);
+  spi_data_write_then_read(Reg, Data, 1, 1);
 //  if (Sensor_IO_Read(handle, Reg, Data, 1))
 //  {
 //    return MEMS_ERROR;
@@ -92,7 +92,7 @@ static status_t LSM6DS3_ACC_GYRO_ReadReg(void *handle, u8_t Reg, u8_t *Data)
 static status_t LSM6DS3_ACC_GYRO_WriteReg(void *handle, u8_t Reg, u8_t Data)
 {
 
-  spi_data_write(0x00, Reg, &Data, 1, 1);
+  spi_data_write(Reg, &Data, 1, 1);
 //  if (Sensor_IO_Write(handle, Reg, &Data, 1))
 //  {
 //    return MEMS_ERROR;
@@ -115,7 +115,7 @@ static status_t LSM6DS3_ACC_GYRO_WriteReg(void *handle, u8_t Reg, u8_t Data)
 u8_t LSM6DS3_ACC_GYRO_WriteMulti(void *handle, u8_t Reg, u8_t *Bufp, u16_t len)
 {
 
-  spi_data_write(0x00, Reg, Bufp, len, SPI_ID);	
+  spi_data_write(Reg, Bufp, len, SPI_ID);
   return MEMS_SUCCESS;
 //  if (Sensor_IO_Write(handle, Reg, Bufp, len))
 //  {
@@ -139,7 +139,7 @@ u8_t LSM6DS3_ACC_GYRO_WriteMulti(void *handle, u8_t Reg, u8_t *Bufp, u16_t len)
 u8_t LSM6DS3_ACC_GYRO_ReadMulti(void *handle, u8_t Reg, u8_t *Bufp, u16_t len)
 {
 
-  spi_data_read(0x00, Reg, Bufp, len, SPI_ID);	
+  spi_data_write_then_read(Reg, Bufp, len, SPI_ID);
   return MEMS_SUCCESS;	
 //  if (Sensor_IO_Read(handle, Reg, Bufp, len))
 //  {
