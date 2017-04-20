@@ -1036,7 +1036,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\inc;..\..\inc\CMSIS;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart</IncludePath>
+              <IncludePath>..\..\algo\8bit_ped_50hz;..\..\inc;..\..\inc\CMSIS;..\..\mmi;..\..\platform\asic\6801;..\..\platform\drvi;..\..\platform\init\inc;..\..\platform\sensor;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
