@@ -3,6 +3,7 @@
 #include "appDisplay.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "spi_oled.h"
 #include "ssd1306_oled_driver.h"
 //#include "appHRM.h"

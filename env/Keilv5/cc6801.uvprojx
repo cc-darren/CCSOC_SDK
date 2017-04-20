@@ -461,6 +461,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\platform\asic\6801\wktm.c</FilePath>
             </File>
+            <File>
+              <FileName>rtc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\rtc.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1156,6 +1161,11 @@
               <FileName>wktm.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\asic\6801\wktm.c</FilePath>
+            </File>
+            <File>
+              <FileName>rtc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\rtc.c</FilePath>
             </File>
           </Files>
         </Group>
