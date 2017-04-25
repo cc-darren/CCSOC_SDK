@@ -32,7 +32,12 @@
 
 #include "uart.h"
 
-#define UART_DMA_ENABLE 1
+#define UART_DMA_ENABLE
+
+static uint8_t *p_rx_buffer;
+static uint32_t rx_counter = 0;
+static uint32_t rx_buffer_length  = 0;
+static cc_uart_event_handler_t handler;
 
 volatile uint32_t UART0_RXDM_INTR = 0;
 volatile uint32_t UART0_TXDM_INTR = 0;
@@ -158,9 +163,9 @@ __STATIC_INLINE void cc_uart_config_baudrate(U_regUARTCTRL  * p_reg, cc_uart_bau
 
 }
 
-__STATIC_INLINE void cc_uart_dma_enable_tx(U_regUARTDMA * p_reg, uint8_t enable)
+__STATIC_INLINE void cc_uart_int_enable_rx(U_regUARTDMA * p_reg, uint8_t enable)
 {
-    p_reg->bf.dma_txen = enable;
+    p_reg->bf.rx_dma_done_intr_en = enable;
 }
 
 __STATIC_INLINE void cc_uart_int_enable_tx(U_regUARTDMA * p_reg, uint8_t enable)
@@ -168,16 +173,24 @@ __STATIC_INLINE void cc_uart_int_enable_tx(U_regUARTDMA * p_reg, uint8_t enable)
     p_reg->bf.tx_dma_done_intr_en = enable;
 }
 
+#ifdef UART_DMA_ENABLE
+__STATIC_INLINE void cc_uart_dma_enable_rx(U_regUARTDMA * p_reg, uint8_t enable)
+{
+    p_reg->bf.dma_rxen = enable;
+}
+
+
+__STATIC_INLINE void cc_uart_dma_enable_tx(U_regUARTDMA * p_reg, uint8_t enable)
+{
+    p_reg->bf.dma_txen = enable;
+}
+#endif
+
 #if 0
 __STATIC_INLINE void cc_uart_dma_flush_tx(U_regUARTDMA * p_reg, uint8_t flush)
 {
     p_reg->bf.tx_flush = flush;
 
-}
-
-__STATIC_INLINE void cc_uart_int_enable_rx(U_regUARTDMA * p_reg, uint8_t enable)
-{
-    p_reg->rx_dma_done_intr_en = enable;
 }
 #endif
 
@@ -193,7 +206,9 @@ int cc_drv_uart_init(cc_drv_uart_config_t const * p_config,
 
     apply_config(p_config);
     cc_uart_int_enable_tx(regUART0DMA, 1);
+    cc_uart_int_enable_rx(regUART0DMA, 1);
 
+    handler = event_handler;
     return CC_SUCCESS;
 }
 
@@ -201,18 +216,72 @@ void cc_drv_uart_uninit(void)
 {
 }
 
+__STATIC_INLINE void rx_done_event(uint8_t bytes)
+{
+    cc_drv_uart_event_t event;
+
+    event.type             = CC_DRV_UART_EVT_RX_DONE;
+    event.data.rxtx.bytes  = bytes;
+    event.data.rxtx.p_data = p_rx_buffer;
+
+    rx_buffer_length = 0;
+
+    handler(&event, 0);
+}
+
+__STATIC_INLINE void rx_byte(uint32_t * reg_addr, uint8_t const *rx_buffer, uint8_t length)
+{
+#ifdef UART_DMA_ENABLE
+    U_regUARTDMA * p_reg = (U_regUARTDMA *) reg_addr;
+
+    p_reg->bf.dma_rxbyte_num = length-1;
+    //DMA tx start address
+    p_reg->bf.dma_rxstrart_addr = (uint32_t)rx_buffer;
+
+    //DMA tx end address
+    p_reg->bf.dma_rxend_addr = (uint32_t)rx_buffer+length;
+#else
+    U_regUARTCTRL * p_reg = (U_regUARTCTRL *) reg_addr;
+
+    p_rx_buffer[rx_counter] = (uint8_t)p_reg->dw.bufRx;
+    rx_counter++;
+#endif
+}
+
 int cc_drv_uart_rx(uint8_t * p_data, uint8_t length)
 {
-    return 0;
+    bool err_code = CC_SUCCESS;
+
+    p_rx_buffer      = p_data;
+    rx_buffer_length = length;
+    rx_counter       = 0;
+
+#ifdef UART_DMA_ENABLE
+    rx_byte((uint32_t *)regUART0DMA, p_rx_buffer, rx_buffer_length);
+
+    NVIC_EnableIRQ(UART0_RXDMA_IRQn);
+
+    cc_uart_dma_enable_rx(regUART0DMA, 1);
+    while(!UART0_RXDM_INTR);
+    UART0_RXDM_INTR = 0;
+    NVIC_DisableIRQ(UART0_RXDMA_IRQn);
+
+    rx_counter       = length;
+#else
+    do {
+        rx_byte((uint32_t *)regUART0CTRL, p_rx_buffer, rx_buffer_length);
+    } while (rx_buffer_length > rx_counter);
+#endif
+
+    rx_done_event(rx_counter);
+    return err_code;
 }
 
-void cc_drv_uart_rx_enable(void)
+void tx_byte(uint32_t * reg_addr, uint8_t const * tx_buffer, uint8_t length)
 {
-}
+#ifdef UART_DMA_ENABLE
+    U_regUARTDMA * p_reg = (U_regUARTDMA *) reg_addr;
 
-void tx_byte(U_regUARTDMA * p_reg, uint8_t const * tx_buffer, uint8_t length)
-{
-#if UART_DMA_ENABLE
     p_reg->bf.dma_txbyte_num = length-1;
     //DMA tx start address
     p_reg->bf.dma_txstrart_addr = (uint32_t)tx_buffer;
@@ -220,10 +289,12 @@ void tx_byte(U_regUARTDMA * p_reg, uint8_t const * tx_buffer, uint8_t length)
     //DMA tx end address
     p_reg->bf.dma_txend_addr = (uint32_t)tx_buffer+length;
 #else
+    U_regUARTCTRL * p_reg = (U_regUARTCTRL *) reg_addr;
+
     while (*tx_buffer)
     {
-        regUART0CTRL->dw.bufTx = *tx_buffer++;
-        while(!regUART0CTRL->bf.untbe);
+        p_reg->dw.bufTx = *tx_buffer++;
+        while(!p_reg->bf.untbe);
     }
 #endif
 }
@@ -232,9 +303,9 @@ int cc_drv_uart_tx(uint8_t const * const p_data, uint8_t length)
 {
     bool err_code = CC_SUCCESS;
 
-#if UART_DMA_ENABLE
+#ifdef UART_DMA_ENABLE
     //Write data
-    tx_byte(regUART0DMA, p_data, length);
+    tx_byte((uint32_t *)regUART0DMA, p_data, length);
     NVIC_EnableIRQ(UART0_TXDMA_IRQn);
     //DMA tx enable
     cc_uart_dma_enable_tx(regUART0DMA, 1);
@@ -245,7 +316,7 @@ int cc_drv_uart_tx(uint8_t const * const p_data, uint8_t length)
     NVIC_DisableIRQ(UART0_TXDMA_IRQn);
 #else
     //Write data
-    tx_byte(regUART0DMA, p_data, length);
+    tx_byte((uint32_t *)regUART0CTRL, p_data, length);
 #endif
     return err_code;
 }

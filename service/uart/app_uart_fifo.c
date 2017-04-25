@@ -25,8 +25,8 @@ static __INLINE uint32_t fifo_length(app_fifo_t * const fifo)
 
 static app_uart_event_handler_t   m_event_handler;            /**< Event handler function. */
 __align(4) static uint8_t tx_tmp;
-static uint8_t tx_buffer[1];
-static uint8_t rx_buffer[1];
+__align(4) static uint8_t tx_buffer[1];
+__align(4) static uint8_t rx_buffer[1];
 
 static app_fifo_t                  m_rx_fifo;                               /**< RX FIFO buffer for storing data received on the UART until the application fetches them using app_uart_get(). */
 static app_fifo_t                  m_tx_fifo;                               /**< TX FIFO buffer for storing data to be transmitted on the UART when TXD is ready. Data is put to the buffer on using app_uart_put(). */
@@ -43,13 +43,15 @@ static void uart_event_handler(cc_drv_uart_event_t * p_event, void* p_context)
         {
             app_uart_event.evt_type          = APP_UART_FIFO_ERROR;
             app_uart_event.data.error_code   = err_code;
-            m_event_handler(&app_uart_event);
+            if (m_event_handler)
+                m_event_handler(&app_uart_event);
         }
         // Notify that new data is available if this was first byte put in the buffer.
         else if (FIFO_LENGTH(m_rx_fifo) == 1)
         {
             app_uart_event.evt_type = APP_UART_DATA_READY;
-            m_event_handler(&app_uart_event);
+            if (m_event_handler)
+                m_event_handler(&app_uart_event);
         }
         else
         {
@@ -125,8 +127,9 @@ uint32_t app_uart_init(const app_uart_comm_params_t * p_comm_params,
         return err_code;
     }
 
-    cc_drv_uart_rx_enable();
-    return cc_drv_uart_rx(rx_buffer,1);
+    //cc_drv_uart_rx_enable();
+    //return cc_drv_uart_rx(rx_buffer,1);
+    return CC_SUCCESS;
 }
 
 uint32_t app_uart_flush(void)
