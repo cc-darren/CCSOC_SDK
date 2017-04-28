@@ -78,29 +78,23 @@ void cc6801_pwm1_loadPrescaler(uint32_t prescaler)
 void cc6801_pwm0_duty(uint32_t percentage)
 {
     //only support duty 1~99
-    if ((percentage > 0)  || (percentage < 100))
-    {
-        regPWM0->dw.highCounter = percentage;
-        regPWM0->dw.lowCounter = 100;
-    }
-    else
-    {
-        //TODO
-    }
+    if (percentage > 99) percentage = 99;
+    if (percentage == 0) percentage = 1;
+
+    percentage = 100 - percentage;
+    regPWM0->dw.highCounter = percentage;
+    regPWM0->dw.lowCounter = 100;
 }
 
 void cc6801_pwm1_duty(uint32_t percentage)
 {
     //only support duty 1~99
-    if ((percentage > 0)  || (percentage < 100))
-    {
-        regPWM1->dw.highCounter = percentage;
-        regPWM1->dw.lowCounter = 100;
-    }
-    else
-    {
-        //TODO
-    }
+    if (percentage > 99) percentage = 99;
+    if (percentage == 0) percentage = 1;
+
+    percentage = 100 - percentage;
+    regPWM1->dw.highCounter = percentage;
+    regPWM1->dw.lowCounter = 100;
 }
 
 void cc6801_pwm0_init(T_callback handler)
