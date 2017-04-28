@@ -368,46 +368,52 @@ typedef union U_regCKGEN
 
     struct
     {
-        uint32_t reserved0:32;
+        //0x00
+        uint32_t reserved0;
+        //0x04
         uint32_t bleClkDiv:5;
-        uint32_t bleLowFreqClkSel:1;
-        uint32_t reserved1:2;
+        //uint32_t bleLowFreqClkSel:1;
+        uint32_t reserved1:3;
         uint32_t wktClkDiv:5;
         uint32_t wktLowFreqClkSel:1;
         uint32_t reserved2:2;
         uint32_t gpioClkDiv:5;
-        uint32_t gpioLowFreqClkSel:1;
-        uint32_t reserved3:2;
+        //uint32_t gpioLowFreqClkSel:1;
+        uint32_t reserved3:3;
         uint32_t wdtClkDiv:5;
         uint32_t wdtLowFreqClkSel:1;
         uint32_t reserved4:2;
+        //0x08
         uint32_t pwmClkDiv:5;
         uint32_t pwmLowFreqClkSel:1;
         uint32_t reserved5:2;
         uint32_t i2cClkDiv:5;
-        uint32_t i2cLowFreqClkSel:1;
-        uint32_t reserved6:2;
+        //uint32_t i2cLowFreqClkSel:1;
+        uint32_t reserved6:3;
         uint32_t i2sClkDiv:5;
-        uint32_t i2sLowFreqClkSel:1;
-        uint32_t reserved7:2;
+        //uint32_t i2sLowFreqClkSel:1;
+        uint32_t reserved7:3;
         uint32_t dmicClkDiv:5;
-        uint32_t dmicLowFreqClkSel:1;
-        uint32_t reserved8:2;
+        //uint32_t dmicLowFreqClkSel:1;
+        uint32_t reserved8:3;
+        //0x0C
         uint32_t uartClkDiv:5;
-        uint32_t uartLowFreqClkSel:1;
-        uint32_t reserved9:2;
+        //uint32_t uartLowFreqClkSel:1;
+        uint32_t reserved9:3;
         uint32_t spi0ClkDiv:5;
-        uint32_t spi0LowFreqClkSel:1;
-        uint32_t reserved10:2;
+        //uint32_t spi0LowFreqClkSel:1;
+        uint32_t reserved10:3;
         uint32_t spi1ClkDiv:5;
-        uint32_t spi1LowFreqClkSel:1;
-        uint32_t reserved11:2;
+        //uint32_t spi1LowFreqClkSel:1;
+        uint32_t reserved11:3;
         uint32_t spi2ClkDiv:5;
-        uint32_t spi2LowFreqClkSel:1;
-        uint32_t reserved12:2;
-        uint32_t ClkDiv:5;
-        uint32_t LowFreqClkSel:1;
-        uint32_t reserved13:26;
+        //uint32_t spi2LowFreqClkSel:1;
+        uint32_t reserved12:3;
+        //0x10
+        uint32_t ccuClkDiv:5;
+        //uint32_t LowFreqClkSel:1;
+        uint32_t reserved13:27;
+        //0x14
         uint32_t reserved14:1;
         uint32_t bleClkEn:1;
         uint32_t wktm0ClkEn:1;
@@ -431,6 +437,7 @@ typedef union U_regCKGEN
         uint32_t reserved15:4;
         uint32_t dmuClkEn:1;
         uint32_t reserved16:7;
+        //0x18
         uint32_t reserved17:1;
         uint32_t bleSwRst:1;
         uint32_t wktm0SwRst:1;
@@ -454,10 +461,11 @@ typedef union U_regCKGEN
         uint32_t sys0SwRst:1;
         uint32_t aesSwRst:1;
         uint32_t sys1SwRst:1;
-        uint32_t bleTimingGenSwRst:4;
+        uint32_t bleTimingGenSwRst:1;
         uint32_t dmuSwRst:1;
         uint32_t reserved18:7;
-        uint32_t clkSel:6;
+        //0x1C
+        uint32_t clkSel:6;              //8:8MHz, 16:16MHz, 32:32MHz
         uint32_t reserved19:26;
     }bf;    //bit-field
 }U_regCKGEN;
@@ -494,7 +502,6 @@ typedef union U_regPWMWKTM
         uint32_t pwmTimerSel:1;     //0:PWM, 1:Timer
         uint32_t reserved2:15;
 			
-
         uint32_t prescaler:8;       //0,1:no pre-scaler, 2~255: pre-scaler
         uint32_t reserved5:24;
 
@@ -525,91 +532,99 @@ typedef union U_regRTC
         uint32_t alarm2Month;
         uint32_t timing;
         uint32_t calib;
+        uint32_t reserved;
         uint32_t interrupt;
     }dw;    //double word
 
     struct
     {
-        uint32_t reserved0:25;
         uint32_t sec:7;
+        uint32_t reserved0:25;
 
-        uint32_t reserved1:25;
         uint32_t min:7;
+        uint32_t reserved1:25;
 
-        uint32_t reserved2:24;
-        uint32_t pm:1;
-        uint32_t reserved3:1;
         uint32_t hour:6;
+        uint32_t reserved3:1;
+        uint32_t pm:1;
+        uint32_t reserved2:24;
 
+        uint32_t weekDay:3;         //0:Sunday
         uint32_t reserved4:29;
-        uint32_t weekDay:3;
 
-        uint32_t reserved5:26;
         uint32_t day:6;
+        uint32_t reserved5:26;
 
-        uint32_t reserved6:25;
         uint32_t month:7;
+        uint32_t reserved6:25;
 
-        uint32_t reserved7:23;
+        uint32_t year:8;            //00: year2000
         uint32_t century:1;
-        uint32_t year:8;
+        uint32_t reserved7:23;
 
-        uint32_t reserved8:25;
         uint32_t alarm1Sec:7;
+        uint32_t reserved8:25;
 
-        uint32_t reserved9:25;
         uint32_t alarm1Min:7;
+        uint32_t reserved9:25;
 
-        uint32_t reserved10:24;
-        uint32_t alarm1Pm:1;
-        uint32_t reserved11:1;
         uint32_t alarm1Hour:6;
+        uint32_t reserved11:1;
+        uint32_t alarm1Pm:1;
+        uint32_t reserved10:24;
 
-        uint32_t reserved12:24;
         uint32_t alarm1Day:8;
+        uint32_t reserved12:24;
 
-        uint32_t reserved13:25;
         uint32_t alarm1Month:7;
+        uint32_t reserved13:25;
 
-        uint32_t reserved14:25;
         uint32_t alarm2Sec:7;
+        uint32_t reserved14:25;
 
-        uint32_t reserved15:25;
         uint32_t alarm2Min:7;
+        uint32_t reserved15:25;
 
-        uint32_t reserved16:24;
-        uint32_t alarm2Pm:1;
-        uint32_t reserved17:1;
         uint32_t alarm2Hour:6;
+        uint32_t reserved17:1;
+        uint32_t alarm2Pm:1;
+        uint32_t reserved16:24;
 
-        uint32_t reserved18:24;
         uint32_t alarm2Day:8;
+        uint32_t reserved18:24;
 
-        uint32_t reserved19:25;
         uint32_t alarm2Month:7;
+        uint32_t reserved19:25;
 
-        uint32_t reserved20:3;
-        uint32_t dataMode:1;         //0:binary, 1:BCD
-        uint32_t hourFormat:1;       //0:12-hour, 1:24-hour
-        uint32_t dse:1;              //day time saving enable
-        uint32_t dv:2;               //0: test mode, 1: calibration mode, 2: normal mode, 3: rtc disable
-        uint32_t reserved21:2;
-        uint32_t cabSign:1;          //0:positive sign, 1:negative sign
         uint32_t cab:21;             //256Hz *
+        uint32_t cabSign:1;          //0:positive sign, 1:negative sign
+        uint32_t reserved21:2;
+        uint32_t dv:2;               //0: test mode, 1: calibration mode, 2: normal mode, 3: rtc disable
+        uint32_t dse:1;              //day time saving enable
+        uint32_t hourFormat:1;       //0:12-hour, 1:24-hour
+        uint32_t dataMode:1;         //0:binary, 1:BCD
+        uint32_t reserved20:3;
 
-        uint32_t reserved22:21;
         uint32_t fcab:11;
+        uint32_t reserved22:21;
 
-        uint32_t interrupt:1;
-        uint32_t uip:1;
-        uint32_t reserved23:11;
-        uint32_t alarm2Int:1;
-        uint32_t alarm1Int:1;
-        uint32_t updateInt:1;
-        uint32_t reserved24:13;
-        uint32_t alarm2IntEn:1;
+        uint32_t reserved25;
+        
+        uint32_t secIntEn:1;
         uint32_t alarm1IntEn:1;
-        uint32_t updateIntEn:1;
+        uint32_t alarm2IntEn:1;
+        uint32_t minIntEn:1;
+        uint32_t hourIntEn:1;
+        uint32_t dayIntEn:1;
+        uint32_t reserved23:10;
+        uint32_t secSts:1;          //read clear
+        uint32_t alarm1IntSts:1;    //read clear
+        uint32_t alarm2IntSts:1;    //read clear
+        uint32_t minSts:1;          //read clear
+        uint32_t hourSts:1;         //read clear
+        uint32_t daySts:1;          //read clear
+        uint32_t reserved24:9;
+        uint32_t allSts:1;
     }bf;    //bit-field
 }U_regRTC;
 
