@@ -31,6 +31,7 @@
 ******************************************************************************/
 
 #include "gpio.h"
+#include "drvi_gpio.h"
 
 volatile uint32_t GPIO_INTR = 0;
 
@@ -134,16 +135,47 @@ void GPIO_IRQHandler(void)
     GPIO_INTR = 1;
 }
 
-void cc6801_request_irq(uint32_t pin_number,
-                                          cc6801_irq_handler callback,
-                                          cc6801_irq_type_t type,
-                                          cc6801_irq_polarity_t polarity)
+static int cc6801_gpio_irq_set_type(uint32_t pin_number, uint32_t type)
 {
-    cc6801_isr[pin_number] = callback;
+
+    switch (type & IRQ_TYPE_SENSE_MASK)
+    {
+        case IRQ_TYPE_EDGE_RISING:
+            REG_GPIO(pin_number)->dw.intType |= (1 << PIN(pin_number));
+            REG_GPIO(pin_number)->dw.intPolarity &= (0 << PIN(pin_number));
+            break;
+
+        case IRQ_TYPE_EDGE_FALLING:
+            REG_GPIO(pin_number)->dw.intType |= (1 << PIN(pin_number));
+            REG_GPIO(pin_number)->dw.intPolarity |= (1 << PIN(pin_number));
+            break;
+
+        case IRQ_TYPE_LEVEL_HIGH:
+            REG_GPIO(pin_number)->dw.intType &= (0 << PIN(pin_number));
+            REG_GPIO(pin_number)->dw.intPolarity &= (0 << PIN(pin_number));
+            break;
+
+        case IRQ_TYPE_LEVEL_LOW:
+            REG_GPIO(pin_number)->dw.intType &= (0 << PIN(pin_number));
+            REG_GPIO(pin_number)->dw.intPolarity |= (1 << PIN(pin_number));
+            break;
+
+        default:
+            return CC_ERROR_INVALID_DATA;
+    }
 
     REG_GPIO(pin_number)->dw.intTrig |= (1UL << PIN(pin_number));
-    REG_GPIO(pin_number)->dw.intType |= (type << PIN(pin_number));
-    REG_GPIO(pin_number)->dw.intPolarity |= (polarity << PIN(pin_number));
+
+    return CC_SUCCESS;
+}
+
+
+void cc6801_request_irq(uint32_t pin_number,
+                        cc6801_irq_handler callback,
+                        uint32_t type)
+{
+    cc6801_isr[pin_number] = callback;
+    cc6801_gpio_irq_set_type(pin_number, type);
 }
 
 #define DEFAULT_PINMUX(_pupd, _pinmux, _io, _od)  \
@@ -285,6 +317,7 @@ int cc6801_gpio_pinmux_init(void)
     cc6801_gpio_pinmux_config_table(cc6801_fpga_pinmux,
                     ARRAY_SIZE(cc6801_fpga_pinmux));
 
+    NVIC_EnableIRQ(GPIO_IRQn);
     return 0;
 }
 

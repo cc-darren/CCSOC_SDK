@@ -267,8 +267,7 @@ __STATIC_INLINE void cc6801_disable_irq(uint32_t pin_number)
 }
 
 void cc6801_request_irq(uint32_t pin_number,
-                                          cc6801_irq_handler callback,
-                                          cc6801_irq_type_t type,
-                                          cc6801_irq_polarity_t polarity);
+                        cc6801_irq_handler callback,
+                        uint32_t type);
 
 #endif //_GPIO_H_
