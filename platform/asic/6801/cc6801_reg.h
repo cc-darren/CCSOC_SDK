@@ -47,34 +47,6 @@ extern "C" {
 #define rd(x,y)     y = *((volatile unsigned int *)(x))
 
 
-//// ------------------------------------
-//// parameter
-//// ------------------------------------
-//// chip
-#define CHIP_ID                     0   //24bit
-#define SHRMEM_ADDR                 20
-#define SHRMEM_ADDR_OFS             16
-#define DBUS_CH                     17
-#define EFLASH_MODULE               1   //3bit
-#define EFLASH_BYTE_ADDR_WIDTH      18  //5bit
-#define IC_A_WIDTH                  13
-#define IC_L_WIDTH                  4
-#define DATARAM_ADDR_WIDTH          11
-#define ROM_ADDR_START              0x00000000
-#define ROM_ADDR_SIZE               0x00020000
-#define EF_ADDR_START               0x00020000
-#define EF_ADDR_SIZE                0x00040000
-#define SYSRAM_ADDR_START           0x00060000
-#define SYSRAM_ADDR_SIZE            0x00020000
-#define DATARAM_ADDR_START          0x00080000
-#define DATARAM_ADDR_SIZE           0x00001000
-#define BLE_ADDR_START              0x80002200
-#define BLE_ADDR_SIZE               0x00000100
-#define HS_ADDR_START               0x80002500
-#define HS_ADDR_SIZE                0x00001000
-#define AHB_CHANNEL                 3
-
-
 //// clock
 #define CLK32K_PERIOD_DIV2          ((1000000000/32768)/2)
 #define CLK48M_PERIOD_DIV2          (10.416)
@@ -85,8 +57,8 @@ extern "C" {
 // mem
 #define ROM_ADDR_BASE               0x00000000
 #define ROM_SIZE                    0x00020000  // 128KB
-#define EF_BASE                     0x30000000
-#define EF_SIZE                     0x30040000  // 256KB
+#define EF_BASE                     0x10000000
+#define EF_SIZE                     0x10040000  // 256KB
 #define SYSRAM_ADDR_BASE            0x20000000
 #define SYSRAM_SIZE                 0x00018000  // 96KB
 #define DATARAM_ADDR_BASE           0x20020000
@@ -122,7 +94,7 @@ extern "C" {
 #define DMU_ADDR_BASE               0x40001300
 
 #define EF_ADDR_BASE                0x40002000
-#define OTP_ADDR_BASE               0x40002100
+//#define OTP_ADDR_BASE               0x40002100
 #define HS_ADDR_BASE                0x40002200
 #define PMU_ADDR_BASE               0x40002300
 #define AES_ADDR_BASE               0x40002400
