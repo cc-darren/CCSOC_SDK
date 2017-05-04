@@ -447,7 +447,7 @@ typedef union U_regSCU
         uint32_t pdm25:1;           //PDM25 control(optional), 0:rising edge without impact, 1:falling edge to enable
         uint32_t reserved18:5;
         uint32_t mcuSwReset:1;      //Software reset enable, 0:reset, 1:un-reset
-        uint32_t clkRstGenRst:1:    //0:reset, 1:un-reset
+        uint32_t clkRstGenRst:1;    //0:reset, 1:un-reset
         uint32_t reserved19:13;
         uint32_t flushDone:1;       //I-Cache flush done, 0:not complete, 1:complete, Read Only
         //0x38 Clock 32KHz calibration
