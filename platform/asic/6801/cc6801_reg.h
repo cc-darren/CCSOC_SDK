@@ -742,7 +742,7 @@ typedef union U_regRTC
         uint32_t dv:2;               //0: test mode, 1: calibration mode, 2: normal mode, 3: rtc disable
         uint32_t dse:1;              //day time saving enable
         uint32_t hourFormat:1;       //0:12-hour, 1:24-hour
-        uint32_t dataMode:1;         //0:binary, 1:BCD
+        uint32_t dataMode:1;         //1:binary, 0:BCD
         uint32_t reserved20:3;
         //0x48
         uint32_t fcab:11;
