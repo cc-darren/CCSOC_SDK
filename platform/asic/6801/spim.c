@@ -172,11 +172,13 @@ int cc_drv_spi_write_then_read(cc_drv_spi_t const * const p_instance,
                                 uint8_t       * p_rx_buffer,
                                 uint8_t         rx_buffer_length)
 {
-    cc_drv_spi_xfer_desc_t xfer_desc;
-    xfer_desc.p_tx_buffer = p_tx_buffer;
-    xfer_desc.p_rx_buffer = p_rx_buffer;
-    xfer_desc.tx_length   = tx_buffer_length;
-    xfer_desc.rx_length   = rx_buffer_length;
+    cc_drv_spi_xfer_desc_t xfer_desc =
+    {
+        xfer_desc.p_tx_buffer = p_tx_buffer,
+        xfer_desc.tx_length   = tx_buffer_length,
+        xfer_desc.p_rx_buffer = p_rx_buffer,
+        xfer_desc.rx_length   = rx_buffer_length,
+    };
 
     return cc_drv_spi_transfer(p_instance, &xfer_desc);
 }
@@ -233,7 +235,7 @@ int cc_drv_spi_transfer(cc_drv_spi_t     const * const p_instance,
         reg->bf.op_mode = CC_SPIM_OP_MODE_WRITE_THEN_READ;
         cc_spim_tx_buffer_set(reg, p_xfer_desc->p_tx_buffer, p_xfer_desc->tx_length);
         cc_spim_rx_buffer_set(reg, p_xfer_desc->p_rx_buffer, p_xfer_desc->rx_length);
-}
+    }
     else if (p_xfer_desc->p_tx_buffer)
     {
         reg->bf.op_mode = CC_SPIM_OP_MODE_WRITE;

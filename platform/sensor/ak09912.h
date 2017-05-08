@@ -9,6 +9,8 @@
 /* Includes ------------------------------------------------------------------*/
 /* Exported types ------------------------------------------------------------*/
 #define MAG_Init()                              AK09912_MAG_Init()
+#define MAG_GetMagRaw(buf)                      AK09912_MAG_GetMagRaw(buf)
+#define MAG_GetMagRawBurst(buf, buf_size)       AK09912_MAG_GetMagRawBurst(buf, buf_size)
 
 //these could change accordingly with the architecture
 
@@ -196,6 +198,7 @@ status_t AK09912_MAG_I2CHS_En(AK09912_MAG_I2CHS_EN_t ov);
 
 /****************Reading Functions*****************/
 status_t AK09912_MAG_GetMagRaw(AxesRaw_t* buff);
+status_t AK09912_MAG_GetMagRawBurst(u8_t* buff, u8_t buffer_size);
 status_t AK09912_MAG_GetTemperatureRaw(u8_t* buff);
 
 /*********************Generic*********************/

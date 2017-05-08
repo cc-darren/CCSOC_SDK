@@ -12,12 +12,16 @@
 #include "global.h"
 #include "i2c.h"
 #include "i2c_sensor.h"
+#include "ak09912.h"
 
 
-//since SPI0 and I2C0 can't be used at the same time, using I2C1 default
+#define I2C0_INSTANCE_INDEX      0
+#define I2C0_CONFIG_FREQUENCY    CC_I2C_FREQ_100K
+#define I2C0_CONFIG_ADDRESS      AK09912_MAG_MEMS_I2C_ADDRESS
+
 static const cc_drv_i2c_t m_i2c_sensor = CC_DRV_I2C_INSTANCE(0);
 static volatile bool i2c_rx_done;  /**< Flag used to indicate that i2c instance completed the Rx transfer. */
-static volatile bool i2c_tx_done;  /**< Flag used to indicate that SPI instance completed the Tx transfer. */
+static volatile bool i2c_tx_done;  /**< Flag used to indicate that i2c instance completed the Tx transfer. */
 
 
 /**
@@ -45,51 +49,53 @@ void i2c_handler(cc_drv_i2c_evt_t const * p_event, void * p_context)
 void i2c_init (void)
 {
     const cc_drv_i2c_config_t i2c_sensor_config = {
-       .scl                = I2C0_CONFIG_SCL,
-       .sda                = I2C0_CONFIG_SDA,
+       .address            = I2C0_CONFIG_ADDRESS,
        .frequency          = I2C0_CONFIG_FREQUENCY,
     };
 
     cc_drv_i2c_init(&m_i2c_sensor, &i2c_sensor_config, i2c_handler, NULL);
-
-    cc_drv_i2c_enable(&m_i2c_sensor);
 }
 
-void i2c_data_read(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data, uint8_t cnt)
+void i2c_data_read(uint8_t reg_addr, uint8_t *reg_data, uint8_t cnt)
 {
     //send i2c device address first
     i2c_tx_done = false;
-    cc_drv_i2c_tx(&m_i2c_sensor, dev_addr, &reg_addr, sizeof(reg_addr), true);
+    cc_drv_i2c_tx(&m_i2c_sensor, &reg_addr, sizeof(reg_addr), true);
 
+    #if 0
     while(!i2c_tx_done)
     {
         __WFE();
     }
     i2c_tx_done = false;
-
+    #endif
     //Read data from i2c
     i2c_rx_done = false;
-    cc_drv_i2c_rx(&m_i2c_sensor, dev_addr, reg_data, cnt, false);
+    cc_drv_i2c_rx(&m_i2c_sensor, reg_data, cnt, false);
     //APP_ERROR_CHECK(err_code);
+    #if 0
     while(!i2c_rx_done)
     {
         __WFE();
     }
     i2c_rx_done = false;
+    #endif
 }
 
-void i2c_data_write(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data)
+void i2c_data_write(uint8_t reg_addr, uint8_t *reg_data)
 {
     uint8_t reg[2];
     reg[0] = reg_addr;
     reg[1] = *reg_data;
 
     i2c_tx_done = false;
-    cc_drv_i2c_tx(&m_i2c_sensor, dev_addr, reg, sizeof(reg), false);
+    cc_drv_i2c_tx(&m_i2c_sensor, reg, sizeof(reg), false);
+    #if 0
     while(!i2c_tx_done)
     {
         __WFE();
     }
     i2c_tx_done = false;
+    #endif
 }
 

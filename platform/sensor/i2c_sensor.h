@@ -6,8 +6,8 @@
 #include <stdint.h>
 
 void i2c_init (void);
-void i2c_data_read(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data, uint8_t cnt);
-void i2c_data_write(uint8_t dev_addr, uint8_t reg_addr, uint8_t *reg_data);
+void i2c_data_read(uint8_t reg_addr, uint8_t *reg_data, uint8_t cnt);
+void i2c_data_write(uint8_t reg_addr, uint8_t *reg_data);
 
 
 #endif

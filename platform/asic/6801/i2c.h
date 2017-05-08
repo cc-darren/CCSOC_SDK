@@ -17,14 +17,6 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-#define I2C0_CONFIG_FREQUENCY    CC_I2C_FREQ_100K
-#define I2C0_CONFIG_SCL          0
-#define I2C0_CONFIG_SDA          1
-
-#define I2C0_INSTANCE_INDEX      0
-
-#define CC_I2C0                        ((S_regI2C            *) I2C0_ADDR_BASE)
-
 /**
  * @enum nrf_i2c_frequency_t
  * @brief I2C master clock frequency.
@@ -55,22 +47,21 @@ typedef struct
 /**@brief I2C driver instance structure. */
 typedef struct
 {
-    S_regI2C           * p_reg;       /**< Pointer to the instance register set. */
+    U_regI2C           * p_reg;       /**< Pointer to the instance register set. */
     uint8_t            instance_id; /**< Instance index. */
 } cc_drv_i2c_t;
 
 /**@brief Macro for creating a I2C driver instance.*/
 #define CC_DRV_I2C_INSTANCE(id)                      \
 {                                                     \
-    .p_reg       = CC_I2C##id,             \
+    .p_reg       = regI2C##id,             \
     .instance_id = I2C##id##_INSTANCE_INDEX \
 }
 
 /**@brief Structure for I2C instance configuration. */
 typedef struct
 {
-    uint32_t            scl;                /**< SCL pin number. */
-    uint32_t            sda;                /**< SDA pin number. */
+    uint8_t            address;            /**< Address. */
     cc_i2c_frequency_t frequency;          /**< Frequency. */
 } cc_drv_i2c_config_t;
 
@@ -121,7 +112,6 @@ void cc_drv_i2c_disable(cc_drv_i2c_t const * const p_instance);
  * The transmission will be stopped when an error or time-out occurs.
  *
  * @param[in] p_instance      I2C instance.
- * @param[in] address         Address of a specific slave device (only 7 LSB).
  * @param[in] p_data          Pointer to a transmit buffer.
  * @param[in] length          Number of bytes to send.
  * @param[in] xfer_pending    After a specified number of bytes, transmission will
@@ -132,7 +122,6 @@ void cc_drv_i2c_disable(cc_drv_i2c_t const * const p_instance);
  * @retval  CC_ERROR_INTERNAL If an @ref CC_I2C_EVENTS_ERROR or a time-out has occurred (only in blocking mode).
  */
 int cc_drv_i2c_tx(cc_drv_i2c_t const * const p_instance,
-                          uint8_t                     address,
                           uint8_t const *             p_data,
                           uint32_t                    length,
                           bool                        xfer_pending);
@@ -143,7 +132,6 @@ int cc_drv_i2c_tx(cc_drv_i2c_t const * const p_instance,
  * Transmission will be stopped when error or time-out occurs.
  *
  * @param[in] p_instance      I2C instance.
- * @param[in] address         Address of a specific slave device (only 7 LSB).
  * @param[in] p_data          Pointer to a receive buffer.
  * @param[in] length          Number of bytes to be received.
  * @param[in] xfer_pending    After a specified number of bytes, transmission will
@@ -154,7 +142,6 @@ int cc_drv_i2c_tx(cc_drv_i2c_t const * const p_instance,
  * @retval  CC_ERROR_INTERNAL If an @ref CC_I2C_EVENTS_ERROR or a time-out has occured (only in blocking mode).
  */
 int cc_drv_i2c_rx(cc_drv_i2c_t const * const p_instance,
-                          uint8_t                     address,
                           uint8_t *                   p_data,
                           uint32_t                    length,
                           bool                        xfer_pending);

@@ -4,7 +4,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "AK09912.h"
-#include "spi_sensor.h"
+#include "i2c_sensor.h"
 
 #define AK09912_MAG_flags_BLE	0x01
 
@@ -27,7 +27,7 @@ u8_t AK09912_MAG_ReadReg(u8_t Reg, u8_t* Data) {
   //To be completed with either I2c or SPI reading function
   //i.e.: *Data = SPI_Mems_Read_Reg( Reg );
   //*Data = i2c_sensor_read_byte((uint32_t)Reg);
-  spi_data_read(Reg, Data, 1, SPI_ID);
+  i2c_data_read(Reg, Data, 1);
   return MEMS_SUCCESS;
   //EXAMPLE
   //if(!I2C_BufferRead(Data, AK09912_MAG_MEMS_I2C_ADDRESS, Reg, 1)) return MEMS_ERROR;
@@ -47,7 +47,7 @@ u8_t AK09912_MAG_WriteReg(u8_t Reg, u8_t Data) {
   //To be completed with either I2c or SPI writing function
   //i.e.: SPI_Mems_Write_Reg(Reg, Data);
   //i2c_sensor_write_byte((uint32_t)Reg, Data);
-  spi_data_write(Reg, &Data, 1, SPI_ID);
+  i2c_data_write(Reg, &Data);
   return MEMS_SUCCESS;
   //EXAMPLE  
   //I2C_ByteWrite(&Data,  AK09912_MAG_MEMS_I2C_ADDRESS,  Reg); 
@@ -254,7 +254,18 @@ status_t AK09912_MAG_Data_Ready(AK09912_MAG_DOR_DRDY_t *value){
   return MEMS_SUCCESS;
 }
 
-
+status_t  AK09912_MAG_GetMagRawBurst(u8_t* buff, u8_t buffer_size)
+{
+    if((!buffer_size) || !buff)
+    {
+        return MEMS_ERROR;
+    }
+    else
+    {
+        i2c_data_read(AK09912_MAG_HXL, buff, buffer_size);
+        return MEMS_SUCCESS;
+    }
+}
 
 /*******************************************************************************
 * Function Name  : AK09912_MAG_GetMagRaw
@@ -374,7 +385,7 @@ status_t AK09912_MAG_Init(void)
  }
   
  //Disable I2C interface
- AK09912_MAG_I2CDisable(AK09912_MAG_I2C_DISABLE);
+ //AK09912_MAG_I2CDisable(AK09912_MAG_I2C_DISABLE);
 
  //Initialize Magnetometer 
  response = AK09912_MAG_SetMode(AK09912_MAG_DO_100_Hz);

@@ -200,6 +200,16 @@ __STATIC_INLINE void cc6801_gpio_set_dir(uint32_t pin_number, cc6801_gpio_dir_t 
     }
 }
 
+__STATIC_INLINE void cc6801_gpio_direction_input(uint32_t pin_number)
+{
+    cc6801_gpio_set_dir(pin_number, CC6801_GPIO_DIR_INPUT);
+}
+
+__STATIC_INLINE void cc6801_gpio_direction_output(uint32_t pin_number)
+{
+    cc6801_gpio_set_dir(pin_number, CC6801_GPIO_DIR_OUTPUT);
+}
+
 __STATIC_INLINE void cc6801_gpio_set(uint32_t pin_number)
 {
     REG_GPIO(pin_number)->dw.output |= (1UL << PIN(pin_number));
@@ -258,12 +268,13 @@ __STATIC_INLINE void cc6801_gpio_set_port_mode(U_regGPIO *p_group, uint8_t port,
 
 __STATIC_INLINE void cc6801_enable_irq(uint32_t pin_number)
 {
+    REG_GPIO(pin_number)->dw.intSts |= (1UL << PIN(pin_number));
     REG_GPIO(pin_number)->dw.intEn |= (1UL << PIN(pin_number));
 }
 
 __STATIC_INLINE void cc6801_disable_irq(uint32_t pin_number)
 {
-    REG_GPIO(pin_number)->dw.intEn |= (0UL << PIN(pin_number));
+    REG_GPIO(pin_number)->dw.intEn &= ~(1UL << PIN(pin_number));
 }
 
 void cc6801_request_irq(uint32_t pin_number,

@@ -36,59 +36,88 @@
 volatile uint32_t I2C0_M_INTR = 0;
 volatile uint32_t I2C1_M_INTR = 0;
 
-/**@brief Generic function for handling I2C interrupt
- *
- * @param[in]  p_reg         Pointer to instance register structure.
- * @param[in]  instance_id   Index of instance.
- */
-__STATIC_INLINE void cc_drv_i2c_int_handler(S_regI2C * p_reg, uint32_t instance_id)
-{
-    // clear interrupt
-    p_reg->dma_done_intr = 1;
-    //p_reg->ms_resync_done_intr = 1;
-    p_reg->i2c_cd_err_intr = 1;
-    p_reg->i2c_err_ack_intr = 1;
-    p_reg->dma_done_intr = 1;
-}
-
-
 void I2C0_M_IRQHandler(void)
 {
-    cc_drv_i2c_int_handler(CC_I2C0, I2C0_INSTANCE_INDEX);
+    //regI2C0->ms_resync_done_intr = 1;
+    regI2C0->bf.i2c_cd_err_intr = 1;
+    regI2C0->bf.i2c_err_ack_intr = 1;
+    regI2C0->bf.dma_done_intr = 1;
     I2C0_M_INTR = 1;
 }
 
 void I2C1_M_IRQHandler(void)
 {
-    wr(I2C1_ADDR_BASE+0, 0x00010007);   // clear interrupt
+    //regI2C1->ms_resync_done_intr = 1;
+    regI2C1->bf.i2c_cd_err_intr = 1;
+    regI2C1->bf.i2c_err_ack_intr = 1;
+    regI2C1->bf.dma_done_intr = 1;
+    I2C1_M_INTR = 1;
 }
 
-__STATIC_INLINE void cc_i2c_frequency_set(S_regI2C      * p_i2c,
+__STATIC_INLINE void cc_i2c_frequency_set(U_regI2C      * p_i2c,
                                            cc_i2c_frequency_t frequency)
 {
     switch (frequency)
     {
         case CC_I2C_FREQ_100K:
-          p_i2c->ms_prescaler = 232;
-          p_i2c->cfg_i2c_mask = 3;
+          p_i2c->bf.ms_prescaler = 154;
+          p_i2c->bf.cfg_i2c_mask = 3;
           break;
         case CC_I2C_FREQ_400K:
-          p_i2c->ms_prescaler = 52;
-          p_i2c->cfg_i2c_mask = 3;
+          p_i2c->bf.ms_prescaler = 35;
+          p_i2c->bf.cfg_i2c_mask = 3;
           break;
         default:
           break;
     }
 }
 
-__STATIC_INLINE void cc_i2c_int_enable(S_regI2C * p_i2c, uint32_t int_mask)
+void cc_i2c_int_disable(cc_drv_i2c_t const * const p_instance)
 {
-    p_i2c->ms_resync_intr_en = 1;
-    p_i2c->i2c_cd_err_intr_en = 1;
-    p_i2c->i2c_err_ack_intr_en = 1;
-    p_i2c->dma_done_intr_en = 1;
+    //p_instance->bf.ms_resync_intr_en = 0;
+    p_instance->p_reg->bf.i2c_cd_err_intr_en = 0;
+    p_instance->p_reg->bf.i2c_err_ack_intr_en = 0;
+    p_instance->p_reg->bf.dma_done_intr_en = 0;
 }
 
+void cc_i2c_int_enable(cc_drv_i2c_t const * const p_instance)
+{
+    //p_instance->p_reg->bf.ms_resync_intr_en = 1;
+    p_instance->p_reg->bf.i2c_cd_err_intr_en = 1;
+    p_instance->p_reg->bf.i2c_err_ack_intr_en = 1;
+    p_instance->p_reg->bf.dma_done_intr_en = 1;
+
+    //p_instance->p_reg->bf.ms_resync_done_intr = 1;
+    p_instance->p_reg->bf.i2c_cd_err_intr = 1;
+    p_instance->p_reg->bf.i2c_err_ack_intr = 1;
+    p_instance->p_reg->bf.dma_done_intr = 1;
+}
+
+static int i2c0_xfer(U_regI2C * p_i2c)
+{
+    NVIC_EnableIRQ(I2C0_M_IRQn);
+
+    p_i2c->bf.dma_enable = 1;
+
+    while(!I2C0_M_INTR);
+    I2C0_M_INTR = 0;
+
+    NVIC_DisableIRQ(I2C0_M_IRQn);
+    return CC_SUCCESS;
+}
+
+static int i2c1_xfer(U_regI2C * p_i2c)
+{
+    NVIC_EnableIRQ(I2C1_M_IRQn);
+
+    p_i2c->bf.dma_enable = 1;
+
+    while(!I2C1_M_INTR);
+    I2C1_M_INTR = 0;
+
+    NVIC_DisableIRQ(I2C1_M_IRQn);
+    return CC_SUCCESS;
+}
 
 /**
  * @brief Function for transferring data.
@@ -108,29 +137,45 @@ __STATIC_INLINE void cc_i2c_int_enable(S_regI2C * p_i2c, uint32_t int_mask)
  * @retval  CC_ERROR_INTERNAL CC_I2C_EVENTS_ERROR or timeout has occured (only in blocking mode).
  */
 static int i2c_transfer(cc_drv_i2c_t const * const p_instance,
-                               uint8_t                     address,
                                uint8_t const             * p_data,
                                uint32_t                    length,
                                bool                        xfer_pending,
                                bool                        is_tx)
 {
+    U_regI2C *reg = p_instance->p_reg;
+    int  intance = p_instance->instance_id;
+    int  (*i2c_xfer)(U_regI2C * p_i2c);
+
+    switch (intance)
+    {
+        case 0:
+            i2c_xfer = i2c0_xfer;
+            break;
+        case 1:
+            i2c_xfer = i2c1_xfer;
+            break;
+        default:
+            break;
+    }
+
     if (is_tx)
     {
-        p_instance->p_reg->dma_str_waddr = (uint32_t)p_data;
-        p_instance->p_reg->wdata_byte_num = length;
+        p_instance->p_reg->bf.dma_str_raddr = (uint32_t)p_data;
+        p_instance->p_reg->bf.wdata_byte_num = length-1;
+        p_instance->p_reg->bf.rdata_byte_num = length-1;
+        p_instance->p_reg->bf.op_mode = 0;
     }
     else
     {
-        p_instance->p_reg->dma_str_raddr = (uint32_t)p_data;
-        p_instance->p_reg->rdata_byte_num = length;
+        p_instance->p_reg->bf.dma_str_waddr = (uint32_t)p_data;
+        p_instance->p_reg->bf.wdata_byte_num = length-1;
+        p_instance->p_reg->bf.rdata_byte_num = length-1;
+        p_instance->p_reg->bf.op_mode = 1;
     }
 
-    p_instance->p_reg->dbus_burst = 0;
-    p_instance->p_reg->dma_enable = 1;
+    p_instance->p_reg->bf.dbus_burst = 0;
 
-    while(!I2C0_M_INTR);
-
-    return CC_SUCCESS;
+    return i2c_xfer(reg);
 }
 
 int cc_drv_i2c_init(cc_drv_i2c_t const * const  p_instance,
@@ -140,16 +185,15 @@ int cc_drv_i2c_init(cc_drv_i2c_t const * const  p_instance,
 {
     cc_i2c_frequency_set(p_instance->p_reg, p_config->frequency);
 
-    p_instance->p_reg->ms_word_addr = 0;
-    p_instance->p_reg->ms_slave_addr = 0x1F;
-    p_instance->p_reg->ms_no_stop = 0;
-    p_instance->p_reg->ms_addr_en = 0;
-    p_instance->p_reg->ms_addr_16bit = 0;
+    p_instance->p_reg->bf.cfg_core_select = 1;
 
-		//TODO: I2C GPIO setting
-    //NRF_GPIO->PIN_CNF[p_config->scl] = SCL_PIN_CONF;
-    //NRF_GPIO->PIN_CNF[p_config->sda] = SDA_PIN_CONF;
-    //nrf_i2c_pins_set(p_instance->p_reg, p_config->scl, p_config->sda);
+    p_instance->p_reg->bf.ms_slave_addr = p_config->address;
+    p_instance->p_reg->bf.ms_word_addr = 0;
+    p_instance->p_reg->bf.ms_no_stop = 0;
+    p_instance->p_reg->bf.ms_addr_en = 0;
+    p_instance->p_reg->bf.ms_addr_16bit = 0;
+
+    cc_i2c_int_enable(p_instance);
 
     return CC_SUCCESS;
 }
@@ -159,36 +203,23 @@ void cc_drv_i2c_uninit(cc_drv_i2c_t const * const p_instance)
 {
 }
 
-
-void cc_drv_i2c_enable(cc_drv_i2c_t const * const p_instance)
-{
-    p_instance->p_reg->ms_resync_done_intr = 1;
-    p_instance->p_reg->i2c_cd_err_intr = 1;
-    p_instance->p_reg->i2c_err_ack_intr = 1;
-    p_instance->p_reg->dma_done_intr = 1;
-
-    cc_i2c_int_enable(p_instance->p_reg, 0x7);
-}
-
 int cc_drv_i2c_tx(cc_drv_i2c_t const * const p_instance,
-                          uint8_t                     address,
                           uint8_t const *             p_data,
                           uint32_t                    length,
                           bool                        xfer_pending)
 {
-    return i2c_transfer(p_instance, address,
+    return i2c_transfer(p_instance,
                         p_data, length,
                         xfer_pending, true);
 }
 
 
 int cc_drv_i2c_rx(cc_drv_i2c_t const * const p_instance,
-                          uint8_t                     address,
                           uint8_t *                   p_data,
                           uint32_t                    length,
                           bool                        xfer_pending)
 {
-    return i2c_transfer(p_instance, address,
+    return i2c_transfer(p_instance,
                         p_data, length,
                         xfer_pending, false);
 }

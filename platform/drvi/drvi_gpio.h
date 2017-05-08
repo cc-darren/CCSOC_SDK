@@ -16,7 +16,9 @@
 
 
 #define drvi_gpio_pinmux_init()            cc6801_gpio_pinmux_init()
-#define drvi_gpio_set_dir(x,y)             cc6801_gpio_set_dir(x,y)
+#define drvi_gpio_direction_input(x)       cc6801_gpio_direction_input(x)
+#define drvi_gpio_direction_output(x)      cc6801_gpio_direction_output(x)
+
 #define drvi_gpio_read(x)                  cc6801_gpio_read(x)
 #define drvi_gpio_write(x,y)               cc6801_gpio_write(x,y)
 
