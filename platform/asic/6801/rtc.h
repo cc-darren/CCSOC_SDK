@@ -26,7 +26,8 @@
         .year = 2017,                       \
     }
 
-
+#define RTC_START_YEAR 2000
+    
 typedef struct
 {
     uint8_t  sec;
@@ -39,13 +40,22 @@ typedef struct
 } S_rtcInfo;
 
 
+#define SETRTC_ERR_SEC      0x00000001
+#define SETRTC_ERR_MIN      0x00000002
+#define SETRTC_ERR_HOUR     0x00000004
+#define SETRTC_ERR_DAY      0x00000008
+#define SETRTC_ERR_MONTH    0x00000010
+#define SETRTC_ERR_YEAR     0x00000020
 
 
 
+void cc6801_rtcInit(void);
+S_rtcInfo cc6801_rtcGetTime(void);
+uint32_t cc6801_rtcSetTime(S_rtcInfo rtcTarget,uint32_t ErrorMask);
 
-
-
-
+void cc6801_rtcSetAlarmEN(uint32_t isEnable);
+S_rtcInfo cc6801_rtcGetAlarm(void);
+uint32_t cc6801_rtcSetAlarm(S_rtcInfo rtcTarget,uint32_t ErrorMask);
 
 
 
