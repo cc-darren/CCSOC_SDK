@@ -1078,6 +1078,48 @@ typedef union U_regSPI
     }bf;    //bit-field
 }U_regSPI;
 
+
+typedef union U_regAES
+{
+    struct
+    {
+        uint32_t interrupt;
+        uint32_t ctrl;
+        uint32_t dmaCtrl;
+        uint32_t dmaWrAddr;
+        uint32_t dmaRdAddr;
+    }dw;    //double word
+
+    struct
+    {
+        uint32_t intEn:1;           //0:disable, 1:enable
+        uint32_t reserved0:15;
+        uint32_t intSts:1;          //write 1 clear
+        uint32_t reserved1:15;
+
+        uint32_t bcMode:5;
+        uint32_t reserved2:3;
+        uint32_t keySize:2;
+        uint32_t reserved3:6;
+        uint32_t decrypt:1;
+        uint32_t reserved4:15;
+
+        uint32_t  wByteNum:12;
+        uint32_t  reserved5:3;
+        uint32_t  dbusBurst:1;
+        uint32_t  rByteNum:12;
+        uint32_t  opMode:2;
+        uint32_t  reserved6:1;
+        uint32_t  dmaEn:1;
+
+        uint32_t  dmaWrAddr:17;
+        uint32_t  reserved7:15;
+
+        uint32_t  dmaRdAddr:17;
+        uint32_t  reserved8:15;
+    }bf;    //bit-field
+}U_regAES;
+
 typedef struct
 {
     //remap control
@@ -1117,6 +1159,7 @@ typedef struct
 #define regRTC          ((U_regRTC         *) RTC_ADDR_BASE)
 #define regI2C0         ((U_regI2C         *) I2C0_ADDR_BASE)
 #define regI2C1         ((U_regI2C         *) I2C1_ADDR_BASE)
+#define regAES          ((U_regAES         *) AES_ADDR_BASE)
 
 #ifdef __cplusplus
 }

@@ -472,9 +472,9 @@
           <GroupName>drvi</GroupName>
           <Files>
             <File>
-              <FileName>drvi_timer.c</FileName>
+              <FileName>drvi_aes.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_timer.c</FilePath>
+              <FilePath>..\..\platform\drvi\drvi_aes.c</FilePath>
             </File>
             <File>
               <FileName>drvi_init.c</FileName>
@@ -485,6 +485,11 @@
               <FileName>drvi_pwm.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\drvi\drvi_pwm.c</FilePath>
+            </File>
+            <File>
+              <FileName>drvi_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\drvi\drvi_timer.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1173,9 +1178,9 @@
           <GroupName>drvi</GroupName>
           <Files>
             <File>
-              <FileName>drvi_timer.c</FileName>
+              <FileName>drvi_aes.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_timer.c</FilePath>
+              <FilePath>..\..\platform\drvi\drvi_aes.c</FilePath>
             </File>
             <File>
               <FileName>drvi_init.c</FileName>
@@ -1186,6 +1191,11 @@
               <FileName>drvi_pwm.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\drvi\drvi_pwm.c</FilePath>
+            </File>
+            <File>
+              <FileName>drvi_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\drvi\drvi_timer.c</FilePath>
             </File>
           </Files>
         </Group>
