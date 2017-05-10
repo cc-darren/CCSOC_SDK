@@ -36,6 +36,33 @@ volatile uint32_t WDT_INTR = 0;
 
 void WDT_IRQHandler(void)
 {
-    wr(WDT_ADDR_BASE+0x0, 0x00010000);   // clear interrupt
+    regWDT->bf.intSts = 1;        //clear interrupt;
     WDT_INTR = 1;
 }
+
+void cc6801_wdt_feed(void)
+{
+    regWDT->bf.wdtEn = 1;
+    regWDT->bf.wdtEn = 0;
+}
+
+void cc6801_wdt_enable(void)
+{
+    regWDT->bf.wdtEn = 1;
+    regWDT->bf.wdtEn = 0;
+
+    regWDT->bf.intSts = 1;        //clear interrupt;
+    regWDT->bf.intEn = 1;         //default enable interrupt;
+}
+
+void cc6801_wdt_init(uint32_t reload_value)
+{
+    regWDT->dw.intCounter = (reload_value * 32768) / 1000;
+    regWDT->dw.rstCounter = (reload_value * 32768) / 1000;
+
+    regWDT->bf.prescaler = 1;     //default to highest clock
+    regWDT->bf.timerSel = 0;      //select watchdog
+
+    NVIC_EnableIRQ(WDT_IRQn);
+}
+

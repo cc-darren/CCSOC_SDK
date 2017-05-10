@@ -1078,7 +1078,6 @@ typedef union U_regSPI
     }bf;    //bit-field
 }U_regSPI;
 
-
 typedef union U_regAES
 {
     struct
@@ -1120,6 +1119,37 @@ typedef union U_regAES
     }bf;    //bit-field
 }U_regAES;
 
+typedef union U_regWDT
+{
+    struct
+    {
+        uint32_t interrupt;
+        uint32_t ctrl;
+        uint32_t intCounter;
+        uint32_t rstCounter;
+        uint32_t counter;
+    }dw;    //double word
+
+    struct
+    {
+        uint32_t intEn:1;           //0:disable, 1:enable
+        uint32_t reserved0:15;
+        uint32_t intSts:1;          //write 1 clear
+        uint32_t reserved1:15;
+
+        uint32_t wdtEn:1;           //0:disable, 1:enable
+        uint32_t timerSel:1;        //0:disable, 1:enable
+        uint32_t rstEn:1;           //0:disable, 1:enable
+        uint32_t reserved2:5;
+        uint32_t prescaler:8;       //0,1:no pre-scaler, 2~255: pre-scaler
+        uint32_t reserved3:16;
+
+        uint32_t intCounter;
+        uint32_t rstCounter;
+        uint32_t counter;           //read counter value
+    }bf;    //bit-field
+}U_regWDT;
+
 typedef struct
 {
     //remap control
@@ -1160,6 +1190,7 @@ typedef struct
 #define regI2C0         ((U_regI2C         *) I2C0_ADDR_BASE)
 #define regI2C1         ((U_regI2C         *) I2C1_ADDR_BASE)
 #define regAES          ((U_regAES         *) AES_ADDR_BASE)
+#define regWDT          ((U_regWDT         *) WDT_ADDR_BASE)
 
 #ifdef __cplusplus
 }
