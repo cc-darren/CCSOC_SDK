@@ -176,6 +176,9 @@ void cc6801_request_irq(uint32_t pin_number,
 {
     cc6801_isr[pin_number] = callback;
     cc6801_gpio_irq_set_type(pin_number, type);
+
+    //Clear interrupt status before request
+    REG_GPIO(pin_number)->dw.intSts |= (1UL << PIN(pin_number));
 }
 
 #define DEFAULT_PINMUX(_pupd, _pinmux, _io, _od)  \

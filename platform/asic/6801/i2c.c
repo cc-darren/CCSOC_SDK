@@ -33,24 +33,54 @@
 #include "cc6801_reg.h"
 #include "i2c.h"
 
+#define I2C_ERR_NONE        0x00
+#define I2C_ERR_NO_ACK      0x01
+#define I2C_ERR_COLLIDED    0x02
+
 volatile uint32_t I2C0_M_INTR = 0;
 volatile uint32_t I2C1_M_INTR = 0;
+
+static int msg_err = 0;
 
 void I2C0_M_IRQHandler(void)
 {
     //regI2C0->ms_resync_done_intr = 1;
-    regI2C0->bf.i2c_cd_err_intr = 1;
-    regI2C0->bf.i2c_err_ack_intr = 1;
-    regI2C0->bf.dma_done_intr = 1;
+    if (regI2C0->bf.i2c_cd_err_intr)
+    {
+        msg_err |= I2C_ERR_COLLIDED;
+        regI2C0->bf.i2c_cd_err_intr = 1;
+    }
+
+    if (regI2C0->bf.i2c_err_ack_intr)
+    {
+        msg_err |= I2C_ERR_NO_ACK;
+        regI2C0->bf.i2c_err_ack_intr = 1;
+    }
+
+    if (regI2C0->bf.dma_done_intr)
+        regI2C0->bf.dma_done_intr = 1;
+
     I2C0_M_INTR = 1;
 }
 
 void I2C1_M_IRQHandler(void)
 {
     //regI2C1->ms_resync_done_intr = 1;
-    regI2C1->bf.i2c_cd_err_intr = 1;
-    regI2C1->bf.i2c_err_ack_intr = 1;
-    regI2C1->bf.dma_done_intr = 1;
+    if (regI2C1->bf.i2c_cd_err_intr)
+    {
+        msg_err |= I2C_ERR_COLLIDED;
+        regI2C1->bf.i2c_cd_err_intr = 1;
+    }
+
+    if (regI2C1->bf.i2c_err_ack_intr)
+    {
+        msg_err |= I2C_ERR_NO_ACK;
+        regI2C1->bf.i2c_err_ack_intr = 1;
+    }
+
+    if (regI2C1->bf.dma_done_intr)
+        regI2C1->bf.dma_done_intr = 1;
+
     I2C1_M_INTR = 1;
 }
 
@@ -64,7 +94,7 @@ __STATIC_INLINE void cc_i2c_frequency_set(U_regI2C      * p_i2c,
           p_i2c->bf.cfg_i2c_mask = 3;
           break;
         case CC_I2C_FREQ_400K:
-          p_i2c->bf.ms_prescaler = 35;
+          p_i2c->bf.ms_prescaler = 30;
           p_i2c->bf.cfg_i2c_mask = 3;
           break;
         default:
@@ -95,6 +125,8 @@ void cc_i2c_int_enable(cc_drv_i2c_t const * const p_instance)
 
 static int i2c0_xfer(U_regI2C * p_i2c)
 {
+    msg_err = I2C_ERR_NONE;
+
     NVIC_EnableIRQ(I2C0_M_IRQn);
 
     p_i2c->bf.dma_enable = 1;
@@ -103,11 +135,25 @@ static int i2c0_xfer(U_regI2C * p_i2c)
     I2C0_M_INTR = 0;
 
     NVIC_DisableIRQ(I2C0_M_IRQn);
-    return CC_SUCCESS;
+
+    if (msg_err == I2C_ERR_NONE)
+        return CC_SUCCESS;
+
+    //Error occurs, reset I2C bus
+    if ((msg_err == I2C_ERR_COLLIDED) || (msg_err == I2C_ERR_NO_ACK))
+    {
+        regCKGEN->bf.i2c0SwRst = 0;
+        regCKGEN->bf.i2c0SwRst = 1;
+        return CC_ERROR_INTERNAL;
+    }
+
+    return CC_ERROR_BUSY;
 }
 
 static int i2c1_xfer(U_regI2C * p_i2c)
 {
+    msg_err = I2C_ERR_NONE;
+
     NVIC_EnableIRQ(I2C1_M_IRQn);
 
     p_i2c->bf.dma_enable = 1;
@@ -116,7 +162,19 @@ static int i2c1_xfer(U_regI2C * p_i2c)
     I2C1_M_INTR = 0;
 
     NVIC_DisableIRQ(I2C1_M_IRQn);
-    return CC_SUCCESS;
+
+    if (msg_err == I2C_ERR_NONE)
+        return CC_SUCCESS;
+
+    //Error occurs, reset I2C bus
+    if ((msg_err == I2C_ERR_COLLIDED) || (msg_err == I2C_ERR_NO_ACK))
+    {
+        regCKGEN->bf.i2c1SwRst = 0;
+        regCKGEN->bf.i2c1SwRst = 1;
+        return CC_ERROR_INTERNAL;
+    }
+
+    return CC_ERROR_BUSY;
 }
 
 /**
