@@ -191,7 +191,9 @@ void SystemInit (void)
     //NVIC_EnableIRQ(I2S_TXDMA_IRQn  );
     //NVIC_EnableIRQ(I2S_IP_IRQn     );
     //NVIC_EnableIRQ(DMIC_IRQn       );
-    //NVIC_EnableIRQ(BLE_IRQn        );
+#ifdef CFG_BLE_APP    
+    NVIC_EnableIRQ(BLE_IRQn        );
+#endif
     //NVIC_EnableIRQ(GPIO_IRQn       );
     //NVIC_EnableIRQ(CCU_IRQn        );
     //NVIC_EnableIRQ(AES_IRQn        );

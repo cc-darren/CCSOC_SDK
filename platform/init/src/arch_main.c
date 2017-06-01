@@ -26,6 +26,8 @@
 #include "spi_oled.h"
 #include "appDisplay.h"
 #include "FP_PED_8Bit.h"
+#include "jump_table.h"
+#include "cfg_ble_ip.h"
 
 #define APP_TIMER_PRESCALER                     0                                           /**< Value of the RTC1 PRESCALER register. */
 #define APP_TIMER_OP_QUEUE_SIZE                 4                                           /**< Size of timer operation queues. */
@@ -312,28 +314,51 @@ void _app_init(void)
 
 int main(void)
 {
+#ifdef CFG_BLE_APP
+	uint32_t error = 0;
+#endif
     drvi_initialize();
 
     app_trace_init();
 
-    pwm_start_test();
+    //pwm_start_test();
 
     timers_init();
     timers_start_test();
 
     //start interrupt handling
+#ifdef CFG_BLE_APP
+    memset (((void *) 0x40006000), 0, 8192);
+
+	*((uint32_t *) 0x40000010) = 0x00000B40;
+    *((uint32_t *) 0x4000011C) = 0x00000008;
+	
+    // Initialize RW SW stack
+    rwip_init(error);
+#endif
+	
     GLOBAL_INT_START();
     printf("\r\n== CC6801 Start ==\r\n");
 
     sensor_init();
     _app_init();
 
+
     while(1)
     {
+#ifdef CFG_BLE_APP
+			 rwip_schedule();
+#endif
+			
        readSensor = 0;
        _sensor_accel_on_change();
        app_displayoled_routine();
-       while(!readSensor);
+       while(!readSensor)
+			 {
+#ifdef CFG_BLE_APP
+				  //rwip_schedule();
+#endif			
+			 }
     }
     rw_main();
 
@@ -341,3 +366,9 @@ int main(void)
     //return(0);
 }
 
+#ifdef CFG_BLE_APP
+void BLE_IRQHandler(void)
+{    
+	rwble_isr();
+}
+#endif

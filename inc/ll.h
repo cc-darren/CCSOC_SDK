@@ -19,7 +19,7 @@
 #endif // __arm__
 
 #include <stdint.h>
-//#include "arch.h"
+#include "arch.h"
 //#include "reg_intc.h"
 
 /** @brief Enable interrupts globally in the system.

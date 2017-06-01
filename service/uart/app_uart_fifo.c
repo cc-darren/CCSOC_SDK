@@ -186,3 +186,70 @@ uint32_t app_uart_close(void)
     cc_drv_uart_uninit();
     return CC_SUCCESS;
 }
+
+
+
+/******************************************************************************
+ ***    APIs required by BLE SW IP 
+ ***    for HCI / AHI / etc.
+ ******************************************************************************/
+void app_ble_uart_read(uint8_t *bufptr, uint32_t size, rwip_eif_callback callback, void* dummy)
+{
+}
+
+void app_ble_uart_write(uint8_t *bufptr, uint32_t size, rwip_eif_callback callback, void* dummy)
+{
+}
+
+void app_ble_uart_flow_on(void)
+{
+}
+
+bool app_ble_uart_flow_off(void)
+{
+    return (1);
+}
+
+const struct rwip_eif_api app_ble_uart_api =
+{
+    app_ble_uart_read,
+    app_ble_uart_write,
+    app_ble_uart_flow_on,
+    app_ble_uart_flow_off,
+};
+
+const struct rwip_eif_api* rwip_eif_get(uint8_t type)
+{
+    const struct rwip_eif_api* ret = NULL;
+
+    switch(type)
+    {
+    case RWIP_EIF_AHI:
+         {
+             ret = &app_ble_uart_api;
+         }
+         break;
+
+#if (BLE_EMB_PRESENT) || (BT_EMB_PRESENT)
+    case RWIP_EIF_HCIC:
+         {
+             ret = &app_ble_uart_api;
+         }
+         break;
+#elif !(BLE_EMB_PRESENT) || !(BT_EMB_PRESENT)
+    case RWIP_EIF_HCIH:
+         {
+             ret = &app_ble_uart2_api;
+         }
+         break;
+#endif // (BLE_EMB_PRESENT)
+
+    default:
+         {
+         //ASSERT_INFO(0, type, 0);
+         }
+         break;
+    }
+    return ret;
+}
+

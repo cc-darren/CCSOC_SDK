@@ -239,6 +239,23 @@ uint32_t app_uart_flush(void);
 uint32_t app_uart_close(void);
 
 
+
+
+
+
+/******************************************************************************
+ ***    APIs required by BLE SW IP 
+ ***    for HCI / AHI / etc.
+ ******************************************************************************/
+#include "rwip.h"
+
+void app_ble_uart_read(uint8_t *bufptr, uint32_t size, rwip_eif_callback callback, void* dummy);
+void app_ble_uart_write(uint8_t *bufptr, uint32_t size, rwip_eif_callback callback, void* dummy);
+void app_ble_uart_flow_on(void);
+bool app_ble_uart_flow_off(void);
+const struct rwip_eif_api* rwip_eif_get(uint8_t type);
+
+
 #endif //APP_UART_H__
 
 /** @} */
