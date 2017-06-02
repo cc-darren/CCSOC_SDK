@@ -124,6 +124,7 @@ void cc6801_timer1_init(T_callback handler)
 void cc6801_timer0_counterClear(void)
 {
     regWKTM0->bf.clear = 1;
+    regWKTM0->bf.clear = 0;
     //Keep clear bit to 1 to make counter value always 0
     //start timer API will clear clear_bit
 }

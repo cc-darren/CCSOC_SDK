@@ -697,6 +697,9 @@ static void compare_reg_update(timer_node_t * p_timer_id_head_old)
         }
 
         cc += (ticks_elapsed < ticks_to_expire) ? ticks_to_expire : ticks_elapsed;
+        if (cc > MAX_RTC_COUNTER_VAL)
+            drvi_timer0_counterClear();
+
         cc &= MAX_RTC_COUNTER_VAL;
 
         rtc1_compare0_set(cc);

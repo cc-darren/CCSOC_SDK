@@ -48,7 +48,7 @@ typedef struct
 typedef struct
 {
     U_regI2C           * p_reg;       /**< Pointer to the instance register set. */
-    uint8_t            instance_id; /**< Instance index. */
+    uint8_t            instance_id;   /**< Instance index. */
 } cc_drv_i2c_t;
 
 /**@brief Macro for creating a I2C driver instance.*/

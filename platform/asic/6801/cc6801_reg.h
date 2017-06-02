@@ -985,7 +985,7 @@ typedef union U_regI2C
     }dw;    //double word
 
     struct
-{
+    {
         //I2C interrupt:0x1100
         uint32_t  dma_done_intr_en:1;
         uint32_t  i2c_err_ack_intr_en:1;
@@ -998,7 +998,7 @@ typedef union U_regI2C
         uint32_t  ms_resync_done_intr:1;
         uint32_t  reserved1:12;
         //I2C Reserved:0x1104
-        uint32_t reserved2;
+        uint32_t  reserved2;
         //I2C DMA control:0x1108
         uint32_t  wdata_byte_num:12;
         uint32_t  reserved3:3;

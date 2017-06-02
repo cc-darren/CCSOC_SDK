@@ -44,6 +44,8 @@ static int msg_err = 0;
 
 void I2C0_M_IRQHandler(void)
 {
+    regI2C0->bf.dma_done_intr = 1;
+
     //regI2C0->ms_resync_done_intr = 1;
     if (regI2C0->bf.i2c_cd_err_intr)
     {
@@ -65,6 +67,8 @@ void I2C0_M_IRQHandler(void)
 
 void I2C1_M_IRQHandler(void)
 {
+    regI2C1->bf.dma_done_intr = 1;
+
     //regI2C1->ms_resync_done_intr = 1;
     if (regI2C1->bf.i2c_cd_err_intr)
     {
@@ -141,17 +145,15 @@ static int i2c0_xfer(U_regI2C * p_i2c)
 
     //Error occurs, reset I2C bus
     if ((msg_err == I2C_ERR_COLLIDED) || (msg_err == I2C_ERR_NO_ACK))
-    {
-        regCKGEN->bf.i2c0SwRst = 0;
-        regCKGEN->bf.i2c0SwRst = 1;
         return CC_ERROR_INTERNAL;
-    }
 
     return CC_ERROR_BUSY;
 }
 
 static int i2c1_xfer(U_regI2C * p_i2c)
 {
+    int counter = 0;
+
     msg_err = I2C_ERR_NONE;
 
     NVIC_EnableIRQ(I2C1_M_IRQn);
@@ -168,11 +170,7 @@ static int i2c1_xfer(U_regI2C * p_i2c)
 
     //Error occurs, reset I2C bus
     if ((msg_err == I2C_ERR_COLLIDED) || (msg_err == I2C_ERR_NO_ACK))
-    {
-        regCKGEN->bf.i2c1SwRst = 0;
-        regCKGEN->bf.i2c1SwRst = 1;
         return CC_ERROR_INTERNAL;
-    }
 
     return CC_ERROR_BUSY;
 }

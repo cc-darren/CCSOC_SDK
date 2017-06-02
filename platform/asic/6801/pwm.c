@@ -107,7 +107,7 @@ void cc6801_pwm0_init(T_callback handler)
     regPWM0->bf.pwmTimerSel = 0;   //select PWM
     regPWM0->bf.clear = 1;
     regPWM0->bf.repeat = 0;        //default output always (0:repeat, 1:single)
-    regPWM0->bf.pwmOutEn = 1;
+    //regPWM0->bf.pwmOutEn = 1;
 
     regPWM0->bf.prescaler = 0;     //default to highest clock
 
@@ -125,7 +125,7 @@ void cc6801_pwm1_init(T_callback handler)
     regPWM1->bf.pwmTimerSel = 0;   //select PWM
     regPWM1->bf.clear = 1;
     regPWM1->bf.repeat = 0;        //default output always (0:repeat, 1:single)
-    regPWM1->bf.pwmOutEn = 1;
+    //regPWM1->bf.pwmOutEn = 1;
 
     regPWM1->bf.prescaler = 0;     //default to highest clock
 
@@ -156,6 +156,9 @@ void cc6801_pwm0_stop(void)
 {
     regPWM0->bf.enable = 0;
     regPWM0->bf.intEn = 0;         //default disable interrupt;
+    regPWM0->bf.pwmTimerSel = 1;
+    regPWM0->bf.pwmTimerSel = 0;
+
     regPWM0->bf.intSts = 1;        //clear interrupt;
 
     //Note: stop pwm won't clear counter value
