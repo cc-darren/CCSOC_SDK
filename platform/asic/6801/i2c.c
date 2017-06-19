@@ -152,8 +152,6 @@ static int i2c0_xfer(U_regI2C * p_i2c)
 
 static int i2c1_xfer(U_regI2C * p_i2c)
 {
-    int counter = 0;
-
     msg_err = I2C_ERR_NONE;
 
     NVIC_EnableIRQ(I2C1_M_IRQn);

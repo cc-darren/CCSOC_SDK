@@ -317,6 +317,9 @@ int main(void)
 #ifdef CFG_BLE_APP
 	uint32_t error = 0;
 #endif
+#if TEST_ENABLE
+    TEST_Main();
+#endif
     drvi_initialize();
 
     app_trace_init();

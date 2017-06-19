@@ -16,6 +16,13 @@
 #include "error.h"
 #include "utility.h"
 
+#define UINT8               unsigned char           // 1 byte
+#define UINT16              unsigned short          // 2 bytes
+#define UINT32              unsigned long           // 4 bytes
+#define INT8                char
+#define INT16               short
+#define INT32               long
+#define BOOL                UINT8
 #define FALSE               (0)
 #define TRUE                (1)
 #define SUCCESS             TRUE

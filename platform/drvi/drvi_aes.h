@@ -14,7 +14,6 @@
 #define _DRVI_AES_H_
 #include "aes.h"
 
-
 #define drvi_aes_init(mode)                    cc6801_aes_init(mode)
 #define drvi_aes_encrypt(in,out,size)          cc6801_aes_encrypt(in,out,size)
 #define drvi_aes_decrypt(in,out,size)          cc6801_aes_decrypt(in,out,size)
@@ -29,11 +28,6 @@ enum drvi_aes_mode {
     DRVI_AES_MODE_CMAC,
     DRVI_AES_MODE_LAST,
 };
-
-void aes_start_test(void);
-
-
-
 
 
 
