@@ -142,7 +142,7 @@ static int cc6801_gpio_irq_set_type(uint32_t pin_number, uint32_t type)
     {
         case IRQ_TYPE_EDGE_RISING:
             REG_GPIO(pin_number)->dw.intType |= (1 << PIN(pin_number));
-            REG_GPIO(pin_number)->dw.intPolarity &= (0 << PIN(pin_number));
+            REG_GPIO(pin_number)->dw.intPolarity &= ~(1 << PIN(pin_number));
             break;
 
         case IRQ_TYPE_EDGE_FALLING:
@@ -151,12 +151,12 @@ static int cc6801_gpio_irq_set_type(uint32_t pin_number, uint32_t type)
             break;
 
         case IRQ_TYPE_LEVEL_HIGH:
-            REG_GPIO(pin_number)->dw.intType &= (0 << PIN(pin_number));
-            REG_GPIO(pin_number)->dw.intPolarity &= (0 << PIN(pin_number));
+            REG_GPIO(pin_number)->dw.intType &= ~(1 << PIN(pin_number));
+            REG_GPIO(pin_number)->dw.intPolarity &= ~(1 << PIN(pin_number));
             break;
 
         case IRQ_TYPE_LEVEL_LOW:
-            REG_GPIO(pin_number)->dw.intType &= (0 << PIN(pin_number));
+            REG_GPIO(pin_number)->dw.intType &= ~(1 << PIN(pin_number));
             REG_GPIO(pin_number)->dw.intPolarity |= (1 << PIN(pin_number));
             break;
 
@@ -265,6 +265,11 @@ static void cc6801_gpio_pinmux_config(uint8_t pin, const struct cc6801_gpio_conf
     cc6801_gpio_dir_t io             = config->io;
     cc6801_gpio_drive_t od           = config->od;
 
+    if (pupd)
+        cc6801_gpio_set_pullup(pin);
+    else
+        cc6801_gpio_clear_pullup(pin);
+
     if (pinmux)
         cc6801_gpio_set_pinmux(pin);
     else
@@ -276,11 +281,6 @@ static void cc6801_gpio_pinmux_config(uint8_t pin, const struct cc6801_gpio_conf
         cc6801_gpio_set_dir(pin, CC6801_GPIO_DIR_INPUT);
 
     cc6801_gpio_write(pin, od);
-
-    if (pupd)
-        cc6801_gpio_set_pullup(pin);
-    else
-        cc6801_gpio_clear_pullup(pin);
 }
 
 void cc6801_gpio_pinmux_config_table(const struct cc6801_gpio_config *config, int len)
