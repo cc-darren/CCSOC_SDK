@@ -16,7 +16,7 @@
         <TargetCommonOption>
           <Device>ARMCM0P</Device>
           <Vendor>ARM</Vendor>
-          <PackID>ARM.CMSIS.5.0.0</PackID>
+          <PackID>ARM.CMSIS.5.0.1</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000,0x00020000) IROM(0x00000000,0x00040000) CPUTYPE("Cortex-M0+") CLOCK(12000000) ESEL ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -159,7 +159,7 @@
             <ldmm>1</ldmm>
             <ldXref>1</ldXref>
             <BigEnd>0</BigEnd>
-            <AdsALst>1</AdsALst>
+            <AdsALst>0</AdsALst>
             <AdsACrf>1</AdsACrf>
             <AdsANop>0</AdsANop>
             <AdsANot>0</AdsANot>
@@ -173,7 +173,7 @@
             <AdsLven>1</AdsLven>
             <AdsLsxf>1</AdsLsxf>
             <RvctClst>0</RvctClst>
-            <GenPPlst>1</GenPPlst>
+            <GenPPlst>0</GenPPlst>
             <AdsCpuType>"Cortex-M0+"</AdsCpuType>
             <RvctDeviceName></RvctDeviceName>
             <mOS>0</mOS>
@@ -311,7 +311,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>4</Optim>
+            <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -1164,7 +1164,7 @@
         <TargetCommonOption>
           <Device>ARMCM4_FP</Device>
           <Vendor>ARM</Vendor>
-          <PackID>ARM.CMSIS.5.0.0</PackID>
+          <PackID>ARM.CMSIS.5.0.1</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000,0x00020000) IROM(0x00000000,0x00040000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ESEL ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -1307,7 +1307,7 @@
             <ldmm>1</ldmm>
             <ldXref>1</ldXref>
             <BigEnd>0</BigEnd>
-            <AdsALst>1</AdsALst>
+            <AdsALst>0</AdsALst>
             <AdsACrf>1</AdsACrf>
             <AdsANop>0</AdsANop>
             <AdsANot>0</AdsANot>
@@ -1460,7 +1460,7 @@
           <Cads>
             <interw>1</interw>
             <Optim>1</Optim>
-            <oTime>1</oTime>
+            <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
             <Strict>0</Strict>
@@ -1483,7 +1483,7 @@
               <MiscControls> --preinclude ..\..\cfg\cfg_ble_ip.h --preinclude ..\..\inc\global.h</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\algo\8bit_ped_50hz;..\..\inc;..\..\inc\CMSIS;..\..\mmi;..\..\platform\asic\6801;..\..\platform\drvi;..\..\platform\init\inc;..\..\platform\sensor;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\ble\ip\ble\profiles\htp;..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\service\tracer;..\..\test;..\..\test\ext</IncludePath>
+              <IncludePath>..\..\algo\8bit_ped_50hz;..\..\inc;..\..\inc\CMSIS;..\..\mmi;..\..\platform\asic\6801;..\..\platform\drvi;..\..\platform\init\inc;..\..\platform\sensor;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\ble\ip\ble\profiles\htp;..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\service\tracer;..\..\test;..\..\test\ext;..\..\cfg</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1513,10 +1513,10 @@
             <TextAddressRange>0x00000000</TextAddressRange>
             <DataAddressRange>0x20000000</DataAddressRange>
             <pXoBase></pXoBase>
-            <ScatterFile>.\FPGA_rom.sct</ScatterFile>
+            <ScatterFile>.\FPGA_eflash.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
-            <Misc></Misc>
+            <Misc>.\rom_symdef.txt  --keep=jump_table.o(jump_table_mem_area)</Misc>
             <LinkerInputFile></LinkerInputFile>
             <DisabledWarnings></DisabledWarnings>
           </LDads>
@@ -2261,7 +2261,7 @@
       <file attr="config" category="sourceAsm" condition="ARMCC" name="Device\ARM\ARMCM0plus\Source\ARM\startup_ARMCM0plus.s" version="1.0.0">
         <instance index="0">RTE\Device\ARMCM0P\startup_ARMCM0plus.s</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="ARM" Cversion="1.0.1" condition="ARMCM0+ CMSIS"/>
-        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.0.0"/>
+        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.0.1"/>
         <targetInfos>
           <targetInfo name="FPGA_M0p"/>
         </targetInfos>
@@ -2269,7 +2269,7 @@
       <file attr="config" category="sourceC" name="Device\ARM\ARMCM0plus\Source\system_ARMCM0plus.c" version="1.0.0">
         <instance index="0">RTE\Device\ARMCM0P\system_ARMCM0plus.c</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="ARM" Cversion="1.0.1" condition="ARMCM0+ CMSIS"/>
-        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.0.0"/>
+        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.0.1"/>
         <targetInfos>
           <targetInfo name="FPGA_M0p"/>
         </targetInfos>
@@ -2277,7 +2277,7 @@
       <file attr="config" category="sourceAsm" condition="ARMCC" name="Device\ARM\ARMCM4\Source\ARM\startup_ARMCM4.s" version="1.0.0">
         <instance index="0">RTE\Device\ARMCM4_FP\startup_ARMCM4.s</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="ARM" Cversion="1.0.1" condition="ARMCM4 CMSIS"/>
-        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.0.0"/>
+        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.0.1"/>
         <targetInfos>
           <targetInfo name="FPGA_M4f"/>
         </targetInfos>
@@ -2285,7 +2285,7 @@
       <file attr="config" category="sourceC" name="Device\ARM\ARMCM4\Source\system_ARMCM4.c" version="1.0.0">
         <instance index="0">RTE\Device\ARMCM4_FP\system_ARMCM4.c</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="ARM" Cversion="1.0.1" condition="ARMCM4 CMSIS"/>
-        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.0.0"/>
+        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.0.1"/>
         <targetInfos>
           <targetInfo name="FPGA_M4f"/>
         </targetInfos>

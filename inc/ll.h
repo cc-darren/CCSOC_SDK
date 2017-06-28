@@ -22,6 +22,13 @@
 #include "arch.h"
 //#include "reg_intc.h"
 
+#define IN_SYS_RAM_BEGIN           _Pragma("arm section code=\"RO_IN_SYS_RAM\", rodata=\"RO_IN_SYS_RAM\", rwdata=\"RW_IN_SYS_RAM\", zidata=\"ZI_IN_SYS_RAM\"")
+#define IN_SYS_RAM_END             _Pragma("arm section code, rodata, rwdata, zidata")
+
+#define IN_RET_RAM_BEGIN           _Pragma("arm section code=\"IN_RET_RAM\", rodata=\"IN_RET_RAM\", rwdata=\"IN_RET_RAM\", zidata=\"IN_RET_RAM\"")
+#define IN_RET_RAM_END             _Pragma("arm section code, rodata, rwdata, zidata")
+
+
 /** @brief Enable interrupts globally in the system.
  * This macro must be used when the initialization phase is over and the interrupts
  * can start being handled by the system.

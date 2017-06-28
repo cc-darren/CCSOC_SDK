@@ -60,8 +60,12 @@ __heap_limit
 
 
 ; Vector Table Mapped to Address 0 at Reset
+                AREA    VECTOR_IN_EFLASH, DATA, READONLY
+                DCD     __initial_sp              ; Top of Stack
+                DCD     Reset_Handler             ; Reset Handler
 
-                AREA    RESET, DATA, READONLY
+; Vector Table Mapped to retention RAM for system wakeup
+                AREA    VECTOR_IN_RET_RAM, DATA, READONLY
                 EXPORT  __Vectors
                 EXPORT  __Vectors_End
                 EXPORT  __Vectors_Size
@@ -121,7 +125,6 @@ __Vectors_End
 __Vectors_Size  EQU     __Vectors_End - __Vectors
 
                 AREA    |.text|, CODE, READONLY
-
 
 ; Reset Handler
 

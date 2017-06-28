@@ -58,6 +58,8 @@ void SystemInit (void)
 {
     uint32_t byp=0,pd=1,divc0=0,divn=8,divm=20,vco_div=0;
 
+    GLOBAL_INT_STOP();
+
 /******************************/
 /* set new vectors address    */
 /******************************/
