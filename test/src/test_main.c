@@ -33,6 +33,7 @@
 /******************************************************************************
 Head Block of The File
 ******************************************************************************/
+#include <stdio.h>
 #include <string.h>
 #include "ll.h"
 #include "drvi_init.h"
@@ -67,7 +68,7 @@ Head Block of The File
 #include "spi_oled.h"
 #endif
 #if (TEST_UART0_TXDMA) || (TEST_UART0_RXDMA)
-#include "app_trace.h"
+#include "test_uart.h"
 #include "uart.h"
 #endif
 #if (TEST_WDT)
@@ -126,6 +127,7 @@ struct S_ModuleExecCount S_Count;
 /******************************************************************************
 Declaration of static Global Variables & Functions
 ******************************************************************************/
+static const cc_drv_uart_t uart0 = CC_DRV_UART_INSTANCE(0);
 
 // Exported function
 void Timer_Callback(void *para)
@@ -168,6 +170,9 @@ static int cc6801_Init(void)
     memset(&S_Count, 0, sizeof(struct S_ModuleExecCount));
 
     drvi_gpio_pinmux_init();
+#if (TEST_AES)
+    TEST_AesInit();
+#endif
     if (g_GpiTestStart)
     {
         drvi_request_irq(1, Gpi_Callback, IRQ_TYPE_EDGE_FALLING);
@@ -190,19 +195,14 @@ static int cc6801_Init(void)
     {
         //pah8002_twi_init();
     }
-    if (g_Uart0TxDmaTestStart || g_Uart0RxDmaTestStart)
-    {
-        app_trace_init();
-    }
+#if (TEST_UART0_TXDMA) || (TEST_UART0_RXDMA)
+    TEST_UartInit();
+#endif
     if (g_EflashTestStart)
     {
         //for (n=0; n<64; n++)
         //    bEflashBuf[n] = n;
         //cc6801_EFinit();
-    }
-    if (g_AesTestStart)
-    {
-        TEST_AesInit();
     }
     if (g_Wktm0TestStart)
     {
@@ -252,8 +252,16 @@ int TEST_Main(void)
     //start interrupt handling
     GLOBAL_INT_START();
 
+#if (TEST_AES)
+    TEST_AesLoop(1000);
+#endif
+#if (TEST_UART0_TXDMA) || (TEST_UART0_RXDMA)
+    TEST_UartLoopBack(1000);
+#endif
+
     while(1)
     {
+
         if (g_MemTestStart)
         {
             g_MemTestStart = 0;
@@ -287,7 +295,7 @@ int TEST_Main(void)
         if (g_Uart0RxDmaTestStart)
         {
             g_Uart0RxDmaTestStart = 0;
-            cc_drv_uart_rx(&bUartRxBuf, 1);
+            cc_drv_uart_rx(&uart0, &bUartRxBuf, 1);
             S_Count.dwUart0Rx++;
         }
         if (g_EflashTestStart)
@@ -296,12 +304,6 @@ int TEST_Main(void)
             //cc6801_EFFlush();
             //cc6801_EFDMAProgram(0x10020000, 64, bEflashBuf);
             S_Count.dwEflash++;
-        }
-        if (g_AesTestStart)
-        {
-            g_AesTestStart = 0;
-            TEST_AesSingleMode();
-            S_Count.dwAes++;
         }
         if (g_WdtTestStart)
         {
@@ -337,7 +339,7 @@ int TEST_Main(void)
             strcat(cUartTxBuf, "[");
             for (i=0; i<(sizeof(struct S_ModuleExecCount)/sizeof(UINT32)); i++)
             {
-                sprintf(cStrBuf, "%d", *(p_mod+i));
+                sprintf(cStrBuf, "%lu", *(p_mod+i));
                 strcat(cUartTxBuf, cStrBuf);
             }
             strcat(cUartTxBuf, "]\r\n");
@@ -347,10 +349,9 @@ int TEST_Main(void)
             //                         S_Count.i2c0, S_Count.i2c1, S_Count.eflash,\
             //                         S_Count.aes, S_Count.gpi, S_Count.uart0_rx, S_Count.wdt, S_Count.wktm0);
             //strcat(cUartTxBuf, cStrBuf);
-            cc_drv_uart_tx((const UINT8 *)cUartTxBuf, strlen(cUartTxBuf));
+            cc_drv_uart_tx(&uart0, (const UINT8 *)cUartTxBuf, strlen(cUartTxBuf));
             S_Count.dwUart0Tx++;
         }
-
         if (((dwLoop >> 3) << 3) == dwLoop)
         {
             drvi_gpio_write(3, 0);

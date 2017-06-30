@@ -947,8 +947,8 @@ typedef union U_regUARTCTRL
         uint32_t   undiv_lower:8;
         uint32_t   reserved8:24;
         //UART UnPSR:0x9C
-        uint32_t   undiv_upper:4;
-        uint32_t   unpsc:4;
+        uint32_t   undiv_upper:3;
+        uint32_t   unpsc:5;
         uint32_t   reserved9:24;
         //UART UnOVR:0xA0
         uint32_t   unovr:4;
@@ -1183,6 +1183,10 @@ typedef struct
 #define regGPIO1        ((U_regGPIO        *) (GPIO_ADDR_BASE + 0x0000002c))
 #define regUART0DMA     ((U_regUARTDMA     *) UART0_ADDR_BASE)
 #define regUART0CTRL    ((U_regUARTCTRL    *) (UART0_ADDR_BASE + 0x00000080))
+#define regUART1DMA     ((U_regUARTDMA     *) UART1_ADDR_BASE)
+#define regUART1CTRL    ((U_regUARTCTRL    *) (UART1_ADDR_BASE + 0x00000080))
+#define regUART2DMA     ((U_regUARTDMA     *) UART2_ADDR_BASE)
+#define regUART2CTRL    ((U_regUARTCTRL    *) (UART2_ADDR_BASE + 0x00000080))
 #define regSPI0         ((U_regSPI         *) SPI0_ADDR_BASE)
 #define regSPI1         ((U_regSPI         *) SPI1_ADDR_BASE)
 #define regSPI2         ((U_regSPI         *) SPI2_ADDR_BASE)

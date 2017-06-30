@@ -125,17 +125,16 @@ void TEST_AesSingleMode(void)
 
 }
 
-void TEST_AesLoop(void)
+void TEST_AesLoop(INT16 iCount)
 {
     INT16 iIndex = 0;
     INT16 iResult = 0;
     enum drvi_aes_mode E_Mode;
-    INT16 iCount = 0;
 
     for (iIndex=0; iIndex<AES_DATA_SIZE; iIndex++)
         dwDecryptData[iIndex] = iIndex;
 
-    while(1)
+    while(iCount>0)
     {
         for (iIndex=16; iIndex<=AES_DATA_SIZE; iIndex*=2)
         {
@@ -164,7 +163,7 @@ void TEST_AesLoop(void)
             }
         }
 
-        iCount++;
+        iCount--;
         if (!(iCount%100)) printf("%d times Pass!\r\n", iCount);
     }
 }

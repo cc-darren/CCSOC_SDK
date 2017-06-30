@@ -12,6 +12,7 @@
 #include "global.h"
 #include "app_uart.h"
 #include "app_fifo.h"
+#include "drvi_uart.h"
 #include "uart.h"
 
 static __INLINE uint32_t fifo_length(app_fifo_t * const fifo)
@@ -30,6 +31,8 @@ __align(4) static uint8_t rx_buffer[1];
 
 static app_fifo_t                  m_rx_fifo;                               /**< RX FIFO buffer for storing data received on the UART until the application fetches them using app_uart_get(). */
 static app_fifo_t                  m_tx_fifo;                               /**< TX FIFO buffer for storing data to be transmitted on the UART when TXD is ready. Data is put to the buffer on using app_uart_put(). */
+
+static const cc_drv_uart_t app_uart0 = CC_DRV_UART_INSTANCE(0);
 
 static void uart_event_handler(cc_drv_uart_event_t * p_event, void* p_context)
 {
@@ -59,7 +62,7 @@ static void uart_event_handler(cc_drv_uart_event_t * p_event, void* p_context)
         }
         if (FIFO_LENGTH(m_rx_fifo) <= m_rx_fifo.buf_size_mask)
         {
-            (void)cc_drv_uart_rx(rx_buffer,1);
+            (void)cc_drv_uart_rx(&app_uart0, rx_buffer, 1);
         }
     }
     else if (p_event->type == CC_DRV_UART_EVT_ERROR)
@@ -73,7 +76,7 @@ static void uart_event_handler(cc_drv_uart_event_t * p_event, void* p_context)
         // Get next byte from FIFO.
         if (app_fifo_get(&m_tx_fifo, tx_buffer) == CC_SUCCESS)
         {
-            (void)cc_drv_uart_tx(tx_buffer,1);
+            (void)cc_drv_uart_tx(&app_uart0, tx_buffer, 1);
         }
         if (FIFO_LENGTH(m_tx_fifo) == 0)
         {
@@ -114,13 +117,13 @@ uint32_t app_uart_init(const app_uart_comm_params_t * p_comm_params,
         return err_code;
     }
 
-    cc_drv_uart_config_t config = CC_DRV_UART_DEFAULT_CONFIG;
-    config.baudrate = (cc_uart_baudrate_t)p_comm_params->baud_rate;
-    config.hwfc = (p_comm_params->flow_control == APP_UART_FLOW_CONTROL_DISABLED) ?
-            CC_UART_HWFC_DISABLED : CC_UART_HWFC_ENABLED;
-    config.parity = p_comm_params->use_parity ? CC_UART_PARITY_INCLUDED : CC_UART_PARITY_EXCLUDED;
+    drvi_uart_params_t config = DRVI_UART_DEFAULT_CONFIG;
+    //config.baudrate = (drvi_uart_baudrate_t)p_comm_params->baud_rate;
+    //config.hw_flow = (p_comm_params->flow_control == APP_UART_FLOW_CONTROL_DISABLED) ?
+    //        DRVI_UART_HWFC_DISABLE : DRVI_UART_HWFC_ENABLE;
+    //config.parity = p_comm_params->use_parity ? CC_UART_PARITY_INCLUDED : CC_UART_PARITY_EXCLUDED;
 
-    err_code = cc_drv_uart_init(&config, uart_event_handler);
+    err_code = drvi_uart_init(&app_uart0, &config, uart_event_handler);
 
     if (err_code != CC_SUCCESS)
     {
@@ -157,7 +160,7 @@ uint32_t app_uart_get(uint8_t * p_byte)
     // If FIFO was full new request to receive one byte was not scheduled. Must be done here.
     if (FIFO_LENGTH(m_rx_fifo) == m_rx_fifo.buf_size_mask)
     {
-        uint32_t err_code = cc_drv_uart_rx(rx_buffer,1);
+        uint32_t err_code = cc_drv_uart_rx(&app_uart0, rx_buffer,1);
         if (err_code != CC_SUCCESS)
         {
             return CC_ERROR_NOT_FOUND;
@@ -171,7 +174,7 @@ uint32_t app_uart_put(uint8_t byte)
     uint32_t err_code;
 
     tx_tmp = byte;
-    err_code = cc_drv_uart_tx(&tx_tmp, 1);
+    err_code = cc_drv_uart_tx(&app_uart0, &tx_tmp, 1);
 
     if (err_code == CC_ERROR_BUSY)
     {

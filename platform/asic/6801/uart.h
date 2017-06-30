@@ -14,10 +14,7 @@
 
 #include "global.h"
 #include "cc6801_reg.h"
-
-#define UART0_CONFIG_HWFC         CC_UART_HWFC_DISABLED
-#define UART0_CONFIG_PARITY       CC_UART_PARITY_EXCLUDED
-#define UART0_CONFIG_BAUDRATE     CC_UART_BAUDRATE_115200
+#include "drvi_uart.h"
 
 /**
  * @enum cc_uart_parity_t
@@ -81,14 +78,32 @@ typedef struct
     cc_uart_baudrate_t baudrate;           ///< Baudrate.
 } cc_drv_uart_config_t;
 
-/**@brief UART default configuration. */
-#define CC_DRV_UART_DEFAULT_CONFIG                                                   \
-    {                                                                                 \
-        .p_context          = NULL,                                                   \
-        .hwfc               = UART0_CONFIG_HWFC,                                      \
-        .parity             = UART0_CONFIG_PARITY,                                    \
-        .baudrate           = UART0_CONFIG_BAUDRATE,                                  \
-    }
+#define UART0_INSTANCE_INDEX 0
+#define UART1_INSTANCE_INDEX 1
+#define UART2_INSTANCE_INDEX 2
+
+#define CC_DRV_UART_DMA(id)  (void *)regUART##id##DMA
+#define CC_DRV_UART_CONFIG(id)  (void *)regUART##id##CTRL
+
+/**
+ * @brief UART master driver instance data structure.
+ */
+typedef struct
+{
+    void *    p_dma_reg;  ///< Pointer to the structure with SPI/SPIM peripheral instance registers.
+    void *    p_ctrl_reg;  ///< Pointer to the structure with SPI/SPIM peripheral instance registers.
+    uint8_t   drv_inst_idx; ///< Driver instance index.
+} cc_drv_uart_t;
+
+/**
+ * @brief Macro for creating an SPI master driver instance.
+ */
+#define CC_DRV_UART_INSTANCE(id)                        \
+{                                                       \
+    .p_dma_reg = CC_DRV_UART_DMA(id),         \
+    .p_ctrl_reg = CC_DRV_UART_CONFIG(id),         \
+    .drv_inst_idx = UART##id##_INSTANCE_INDEX, \
+}
 
 /**@brief Structure for UART transfer completion event. */
 typedef struct
@@ -136,7 +151,8 @@ typedef void (*cc_uart_event_handler_t)(cc_drv_uart_event_t * p_event, void * p_
  * @retval    CC_SUCCESS             If initialization was successful.
  * @retval    CC_ERROR_INVALID_STATE If driver is already initialized.
  */
-int cc_drv_uart_init(cc_drv_uart_config_t const * p_config,
+int cc_drv_uart_init(cc_drv_uart_t const * const p_instance,
+                             drvi_uart_params_t const * p_config,
                              cc_uart_event_handler_t      event_handler);
 
 /**
@@ -165,7 +181,8 @@ void cc_drv_uart_uninit(void);
  * @retval    CC_ERROR_INVALID_ADDR If p_data does not point to RAM buffer (UARTE only).
  * @retval    CC_ERROR_FORBIDDEN    If transfer was aborted (blocking mode only).
  */
-int cc_drv_uart_tx(uint8_t const * const p_data, uint8_t length);
+int cc_drv_uart_tx(cc_drv_uart_t const * const p_instance,
+                            uint8_t const * const p_data, uint8_t length);
 
 /**
  * @brief Function for aborting any ongoing transmission.
@@ -196,7 +213,10 @@ void cc_drv_uart_tx_abort(void);
  * @retval    CC_ERROR_INVALID_ADDR If p_data does not point to RAM buffer (UARTE only).
  * @retval    CC_ERROR_FORBIDDEN    If transfer was aborted (blocking mode only).
  */
-int cc_drv_uart_rx(uint8_t * p_data, uint8_t length);
+int cc_drv_uart_rx(cc_drv_uart_t const * const p_instance,
+                            uint8_t * p_data, uint8_t length);
+
+__STATIC_INLINE void rx_done_event(uint8_t idx, uint8_t bytes);
 
 /**
  * @brief Function for enabling receiver.
