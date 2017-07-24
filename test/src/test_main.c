@@ -58,14 +58,8 @@ Head Block of The File
 #if (TEST_RTC)
 #include "rtc.h"
 #endif
-#if (TEST_SPI1) || (TEST_SPI2)
-#include "spi_sensor.h"
-#endif
-#if (TEST_SPI1)
-#include "LSM6DS3_ACC_GYRO_driver.h"
-#endif
-#if (TEST_SPI2)
-#include "spi_oled.h"
+#if (TEST_SPI)
+#include "test_spi.h"
 #endif
 #if (TEST_UART0_TXDMA) || (TEST_UART0_RXDMA)
 #include "test_uart.h"
@@ -178,15 +172,6 @@ static int cc6801_Init(void)
         drvi_request_irq(1, Gpi_Callback, IRQ_TYPE_EDGE_FALLING);
         drvi_enable_irq(1);
     }
-    if (g_Spi1TestStart)
-    {
-        spi_init(1);
-    }
-    if (g_Spi2TestStart)
-    {
-        ssd1306_interface_init();
-        ssd1306_hard_reset();
-    }
     if (g_I2c0TestStart)
     {
         i2c_init();
@@ -255,6 +240,9 @@ int TEST_Main(void)
 #if (TEST_AES)
     TEST_AesLoop(1000);
 #endif
+#if (TEST_SPI)
+    TEST_SpiRW(1000);
+#endif
 #if (TEST_UART0_TXDMA) || (TEST_UART0_RXDMA)
     TEST_UartLoopBack(1000);
 #endif
@@ -267,18 +255,6 @@ int TEST_Main(void)
             g_MemTestStart = 0;
             //mem_rw();
             S_Count.dwMem++;
-        }
-        if (g_Spi1TestStart)
-        {
-            g_Spi1TestStart = 0;
-            //ACC_Burst_Read(bAccBuf, 12);
-            S_Count.dwSpi1++;
-        }
-        if (g_Spi2TestStart)
-        {
-            g_Spi2TestStart = 0;
-            ssd1306_write_command(SSD1306_CMD_SET_DISPLAY_OFF);
-            S_Count.dwSpi2++;
         }
         if (g_I2c0TestStart)
         {

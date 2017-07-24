@@ -1014,6 +1014,11 @@
               <FilePath>..\..\test\src\test_main.c</FilePath>
             </File>
             <File>
+              <FileName>test_spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_spi.c</FilePath>
+            </File>
+            <File>
               <FileName>test_uart.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\test\src\test_uart.c</FilePath>
@@ -2165,6 +2170,11 @@
               <FileName>test_main.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\test\src\test_main.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_spi.c</FilePath>
             </File>
             <File>
               <FileName>test_uart.c</FileName>
