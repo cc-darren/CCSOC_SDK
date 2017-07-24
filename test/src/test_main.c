@@ -45,12 +45,8 @@ Head Block of The File
 #if (TEST_EFLASH)
 #include "eflash.h"
 #endif
-#if (TEST_I2C0)
-#include "ak09912.h"
-#include "i2c_sensor.h"
-#endif
-#if (TEST_I2C1)
-#include "pah8002_comm.h"
+#if (TEST_I2C)
+#include "test_i2c.h"
 #endif
 #if (TEST_PWM0)
 #include "drvi_pwm.h"
@@ -102,13 +98,8 @@ struct S_ModuleExecCount
 Declaration of Global Variables & Functions
 ******************************************************************************/
 UINT32 g_MemTestStart = 1;
-UINT32 g_Spi1TestStart = 1;
-UINT32 g_Spi2TestStart = 1;
-UINT32 g_I2c0TestStart = 1;
-UINT32 g_I2c1TestStart = 1;
 UINT32 g_Uart0TxDmaTestStart = 1;
 UINT32 g_Uart0RxDmaTestStart = 1;
-UINT32 g_AesTestStart = 1;
 UINT32 g_WdtTestStart = 1;
 UINT32 g_EflashTestStart = 1;
 UINT32 g_Wktm0TestStart = 1;
@@ -172,14 +163,6 @@ static int cc6801_Init(void)
         drvi_request_irq(1, Gpi_Callback, IRQ_TYPE_EDGE_FALLING);
         drvi_enable_irq(1);
     }
-    if (g_I2c0TestStart)
-    {
-        i2c_init();
-    }
-    if (g_I2c1TestStart)
-    {
-        //pah8002_twi_init();
-    }
 #if (TEST_UART0_TXDMA) || (TEST_UART0_RXDMA)
     TEST_UartInit();
 #endif
@@ -225,9 +208,6 @@ int TEST_Main(void)
 
     //UINT8 bEflashBuf[64];
 
-    //UINT8 bAccBuf[12];
-    UINT8 bMagBuf[6];
-
     S_rtcInfo S_Time;
 
     UINT32 dwLoop = 0;
@@ -243,6 +223,9 @@ int TEST_Main(void)
 #if (TEST_SPI)
     TEST_SpiRW(1000);
 #endif
+#if (TEST_I2C)
+    TEST_I2cRW(1000);
+#endif
 #if (TEST_UART0_TXDMA) || (TEST_UART0_RXDMA)
     TEST_UartLoopBack(1000);
 #endif
@@ -255,18 +238,6 @@ int TEST_Main(void)
             g_MemTestStart = 0;
             //mem_rw();
             S_Count.dwMem++;
-        }
-        if (g_I2c0TestStart)
-        {
-            g_I2c0TestStart = 0;
-            MAG_GetMagRawBurst(bMagBuf, 6);
-            S_Count.dwI2c0++;
-        }
-        if (g_I2c1TestStart)
-        {
-            g_I2c1TestStart = 0;
-            //pah8002_write_reg(0x7f, 0x00);
-            S_Count.dwI2c1++;
         }
         if (g_Uart0RxDmaTestStart)
         {
