@@ -17,29 +17,29 @@ SOC 0x10000000 0x40000  ; 256KB
 
     IMAGE_RO + 0
     {
-        *(RO_IN_SYS_RAM)
+        ;*(RO_IN_SYS_RAM)
         .ANY (+RO)
     }
 
 	IMAGE_RW 0x20000900      ; fixed address after BootROM BLE_ZI
     {
-        *(RW_IN_SYS_RAM)
+        ;*(RW_IN_SYS_RAM)
         .ANY (+RW)
     }
 
 	IMAGE_ZI + 0
     {
-        *(ZI_IN_SYS_RAM)
+        ;*(ZI_IN_SYS_RAM)
         .ANY (+ZI)
     }	
 
 	RET_RAM 0x20020000 ; Retention memory
     {
 		*(VECTOR_IN_RET_RAM, +First)
-        *(IN_RET_RAM)
-		jump_table.o (heap_env_area)
-        jump_table.o (heap_db_area)
-        jump_table.o (heap_msg_area)
+        ;*(IN_RET_RAM)
+		;jump_table.o (heap_env_area)
+        ;jump_table.o (heap_db_area)
+        ;jump_table.o (heap_msg_area)
     }
 
 }
