@@ -1009,9 +1009,19 @@
               <FilePath>..\..\test\src\test_aes.c</FilePath>
             </File>
             <File>
+              <FileName>test_i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_i2c.c</FilePath>
+            </File>
+            <File>
               <FileName>test_main.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\test\src\test_main.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_spi.c</FilePath>
             </File>
             <File>
               <FileName>test_uart.c</FileName>
@@ -2162,9 +2172,19 @@
               <FilePath>..\..\test\src\test_aes.c</FilePath>
             </File>
             <File>
+              <FileName>test_i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_i2c.c</FilePath>
+            </File>
+            <File>
               <FileName>test_main.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\test\src\test_main.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_spi.c</FilePath>
             </File>
             <File>
               <FileName>test_uart.c</FileName>
