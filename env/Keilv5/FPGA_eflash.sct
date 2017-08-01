@@ -9,7 +9,7 @@ SOC 0x10000000 0x40000  ; 256KB
         *(VECTOR_IN_EFLASH, +First)
         *(InRoot$$Sections)	
     }
-	
+
     BLE_JUMP_TABLE 0x10000200 FIXED 0x400 
     {
         .ANY (jump_table_mem_area)     
@@ -21,23 +21,24 @@ SOC 0x10000000 0x40000  ; 256KB
         .ANY (+RO)
     }
 
-	IMAGE_RW 0x20000900      ; fixed address after BootROM BLE_ZI
+    IMAGE_RW 0x20000900      ; fixed address after BootROM BLE_ZI
     {
         ;*(RW_IN_SYS_RAM)
+        ;clock.o (+RO, +RW, +ZI)
         .ANY (+RW)
     }
 
-	IMAGE_ZI + 0
+    IMAGE_ZI + 0
     {
         ;*(ZI_IN_SYS_RAM)
         .ANY (+ZI)
-    }	
+    }
 
-	RET_RAM 0x20020000 ; Retention memory
+    RET_RAM 0x20020000 ; Retention memory
     {
-		*(VECTOR_IN_RET_RAM, +First)
+        *(VECTOR_IN_RET_RAM, +First)
         ;*(IN_RET_RAM)
-		;jump_table.o (heap_env_area)
+        ;jump_table.o (heap_env_area)
         ;jump_table.o (heap_db_area)
         ;jump_table.o (heap_msg_area)
     }

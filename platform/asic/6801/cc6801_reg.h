@@ -36,6 +36,7 @@
 #define _CC6801_REG_H_
 
 #include <stdint.h>
+#include "ARMCM.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -1152,6 +1153,34 @@ typedef union U_regWDT
 
 typedef struct
 {
+    uint32_t dwInterrupt;
+    uint32_t dwCtrl;
+    uint32_t dwIndirStart;
+    uint32_t dwProgBuf1;
+    uint32_t dwProgBuf2;
+    uint32_t dwProgBuf3;
+    uint32_t dwProgBuf4;
+    uint32_t dwAccessCtrl;
+    uint32_t dwRdBuf1;
+    uint32_t dwRdBuf2;
+    uint32_t dwRedundancy;
+    uint32_t dwProtect;
+    uint32_t dwPadding[5];
+    uint32_t dwTcpsTadhTah;
+    uint32_t dwTwkTpgs;
+    uint32_t dwTrcvTnvh;
+    uint32_t dwTprog;
+    uint32_t dwTerase;
+    uint32_t dwTme;
+    uint32_t dwTnvsTnvh1;
+    uint32_t dwDmaCtrl;
+    uint32_t dwDmaWrAddr;
+    uint32_t dwDmaRdAddr;    
+}S_regEFLASH;
+
+
+typedef struct
+{
     //remap control
     uint32_t  padding1:31;
     uint32_t  Rmap_en:1;
@@ -1195,6 +1224,7 @@ typedef struct
 #define regI2C1         ((U_regI2C         *) I2C1_ADDR_BASE)
 #define regAES          ((U_regAES         *) AES_ADDR_BASE)
 #define regWDT          ((U_regWDT         *) WDT_ADDR_BASE)
+#define regEFLASH       ((S_regEFLASH      *) EF_ADDR_BASE)
 
 #ifdef __cplusplus
 }
