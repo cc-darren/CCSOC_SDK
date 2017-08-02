@@ -10,7 +10,6 @@
 
 
 
-void OLED_BufferPrintString(char *pcBuffer, const char *pcStr, uint8_t ui8X);
 uint8_t lcdGetStringLength(const char *pcStr);
 void OLED_Draw_BMP(unsigned char x0, unsigned char y0,unsigned char x1, unsigned char y1,unsigned char BMP[]);
 void OLED_P16x16Ch(unsigned char x, unsigned char y,unsigned char  N);
@@ -30,7 +29,7 @@ void RunningChineseString16(char* pstr, unsigned int delayms);
 void RunningString16(char* pstr, unsigned int delayms);
 void LCD_P16x16Ch(unsigned char x, unsigned char y, unsigned char N);
 void LCD_P16x16ChString(unsigned char x, unsigned char y, unsigned char N, char* pStr);
-
+void OLED_BufferPrintString(char *pcBuffer, const char *pcStr, uint8_t ui8X);
 #endif
 
 #endif

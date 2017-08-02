@@ -41,7 +41,6 @@ Head Block of The File
 #include <string.h>
 
 #include "drvi_spi.h"
-#include "spim.h"
 
 #define SPI_BUFFER_SIZE 64
 #define WINBOND_BLOCK_NUM 16
@@ -76,50 +75,46 @@ Declaration of Global Variables & Functions
 /******************************************************************************
 Declaration of static Global Variables & Functions
 ******************************************************************************/
-//static const cc_drv_spi_t spi = CC_DRV_SPI_INSTANCE(0);
-static const cc_drv_spi_t spi = CC_DRV_SPI_INSTANCE(1);
-//static const cc_drv_spi_t spi = CC_DRV_SPI_INSTANCE(2);
-
 __align(4) static T_SpiTxBuffer g_tSpi0TxBuffer = {0, {0}, {0}};
 __align(4) static UINT8 g_baSpi0RxBuffer[SPI_BUFFER_SIZE] = {0};
 
-static void winbond_WriteEnable(const cc_drv_spi_t *spi)
+static void winbond_WriteEnable(const T_SpiDevice *spi)
 {
     UINT8 bCmd = 0;
 
     bCmd = 0x06;
-    drvi_spi_write(spi, &bCmd, 1);
+    drvi_SpiWrite(spi, &bCmd, 1);
 }
 
-static UINT8 winbond_ReadStatusReg1(const cc_drv_spi_t *spi)
+static UINT8 winbond_ReadStatusReg1(const T_SpiDevice *spi)
 {
     UINT8 bCmd = 0;
     UINT8 bVal = 0;
 
     bCmd = 0x05;
-    drvi_spi_write_then_read(spi, &bCmd, 1, &bVal, 1);
+    drvi_SpiWriteThenRead(spi, &bCmd, 1, &bVal, 1);
 
     return bVal;
 }
 
-static void winbond_ChipErase(const cc_drv_spi_t *spi)
+static void winbond_ChipErase(const T_SpiDevice *spi)
 {
     UINT8 bCmd = 0;
 
     bCmd = 0xC7;
-    drvi_spi_write(spi, &bCmd, 1);
+    drvi_SpiWrite(spi, &bCmd, 1);
 }
 
-static void winbond_BlockErase64(const cc_drv_spi_t *spi, UINT32 dwAddr)
+static void winbond_BlockErase64(const T_SpiDevice *spi, UINT32 dwAddr)
 {
     UINT32 dwCmdAddr = 0;
 
     dwCmdAddr = (((dwAddr & 0xFF) << 24) | (((dwAddr >> 8) & 0xFF) << 16) | (((dwAddr >> 16) & 0x0F) << 8) | 0xD8);
 
-    drvi_spi_write(spi, (UINT8 *)&dwCmdAddr, sizeof(dwCmdAddr));
+    drvi_SpiWrite(spi, (UINT8 *)&dwCmdAddr, sizeof(dwCmdAddr));
 }
 
-static INT16 winbond_PageProgram(const cc_drv_spi_t *spi, UINT32 dwAddr, UINT8 *pbBuf, INT16 iSize)
+static INT16 winbond_PageProgram(const T_SpiDevice *spi, UINT32 dwAddr, UINT8 *pbBuf, INT16 iSize)
 {
     UINT8 bCmd = 0;
     INT16 iTxSize = 0;
@@ -137,12 +132,12 @@ static INT16 winbond_PageProgram(const cc_drv_spi_t *spi, UINT32 dwAddr, UINT8 *
 
     memcpy(&g_tSpi0TxBuffer.baBuffer, pbBuf, iSize);
 
-    drvi_spi_write(spi, (UINT8 const *)&g_tSpi0TxBuffer, iTxSize);
+    drvi_SpiWrite(spi, (UINT8 const *)&g_tSpi0TxBuffer, iTxSize);
 
     return CC_SUCCESS;
 }
 
-static void winbond_ReadData(const cc_drv_spi_t *spi, UINT32 dwAddr, UINT8 *pbBuf, INT16 iSize)
+static void winbond_ReadData(T_SpiDevice *spi, UINT32 dwAddr, UINT8 *pbBuf, INT16 iSize)
 {
     UINT8 bCmd = 0;
     INT16 iTxSize = 0;
@@ -155,14 +150,15 @@ static void winbond_ReadData(const cc_drv_spi_t *spi, UINT32 dwAddr, UINT8 *pbBu
     g_tSpi0TxBuffer.baAddr[1] = (dwAddr >> 8) & 0xFF;
     g_tSpi0TxBuffer.baAddr[2] = dwAddr & 0xFF;
 
-    drvi_spi_write_then_read(spi, (UINT8 const *)&g_tSpi0TxBuffer, iTxSize, pbBuf, iSize);
+    drvi_SpiWriteThenRead(spi, (UINT8 const *)&g_tSpi0TxBuffer, iTxSize, pbBuf, iSize);
 }
 
-INT16 TEST_SpiInit(void)
+INT16 TEST_SpiInit(T_SpiDevice *spi)
 {
-    cc_drv_spi_config_t spi_config = CC_DRV_SPI_DEFAULT_CONFIG();
+    spi->bBusNum = 1;
+    spi->wMode = DRVI_SPI_MODE_3;
 
-    drvi_spi_init(&spi, &spi_config, NULL);
+    drvi_SpiInit(spi);
 
     return CC_SUCCESS;
 }
@@ -175,7 +171,9 @@ void TEST_SpiRW(UINT32 dwCount)
     INT16 iBlock = 0;
     INT16 iSize = 0;
 
-    iError = TEST_SpiInit();
+    T_SpiDevice spi;
+
+    iError = TEST_SpiInit(&spi);
     if (iError)
         return;
 

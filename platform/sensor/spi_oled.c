@@ -32,10 +32,12 @@
 #define OLED_EN
 #ifdef  OLED_EN
 
-#include "spim.h"
+#include <stddef.h>
+
 #include "spi_oled.h"
-#include "drvi_gpio.h"
 #include "spi_sensor.h"
+#include "drvi_gpio.h"
+#include "drvi_spi.h"
 
 #define SPI2_OLED_PWR_EN    15
 #define SPI2_OLED_RESET     31
@@ -43,10 +45,9 @@
 #define SPI_ID 2
 #define OLED_DELAY(x) delayns(x*1000)
 
-static const cc_drv_spi_t spi2 = CC_DRV_SPI_INSTANCE(2);  /**< SPI instance. */
 static volatile bool spi_oled_xfer_done;  /**< Flag used to indicate that SPI instance completed the transfer. */
 
-void spi_oled_event_handler(cc_drv_spi_evt_t const * p_event)
+void spi_oled_event_handler(E_DrviSpiEvent * p_event)
 {
     spi_oled_xfer_done = true;
 }
@@ -54,47 +55,46 @@ void spi_oled_event_handler(cc_drv_spi_evt_t const * p_event)
 void set_oled_pwrctl_hi( void )
 {
     //setGpioOutputHigh( SPI2_OLED_PWR_EN);
-    cc6801_gpio_write(SPI2_OLED_PWR_EN, 1);
+    drvi_gpio_write(SPI2_OLED_PWR_EN, 1);
 }
 void set_oled_pwrctl_lo( void )
 {
     //setGpioOutputLow(SPI2_OLED_PWR_EN);
-    cc6801_gpio_write(SPI2_OLED_PWR_EN, 0);
+    drvi_gpio_write(SPI2_OLED_PWR_EN, 0);
 }
 void set_oled_dc_hi( void )
 {
     //setGpioOutputHigh( SPI2_OLED_DC);
-    cc6801_gpio_write(SPI2_OLED_DC, 1);
+    drvi_gpio_write(SPI2_OLED_DC, 1);
 }
 void set_oled_dc_lo( void )
 {
     //setGpioOutputLow(SPI2_OLED_DC);
-    cc6801_gpio_write(SPI2_OLED_DC, 0);
+    drvi_gpio_write(SPI2_OLED_DC, 0);
 }
 void set_oled_reset_hi( void )
 {
     //setGpioOutputHigh( SPI2_OLED_RESET );
-    cc6801_gpio_write(SPI2_OLED_RESET, 1);
+    drvi_gpio_write(SPI2_OLED_RESET, 1);
 }
 void set_oled_reset_lo( void )
 {
     //setGpioOutputLow( SPI2_OLED_RESET);
-    cc6801_gpio_write(SPI2_OLED_RESET, 0);
+    drvi_gpio_write(SPI2_OLED_RESET, 0);
 }
 
 void oled_spi_init( void )
 {
+    T_SpiDevice spi;
+
     set_oled_pwrctl_lo();
     set_oled_dc_lo();
 
-    #define CC_DRV_SPI_OLED_CONFIG                           \
-    {                                                        \
-    .mode         = CC_SPIM_MODE_2,                      \
-    .bit_order    = CC_SPIM_BIT_ORDER_MSB_FIRST,         \
-    }
+    spi.bBusNum = 2;
+    spi.wMode = DRVI_SPI_MODE_3;
+    spi.fpComplete = spi_oled_event_handler;
 
-    cc_drv_spi_config_t spi2_config = CC_DRV_SPI_OLED_CONFIG;
-    cc_drv_spi_init(&spi2, &spi2_config, spi_oled_event_handler);
+    drvi_SpiInit(&spi);
 }
 
 /**

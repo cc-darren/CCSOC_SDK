@@ -103,8 +103,8 @@ int16_t app_displayoled_routine(void)
               memset(pDisplayStepCount,0,sizeof(pDisplayStepCount));
               memset(pDisplayHeartRate,0,sizeof(pDisplayHeartRate));
             }
-            sprintf(pDisplayStepCount,"%d",dwStepCount);
-            sprintf(pDisplayHeartRate,"%d",dwHeartRate);
+            sprintf((char *)pDisplayStepCount,"%d",dwStepCount);
+            sprintf((char *)pDisplayHeartRate,"%d",dwHeartRate);
             OLED_P8x16Str(30,0,"STEP: ");
             OLED_P8x16Str(70,0,pDisplayStepCount);
             //OLED_P8x16Str(30,2,"HR: ");
@@ -194,8 +194,8 @@ void app_displayoled_start(void)
 
         //OLED_P8x16Str(30,0,"STEP: ");
         //OLED_P8x16Str(30,2,"HR: ");
-        sprintf(pDisplayStepCount,"%d",dwStepCount);
-        sprintf(pDisplayHeartRate,"%d",dwHeartRate);
+        sprintf((char *)pDisplayStepCount,"%d",dwStepCount);
+        sprintf((char *)pDisplayHeartRate,"%d",dwHeartRate);
         OLED_P8x16Str(30,0,"STEP: ");
         OLED_P8x16Str(70,0,pDisplayStepCount);
         //OLED_P8x16Str(30,2,"HR: ");

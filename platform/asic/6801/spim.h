@@ -14,225 +14,95 @@
 
 #include "global.h"
 #include "cc6801_reg.h"
-#include <stddef.h>
-#include <stdbool.h>
 
-#define SPI0_INSTANCE_INDEX 0
-#define SPI1_INSTANCE_INDEX 1
-#define SPI2_INSTANCE_INDEX 2
+#define SPIM_INT_ERROR_STATUS_MASK (0x1UL << 17)
+#define SPIM_INT_ERROR_STATUS_CLEAR_BIT (1)
 
-#define CC_DRV_SPI_PERIPHERAL(id)  (void *)regSPI##id
+#define SPIM_INT_EVENT_STATUS_MASK (0x1UL << 16)
+#define SPIM_INT_EVENT_STATUS_CLEAR_BIT (1)
 
-/**
- * @brief SPI master driver instance data structure.
- */
-typedef struct
-{
-    void *    p_registers;  ///< Pointer to the structure with SPI/SPIM peripheral instance registers.
-    uint8_t   drv_inst_idx; ///< Driver instance index.
-} cc_drv_spi_t;
+#define SPIM_INT_ERROR_ENABLE_MASK (0x1UL << 1)
+#define SPIM_INT_ERROR_DISABLE_BIT (0)
+#define SPIM_INT_ERROR_ENABLE_BIT (1)
 
-/**
- * @brief Macro for creating an SPI master driver instance.
- */
-#define CC_DRV_SPI_INSTANCE(id)                        \
-{                                                       \
-    .p_registers  = CC_DRV_SPI_PERIPHERAL(id),         \
-    .drv_inst_idx = SPI##id##_INSTANCE_INDEX, \
-}
+#define SPIM_INT_EVENT_ENABLE_MASK (0x1UL << 0)
+#define SPIM_INT_EVENT_DISABLE_BIT (0)
+#define SPIM_INT_EVENT_ENABLE_BIT (1)
 
-/**
- * @brief SPI modes.
- */
+#define SPIM_CTRL_ENABLE_MASK (0x1UL << 24)
+#define SPIM_CTRL_DISABLE_BIT (0)
+#define SPIM_CTRL_ENABLE_BIT (1)
+
+#define SPIM_CTRL_CS_POLARITY_MASK (0x1UL << 10)
+#define SPIM_CTRL_CS_POLARITY_HIGH_BIT (0)
+#define SPIM_CTRL_CS_POLARITY_LOW_BIT (1)
+
+#define SPIM_CTRL_CPOL_MASK (0x1UL << 1)
+#define SPIM_CTRL_CPOL_EDGE_RISING_BIT (0)
+#define SPIM_CTRL_CPOL_EDGE_FALLING_BIT (1)
+
+#define SPIM_CTRL_CPHA_MASK (0x1UL << 0)
+#define SPIM_CTRL_CPHA_PHASE_NO_SHIFT_BIT (0)
+#define SPIM_CTRL_CPHA_PHASE_SHIFT_BIT (1)
+
+#define SPIM_DMA_ENALBE_MASK (0x1UL << 24)
+#define SPIM_DMA_DISABLE_BIT (0)
+#define SPIM_DMA_ENABLE_BIT (1)
+
+#define SPIM_DMA_BYTE_SWAP_RX_MASK (0x1UL << 19)
+#define SPIM_DMA_BYTE_SWAP_RX_LSB_BIT (0)
+#define SPIM_DMA_BYTE_SWAP_RX_MSB_BIT (1)
+
+#define SPIM_DMA_BYTE_SWAP_TX_MASK (0x1UL << 18)
+#define SPIM_DMA_BYTE_SWAP_TX_LSB_BIT (0)
+#define SPIM_DMA_BYTE_SWAP_TX_MSB_BIT (1)
+
+typedef struct S_SpiDevice T_SpiDevice;
+
 typedef enum
 {
-    CC_SPIM_MODE_0, ///< SCK active high, sample on leading edge of clock.
-    CC_SPIM_MODE_1, ///< SCK active high, sample on trailing edge of clock.
-    CC_SPIM_MODE_2, ///< SCK active low, sample on leading edge of clock.
-    CC_SPIM_MODE_3  ///< SCK active low, sample on trailing edge of clock.
-} cc_spim_mode_t;
+    SPIM_0 = 0,
+    SPIM_1,
+    SPIM_2,
+    SPIM_TOTAL_SUPPORTED
+}E_SpimSupported;
 
-/**
- * @brief SPI bit orders.
- */
 typedef enum
 {
-    CC_SPIM_BIT_ORDER_MSB_FIRST, ///< Most significant bit shifted out first.
-    CC_SPIM_BIT_ORDER_LSB_FIRST  ///< Least significant bit shifted out first.
-} cc_spim_bit_order_t;
-
-/**
- * @brief SPI operation mode.
- */
-typedef enum
-{
-    CC_SPIM_OP_MODE_WRITE,
-    CC_SPIM_OP_MODE_READ,
-    CC_SPIM_OP_MODE_WRITE_THEN_READ
-} cc_spim_op_mode_t;
-
-/**
- * @brief SPI master driver instance configuration structure.
- */
-typedef struct
-{
-    cc_spim_mode_t      mode;      ///< SPI mode.
-    cc_spim_bit_order_t bit_order; ///< SPI bit order.
-} cc_drv_spi_config_t;
-
-/**
- * @brief SPI master instance default configuration.
- */
-#define CC_DRV_SPI_DEFAULT_CONFIG()                       \
-{                                                            \
-    .mode         = CC_SPIM_MODE_3,                      \
-    .bit_order    = CC_SPIM_BIT_ORDER_MSB_FIRST,         \
-}
-
-/**
- * @brief Single transfer descriptor structure.
- */
-typedef struct
-{
-    uint8_t const * p_tx_buffer; ///< Pointer to TX buffer.
-    uint8_t         tx_length;   ///< TX buffer length.
-    uint8_t       * p_rx_buffer; ///< Pointer to RX buffer.
-    uint8_t         rx_length;   ///< RX buffer length.
-}cc_drv_spi_xfer_desc_t;
-
-/**
- * @brief SPI master driver event types, passed to the handler routine provided
- *        during initialization.
- */
-typedef enum
-{
-    CC_DRV_SPI_EVENT_DONE, ///< Transfer done.
-} cc_drv_spi_evt_type_t;
+    SPIM_OP_MODE_WRITE,
+    SPIM_OP_MODE_READ,
+    SPIM_OP_MODE_WRITE_THEN_READ
+} E_SpimOpMode;
 
 typedef struct
 {
-    cc_drv_spi_evt_type_t  type;      ///< Event type.
-    cc_drv_spi_xfer_desc_t done;  ///< Event data for DONE event.
-} cc_drv_spi_evt_t;
+    void *pReg;
+    E_SpimSupported index;
+    int (*fpSpimXfer)(U_regSPI * p_spim);
+} T_SpiMaster;
 
-/**
- * @brief SPI master driver event handler type.
- */
-typedef void (*cc_drv_spi_handler_t)(cc_drv_spi_evt_t const * p_event);
+typedef struct
+{
+    UINT8 const *pTxBuffer;
+    UINT8        bTxLength;
+    UINT8       *pRxBuffer;
+    UINT8        bRxLength;
+}T_SpimTransfer;
 
+int cc6801_SpimInit(T_SpiDevice *spi);
 
-/**
- * @brief Function for initializing the SPI master driver instance.
- *
- * This function configures and enables the specified peripheral.
- *
- * @param[in] p_instance Pointer to the instance structure.
- * @param[in] p_config   Pointer to the structure with the initial configuration.
- *                       If NULL, the default configuration is used.
- * @param     handler    Event handler provided by the user. If NULL, transfers
- *                       will be performed in blocking mode.
- *
- * @retval CC_SUCCESS             If initialization was successful.
- * @retval CC_ERROR_INVALID_STATE If the driver was already initialized.
- * @retval CC_ERROR_BUSY          If some other peripheral with the same
- *                                 instance ID is already in use. This is
- *                                 possible only if PERIPHERAL_RESOURCE_SHARING_ENABLED
- *                                 is set to a value other than zero.
- */
-int cc_drv_spi_init(cc_drv_spi_t const * const p_instance,
-                            cc_drv_spi_config_t const * p_config,
-                            cc_drv_spi_handler_t handler);
+int cc6801_SpimWrite(T_SpiDevice const * const pSpiDev,
+                           UINT8 const * pTxBuf,
+                           UINT8         bTxBufLen);
 
-/**
- * @brief Function for uninitializing the SPI master driver instance.
- *
- * @param[in] p_instance Pointer to the instance structure.
- */
-void cc_drv_spi_uninit(cc_drv_spi_t const * const p_instance);
+int cc6801_SpimRead(T_SpiDevice const * const pSpiDev,
+                          UINT8       * pRxBuf,
+                          UINT8         bRxBufLen);
 
-int cc_drv_spi_write(cc_drv_spi_t const * const p_instance,
-                      uint8_t const * p_tx_buffer,
-                      uint8_t         tx_buffer_length);
-
-int cc_drv_spi_read(cc_drv_spi_t const * const p_instance,
-                     uint8_t       * p_rx_buffer,
-                     uint8_t         rx_buffer_length);
-
-/**
- * @brief Function for starting the SPI data transfer.
- *
- * If an event handler was provided in the @ref cc_drv_spi_init call, this function
- * returns immediately and the handler is called when the transfer is done.
- * Otherwise, the transfer is performed in blocking mode, which means that this function
- * returns when the transfer is finished.
- *
- * @note Peripherals using EasyDMA (for example, SPIM) require the transfer buffers
- *       to be placed in the Data RAM region. If they are not and an SPIM instance is
- *       used, this function will fail with the error code CC_ERROR_INVALID_ADDR.
- *
- * @param[in] p_instance       Pointer to the instance structure.
- * @param[in] p_tx_buffer      Pointer to the transmit buffer. Can be NULL
- *                             if there is nothing to send.
- * @param     tx_buffer_length Length of the transmit buffer.
- * @param[in] p_rx_buffer      Pointer to the receive buffer. Can be NULL
- *                             if there is nothing to receive.
- * @param     rx_buffer_length Length of the receive buffer.
- *
- * @retval CC_SUCCESS            If the operation was successful.
- * @retval CC_ERROR_BUSY         If a previously started transfer has not finished
- *                                yet.
- * @retval CC_ERROR_INVALID_ADDR If the provided buffers are not placed in the Data
- *                                RAM region.
- */
-int cc_drv_spi_write_then_read(cc_drv_spi_t const * const p_instance,
-                                uint8_t const * p_tx_buffer,
-                                uint8_t         tx_buffer_length,
-                                uint8_t       * p_rx_buffer,
-                                uint8_t         rx_buffer_length);
-
-
-/**
- * @brief Function for starting the SPI data transfer with additional option flags.
- *
- * Function enables customizing the transfer by using option flags.
- *
- * Additional options are provided using the flags parameter:
- *
- * - @ref CC_DRV_SPI_FLAG_TX_POSTINC and @ref CC_DRV_SPI_FLAG_RX_POSTINC<span></span>:
- *   Post-incrementation of buffer addresses. Supported only by SPIM.
- * - @ref CC_DRV_SPI_FLAG_HOLD_XFER<span></span>: Driver is not starting the transfer. Use this
- *   flag if the transfer is triggered externally by PPI. Supported only by SPIM. Use
- *   @ref cc_drv_twi_start_task_get to get the address of the start task.
- * - @ref CC_DRV_SPI_FLAG_NO_XFER_EVT_HANDLER<span></span>: No user event handler after transfer
- *   completion. This also means no interrupt at the end of the transfer. Supported only by SPIM.
- *   If @ref CC_DRV_SPI_FLAG_NO_XFER_EVT_HANDLER is used, the driver does not set the instance into
- *   busy state, so you must ensure that the next transfers are set up when SPIM is not active.
- *   @ref cc_drv_spi_end_event_get function can be used to detect end of transfer. Option can be used
- *   together with @ref CC_DRV_SPI_FLAG_REPEATED_XFER to prepare a sequence of SPI transfers
- *   without interruptions.
- * - @ref CC_DRV_SPI_FLAG_REPEATED_XFER<span></span>: Prepare for repeated transfers. You can set
- *   up a number of transfers that will be triggered externally (for example by PPI). An example is
- *   a TXRX transfer with the options @ref CC_DRV_SPI_FLAG_RX_POSTINC,
- *   @ref CC_DRV_SPI_FLAG_NO_XFER_EVT_HANDLER, and @ref CC_DRV_SPI_FLAG_REPEATED_XFER. After the
- *   transfer is set up, a set of transfers can be triggered by PPI that will read, for example,
- *   the same register of an external component and put it into a RAM buffer without any interrupts.
- *   @ref cc_drv_spi_end_event_get can be used to get the address of the END event, which can be
- *   used to count the number of transfers. If @ref CC_DRV_SPI_FLAG_REPEATED_XFER is used,
- *   the driver does not set the instance into busy state, so you must ensure that the next
- *   transfers are set up when SPIM is not active. Supported only by SPIM.
- * @note Function is intended to be used only in non-blocking mode.
- *
- * @param p_instance  SPI instance.
- * @param p_xfer_desc Pointer to the transfer descriptor.
- * @param flags       Transfer options (0 for default settings).
- *
- * @retval CC_SUCCESS             If the procedure was successful.
- * @retval CC_ERROR_BUSY          If the driver is not ready for a new transfer.
- * @retval CC_ERROR_NOT_SUPPORTED If the provided parameters are not supported.
- * @retval CC_ERROR_INVALID_ADDR  If the provided buffers are not placed in the Data
- *                                 RAM region.
- */
-int cc_drv_spi_transfer(cc_drv_spi_t     const * const p_instance,
-                            cc_drv_spi_xfer_desc_t const * p_xfer_desc);
+int cc6801_SpimWriteThenRead(T_SpiDevice const * const pSpiDev,
+                                   UINT8 const * pTxBuf,
+                                   UINT8         bTxBufLen,
+                                   UINT8       * pRxBuf,
+                                   UINT8         bRxBufLen);
 
 #endif // _SPIM_H__

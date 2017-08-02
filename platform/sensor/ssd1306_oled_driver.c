@@ -32,7 +32,7 @@
 #include "spi_oled.h"
 //#include "nrf_delay.h"
 #include <stdio.h>
-#include "spim.h"
+#include "cc6801_reg.h"
 #define nrf_delay_ms(x) delayns(x*1000)
 
 #if DISABLE_CHINESESTRING
@@ -1694,7 +1694,9 @@ extern const uint8_t lcd_alphabet[];
 
 
 #ifndef LCD_NO_DEFAULT_BUFFER
+#if DISABLE_CHINESESTRING
 static char lcdDefaultBuffer[LCD_BYTES] = {0};
+#endif
 #endif
 
 #define uchar unsigned char
@@ -1950,6 +1952,7 @@ OLED_BufferPrintString(char *pcBuffer, const char *pcStr, uint8_t ui8X)
     char *pcBuf = pcBuffer;
 
 #ifndef LCD_NO_DEFAULT_BUFFER
+#if DISABLE_CHINESESTRING
     //
     // Use default buffer if null pointer
     //
@@ -1957,6 +1960,7 @@ OLED_BufferPrintString(char *pcBuffer, const char *pcStr, uint8_t ui8X)
     {
         pcBuf = lcdDefaultBuffer;
     }
+#endif
 #endif // LCD_NO_DEFAULT_BUFFER
 
     //
