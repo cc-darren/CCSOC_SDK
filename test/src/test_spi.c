@@ -156,7 +156,7 @@ static void winbond_ReadData(T_SpiDevice *spi, UINT32 dwAddr, UINT8 *pbBuf, INT1
 INT16 TEST_SpiInit(T_SpiDevice *spi)
 {
     spi->bBusNum = 1;
-    spi->wMode = DRVI_SPI_MODE_3;
+    spi->wMode = DRVI_SPI_MODE_0;
 
     drvi_SpiInit(spi);
 

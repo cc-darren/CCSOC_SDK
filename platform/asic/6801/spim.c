@@ -187,13 +187,13 @@ __STATIC_INLINE void cc6801_SpimConfig(U_regSPI * pSpimBase,
 
     if (spi->wMode & DRVI_SPI_LSB_FIRST)
     {
-        dwDmaCtrl &= ~SPIM_DMA_BYTE_SWAP_TX_MASK;
-        dwDmaCtrl &= ~SPIM_DMA_BYTE_SWAP_RX_MASK;
+        dwDmaCtrl |= SPIM_DMA_BYTE_SWAP_TX_MASK;
+        dwDmaCtrl |= SPIM_DMA_BYTE_SWAP_RX_MASK;
     }
     else
     {
-        dwDmaCtrl |= SPIM_DMA_BYTE_SWAP_TX_MASK;
-        dwDmaCtrl |= SPIM_DMA_BYTE_SWAP_RX_MASK;
+        dwDmaCtrl &= ~SPIM_DMA_BYTE_SWAP_TX_MASK;
+        dwDmaCtrl &= ~SPIM_DMA_BYTE_SWAP_RX_MASK;
     }
 
     if (spi->wMode & DRVI_SPI_CPHA)
