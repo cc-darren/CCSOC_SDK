@@ -2,10 +2,10 @@
 //#include "CC_global_config.h"
 #include "appDisplay.h"
 #include <stdio.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
-#include "spi_oled.h"
-#include "ssd1306_oled_driver.h"
+#include "dspi.h"
 //#include "appHRM.h"
 
 #define NRF_LOG_MODULE_NAME "APP"
@@ -97,7 +97,7 @@ int16_t app_displayoled_routine(void)
            //}
             if ((dwLastHeartRate != dwHeartRate ) || (dwLastStepCount!= dwStepCount))
             {
-              OLED_Display_Black();
+              dspi_DrawBlack();
               dwLastHeartRate = dwHeartRate ;
               dwLastStepCount = dwStepCount;
               memset(pDisplayStepCount,0,sizeof(pDisplayStepCount));
@@ -105,10 +105,10 @@ int16_t app_displayoled_routine(void)
             }
             sprintf((char *)pDisplayStepCount,"%d",dwStepCount);
             sprintf((char *)pDisplayHeartRate,"%d",dwHeartRate);
-            OLED_P8x16Str(30,0,"STEP: ");
-            OLED_P8x16Str(70,0,pDisplayStepCount);
-            //OLED_P8x16Str(30,2,"HR: ");
-            //OLED_P8x16Str(55,2,pDisplayHeartRate);
+            dspi_DrawPixel8x16(30,0,"STEP: ");
+            dspi_DrawPixel8x16(70,0,pDisplayStepCount);
+            //dspi_DrawPixel8x16(30,2,"HR: ");
+            //dspi_DrawPixel8x16(55,2,pDisplayHeartRate);
 
             f_displayoled()->display_tmrcnt--;
 
@@ -125,17 +125,17 @@ int16_t app_displayoled_routine(void)
     case  E_OLED_PWRSTATE_TURNOFF:
          if (true == f_displayoled()->remote_turnon)
          {
-            ssd1306_display_on();
+            dspi_DisplayOn();
             f_displayoled()->ePwr_nextstate =  E_OLED_PWRSTATE_TURNON;
          }
          else
-            ssd1306_display_off();
+            dspi_DisplayOff();
 
     break;
     case  E_OLED_PWRSTATE_WAKEUP:
          if (true == f_displayoled()->remote_turnon)
          {
-            OLED_Enable_SleepMode(0); //0= left sleep
+            dspi_WakeUp();
             f_displayoled()->ePwr_nextstate =  E_OLED_PWRSTATE_TURNON;
             dwHeartRate =0;
          }
@@ -144,7 +144,7 @@ int16_t app_displayoled_routine(void)
     case  E_OLED_PWRSTATE_SLEEP:
          if (false == f_displayoled()->remote_turnon)
          {
-            OLED_Enable_SleepMode(1); //1 = enter sleep
+            dspi_Sleep();
             f_displayoled()->ePwr_nextstate =  E_OLED_PWRSTATE_WAKEUP;
          }
     break;
@@ -178,7 +178,7 @@ void app_displayoled_init(void)
         f_displayoled()->display_tmrcnt =0;
         f_displayoled()->ePwr_curstate=E_OLED_PWRSTATE_INIT;
 
-        ssd1306_init();
+        dspi_Init();
 
 
     }
@@ -192,14 +192,14 @@ void app_displayoled_start(void)
 
     if (f_displayoled()->id < 0) {
 
-        //OLED_P8x16Str(30,0,"STEP: ");
-        //OLED_P8x16Str(30,2,"HR: ");
+        //dspi_DrawPixel8x16(30,0,"STEP: ");
+        //dspi_DrawPixel8x16(30,2,"HR: ");
         sprintf((char *)pDisplayStepCount,"%d",dwStepCount);
         sprintf((char *)pDisplayHeartRate,"%d",dwHeartRate);
-        OLED_P8x16Str(30,0,"STEP: ");
-        OLED_P8x16Str(70,0,pDisplayStepCount);
-        //OLED_P8x16Str(30,2,"HR: ");
-        //OLED_P8x16Str(55,2,pDisplayHeartRate);
+        dspi_DrawPixel8x16(30,0,"STEP: ");
+        dspi_DrawPixel8x16(70,0,pDisplayStepCount);
+        //dspi_DrawPixel8x16(30,2,"HR: ");
+        //dspi_DrawPixel8x16(55,2,pDisplayHeartRate);
 
 
         f_displayoled()->ePwr_nextstate=E_OLED_PWRSTATE_TURNON;

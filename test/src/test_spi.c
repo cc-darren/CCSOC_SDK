@@ -47,10 +47,10 @@ Head Block of The File
 
 #define WAIT_WINBOND_BUSY()                            \
     {                                                  \
-         UINT8 cBusy = 0;                              \
+         uint8_t cBusy = 0;                            \
          do                                            \
          {                                             \
-             cBusy = winbond_ReadStatusReg1(&spi);   \
+             cBusy = winbond_ReadStatusReg1(&spi);     \
          } while(cBusy & 0x01);                        \
     }
 
@@ -63,9 +63,9 @@ Declaration of data structure
 ******************************************************************************/
 typedef struct S_SpiTxBuffer
 {
-    UINT8 bCmd;
-    UINT8 baAddr[3];
-    UINT8 baBuffer[SPI_BUFFER_SIZE];
+    uint8_t bCmd;
+    uint8_t baAddr[3];
+    uint8_t baBuffer[SPI_BUFFER_SIZE];
 }T_SpiTxBuffer;
 
 /******************************************************************************
@@ -76,20 +76,20 @@ Declaration of Global Variables & Functions
 Declaration of static Global Variables & Functions
 ******************************************************************************/
 __align(4) static T_SpiTxBuffer g_tSpi0TxBuffer = {0, {0}, {0}};
-__align(4) static UINT8 g_baSpi0RxBuffer[SPI_BUFFER_SIZE] = {0};
+__align(4) static uint8_t g_baSpi0RxBuffer[SPI_BUFFER_SIZE] = {0};
 
 static void winbond_WriteEnable(const T_SpiDevice *spi)
 {
-    UINT8 bCmd = 0;
+    uint8_t bCmd = 0;
 
     bCmd = 0x06;
     drvi_SpiWrite(spi, &bCmd, 1);
 }
 
-static UINT8 winbond_ReadStatusReg1(const T_SpiDevice *spi)
+static uint8_t winbond_ReadStatusReg1(const T_SpiDevice *spi)
 {
-    UINT8 bCmd = 0;
-    UINT8 bVal = 0;
+    uint8_t bCmd = 0;
+    uint8_t bVal = 0;
 
     bCmd = 0x05;
     drvi_SpiWriteThenRead(spi, &bCmd, 1, &bVal, 1);
@@ -99,25 +99,25 @@ static UINT8 winbond_ReadStatusReg1(const T_SpiDevice *spi)
 
 static void winbond_ChipErase(const T_SpiDevice *spi)
 {
-    UINT8 bCmd = 0;
+    uint8_t bCmd = 0;
 
     bCmd = 0xC7;
     drvi_SpiWrite(spi, &bCmd, 1);
 }
 
-static void winbond_BlockErase64(const T_SpiDevice *spi, UINT32 dwAddr)
+static void winbond_BlockErase64(const T_SpiDevice *spi, uint32_t dwAddr)
 {
-    UINT32 dwCmdAddr = 0;
+    uint32_t dwCmdAddr = 0;
 
     dwCmdAddr = (((dwAddr & 0xFF) << 24) | (((dwAddr >> 8) & 0xFF) << 16) | (((dwAddr >> 16) & 0x0F) << 8) | 0xD8);
 
-    drvi_SpiWrite(spi, (UINT8 *)&dwCmdAddr, sizeof(dwCmdAddr));
+    drvi_SpiWrite(spi, (uint8_t *)&dwCmdAddr, sizeof(dwCmdAddr));
 }
 
-static INT16 winbond_PageProgram(const T_SpiDevice *spi, UINT32 dwAddr, UINT8 *pbBuf, INT16 iSize)
+static int winbond_PageProgram(const T_SpiDevice *spi, uint32_t dwAddr, uint8_t *pbBuf, int iSize)
 {
-    UINT8 bCmd = 0;
-    INT16 iTxSize = 0;
+    uint8_t bCmd = 0;
+    int iTxSize = 0;
 
     if (iSize > SPI_BUFFER_SIZE)
         return CC_ERROR_NO_MEM;
@@ -132,15 +132,15 @@ static INT16 winbond_PageProgram(const T_SpiDevice *spi, UINT32 dwAddr, UINT8 *p
 
     memcpy(&g_tSpi0TxBuffer.baBuffer, pbBuf, iSize);
 
-    drvi_SpiWrite(spi, (UINT8 const *)&g_tSpi0TxBuffer, iTxSize);
+    drvi_SpiWrite(spi, (uint8_t const *)&g_tSpi0TxBuffer, iTxSize);
 
     return CC_SUCCESS;
 }
 
-static void winbond_ReadData(T_SpiDevice *spi, UINT32 dwAddr, UINT8 *pbBuf, INT16 iSize)
+static void winbond_ReadData(T_SpiDevice *spi, uint32_t dwAddr, uint8_t *pbBuf, int iSize)
 {
-    UINT8 bCmd = 0;
-    INT16 iTxSize = 0;
+    uint8_t bCmd = 0;
+    int iTxSize = 0;
 
     bCmd = 0x03;
     iTxSize = sizeof(g_tSpi0TxBuffer.bCmd) + sizeof(g_tSpi0TxBuffer.baAddr);
@@ -150,10 +150,10 @@ static void winbond_ReadData(T_SpiDevice *spi, UINT32 dwAddr, UINT8 *pbBuf, INT1
     g_tSpi0TxBuffer.baAddr[1] = (dwAddr >> 8) & 0xFF;
     g_tSpi0TxBuffer.baAddr[2] = dwAddr & 0xFF;
 
-    drvi_SpiWriteThenRead(spi, (UINT8 const *)&g_tSpi0TxBuffer, iTxSize, pbBuf, iSize);
+    drvi_SpiWriteThenRead(spi, (uint8_t const *)&g_tSpi0TxBuffer, iTxSize, pbBuf, iSize);
 }
 
-INT16 TEST_SpiInit(T_SpiDevice *spi)
+int TEST_SpiInit(T_SpiDevice *spi)
 {
     spi->bBusNum = 1;
     spi->wMode = DRVI_SPI_MODE_0;
@@ -163,13 +163,13 @@ INT16 TEST_SpiInit(T_SpiDevice *spi)
     return CC_SUCCESS;
 }
 
-void TEST_SpiRW(UINT32 dwCount)
+void TEST_SpiRW(uint32_t dwCount)
 {
-    UINT32 dwIndex = 0;
-    UINT32 dwAddr = 0;
-    INT16 iError = CC_SUCCESS;
-    INT16 iBlock = 0;
-    INT16 iSize = 0;
+    uint32_t dwIndex = 0;
+    uint32_t dwAddr = 0;
+    int iError = CC_SUCCESS;
+    int iBlock = 0;
+    int iSize = 0;
 
     T_SpiDevice spi;
 

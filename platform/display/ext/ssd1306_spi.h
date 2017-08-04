@@ -15,19 +15,13 @@
  ****************************************************************************************
  */
 
-#ifndef _SPI_OLED_H_
-#define _SPI_OLED_H_
+#ifndef _SSD1306_SPI_H_
+#define _SSD1306_SPI_H_
 
 #include <stdint.h>
-#include "ssd1306_oled_driver.h"
 
-
-#define SPI2_INSTANCE  2 /**< SPI instance index. */
-
-
-#define SSD1306_LCDWIDTH                  128
-#define SSD1306_LCDHEIGHT                 32
-
+#define SSD1306_LCDWIDTH                            128
+#define SSD1306_LCDHEIGHT                           32
 
 #define SSD1306_CMD_COL_ADD_SET_LSB(column)         (0x00 | (column))
 #define SSD1306_CMD_COL_ADD_SET_MSB(column)         (0x10 | (column))
@@ -55,61 +49,29 @@
 #define SSD1306_CMD_SET_COM_PINS                    0xDA
 #define SSD1306_CMD_SET_VCOMH_DESELECT_LEVEL        0xDB
 #define SSD1306_CMD_NOP                             0xE3
-#define SSD1306_MAXROWS 4
+#define SSD1306_MAXROWS                             4
 
-	// address setting
-#define SSD1306_SETLOWCOLUMN 0x00
-#define SSD1306_SETHIGHCOLUMN 0x10
-#define SSD1306_MEMORYMODE 0x20
-#define SSD1306_COLUMNADDRESS 0x21
-#define SSD1306_COLUMNADDRESS_MSB 0x00
-#define SSD1306_COLUMNADDRESS_LSB 0x7F
-#define SSD1306_PAGEADDRESS	0x22
-#define SSD1306_PAGE_START_ADDRESS 0xB0
+// address setting
+#define SSD1306_SETLOWCOLUMN                        0x00
+#define SSD1306_SETHIGHCOLUMN                       0x10
+#define SSD1306_MEMORYMODE                          0x20
+#define SSD1306_COLUMNADDRESS                       0x21
+#define SSD1306_COLUMNADDRESS_MSB                   0x00
+#define SSD1306_COLUMNADDRESS_LSB                   0x7F
+#define SSD1306_PAGEADDRESS                         0x22
+#define SSD1306_PAGE_START_ADDRESS                  0xB0
 
-/**
- ****************************************************************************************
- * @brief LIS2DH clr cs
- ****************************************************************************************
- */
-inline void set_oled_pwrctl_hi( void )__attribute__((always_inline));
-inline void set_oled_pwrctl_lo( void )__attribute__((always_inline));
-inline void set_oled_dc_hi( void )__attribute__((always_inline));
-inline void set_oled_dc_lo( void )__attribute__((always_inline));
-inline void set_oled_reset_hi( void )__attribute__((always_inline));
-inline void set_oled_reset_lo( void )__attribute__((always_inline));
+void ssd1306_Init(void);
+void ssd1306_Reset(void);
+void ssd1306_HardReset(void);
 
+void ssd1306_SendCommand(uint8_t bByte);
+void ssd1306_SendData(uint8_t bByte);
 
+void ssd1306_DisplayOn(void);
+void ssd1306_DisplayOff(void);
 
-/**
- ****************************************************************************************
- * @brief initializes the DA1458x SPI peripheral
- *
- * @param[in] none
- *
- * @return none
- ****************************************************************************************
- */
-void oled_spi_init( void );
-void oled_spi_release(void);
-void oled_pins_init( void ) ;
-void ssd1306_init(void);
-void ssd1306_reset(void);
+void ssd1306_Sleep(void);
+void ssd1306_WakeUp(void);
 
-void ssd1306_hard_reset(void);
-void ssd1306_interface_init(void);
-void ssd1306_write_command(uint8_t command);
-void ssd1306_write_data(uint8_t command);
-uint8_t ssd1306_set_contrast(uint8_t contrast);
-void ssd1306_display_invert_disable(void);
-void ssd1306_display_on(void);
-void ssd1306_display_off(void);
-
-void OLED_Display_White(void);
-void OLED_Display_Black(void);
-
-
-
-
-
-#endif //_SPI_SENSOR_H_
+#endif //_SSD1306_SPI_H_

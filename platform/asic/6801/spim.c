@@ -35,9 +35,9 @@
 #include "drvi_spi.h"
 #include "spim.h"
 
-volatile UINT32 SPI0_M_INTR = 0;
-volatile UINT32 SPI1_M_INTR = 0;
-volatile UINT32 SPI2_M_INTR = 0;
+volatile uint32_t SPI0_M_INTR = 0;
+volatile uint32_t SPI1_M_INTR = 0;
+volatile uint32_t SPI2_M_INTR = 0;
 
 void SPI0_M_IRQHandler(void)
 {
@@ -98,18 +98,18 @@ static int cc6801_Spim2Xfer(U_regSPI * pSpim2Base)
 }
 
 static void cc6801_SpimTxBufferSet(U_regSPI * pSpimBase,
-                                    UINT8 const * pBuffer,
-                                    UINT8   bLength)
+                                    uint8_t const * pBuffer,
+                                    uint8_t   bLength)
 {
-    pSpimBase->bf.dma_str_raddr = (UINT32)pBuffer;
+    pSpimBase->bf.dma_str_raddr = (uint32_t)pBuffer;
     pSpimBase->bf.total_wbyte = bLength - 1;
 }
 
 static void cc6801_SpimRxBufferSet(U_regSPI * pSpimBase,
-                                    UINT8 const * pBuffer,
-                                    UINT8   bLength)
+                                    uint8_t const * pBuffer,
+                                    uint8_t   bLength)
 {
-    pSpimBase->bf.dma_str_waddr = (UINT32)pBuffer;
+    pSpimBase->bf.dma_str_waddr = (uint32_t)pBuffer;
     pSpimBase->bf.total_rbyte = bLength - 1;
 }
 
@@ -118,7 +118,7 @@ static void cc6801_SpimIntStatusClr(U_regSPI * pSpimBase)
     pSpimBase->dw.spiInt |= (SPIM_INT_ERROR_STATUS_MASK | SPIM_INT_EVENT_STATUS_MASK);
 }
 
-static T_SpiMaster cc6801_SpiMasterGet(UINT8 bSpimId)
+static T_SpiMaster cc6801_SpiMasterGet(uint8_t bSpimId)
 {
     T_SpiMaster master;
 
@@ -151,8 +151,8 @@ static int cc6801_SpimTransfer(T_SpiMaster const * const pSpim,
 {
     U_regSPI *pSpimBase = pSpim->pReg;
 
-    if (((UINT32)pXfer->pTxBuffer & 0x3UL) ||
-         ((UINT32)pXfer->pRxBuffer & 0x3UL))
+    if (((uint32_t)pXfer->pTxBuffer & 0x3UL) ||
+         ((uint32_t)pXfer->pRxBuffer & 0x3UL))
         return CC_ERROR_INVALID_ADDR;
 
     if ((pXfer->pTxBuffer) && (pXfer->pRxBuffer))
@@ -182,8 +182,8 @@ static int cc6801_SpimTransfer(T_SpiMaster const * const pSpim,
 __STATIC_INLINE void cc6801_SpimConfig(U_regSPI * pSpimBase,
                                         T_SpiDevice *spi)
 {
-    UINT32 dwDmaCtrl = pSpimBase->dw.DmaCtrl;
-    UINT32 dwSpiCtrl = pSpimBase->dw.spiCtrl;
+    uint32_t dwDmaCtrl = pSpimBase->dw.DmaCtrl;
+    uint32_t dwSpiCtrl = pSpimBase->dw.spiCtrl;
 
     if (spi->wMode & DRVI_SPI_LSB_FIRST)
     {
@@ -248,8 +248,8 @@ int cc6801_SpimInit(T_SpiDevice *pSpiDev)
 }
 
 int cc6801_SpimWrite(T_SpiDevice const * const pSpiDev,
-                           UINT8 const * pTxBuf,
-                           UINT8         bTxBufLen)
+                         uint8_t const * pTxBuf,
+                         uint8_t         bTxBufLen)
 {
     T_SpiMaster master = cc6801_SpiMasterGet(pSpiDev->bBusNum);
 
@@ -263,8 +263,8 @@ int cc6801_SpimWrite(T_SpiDevice const * const pSpiDev,
 }
 
 int cc6801_SpimRead(T_SpiDevice const * const pSpiDev,
-                          UINT8       * pRxBuf,
-                          UINT8         bRxBufLen)
+                        uint8_t       * pRxBuf,
+                        uint8_t         bRxBufLen)
 {
     T_SpiMaster master = cc6801_SpiMasterGet(pSpiDev->bBusNum);
 
@@ -278,10 +278,10 @@ int cc6801_SpimRead(T_SpiDevice const * const pSpiDev,
 }
 
 int cc6801_SpimWriteThenRead(T_SpiDevice const * const pSpiDev,
-                                   UINT8 const * pTxBuf,
-                                   UINT8         bTxBufLen,
-                                   UINT8       * pRxBuf,
-                                   UINT8         bRxBufLen)
+                                 uint8_t const * pTxBuf,
+                                 uint8_t         bTxBufLen,
+                                 uint8_t       * pRxBuf,
+                                 uint8_t         bRxBufLen)
 {
     T_SpiMaster master = cc6801_SpiMasterGet(pSpiDev->bBusNum);
 

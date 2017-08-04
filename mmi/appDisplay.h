@@ -66,5 +66,6 @@ void app_displayoled_changestate(E_OLED_PWRSTATE e_nxState,char state);
 }
 #endif
 
+
 #endif /**< CFG_MODULE_LONGSIT */
 

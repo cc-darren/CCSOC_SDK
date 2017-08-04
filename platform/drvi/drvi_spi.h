@@ -40,10 +40,10 @@ typedef enum
 } E_DrviSpiEvent;
 
 typedef struct S_SpiDevice {
-    UINT8        bBusNum;
-    UINT8        chip_select;
-    UINT16       wMode;
-    UINT32       dwMaxSpeedHz;
+    uint8_t        bBusNum;
+    uint8_t        chip_select;
+    uint16_t       wMode;
+    uint32_t       dwMaxSpeedHz;
 
     void (*fpComplete)(E_DrviSpiEvent *event);
 }T_SpiDevice;

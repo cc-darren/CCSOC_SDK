@@ -335,7 +335,7 @@
               <MiscControls>--no_inline --no_multifile -DMSC_CLOCK --preinclude ..\..\cfg\cfg_ble_ip.h --preinclude ..\..\inc\global.h</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\algo\8bit_ped_50hz;..\..\inc;..\..\inc\CMSIS;..\..\mmi;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\platform\sensor;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\ble\ip\ble\profiles\htp;..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\cfg;..\..\service\tracer;..\..\test;..\..\test\ext;..\..\cfg\project</IncludePath>
+              <IncludePath>..\..\algo\8bit_ped_50hz;..\..\inc;..\..\inc\CMSIS;..\..\mmi;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\platform\sensor;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\ble\ip\ble\profiles\htp;..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\cfg;..\..\service\tracer;..\..\test;..\..\test\ext;..\..\cfg\project;..\..\platform\display;..\..\platform\display\ext</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -402,6 +402,16 @@
               <FileName>appDisplay.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\mmi\appDisplay.c</FilePath>
+            </File>
+            <File>
+              <FileName>font.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\mmi\font.c</FilePath>
+            </File>
+            <File>
+              <FileName>icon.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\mmi\icon.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -544,19 +554,9 @@
               <FilePath>..\..\platform\sensor\LSM6DS3_ACC_GYRO_driver.c</FilePath>
             </File>
             <File>
-              <FileName>spi_oled.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\sensor\spi_oled.c</FilePath>
-            </File>
-            <File>
               <FileName>spi_sensor.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\sensor\spi_sensor.c</FilePath>
-            </File>
-            <File>
-              <FileName>ssd1306_oled_driver.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\sensor\ssd1306_oled_driver.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1037,6 +1037,21 @@
               <FileName>test_clock.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\test\src\test_clock.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>display</GroupName>
+          <Files>
+            <File>
+              <FileName>ssd1306_128x32.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\display\src\ssd1306_128x32.c</FilePath>
+            </File>
+            <File>
+              <FileName>ssd1306_spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\display\src\ssd1306_spi.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1508,7 +1523,7 @@
               <MiscControls> --preinclude ..\..\cfg\cfg_ble_ip.h --preinclude ..\..\inc\global.h</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\algo\8bit_ped_50hz;..\..\inc;..\..\inc\CMSIS;..\..\mmi;..\..\platform\asic\6801;..\..\platform\drvi;..\..\platform\init\inc;..\..\platform\sensor;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\ble\ip\ble\profiles\htp;..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\service\tracer;..\..\test;..\..\test\ext;..\..\cfg;..\..\cfg\project</IncludePath>
+              <IncludePath>..\..\algo\8bit_ped_50hz;..\..\inc;..\..\inc\CMSIS;..\..\mmi;..\..\platform\asic\6801;..\..\platform\drvi;..\..\platform\init\inc;..\..\platform\sensor;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\ble\ip\ble\profiles\htp;..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\service\tracer;..\..\test;..\..\test\ext;..\..\cfg;..\..\cfg\project;..\..\platform\display;..\..\platform\display\ext</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1575,6 +1590,16 @@
               <FileName>appDisplay.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\mmi\appDisplay.c</FilePath>
+            </File>
+            <File>
+              <FileName>font.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\mmi\font.c</FilePath>
+            </File>
+            <File>
+              <FileName>icon.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\mmi\icon.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1717,19 +1742,9 @@
               <FilePath>..\..\platform\sensor\LSM6DS3_ACC_GYRO_driver.c</FilePath>
             </File>
             <File>
-              <FileName>spi_oled.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\sensor\spi_oled.c</FilePath>
-            </File>
-            <File>
               <FileName>spi_sensor.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\sensor\spi_sensor.c</FilePath>
-            </File>
-            <File>
-              <FileName>ssd1306_oled_driver.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\sensor\ssd1306_oled_driver.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2210,6 +2225,21 @@
               <FileName>test_clock.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\test\src\test_clock.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>display</GroupName>
+          <Files>
+            <File>
+              <FileName>ssd1306_128x32.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\display\src\ssd1306_128x32.c</FilePath>
+            </File>
+            <File>
+              <FileName>ssd1306_spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\display\src\ssd1306_spi.c</FilePath>
             </File>
           </Files>
         </Group>

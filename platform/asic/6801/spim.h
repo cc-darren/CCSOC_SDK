@@ -83,26 +83,26 @@ typedef struct
 
 typedef struct
 {
-    UINT8 const *pTxBuffer;
-    UINT8        bTxLength;
-    UINT8       *pRxBuffer;
-    UINT8        bRxLength;
+    uint8_t const *pTxBuffer;
+    uint8_t        bTxLength;
+    uint8_t       *pRxBuffer;
+    uint8_t        bRxLength;
 }T_SpimTransfer;
 
 int cc6801_SpimInit(T_SpiDevice *spi);
 
 int cc6801_SpimWrite(T_SpiDevice const * const pSpiDev,
-                           UINT8 const * pTxBuf,
-                           UINT8         bTxBufLen);
+                         uint8_t const * pTxBuf,
+                         uint8_t         bTxBufLen);
 
 int cc6801_SpimRead(T_SpiDevice const * const pSpiDev,
-                          UINT8       * pRxBuf,
-                          UINT8         bRxBufLen);
+                        uint8_t       * pRxBuf,
+                        uint8_t         bRxBufLen);
 
 int cc6801_SpimWriteThenRead(T_SpiDevice const * const pSpiDev,
-                                   UINT8 const * pTxBuf,
-                                   UINT8         bTxBufLen,
-                                   UINT8       * pRxBuf,
-                                   UINT8         bRxBufLen);
+                                 uint8_t const * pTxBuf,
+                                 uint8_t         bTxBufLen,
+                                 uint8_t       * pRxBuf,
+                                 uint8_t         bRxBufLen);
 
 #endif // _SPIM_H__
