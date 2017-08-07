@@ -84,7 +84,7 @@ void SystemInit (void)
 /******************************/
     wr(SCU_PLLCFG_REG, (0 | vco_div<<26 | byp<<25 | pd<<24 | divc0<<16 | divm<<8 | divn) );
     wr(SCU_CLKCFG0_REG, 0x00000500);
-    wr(SCU_CLKCFG1_REG, 0x00000B01);
+    wr(SCU_CLKCFG1_REG, 0x00002B01);
 
     //drvi_ClockSysClkAdjust(g_dwCurrentClock);
 
