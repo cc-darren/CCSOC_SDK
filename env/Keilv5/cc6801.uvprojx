@@ -419,9 +419,39 @@
           <GroupName>asic</GroupName>
           <Files>
             <File>
-              <FileName>spim.c</FileName>
+              <FileName>adc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801\spim.c</FilePath>
+              <FilePath>..\..\platform\asic\6801\adc.c</FilePath>
+            </File>
+            <File>
+              <FileName>aes.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\aes.c</FilePath>
+            </File>
+            <File>
+              <FileName>clock.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\clock.c</FilePath>
+            </File>
+            <File>
+              <FileName>dmic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\dmic.c</FilePath>
+            </File>
+            <File>
+              <FileName>dmu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\dmu.c</FilePath>
+            </File>
+            <File>
+              <FileName>eflash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\eflash.c</FilePath>
+            </File>
+            <File>
+              <FileName>gpio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\gpio.c</FilePath>
             </File>
             <File>
               <FileName>i2c.c</FileName>
@@ -434,49 +464,14 @@
               <FilePath>..\..\platform\asic\6801\i2s.c</FilePath>
             </File>
             <File>
-              <FileName>uart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801\uart.c</FilePath>
-            </File>
-            <File>
               <FileName>pwm.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\asic\6801\pwm.c</FilePath>
             </File>
             <File>
-              <FileName>aes.c</FileName>
+              <FileName>spim.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801\aes.c</FilePath>
-            </File>
-            <File>
-              <FileName>wdt.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801\wdt.c</FilePath>
-            </File>
-            <File>
-              <FileName>gpio.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801\gpio.c</FilePath>
-            </File>
-            <File>
-              <FileName>dmic.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801\dmic.c</FilePath>
-            </File>
-            <File>
-              <FileName>eflash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801\eflash.c</FilePath>
-            </File>
-            <File>
-              <FileName>dmu.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801\dmu.c</FilePath>
-            </File>
-            <File>
-              <FileName>wktm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801\wktm.c</FilePath>
+              <FilePath>..\..\platform\asic\6801\spim.c</FilePath>
             </File>
             <File>
               <FileName>rtc.c</FileName>
@@ -484,9 +479,19 @@
               <FilePath>..\..\platform\asic\6801\rtc.c</FilePath>
             </File>
             <File>
-              <FileName>clock.c</FileName>
+              <FileName>uart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801\clock.c</FilePath>
+              <FilePath>..\..\platform\asic\6801\uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>wdt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\wdt.c</FilePath>
+            </File>
+            <File>
+              <FileName>wktm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\wktm.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1607,9 +1612,39 @@
           <GroupName>asic</GroupName>
           <Files>
             <File>
-              <FileName>spim.c</FileName>
+              <FileName>adc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801\spim.c</FilePath>
+              <FilePath>..\..\platform\asic\6801\adc.c</FilePath>
+            </File>
+            <File>
+              <FileName>aes.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\aes.c</FilePath>
+            </File>
+            <File>
+              <FileName>clock.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\clock.c</FilePath>
+            </File>
+            <File>
+              <FileName>dmic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\dmic.c</FilePath>
+            </File>
+            <File>
+              <FileName>dmu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\dmu.c</FilePath>
+            </File>
+            <File>
+              <FileName>eflash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\eflash.c</FilePath>
+            </File>
+            <File>
+              <FileName>gpio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\gpio.c</FilePath>
             </File>
             <File>
               <FileName>i2c.c</FileName>
@@ -1622,49 +1657,14 @@
               <FilePath>..\..\platform\asic\6801\i2s.c</FilePath>
             </File>
             <File>
-              <FileName>uart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801\uart.c</FilePath>
-            </File>
-            <File>
               <FileName>pwm.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\asic\6801\pwm.c</FilePath>
             </File>
             <File>
-              <FileName>aes.c</FileName>
+              <FileName>spim.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801\aes.c</FilePath>
-            </File>
-            <File>
-              <FileName>wdt.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801\wdt.c</FilePath>
-            </File>
-            <File>
-              <FileName>gpio.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801\gpio.c</FilePath>
-            </File>
-            <File>
-              <FileName>dmic.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801\dmic.c</FilePath>
-            </File>
-            <File>
-              <FileName>eflash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801\eflash.c</FilePath>
-            </File>
-            <File>
-              <FileName>dmu.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801\dmu.c</FilePath>
-            </File>
-            <File>
-              <FileName>wktm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801\wktm.c</FilePath>
+              <FilePath>..\..\platform\asic\6801\spim.c</FilePath>
             </File>
             <File>
               <FileName>rtc.c</FileName>
@@ -1672,9 +1672,19 @@
               <FilePath>..\..\platform\asic\6801\rtc.c</FilePath>
             </File>
             <File>
-              <FileName>clock.c</FileName>
+              <FileName>uart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801\clock.c</FilePath>
+              <FilePath>..\..\platform\asic\6801\uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>wdt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\wdt.c</FilePath>
+            </File>
+            <File>
+              <FileName>wktm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\wktm.c</FilePath>
             </File>
           </Files>
         </Group>
