@@ -90,6 +90,7 @@ Declaration of static Global Variables & Functions
         //16MHz
         {
             //XTAL=48MHz, 48/3=16MHz, we don't need to use PLL
+            (16000000),
             (PLL_BYPASS_MASK|PLL_POWER_DOWN_MASK|DIVCO_BYPASS_MASK|DIVM_BYPASS_MASK|DIVN_BYPASS_MASK),
             (PLL_DISABLE_MASK|SELECT_XTAL_MASK|SYS_DIV_3_MASK),
             //(RET_RAM_CLK_EN_MASK|OSC_40K_DIS_MASK|OSC_32K_EN_MASK|SELECT_OSC_32K_MASK|HS_CLK_EN_MASK|CPU_CLK_EN_MASK|FREQ_HIGH_MASK)
@@ -98,6 +99,7 @@ Declaration of static Global Variables & Functions
         //24MHz
         {
             //XTAL=48MHz, 48/2=24MHz, we don't need to use PLL
+            (24000000),
             (PLL_BYPASS_MASK|PLL_POWER_DOWN_MASK|DIVCO_BYPASS_MASK|DIVM_BYPASS_MASK|DIVN_BYPASS_MASK),
             (PLL_DISABLE_MASK|SELECT_XTAL_MASK|SYS_DIV_2_MASK),
             //(RET_RAM_CLK_EN_MASK|OSC_40K_DIS_MASK|OSC_32K_EN_MASK|SELECT_OSC_32K_MASK|HS_CLK_EN_MASK|CPU_CLK_EN_MASK|FREQ_HIGH_MASK)
@@ -106,6 +108,7 @@ Declaration of static Global Variables & Functions
         //32MHz
         {
             //XTAL=48MHz, must enable PLL
+            (32000000),
             (PLL_USE_MASK|PLL_POWER_UP_MASK|DIVCO_32MHZ_MASK|DIVM_32MHZ_MASK|DIVN_32MHZ_MASK),
             (PLL_ENABLE_MASK|SELECT_PLL_MASK|SYS_DIV_0_MASK),
             //(RET_RAM_CLK_EN_MASK|OSC_40K_DIS_MASK|OSC_32K_EN_MASK|SELECT_OSC_32K_MASK|HS_CLK_EN_MASK|CPU_CLK_EN_MASK|FREQ_HIGH_MASK)
@@ -114,6 +117,7 @@ Declaration of static Global Variables & Functions
         //48MHz
         {
             //XTAL=48MHz, 48/1=48MHz, we don't need to use PLL
+            (48000000),
             (PLL_BYPASS_MASK|PLL_POWER_DOWN_MASK|DIVCO_BYPASS_MASK|DIVM_BYPASS_MASK|DIVN_BYPASS_MASK),
             (PLL_DISABLE_MASK|SELECT_XTAL_MASK|SYS_DIV_0_MASK),
             //(RET_RAM_CLK_EN_MASK|OSC_40K_DIS_MASK|OSC_32K_EN_MASK|SELECT_OSC_32K_MASK|HS_CLK_EN_MASK|CPU_CLK_EN_MASK|FREQ_HIGH_MASK)
@@ -122,6 +126,7 @@ Declaration of static Global Variables & Functions
         //64MHz
         {
             //XTAL=48MHz, must enable PLL
+            (64000000),
             (PLL_USE_MASK|PLL_POWER_UP_MASK|DIVCO_64MHZ_MASK|DIVM_64MHZ_MASK|DIVN_64MHZ_MASK),
             (PLL_ENABLE_MASK|SELECT_PLL_MASK|SYS_DIV_0_MASK),
             //(RET_RAM_CLK_EN_MASK|OSC_40K_DIS_MASK|OSC_32K_EN_MASK|SELECT_OSC_32K_MASK|HS_CLK_EN_MASK|CPU_CLK_EN_MASK|FREQ_HIGH_MASK)
@@ -249,7 +254,7 @@ DESCRIPTION
   Step2:Adjust eFlash parameter
 
 PARAMETERS
-    none
+    E_ClockSupported
 RETURNS
     none
 ******************************************************************************/

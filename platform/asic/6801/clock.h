@@ -331,6 +331,7 @@ Declaration of static Global Variables & Functions
 // Sec 8: declaration of static global variable
 typedef struct
 {
+    uint32_t dwMhz;
     uint32_t dwPllCfg;
     uint32_t dwClkCfg0;
     //uint32_t dwClkCfg1;   //value is same for every clock
