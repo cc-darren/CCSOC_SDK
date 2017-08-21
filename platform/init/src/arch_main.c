@@ -28,6 +28,7 @@
 #include "FP_PED_8Bit.h"
 #include "jump_table.h"
 #include "cfg_ble_ip.h"
+#include "tracer.h"
 
 #define APP_TIMER_PRESCALER                     0                                           /**< Value of the RTC1 PRESCALER register. */
 #define APP_TIMER_OP_QUEUE_SIZE                 4                                           /**< Size of timer operation queues. */
@@ -301,8 +302,6 @@ void _sensor_accel_on_change(void)
     }
 }
 
-extern void app_trace_init(void);
-
 void _app_init(void)
 {
     memset(&s_tVenusCB, 0, sizeof(s_tVenusCB));
@@ -322,12 +321,8 @@ int main(void)
 #endif
     drvi_initialize();
 
-    app_trace_init();
-
-    //pwm_start_test();
-
+    Tracer_Init();
     timers_init();
-    timers_start_test();
 
     //start interrupt handling
 #ifdef CFG_BLE_APP
@@ -341,7 +336,7 @@ int main(void)
 #endif
 	
     GLOBAL_INT_START();
-    printf("\r\n== CC6801 Start ==\r\n");
+    TracerInfo("== CC6801 Start ==\n");
 
     sensor_init();
     _app_init();

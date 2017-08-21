@@ -38,7 +38,7 @@ static uint8_t *p_rx_buffer[3];
 static uint32_t rx_counter[3] = {0};
 static uint32_t rx_buffer_length[3]  = {0};
 
-static cc_uart_event_handler_t cb_handler[3] = {0};
+static void (*cb_handler[3])(T_UartEvent *p_event) = {0};
 
 volatile uint32_t UART0_RXDM_INTR = 0;
 volatile uint32_t UART0_TXDM_INTR = 0;
@@ -54,7 +54,7 @@ void UART0_RXDMA_IRQHandler(void)
     if (rx_buffer_length[0])
     {
         NVIC_DisableIRQ(UART0_RXDMA_IRQn);
-        rx_done_event(UART0_INSTANCE_INDEX, rx_counter[0]);
+        rx_done_event(UART_0, rx_counter[0]);
     }
 }
 
@@ -71,7 +71,7 @@ void UART1_RXDMA_IRQHandler(void)
     if (rx_buffer_length[1])
     {
         NVIC_DisableIRQ(UART1_RXDMA_IRQn);
-        rx_done_event(UART1_INSTANCE_INDEX, rx_counter[1]);
+        rx_done_event(UART_1, rx_counter[1]);
     }
 }
 
@@ -88,7 +88,7 @@ void UART2_RXDMA_IRQHandler(void)
     if (rx_buffer_length[2])
     {
         NVIC_DisableIRQ(UART2_RXDMA_IRQn);
-        rx_done_event(UART2_INSTANCE_INDEX, rx_counter[2]);
+        rx_done_event(UART_2, rx_counter[2]);
     }
 }
 
@@ -98,432 +98,440 @@ void UART2_TXDMA_IRQHandler(void)
     UART2_TXDM_INTR = 1;
 }
 
-__STATIC_INLINE void cc_uart_tx_buffer_set(U_regUARTDMA * p_uart_dma,
-                                            uint8_t const * tx_buffer,
-                                            uint8_t         length)
+static void cc6801_UartRxDmaEnable(U_regUARTDMA *pUartBase, uint8_t bEnable)
 {
-    p_uart_dma->bf.dma_txbyte_num = length-1;
-    //DMA tx start address
-    p_uart_dma->bf.dma_txstrart_addr = (uint32_t)tx_buffer;
-    //DMA tx end address
-    p_uart_dma->bf.dma_txend_addr = (uint32_t)tx_buffer+(((length-1)>>2) << 2);
+    pUartBase->bf.dma_rxen = bEnable;
 }
 
-__STATIC_INLINE void cc_uart_rx_buffer_set(U_regUARTDMA * p_uart_dma,
-                                            uint8_t const * rx_buffer,
-                                            uint8_t   length)
-{
-    p_uart_dma->bf.dma_rxbyte_num = length-1;
-    //DMA tx start address
-    p_uart_dma->bf.dma_rxstrart_addr = (uint32_t)rx_buffer;
-    //DMA tx end address
-    p_uart_dma->bf.dma_rxend_addr = (uint32_t)rx_buffer+(((length-1)>>2) << 2);
-}
-__STATIC_INLINE void cc_uart_config(U_regUARTCTRL   * p_reg,
-                                        drvi_uart_params_t const * config)
-{
-    //7: Request to send, 1: urts_n=0
-    //5: Enable receive DMA
-    //4: Enable transmit DMA
-    p_reg->bf.unrts = 1;
-    p_reg->bf.unfce = config->hw_flow;
-    p_reg->bf.unerd = 1;
-    p_reg->bf.unetd = 1;
 
-    //7: Enable receive error interrupt
-    //6: Enable receiver interrupt
-    //5: Enable transmitter interrupt
-    //4: Enable flow control interrupt
-    p_reg->bf.uneei = 1;
-    p_reg->bf.uneri = 1;
-    p_reg->bf.uneti = 1;
-    p_reg->bf.unefci = 1;
-
-    //8bits data, 1 stop bit, 0 as 9th data bit, parity disable
-    if (DRVI_UART_PARITY_DISABLE != config->parity)
-    {
-        p_reg->bf.unpen = 1;
-        p_reg->bf.unpsel = config->parity;
-    }
-    p_reg->bf.unxb9 = 0;
-    p_reg->bf.unstp = config->stop_bits;
-    p_reg->bf.unchar = config->data_bits;
+static void cc6801_UartTxDmaEnable(U_regUARTDMA *pUartBase, uint8_t bEnable)
+{
+    pUartBase->bf.dma_txen = bEnable;
 }
 
-__STATIC_INLINE int cc_uart_config_baudrate(U_regUARTCTRL  * p_reg, drvi_uart_baudrate_t baudrate)
+#if 0
+static void cc6801_UartTxDmaFlush(U_regUARTDMA *pUartBase, uint8_t bFlush)
 {
-    switch (baudrate)
-    {
-      case DRVI_UART_BAUDRATE_1200:
-        p_reg->bf.undiv_lower = 0x40;
-        p_reg->bf.undiv_upper = 0x3;
-        p_reg->bf.unpsc = 0x3;
-        p_reg->bf.unovr = 0x0;
-        break;
-      case DRVI_UART_BAUDRATE_2400:
-        p_reg->bf.undiv_lower = 0x40;
-        p_reg->bf.undiv_upper = 0x3;
-        p_reg->bf.unpsc = 0x1;
-        p_reg->bf.unovr = 0x0;
-        break;
-      case DRVI_UART_BAUDRATE_4800:
-        p_reg->bf.undiv_lower = 0xA0;
-        p_reg->bf.undiv_upper = 0x1;
-        p_reg->bf.unpsc = 0x1;
-        p_reg->bf.unovr = 0x0;
-        break;
-      case DRVI_UART_BAUDRATE_9600:
-        //FPGA DEMO setting, clk=16M
-        p_reg->bf.undiv_lower = 0x53;
-        //p_reg->bf.undiv_lower = 0x7c;
-        p_reg->bf.undiv_upper = 0x0;
-        p_reg->bf.unpsc = 0x4;
-        p_reg->bf.unovr = 0x0;
-        break;
-//      case CC_UART_BAUDRATE_14400:
-//        break;
-      case DRVI_UART_BAUDRATE_19200:
-        p_reg->bf.undiv_lower = 0xA7;
-        p_reg->bf.undiv_upper = 0x0;
-        p_reg->bf.unpsc = 0x1;
-        p_reg->bf.unovr = 0x0A;
-        break;
-//      case CC_UART_BAUDRATE_28800:
-//        break;
-      case DRVI_UART_BAUDRATE_38400:
-        p_reg->bf.undiv_lower = 0x53;
-        p_reg->bf.undiv_upper = 0x0;
-        p_reg->bf.unpsc = 0x1;
-        p_reg->bf.unovr = 0x0A;
-        break;
-      case DRVI_UART_BAUDRATE_115200:
-        //FPGA DEMO setting, clk=16M
-        p_reg->bf.undiv_lower = 0x05;
-        //p_reg->bf.undiv_lower = 0x10;
-        p_reg->bf.undiv_upper = 0x0;
-        p_reg->bf.unpsc = 0xC;
-        p_reg->bf.unovr = 0x7;
-        break;
-      case DRVI_UART_BAUDRATE_230400:
-        p_reg->bf.undiv_lower = 0x0A;
-        p_reg->bf.undiv_upper = 0x0;
-        p_reg->bf.unpsc = 0xC;
-        p_reg->bf.unovr = 0x7;
-        break;
-//      case CC_UART_BAUDRATE_345600:
-//        break;
-      case DRVI_UART_BAUDRATE_460800:
-        p_reg->bf.undiv_lower = 0x14;
-        p_reg->bf.undiv_upper = 0x0;
-        p_reg->bf.unpsc = 0xC;
-        p_reg->bf.unovr = 0x7;
-        break;
-      case DRVI_UART_BAUDRATE_921600:
-        p_reg->bf.undiv_lower = 0x28;
-        p_reg->bf.undiv_upper = 0x0;
-        p_reg->bf.unpsc = 0xC;
-        p_reg->bf.unovr = 0x7;
-        break;
-//      case CC_UART_BAUDRATE_1105920:
-//        break;
-      case DRVI_UART_BAUDRATE_57600:
-      default:
-        return CC_ERROR_INVALID_DATA;
-    }
+    pUartBase->bf.tx_flush = bFlush;
+
+}
+#endif
+
+static void cc6801_UartRxIntEnable(U_regUARTDMA *pUartBase, uint8_t bEnable)
+{
+    pUartBase->bf.rx_dma_done_intr_en = bEnable;
+}
+
+static void cc6801_UartTxIntEnable(U_regUARTDMA *pUartBase, uint8_t bEnable)
+{
+    pUartBase->bf.tx_dma_done_intr_en = bEnable;
+}
+
+static int cc6801_Uart0Xfer(void const * const pReg)
+{
+    U_regUARTDMA *pUart0DmaBase = (U_regUARTDMA *)pReg;
+
+    NVIC_EnableIRQ(UART0_TXDMA_IRQn);
+    //DMA tx enable
+    cc6801_UartTxDmaEnable(pUart0DmaBase, 1);
+
+    //UART0 busy waiting until transfer done
+    while(!UART0_TXDM_INTR);
+    UART0_TXDM_INTR = 0;
+    NVIC_DisableIRQ(UART0_TXDMA_IRQn);
 
     return CC_SUCCESS;
 }
 
-__STATIC_INLINE void cc_uart_int_enable_rx(U_regUARTDMA * p_reg, uint8_t enable)
+static int cc6801_Uart1Xfer(void const * const pReg)
 {
-    p_reg->bf.rx_dma_done_intr_en = enable;
+    U_regUARTDMA *pUart1DmaBase = (U_regUARTDMA *)pReg;
+
+    NVIC_EnableIRQ(UART1_TXDMA_IRQn);
+    //DMA tx enable
+    cc6801_UartTxDmaEnable(pUart1DmaBase, 1);
+
+    //UART1 busy waiting until transfer done
+    while(!UART1_TXDM_INTR);
+    UART1_TXDM_INTR = 0;
+    NVIC_DisableIRQ(UART1_TXDMA_IRQn);
+
+    return CC_SUCCESS;
 }
 
-__STATIC_INLINE void cc_uart_int_enable_tx(U_regUARTDMA * p_reg, uint8_t enable)
+static int cc6801_Uart2Xfer(void const * const pReg)
 {
-    p_reg->bf.tx_dma_done_intr_en = enable;
+    U_regUARTDMA *pUart2DmaBase = (U_regUARTDMA *)pReg;
+
+    NVIC_EnableIRQ(UART2_TXDMA_IRQn);
+    //DMA tx enable
+    cc6801_UartTxDmaEnable(pUart2DmaBase, 1);
+
+    //UART2 busy waiting until transfer done
+    while(!UART2_TXDM_INTR);
+    UART2_TXDM_INTR = 0;
+    NVIC_DisableIRQ(UART2_TXDMA_IRQn);
+
+    return CC_SUCCESS;
 }
 
-#ifdef UART_DMA_ENABLE
-__STATIC_INLINE void cc_uart_dma_enable_rx(U_regUARTDMA * p_reg, uint8_t enable)
+static int cc6801_Uart0Rcvr(void const * const pReg)
 {
-    p_reg->bf.dma_rxen = enable;
-}
-
-
-__STATIC_INLINE void cc_uart_dma_enable_tx(U_regUARTDMA * p_reg, uint8_t enable)
-{
-    p_reg->bf.dma_txen = enable;
-}
-#endif
-
-#if 0
-__STATIC_INLINE void cc_uart_dma_flush_tx(U_regUARTDMA * p_reg, uint8_t flush)
-{
-    p_reg->bf.tx_flush = flush;
-
-}
-#endif
-
-int cc_drv_uart_init(cc_drv_uart_t const * const p_instance,
-                             drvi_uart_params_t const * p_config,
-                             cc_uart_event_handler_t      event_handler)
-{
-    int error = CC_SUCCESS;
-
-    cc_uart_config(p_instance->p_ctrl_reg, p_config);
-    error = cc_uart_config_baudrate(p_instance->p_ctrl_reg, p_config->baudrate);
-    cc_uart_int_enable_tx(p_instance->p_dma_reg, 1);
-    cc_uart_int_enable_rx(p_instance->p_dma_reg, 1);
-
-    cb_handler[p_instance->drv_inst_idx] = event_handler;
-
-    return error;
-}
-
-void cc_drv_uart_uninit(void)
-{
-}
-
-__STATIC_INLINE void rx_done_event(uint8_t idx, uint8_t bytes)
-{
-    cc_drv_uart_event_t event;
-
-    event.type             = CC_DRV_UART_EVT_RX_DONE;
-    event.data.rxtx.bytes  = bytes;
-    event.data.rxtx.p_data = p_rx_buffer[idx];
-
-    rx_buffer_length[idx] = 0;
-
-    cb_handler[idx](&event, 0);
-}
-
-static int uart0_rcvr(cc_drv_uart_t const * const p_instance)
-{
-#ifdef UART_DMA_ENABLE
-    U_regUARTDMA * p_reg = p_instance->p_dma_reg;
+    U_regUARTDMA *pUart0DmaBase = (U_regUARTDMA *)pReg;
 
     NVIC_EnableIRQ(UART0_RXDMA_IRQn);
 
-    cc_uart_dma_enable_rx(p_reg, 1);
+    cc6801_UartRxDmaEnable(pUart0DmaBase, 1);
     if (cb_handler[0])
         return CC_SUCCESS;
 
     while(!UART0_RXDM_INTR);
     UART0_RXDM_INTR = 0;
     //NVIC_DisableIRQ(UART0_RXDMA_IRQn);
-#else
-    U_regUARTCTRL * p_reg = p_instance->p_ctrl_reg;
-
-    do {
-        *(p_rx_buffer[0]+rx_counter[0]) = (uint8_t)p_reg->dw.bufRx;
-        rx_counter[0]++;
-    } while (rx_buffer_length[0] > rx_counter[0]);
-
-    rx_done_event(UART0_INSTANCE_INDEX, rx_counter[0]);
-#endif
 
     return CC_SUCCESS;
 }
 
-static int uart1_rcvr(cc_drv_uart_t const * const p_instance)
+static int cc6801_Uart1Rcvr(void const * const pReg)
 {
-#ifdef UART_DMA_ENABLE
-    U_regUARTDMA * p_reg = p_instance->p_dma_reg;
+    U_regUARTDMA *pUart1DmaBase = (U_regUARTDMA *)pReg;
 
     NVIC_EnableIRQ(UART1_RXDMA_IRQn);
 
-    cc_uart_dma_enable_rx(p_reg, 1);
+    cc6801_UartRxDmaEnable(pUart1DmaBase, 1);
     if (cb_handler[1])
         return CC_SUCCESS;
 
     while(!UART1_RXDM_INTR);
     UART1_RXDM_INTR = 0;
     //NVIC_DisableIRQ(UART1_RXDMA_IRQn);
-#else
-    U_regUARTCTRL * p_reg = p_instance->p_ctrl_reg;
-
-    do {
-        *(p_rx_buffer[1]+rx_counter[1]) = (uint8_t)p_reg->dw.bufRx;
-        rx_counter[1]++;
-    } while (rx_buffer_length[1] > rx_counter[1]);
-
-    rx_done_event(UART1_INSTANCE_INDEX, rx_counter[1]);
-#endif
 
     return CC_SUCCESS;
 }
 
-static int uart2_rcvr(cc_drv_uart_t const * const p_instance)
+static int cc6801_Uart2Rcvr(void const * const pReg)
 {
-#ifdef UART_DMA_ENABLE
-    U_regUARTDMA * p_reg = p_instance->p_dma_reg;
+    U_regUARTDMA *pUart2DmaBase = (U_regUARTDMA *)pReg;
 
     NVIC_EnableIRQ(UART2_RXDMA_IRQn);
 
-    cc_uart_dma_enable_rx(p_reg, 1);
+    cc6801_UartRxDmaEnable(pUart2DmaBase, 1);
     if (cb_handler[2])
         return CC_SUCCESS;
 
     while(!UART2_RXDM_INTR);
     UART2_RXDM_INTR = 0;
     //NVIC_DisableIRQ(UART2_RXDMA_IRQn);
+
+    return CC_SUCCESS;
+}
+
+
+static void cc6801_UartTxBufferSet(U_regUARTDMA * pUartBase,
+                                            uint8_t const *pTxBuf,
+                                            uint8_t bLen)
+{
+    pUartBase->bf.dma_txbyte_num = bLen - 1;
+    //DMA tx start address
+    pUartBase->bf.dma_txstrart_addr = (uint32_t)pTxBuf;
+    //DMA tx end address
+    pUartBase->bf.dma_txend_addr = (uint32_t)pTxBuf + (((bLen - 1) >> 2) << 2);
+}
+
+static void cc6801_UartRxBufferSet(U_regUARTDMA *pUartBase,
+                                            uint8_t const *pRxBuf,
+                                            uint8_t bLen)
+{
+    pUartBase->bf.dma_rxbyte_num = bLen - 1;
+    //DMA rx start address
+    pUartBase->bf.dma_rxstrart_addr = (uint32_t)pRxBuf;
+    //DMA rx end address
+    pUartBase->bf.dma_rxend_addr = (uint32_t)pRxBuf + (((bLen - 1) >> 2) << 2);
+}
+
+static T_cc6801UartPort cc6801_UartPortGet(uint8_t bPortNum)
+{
+    T_cc6801UartPort port;
+
+    switch (bPortNum)
+    {
+        case UART_0:
+            port.pDmaReg = (void *)regUART0DMA,
+            port.pCtrlReg = (void *)regUART0CTRL,
+            port.index = UART_0,
+            port.fpUartXfer = cc6801_Uart0Xfer;
+            port.fpUartRcvr = cc6801_Uart0Rcvr;
+            break;
+        case UART_1:
+            port.pDmaReg = (void *)regUART1DMA,
+            port.pCtrlReg = (void *)regUART1CTRL,
+            port.index = UART_1,
+            port.fpUartXfer = cc6801_Uart1Xfer;
+            port.fpUartRcvr = cc6801_Uart1Rcvr;
+            break;
+        case UART_2:
+            port.pDmaReg = (void *)regUART2DMA,
+            port.pCtrlReg = (void *)regUART2CTRL,
+            port.index = UART_2,
+            port.fpUartXfer = cc6801_Uart2Xfer;
+            port.fpUartRcvr = cc6801_Uart2Rcvr;
+            break;
+        default:
+            break;
+    }
+
+    return port;
+}
+
+static uint8_t cc6801_ComputeFRS(uint32_t dwConfig)
+{
+    uint8_t bFrs;
+
+    switch (dwConfig & DRVI_UART_SIZE)
+    {
+        case DRVI_UART_S7:
+            bFrs = UART_FRS_CHAR_WLEN7_BIT;
+            break;
+        case DRVI_UART_S9:
+            bFrs = UART_FRS_CHAR_WLEN9_BIT;
+            break;
+        default:
+        case DRVI_UART_S8:
+            bFrs = UART_FRS_CHAR_WLEN8_BIT;
+            break;
+    }
+
+    if (dwConfig & DRVI_UART_STOPB)
+        bFrs |= UART_FRS_STP_2BIT_BIT;
+
+    if (dwConfig & DRVI_UART_XB9)
+        bFrs |= UART_FRS_XB9_1_MASK;
+
+    if (bFrs & DRVI_UART_PARENB)
+        bFrs |= UART_FRS_PEN_ENABLE_MASK;
+
+    if (dwConfig & DRVI_UART_SPAR)
+        bFrs |= UART_FRS_PSEL_SPAR_MASK;
+    else if (dwConfig & DRVI_UART_MPAR)
+        bFrs |= UART_FRS_PSEL_MPAR_MASK;
+    else if (dwConfig & DRVI_UART_PAREVEN)
+        bFrs |= UART_FRS_PSEL_EPAR_MASK;
+    else
+        bFrs |= UART_FRS_PSEL_OPAR_MASK;
+
+    return bFrs;
+}
+
+static int cc6801_UartBaudrateSet(T_UartPort *pUartPort)
+{
+    T_cc6801UartPort port = cc6801_UartPortGet(pUartPort->bPortNum);
+    U_regUARTCTRL *pUartCtrlBase = port.pCtrlReg;
+	uint32_t dwBaud;
+
+	dwBaud = pUartPort->dwConfig & DRVI_UART_BAUD;
+
+    switch (dwBaud)
+    {
+      case DRVI_UART_B1200:
+        pUartCtrlBase->dw.baud = 0x40;
+        pUartCtrlBase->dw.psr = ((0x3 << 3) | 0x3);
+        pUartCtrlBase->dw.ovr = 0x0;
+        break;
+      case DRVI_UART_B2400:
+        pUartCtrlBase->dw.baud = 0x40;
+        pUartCtrlBase->dw.psr = ((0x1 << 3) | 0x3);
+        pUartCtrlBase->dw.ovr = 0x0;
+        break;
+      case DRVI_UART_B4800:
+        pUartCtrlBase->dw.baud = 0xA0;
+        pUartCtrlBase->dw.psr = ((0x1 << 3) | 0x1);
+        pUartCtrlBase->dw.ovr = 0x0;
+        break;
+      case DRVI_UART_B9600:
+        //FPGA DEMO setting, clk=16M
+        pUartCtrlBase->dw.baud = 0x53;
+        pUartCtrlBase->dw.psr = ((0x4 << 3) | 0x0);
+        pUartCtrlBase->dw.ovr = 0x0;
+        break;
+//      case DRVI_UART_B14400:
+//        break;
+      case DRVI_UART_B19200:
+        pUartCtrlBase->dw.baud = 0xA7;
+        pUartCtrlBase->dw.psr = ((0x1 << 3) | 0x0);
+        pUartCtrlBase->dw.ovr = 0x0A;
+        break;
+//      case DRVI_UART_B28800:
+//        break;
+      case DRVI_UART_B38400:
+        pUartCtrlBase->dw.baud = 0x53;
+        pUartCtrlBase->dw.psr = ((0x1 << 3) | 0x0);
+        pUartCtrlBase->dw.ovr = 0x0A;
+        break;
+      case DRVI_UART_B230400:
+        pUartCtrlBase->dw.baud = 0x0A;
+        pUartCtrlBase->dw.psr = ((0xC << 3) | 0x0);
+        pUartCtrlBase->dw.ovr = 0x07;
+        break;
+//      case DRVI_UART_B345600:
+//        break;
+      case DRVI_UART_B460800:
+        pUartCtrlBase->dw.baud = 0x14;
+        pUartCtrlBase->dw.psr = ((0xC << 3) | 0x0);
+        pUartCtrlBase->dw.ovr = 0x07;
+        break;
+      case DRVI_UART_B921600:
+        pUartCtrlBase->dw.baud = 0x28;
+        pUartCtrlBase->dw.psr = ((0xC << 3) | 0x0);
+        pUartCtrlBase->dw.ovr = 0x07;
+        break;
+//      case DRVI_UART_B1105920:
+//        break;
+      case DRVI_UART_B57600:
+      default:
+      case DRVI_UART_B115200:
+        //FPGA DEMO setting, clk=16M
+        pUartCtrlBase->dw.baud = 0x05;
+        pUartCtrlBase->dw.psr = ((0xC << 3) | 0x0);
+        pUartCtrlBase->dw.ovr = 0x07;
+        break;
+    }
+
+    return CC_SUCCESS;
+}
+
+static void cc6801_UartConfigSet(T_UartPort *pUartPort)
+{
+    T_cc6801UartPort port = cc6801_UartPortGet(pUartPort->bPortNum);
+    U_regUARTCTRL *pUartCtrlBase = port.pCtrlReg;
+    uint8_t bFrs, bMdsl, bIntCtrl;
+
+    bFrs = cc6801_ComputeFRS(pUartPort->dwConfig);
+    cc6801_UartBaudrateSet(pUartPort);
+
+    bIntCtrl |= UART_CTRL_INT_ETI_ENABLE_MASK;
+    bIntCtrl |= UART_CTRL_INT_EEI_ENABLE_MASK;
+
+    if (pUartPort->dwConfig & DRVI_UART_READ)
+    {
+        bIntCtrl |= UART_CTRL_INT_ERI_ENABLE_MASK;
+    }
+
+    bMdsl |= UART_MDSL_RTS_ENABLE_MASK;
+
+    if (pUartPort->dwConfig & DRVI_UART_RTSCTS)
+    {
+        bIntCtrl |= UART_CTRL_INT_EFCI_ENABLE_MASK;
+        bMdsl |= UART_MDSL_FCE_ENABLE_MASK;
+    }
+
+#ifdef UART_DMA_ENABLE
+    bMdsl |= UART_MDSL_ETD_ENABLE_MASK;
+
+    if (pUartPort->dwConfig & DRVI_UART_READ)
+        bMdsl |= UART_MDSL_ERD_ENABLE_MASK;
+#endif
+
+    pUartCtrlBase->dw.ictrl = bIntCtrl;
+    pUartCtrlBase->dw.frs = bFrs;
+    pUartCtrlBase->dw.mdsl = bMdsl;
+
+}
+
+__STATIC_INLINE void rx_done_event(uint8_t idx, uint8_t bytes)
+{
+    T_UartEvent event;
+
+    event.type             = DRVI_UART_EVENT_RX_DONE;
+    event.bRxBytes  = bytes;
+    event.pRxBuf = p_rx_buffer[idx];
+
+    rx_buffer_length[idx] = 0;
+
+    cb_handler[idx](&event);
+}
+
+int cc6801_UartInit(T_UartPort *pUartPort)
+{
+    T_cc6801UartPort port;
+    int error = CC_SUCCESS;
+
+    port = cc6801_UartPortGet(pUartPort->bPortNum);
+
+    cc6801_UartConfigSet(pUartPort);
+
+    cc6801_UartTxIntEnable(port.pDmaReg, 1);
+    cc6801_UartRxIntEnable(port.pDmaReg, 1);
+
+    if (pUartPort->fpComplete)
+        cb_handler[port.index] = pUartPort->fpComplete;
+
+    if ((pUartPort->dwConfig & DRVI_UART_READ) == 0)
+    {
+        NVIC_DisableIRQ(UART0_RXDMA_IRQn);
+        cc6801_UartRxIntEnable(port.pDmaReg, 0);
+    }
+
+    return error;
+}
+
+int cc6801_UartRx(T_UartPort *pUartPort,
+                    uint8_t * pData, uint8_t bLen)
+{
+    T_cc6801UartPort port;
+
+    port = cc6801_UartPortGet(pUartPort->bPortNum);
+
+    p_rx_buffer[port.index]      = pData;
+    rx_buffer_length[port.index] = bLen;
+    rx_counter[port.index]       = 0;
+
+#ifdef UART_DMA_ENABLE
+    if ((uint32_t)pData & 0x3UL)
+      return CC_ERROR_INVALID_ADDR;
+
+    cc6801_UartRxBufferSet(port.pDmaReg, pData, bLen);
+    rx_counter[port.index] = bLen;
+
+    return port.fpUartRcvr(port.pDmaReg);
 #else
-    U_regUARTCTRL * p_reg = p_instance->p_ctrl_reg;
+    U_regUARTCTRL *pUart0CtrlBase = (U_regUARTCTRL *)port.pCtrlReg;
 
     do {
-        *(p_rx_buffer[2]+rx_counter[2]) = (uint8_t)p_reg->dw.bufRx;
-        rx_counter[2]++;
-    } while (rx_buffer_length[2] > rx_counter[2]);
+        *(p_rx_buffer[port.index]+rx_counter[port.index]) = (uint8_t)pUart0CtrlBase->dw.bufRx;
+        rx_counter[port.index]++;
+    } while (rx_buffer_length[port.index] > rx_counter[port.index]);
 
-    rx_done_event(UART2_INSTANCE_INDEX, rx_counter[2]);
-#endif
+    rx_done_event(port.index, rx_counter[port.index]);
 
     return CC_SUCCESS;
+#endif
 }
 
-int cc_drv_uart_rx(cc_drv_uart_t const * const p_instance,
-                                  uint8_t * p_data, uint8_t length)
+int cc6801_UartTx(T_UartPort *pUartPort,
+                    uint8_t const * const pData, uint8_t bLen)
 {
-    int  intance = p_instance->drv_inst_idx;
-    int  (*uart_rcvr)(cc_drv_uart_t const * const p_instance);
+    T_cc6801UartPort port;
 
-    p_rx_buffer[intance]      = p_data;
-    rx_buffer_length[intance] = length;
-    rx_counter[intance]       = 0;
+    port = cc6801_UartPortGet(pUartPort->bPortNum);
 
 #ifdef UART_DMA_ENABLE
-    if ((uint32_t)p_data & 0x3UL)
+    if ((uint32_t)pData & 0x3UL)
       return CC_ERROR_INVALID_ADDR;
 
-    cc_uart_rx_buffer_set(p_instance->p_dma_reg, p_data, length);
-    rx_counter[intance]       = length;
-#endif
+    cc6801_UartTxBufferSet(port.pDmaReg, pData, bLen);
 
-    switch (intance)
-    {
-        case 0:
-            uart_rcvr = uart0_rcvr;
-            break;
-        case 1:
-            uart_rcvr = uart1_rcvr;
-            break;
-        case 2:
-            uart_rcvr = uart2_rcvr;
-            break;
-        default:
-            break;
-    }
-
-    return uart_rcvr(p_instance);
-}
-
-static int uart0_xfer(cc_drv_uart_t const * const p_instance)
-{
-#ifdef UART_DMA_ENABLE
-    U_regUARTDMA * p_reg = p_instance->p_dma_reg;
-
-    NVIC_EnableIRQ(UART0_TXDMA_IRQn);
-    //DMA tx enable
-    cc_uart_dma_enable_tx(p_reg, 1);
-
-    //UART0 busy waiting until transfer done
-    while(!UART0_TXDM_INTR);
-    UART0_TXDM_INTR = 0;
-    NVIC_DisableIRQ(UART0_TXDMA_IRQn);
+    return port.fpUartXfer(port.pDmaReg);
 #else
-    U_regUARTCTRL * p_reg = p_instance->p_ctrl_reg;
+    U_regUARTCTRL *pUart0CtrlBase = (U_regUARTCTRL *)port.pCtrlReg;
+    uint8_t const *pTxBuf = pData;
 
-    while (*tx_buffer)
+    while (*pTxBuf)
     {
-        p_reg->dw.bufTx = *tx_buffer++;
-        while(!p_reg->bf.untbe);
+        pUart0CtrlBase->dw.bufTx = *pTxBuf++;
+        while(!pUart0CtrlBase->bf.untbe);
     }
-#endif
 
     return CC_SUCCESS;
-}
-
-static int uart1_xfer(cc_drv_uart_t const * const p_instance)
-{
-#ifdef UART_DMA_ENABLE
-    U_regUARTDMA * p_reg = p_instance->p_dma_reg;
-
-    NVIC_EnableIRQ(UART1_TXDMA_IRQn);
-    //DMA tx enable
-    cc_uart_dma_enable_tx(p_reg, 1);
-
-    //UART1 busy waiting until transfer done
-    while(!UART1_TXDM_INTR);
-    UART1_TXDM_INTR = 0;
-    NVIC_DisableIRQ(UART1_TXDMA_IRQn);
-#else
-    U_regUARTCTRL * p_reg = p_instance->p_ctrl_reg;
-
-    while (*tx_buffer)
-    {
-        p_reg->dw.bufTx = *tx_buffer++;
-        while(!p_reg->bf.untbe);
-    }
 #endif
-
-    return CC_SUCCESS;
-}
-
-static int uart2_xfer(cc_drv_uart_t const * const p_instance)
-{
-#ifdef UART_DMA_ENABLE
-    U_regUARTDMA * p_reg = p_instance->p_dma_reg;
-
-    NVIC_EnableIRQ(UART2_TXDMA_IRQn);
-    //DMA tx enable
-    cc_uart_dma_enable_tx(p_reg, 1);
-
-    //UART2 busy waiting until transfer done
-    while(!UART2_TXDM_INTR);
-    UART2_TXDM_INTR = 0;
-    NVIC_DisableIRQ(UART2_TXDMA_IRQn);
-#else
-    U_regUARTCTRL * p_reg = p_instance->p_ctrl_reg;
-
-    while (*tx_buffer)
-    {
-        p_reg->dw.bufTx = *tx_buffer++;
-        while(!p_reg->bf.untbe);
-    }
-#endif
-
-    return CC_SUCCESS;
-}
-
-int cc_drv_uart_tx(cc_drv_uart_t const * const p_instance,
-                            uint8_t const * const p_data, uint8_t length)
-{
-    int  intance = p_instance->drv_inst_idx;
-    int  (*uart_xfer)(cc_drv_uart_t const * const p_instance);
-
-#ifdef UART_DMA_ENABLE
-    if ((uint32_t)p_data & 0x3UL)
-      return CC_ERROR_INVALID_ADDR;
-
-    cc_uart_tx_buffer_set(p_instance->p_dma_reg, p_data, length);
-#endif
-
-    switch (intance)
-    {
-        case 0:
-            uart_xfer = uart0_xfer;
-            break;
-        case 1:
-            uart_xfer = uart1_xfer;
-            break;
-        case 2:
-            uart_xfer = uart2_xfer;
-            break;
-        default:
-            break;
-    }
-
-    return uart_xfer(p_instance);
 }
 

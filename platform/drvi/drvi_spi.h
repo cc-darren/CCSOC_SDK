@@ -39,14 +39,15 @@ typedef enum
     DRVI_SPI_EVENT_ERROR,
 } E_DrviSpiEvent;
 
-typedef struct S_SpiDevice {
+typedef struct S_SpiDevice
+{
     uint8_t        bBusNum;
     uint8_t        chip_select;
     uint16_t       wMode;
     uint32_t       dwMaxSpeedHz;
 
     void (*fpComplete)(E_DrviSpiEvent *event);
-}T_SpiDevice;
+} T_SpiDevice;
 
 
 

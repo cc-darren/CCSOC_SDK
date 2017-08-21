@@ -579,11 +579,6 @@
               <FilePath>..\..\service\fifo\app_fifo.c</FilePath>
             </File>
             <File>
-              <FileName>app_trace.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\tracer\app_trace.c</FilePath>
-            </File>
-            <File>
               <FileName>app_uart_fifo.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\service\uart\app_uart_fifo.c</FilePath>
@@ -592,6 +587,11 @@
               <FileName>retarget.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\service\uart\retarget.c</FilePath>
+            </File>
+            <File>
+              <FileName>tracer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\tracer\tracer.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1772,11 +1772,6 @@
               <FilePath>..\..\service\fifo\app_fifo.c</FilePath>
             </File>
             <File>
-              <FileName>app_trace.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\tracer\app_trace.c</FilePath>
-            </File>
-            <File>
               <FileName>app_uart_fifo.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\service\uart\app_uart_fifo.c</FilePath>
@@ -1785,6 +1780,11 @@
               <FileName>retarget.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\service\uart\retarget.c</FilePath>
+            </File>
+            <File>
+              <FileName>tracer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\tracer\tracer.c</FilePath>
             </File>
           </Files>
         </Group>

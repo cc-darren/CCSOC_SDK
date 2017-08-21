@@ -112,8 +112,13 @@ struct S_ModuleExecCount S_Count;
 /******************************************************************************
 Declaration of static Global Variables & Functions
 ******************************************************************************/
-static const cc_drv_uart_t uart0 = CC_DRV_UART_INSTANCE(0);
-
+#if (TEST_UART0_TXDMA) || (TEST_UART0_RXDMA)
+static T_UartPort TestUart0 =
+{
+    .bPortNum = 0,
+    .dwConfig = DRVI_UART_B1152000 | DRVI_UART_S8,
+};
+#endif
 // Exported function
 void Timer_Callback(void *para)
 {
@@ -239,12 +244,14 @@ int TEST_Main(void)
             //mem_rw();
             S_Count.dwMem++;
         }
+#if (TEST_UART0_RXDMA)
         if (g_Uart0RxDmaTestStart)
         {
             g_Uart0RxDmaTestStart = 0;
-            cc_drv_uart_rx(&uart0, &bUartRxBuf, 1);
+            cc6801_UartRx(&TestUart0, &bUartRxBuf, 1);
             S_Count.dwUart0Rx++;
         }
+#endif
         if (g_EflashTestStart)
         {
             g_EflashTestStart = 0;
@@ -275,6 +282,7 @@ int TEST_Main(void)
             g_RtcTestStart = 0;
             S_Time = cc6801_rtcGetTime();
         }
+#if (TEST_UART0_TXDMA)
         if (g_Uart0TxDmaTestStart)
         {
             g_Uart0TxDmaTestStart = 0;
@@ -296,9 +304,10 @@ int TEST_Main(void)
             //                         S_Count.i2c0, S_Count.i2c1, S_Count.eflash,\
             //                         S_Count.aes, S_Count.gpi, S_Count.uart0_rx, S_Count.wdt, S_Count.wktm0);
             //strcat(cUartTxBuf, cStrBuf);
-            cc_drv_uart_tx(&uart0, (const UINT8 *)cUartTxBuf, strlen(cUartTxBuf));
+            cc6801_UartTx(&TestUart0, (const UINT8 *)cUartTxBuf, strlen(cUartTxBuf));
             S_Count.dwUart0Tx++;
         }
+#endif
         if (((dwLoop >> 3) << 3) == dwLoop)
         {
             drvi_gpio_write(3, 0);
