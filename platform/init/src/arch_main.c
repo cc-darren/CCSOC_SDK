@@ -29,6 +29,7 @@
 #include "jump_table.h"
 #include "cfg_ble_ip.h"
 #include "tracer.h"
+#include "drvi_clock.h"
 
 #define APP_TIMER_PRESCALER                     0                                           /**< Value of the RTC1 PRESCALER register. */
 #define APP_TIMER_OP_QUEUE_SIZE                 4                                           /**< Size of timer operation queues. */
@@ -60,6 +61,7 @@ unsigned char init_done = 0;
 uint32_t readSensor;
 
 extern void pwm_start_test(void);
+extern void sys_InitMain(void);
 
 static void system_idle_timeout_handler(void * p_context)
 {
@@ -145,6 +147,7 @@ void rw_main(void)
     }
 }
 
+#if 0
 static void timers_start_test(void)
 {
     volatile uint32_t err_code;
@@ -168,6 +171,7 @@ static void timers_start_test(void)
     APP_ERROR_CHECK(err_code);
 
 }
+#endif
 
 static void timers_init(void)
 {
@@ -314,8 +318,11 @@ void _app_init(void)
 int main(void)
 {
 #ifdef CFG_BLE_APP
-	uint32_t error = 0;
+    uint32_t error = 0;
 #endif
+    //Must be first in main()
+    sys_InitMain();
+
 #if TEST_ENABLE
     TEST_Main();
 #endif
@@ -328,39 +335,39 @@ int main(void)
 #ifdef CFG_BLE_APP
     memset (((void *) 0x40006000), 0, 8192);
 
-	*((uint32_t *) 0x40000010) = 0x00000B40;
+    *((uint32_t *) 0x40000010) = 0x00000B40;
     *((uint32_t *) 0x4000011C) = 0x00000008;
-	
+
     // Initialize RW SW stack
     rwip_init(error);
 #endif
-	
-    GLOBAL_INT_START();
-    TracerInfo("== CC6801 Start ==\n");
 
-    sensor_init();
-    _app_init();
+    GLOBAL_INT_START();
+    //TracerInfo("== CC6801 Start ==\n");
+
+    //sensor_init();
+    //_app_init();
 
 
     while(1)
     {
 #ifdef CFG_BLE_APP
-			 rwip_schedule();
+        rwip_schedule();
 #endif
-			
-       readSensor = 0;
-       _sensor_accel_on_change();
-       app_displayoled_routine();
-       while(!readSensor)
-			 {
+        readSensor = 0;
+        //_sensor_accel_on_change();
+        //app_displayoled_routine();
+        //while(!readSensor)
+        {
 #ifdef CFG_BLE_APP
-				  //rwip_schedule();
-#endif			
-			 }
+            //rwip_schedule();
+#endif
+        }
+       drvi_ClockDelayUs(10);
     }
-    rw_main();
+    //rw_main();
 
-    while(1);
+    //while(1);
     //return(0);
 }
 

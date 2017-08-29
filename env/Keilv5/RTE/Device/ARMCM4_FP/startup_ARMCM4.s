@@ -131,12 +131,12 @@ __Vectors_Size  EQU     __Vectors_End - __Vectors
 
 Reset_Handler   PROC
                 EXPORT  Reset_Handler             [WEAK]
-                IMPORT  SystemInit
+                IMPORT  sys_InitStartup
                 IMPORT  __main
                 
                 LDR     R0, =__initial_sp
                 MOV     SP, R0
-                LDR     R0, =SystemInit
+                LDR     R0, =sys_InitStartup
                 BLX     R0
                 LDR     R0, =__main
                 BX      R0

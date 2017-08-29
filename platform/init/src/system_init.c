@@ -26,14 +26,6 @@
 extern E_ClockSupported g_dwCurrentClock;
 
 /*----------------------------------------------------------------------------
-  Define clocks
- *----------------------------------------------------------------------------*/
-#define  XTAL            (48000000U)      /* Oscillator frequency */
-
-#define  SYSTEM_CLOCK    (1 * XTAL)
-
-
-/*----------------------------------------------------------------------------
   Externals
  *----------------------------------------------------------------------------*/
 #if defined (__VTOR_PRESENT) && (__VTOR_PRESENT == 1)
@@ -41,25 +33,11 @@ extern E_ClockSupported g_dwCurrentClock;
 #endif
 
 /*----------------------------------------------------------------------------
-  System Core Clock Variable
- *----------------------------------------------------------------------------*/
-uint32_t SystemCoreClock = SYSTEM_CLOCK;
-
-
-/*----------------------------------------------------------------------------
-  System Core Clock update function
- *----------------------------------------------------------------------------*/
-void SystemCoreClockUpdate (void)
-{
-    SystemCoreClock = SYSTEM_CLOCK;
-}
-
-/*----------------------------------------------------------------------------
   System initialization function
  *----------------------------------------------------------------------------*/
-void SystemInit (void)
+void sys_InitStartup (void)
 {
-    uint32_t byp=0,pd=1,divc0=0,divn=8,divm=20,vco_div=0;
+    //uint32_t byp=0,pd=1,divc0=0,divn=8,divm=20,vco_div=0;
 
     GLOBAL_INT_STOP();
 
@@ -72,7 +50,7 @@ void SystemInit (void)
 
 #if defined (__FPU_USED) && (__FPU_USED == 1)
     SCB->CPACR |= ((3U << 10*2) |           /* set CP10 Full Access */
-                 (3U << 11*2)  );         /* set CP11 Full Access */
+                   (3U << 11*2)  );         /* set CP11 Full Access */
 #endif
 
 #ifdef UNALIGNED_SUPPORT_DISABLE
@@ -82,12 +60,18 @@ void SystemInit (void)
 /******************************/
 /* setup PLL                  */
 /******************************/
-    wr(SCU_PLLCFG_REG, (0 | vco_div<<26 | byp<<25 | pd<<24 | divc0<<16 | divm<<8 | divn) );
-    wr(SCU_CLKCFG0_REG, 0x00000500);
-    wr(SCU_CLKCFG1_REG, 0x00002B01);
 
-    //drvi_ClockSysClkAdjust(g_dwCurrentClock);
+    //wr(SCU_PLLCFG_REG, (0 | vco_div<<26 | byp<<25 | pd<<24 | divc0<<16 | divm<<8 | divn) );
+    //wr(SCU_CLKCFG0_REG, 0x00000500);
+    //wr(SCU_CLKCFG1_REG, 0x00002B01);
+}
 
+
+void sys_InitMain (void)
+{    
+    drvi_ClockSysClkAdjust(g_dwCurrentClock);
+    
+    //Set init value, it should be config by driver respectively
     wr(CKGEN_CFG1_REG, (0x00000000 | 0<<29 | 1<<21 | 0<<13 | 1<<5));
     wr(CKGEN_CFG2_REG, (0x00000000 | 1<<29 | 1<<21 | 1<<13 | 1<<5));
     wr(CKGEN_CFG3_REG, (0x00000000 | 1<<29 | 1<<21 | 1<<13 | 1<<5));
@@ -214,5 +198,4 @@ void SystemInit (void)
 /******************************/
     //if necessary
 
-    SystemCoreClock = SYSTEM_CLOCK;
 }
