@@ -68,14 +68,15 @@ void sys_InitStartup (void)
 
 
 void sys_InitMain (void)
-{    
+{
+    //enable high speed as early as possible
     drvi_ClockSysClkAdjust(g_dwCurrentClock);
     
     //Set init value, it should be config by driver respectively
-    wr(CKGEN_CFG1_REG, (0x00000000 | 0<<29 | 1<<21 | 0<<13 | 1<<5));
-    wr(CKGEN_CFG2_REG, (0x00000000 | 1<<29 | 1<<21 | 1<<13 | 1<<5));
-    wr(CKGEN_CFG3_REG, (0x00000000 | 1<<29 | 1<<21 | 1<<13 | 1<<5));
-    wr(CKGEN_CFG4_REG, (0x00000000 | 1<<5));
+    regCKGEN->dw.clkCfg1 = (0x00000000 | 0<<29 | 1<<21 | 0<<13 | 1<<5);
+    regCKGEN->dw.clkCfg2 = (0x00000000 | 1<<29 | 1<<21 | 1<<13 | 1<<5);
+    regCKGEN->dw.clkCfg3 = (0x00000000 | 1<<29 | 1<<21 | 1<<13 | 1<<5);
+    regCKGEN->dw.clkCfg4 = (0x00000000 | 1<<5);
 
 /******************************/
 /* re-arrange IRQ priority    */

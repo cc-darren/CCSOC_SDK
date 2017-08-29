@@ -40,6 +40,7 @@ Head Block of The File
 
 // Sec 1: Include File
 #include <stdint.h>
+#include "ARMCM.h"
 #include "project.h"
 
 // Sec 2: Constant Definitions, Imported Symbols, miscellaneous
@@ -324,6 +325,8 @@ Declaration of Global Variables & Functions
 // Sec 7: declaration of global function prototype
 void cc6801_ClockSysClkAdjust(E_ClockSupported clk);
 void cc6801_ClockPeripheralClkAdjust(void);
+void cc6801_ClockDelayUs(volatile uint32_t);
+void cc6801_ClockDelayMs(volatile uint32_t);
 
 /******************************************************************************
 Declaration of static Global Variables & Functions
@@ -335,6 +338,7 @@ typedef struct
     uint32_t dwPllCfg;
     uint32_t dwClkCfg0;
     //uint32_t dwClkCfg1;   //value is same for every clock
+    void (*pDelayFunc)(uint32_t);
 } T_ClockConfig;
 
 typedef struct
@@ -350,6 +354,11 @@ typedef struct
 
 
 // Sec 9: declaration of static function prototype
+static __ASM void __INLINE cc6801_ClockDelayUs_16MHz(volatile uint32_t);
+static __ASM void __INLINE cc6801_ClockDelayUs_24MHz(volatile uint32_t);
+static __ASM void __INLINE cc6801_ClockDelayUs_32MHz(volatile uint32_t);
+static __ASM void __INLINE cc6801_ClockDelayUs_48MHz(volatile uint32_t);
+static __ASM void __INLINE cc6801_ClockDelayUs_64MHz(volatile uint32_t);
 
 /******************************************************************************
 // Sec 10: C Functions

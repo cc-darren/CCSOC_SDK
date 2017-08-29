@@ -93,7 +93,8 @@ Declaration of static Global Variables & Functions
             (16000000),
             (PLL_BYPASS_MASK|PLL_POWER_DOWN_MASK|DIVCO_BYPASS_MASK|DIVM_BYPASS_MASK|DIVN_BYPASS_MASK),
             (PLL_DISABLE_MASK|SELECT_XTAL_MASK|SYS_DIV_3_MASK),
-            //(RET_RAM_CLK_EN_MASK|OSC_40K_DIS_MASK|OSC_32K_EN_MASK|SELECT_OSC_32K_MASK|HS_CLK_EN_MASK|CPU_CLK_EN_MASK|FREQ_HIGH_MASK)
+            //(RET_RAM_CLK_EN_MASK|OSC_40K_DIS_MASK|OSC_32K_EN_MASK|SELECT_OSC_32K_MASK|HS_CLK_EN_MASK|CPU_CLK_EN_MASK|FREQ_HIGH_MASK),
+            cc6801_ClockDelayUs_16MHz
         },
 
         //24MHz
@@ -102,7 +103,8 @@ Declaration of static Global Variables & Functions
             (24000000),
             (PLL_BYPASS_MASK|PLL_POWER_DOWN_MASK|DIVCO_BYPASS_MASK|DIVM_BYPASS_MASK|DIVN_BYPASS_MASK),
             (PLL_DISABLE_MASK|SELECT_XTAL_MASK|SYS_DIV_2_MASK),
-            //(RET_RAM_CLK_EN_MASK|OSC_40K_DIS_MASK|OSC_32K_EN_MASK|SELECT_OSC_32K_MASK|HS_CLK_EN_MASK|CPU_CLK_EN_MASK|FREQ_HIGH_MASK)
+            //(RET_RAM_CLK_EN_MASK|OSC_40K_DIS_MASK|OSC_32K_EN_MASK|SELECT_OSC_32K_MASK|HS_CLK_EN_MASK|CPU_CLK_EN_MASK|FREQ_HIGH_MASK),
+            cc6801_ClockDelayUs_24MHz
         },
 
         //32MHz
@@ -111,7 +113,8 @@ Declaration of static Global Variables & Functions
             (32000000),
             (PLL_USE_MASK|PLL_POWER_UP_MASK|DIVCO_32MHZ_MASK|DIVM_32MHZ_MASK|DIVN_32MHZ_MASK),
             (PLL_ENABLE_MASK|SELECT_PLL_MASK|SYS_DIV_0_MASK),
-            //(RET_RAM_CLK_EN_MASK|OSC_40K_DIS_MASK|OSC_32K_EN_MASK|SELECT_OSC_32K_MASK|HS_CLK_EN_MASK|CPU_CLK_EN_MASK|FREQ_HIGH_MASK)
+            //(RET_RAM_CLK_EN_MASK|OSC_40K_DIS_MASK|OSC_32K_EN_MASK|SELECT_OSC_32K_MASK|HS_CLK_EN_MASK|CPU_CLK_EN_MASK|FREQ_HIGH_MASK),
+            cc6801_ClockDelayUs_32MHz
         },
 
         //48MHz
@@ -120,7 +123,8 @@ Declaration of static Global Variables & Functions
             (48000000),
             (PLL_BYPASS_MASK|PLL_POWER_DOWN_MASK|DIVCO_BYPASS_MASK|DIVM_BYPASS_MASK|DIVN_BYPASS_MASK),
             (PLL_DISABLE_MASK|SELECT_XTAL_MASK|SYS_DIV_0_MASK),
-            //(RET_RAM_CLK_EN_MASK|OSC_40K_DIS_MASK|OSC_32K_EN_MASK|SELECT_OSC_32K_MASK|HS_CLK_EN_MASK|CPU_CLK_EN_MASK|FREQ_HIGH_MASK)
+            //(RET_RAM_CLK_EN_MASK|OSC_40K_DIS_MASK|OSC_32K_EN_MASK|SELECT_OSC_32K_MASK|HS_CLK_EN_MASK|CPU_CLK_EN_MASK|FREQ_HIGH_MASK),
+            cc6801_ClockDelayUs_48MHz
         },
 
         //64MHz
@@ -129,7 +133,8 @@ Declaration of static Global Variables & Functions
             (64000000),
             (PLL_USE_MASK|PLL_POWER_UP_MASK|DIVCO_64MHZ_MASK|DIVM_64MHZ_MASK|DIVN_64MHZ_MASK),
             (PLL_ENABLE_MASK|SELECT_PLL_MASK|SYS_DIV_0_MASK),
-            //(RET_RAM_CLK_EN_MASK|OSC_40K_DIS_MASK|OSC_32K_EN_MASK|SELECT_OSC_32K_MASK|HS_CLK_EN_MASK|CPU_CLK_EN_MASK|FREQ_HIGH_MASK)
+            //(RET_RAM_CLK_EN_MASK|OSC_40K_DIS_MASK|OSC_32K_EN_MASK|SELECT_OSC_32K_MASK|HS_CLK_EN_MASK|CPU_CLK_EN_MASK|FREQ_HIGH_MASK),
+            cc6801_ClockDelayUs_64MHz
         },
     };
 
@@ -285,6 +290,231 @@ void cc6801_ClockPeripheralClkAdjust(void)
 
 
 }
+
+/******************************************************************************
+FUNCTION
+  cc6801_ClockDelayUs_16MHz
+
+DESCRIPTION
+  Implement blocked delay function in micro-second unit.
+
+  Becuse we support dynamically clock change, delay function must be also changed when clock is changed.
+  We provide us delay function for every clock setting.
+  When application call delay function, it will be directed to proper function by function pointer stored in table
+
+PARAMETERS
+    number of us
+RETURNS
+    none
+******************************************************************************/
+static __ASM void __INLINE cc6801_ClockDelayUs_16MHz(volatile uint32_t _us)
+{
+loop16
+    subs    r0, r0, #1
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+    bne     loop16
+    bx      lr
+}
+
+/******************************************************************************
+FUNCTION
+  cc6801_ClockDelayUs_24MHz
+
+DESCRIPTION
+  Implement blocked delay function in micro-second unit.
+
+  Becuse we support dynamically clock change, delay function must be also changed when clock is changed.
+  We provide us delay function for every clock setting.
+  When application call delay function, it will be directed to proper function by function pointer stored in table
+
+PARAMETERS
+    number of us
+RETURNS
+    none
+******************************************************************************/
+static __ASM void __INLINE cc6801_ClockDelayUs_24MHz(volatile uint32_t _us)
+{
+loop24
+    subs    r0, r0, #1
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+    bne     loop24
+    bx      lr
+}
+
+/******************************************************************************
+FUNCTION
+  cc6801_ClockDelayUs_32MHz
+
+DESCRIPTION
+  Implement blocked delay function in micro-second unit.
+
+  Becuse we support dynamically clock change, delay function must be also changed when clock is changed.
+  We provide us delay function for every clock setting.
+  When application call delay function, it will be directed to proper function by function pointer stored in table
+
+PARAMETERS
+    number of us
+RETURNS
+    none
+******************************************************************************/
+static __ASM void __INLINE cc6801_ClockDelayUs_32MHz(volatile uint32_t _us)
+{
+loop32
+    subs    r0, r0, #1
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+    bne     loop32
+    bx      lr
+}
+
+/******************************************************************************
+FUNCTION
+  cc6801_ClockDelayUs_48MHz
+
+DESCRIPTION
+  Implement blocked delay function in micro-second unit.
+
+  Becuse we support dynamically clock change, delay function must be also changed when clock is changed.
+  We provide us delay function for every clock setting.
+  When application call delay function, it will be directed to proper function by function pointer stored in table
+
+PARAMETERS
+    number of us
+RETURNS
+    none
+******************************************************************************/
+static __ASM void __INLINE cc6801_ClockDelayUs_48MHz(volatile uint32_t _us)
+{
+loop48
+    subs    r0, r0, #1
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+    bne     loop48
+    bx      lr
+}
+
+/******************************************************************************
+FUNCTION
+  cc6801_ClockDelayUs_64MHz
+
+DESCRIPTION
+  Implement blocked delay function in micro-second unit.
+
+  Becuse we support dynamically clock change, delay function must be also changed when clock is changed.
+  We provide us delay function for every clock setting.
+  When application call delay function, it will be directed to proper function by function pointer stored in table
+
+PARAMETERS
+    number of us
+RETURNS
+    none
+******************************************************************************/
+static __ASM void __INLINE cc6801_ClockDelayUs_64MHz(volatile uint32_t _us)
+{
+loop64
+    subs    r0, r0, #1
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+    bne     loop64
+    bx      lr
+}
+
+/******************************************************************************
+FUNCTION
+  cc6801_ClockDelayUs
+
+DESCRIPTION
+  Implement blocked delay function in micro-second unit.
+
+  Becuse we support dynamically clock change, delay function must be also changed when clock is changed.
+  We provide us delay function for every clock setting.
+  When application call delay function, it will be directed to proper function by function pointer stored in table
+
+PARAMETERS
+    number of us
+RETURNS
+    none
+******************************************************************************/
+void __INLINE cc6801_ClockDelayUs(volatile uint32_t _us)
+{
+    (*g_aClockTable[g_dwCurrentClock].pDelayFunc)(_us);
+}
+
+/******************************************************************************
+FUNCTION
+  cc6801_ClockDelayMs
+
+DESCRIPTION
+  Implement blocked delay function in milli-second unit.
+
+PARAMETERS
+    number of ms
+RETURNS
+    none
+******************************************************************************/
+void __INLINE cc6801_ClockDelayMs(volatile uint32_t _ms)
+{
+    while(_ms--)
+    {
+        cc6801_ClockDelayUs(1000);
+    }
+}
+
+
+
+
 
 
 

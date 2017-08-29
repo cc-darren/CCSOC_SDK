@@ -323,6 +323,9 @@ int main(void)
     //Must be first in main()
     sys_InitMain();
 
+    drvi_ClockDelayUs(2);
+    drvi_ClockDelayMs(2);
+
 #if TEST_ENABLE
     TEST_Main();
 #endif
@@ -363,7 +366,6 @@ int main(void)
             //rwip_schedule();
 #endif
         }
-       drvi_ClockDelayUs(10);
     }
     //rw_main();
 
