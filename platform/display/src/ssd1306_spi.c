@@ -44,12 +44,6 @@
 
 static volatile int8_t cSpiXferDone;
 
-T_SpiDevice ssd1306BoardInfo =
-{
-    .bBusNum = OLED_SSD1306_SPI,
-    .wMode = DRVI_SPI_MODE_3
-};
-
 static void ssd1306_SetPwrCtlHigh(void)
 {
     drvi_gpio_write(OLED_SSD1306_PWR, 1);
@@ -80,31 +74,31 @@ static void ssd1306_SetResetLow(void)
     drvi_gpio_write(OLED_SSD1306_RST, 0);
 }
 
-static void ssd1306_EventHandlerCB(E_DrviSpiEvent * p_event)
-{
-    cSpiXferDone = 1;
-}
+//static void ssd1306_EventHandlerCB(E_DrviSpiEvent * p_event)
+//{
+//    cSpiXferDone = 1;
+//}
 
 static void ssd1306_SpiInit(void)
 {
     ssd1306_SetPwrCtlHigh();
     ssd1306_SetDataCmdLow();
 
-    ssd1306BoardInfo.fpComplete = ssd1306_EventHandlerCB;
+    //ssd1306BoardInfo.fpComplete = ssd1306_EventHandlerCB;
 
-    drvi_SpiInit(&ssd1306BoardInfo);
+    drvi_SpiInit(OLED_SSD1306_SPI);
 }
 
 void ssd1306_SendCommand(uint8_t bByte)
 {
     ssd1306_SetDataCmdLow();
-    drvi_SpiWrite(&ssd1306BoardInfo, &bByte, sizeof(bByte));
+    drvi_SpiWrite(OLED_SSD1306_SPI, &bByte, sizeof(bByte));
 }
 
 void ssd1306_SendData(uint8_t bByte)
 {
     ssd1306_SetDataCmdHigh();
-    drvi_SpiWrite(&ssd1306BoardInfo, &bByte, sizeof(bByte));
+    drvi_SpiWrite(OLED_SSD1306_SPI, &bByte, sizeof(bByte));
 }
 
 void ssd1306_Init(void)

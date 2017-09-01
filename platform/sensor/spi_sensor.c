@@ -31,21 +31,9 @@ void spi_event_handler(E_DrviSpiEvent * p_event)
     //}
 }
 
-T_SpiDevice spi[DRVI_SPI_BUS_NUM];
-
 int spi_init(uint8_t spi_id)
 {
-    if (spi_id > DRVI_SPI_BUS_NUM)
-    {
-        printf("Not Support SPI%d\r\n", spi_id);
-        return CC_ERROR_INVALID_PARAM;
-    }
-
-    spi[spi_id].bBusNum = spi_id;
-    spi[spi_id].wMode = DRVI_SPI_MODE_3;
-    spi[spi_id].fpComplete = spi_event_handler;
-
-    return drvi_SpiInit(&spi[spi_id]);
+    return drvi_SpiInit(spi_id);
 }
 
 void spi_data_write_then_read(uint8_t reg_addr, uint8_t *reg_data, uint8_t cnt, uint8_t spi_id)
@@ -60,7 +48,7 @@ void spi_data_write_then_read(uint8_t reg_addr, uint8_t *reg_data, uint8_t cnt, 
         m_tx_buf[i] = 0x00;
     }
 
-    drvi_SpiWriteThenRead(&spi[spi_id], m_tx_buf, 1, m_rx_buf, cnt);
+    drvi_SpiWriteThenRead(spi_id, m_tx_buf, 1, m_rx_buf, cnt);
 
 #if 0
     while (!spi_xfer_done)
@@ -106,7 +94,7 @@ void spi_data_write(uint8_t reg_addr, uint8_t *reg_data, uint8_t cnt, uint8_t sp
         reg_data++;
     }
 
-    drvi_SpiWrite(&spi[spi_id], m_tx_buf, cnt+1);
+    drvi_SpiWrite(spi_id, m_tx_buf, cnt+1);
 #endif
 #if 0
     while (!spi_xfer_done)
@@ -122,7 +110,7 @@ void spi_data_read(uint8_t reg_addr, uint8_t *reg_data, uint8_t cnt, uint8_t spi
 {
     int i;
 
-    drvi_SpiRead(&spi[spi_id], m_rx_buf, cnt);
+    drvi_SpiRead(spi_id, m_rx_buf, cnt);
 
 #if 0
     while (!spi_xfer_done)

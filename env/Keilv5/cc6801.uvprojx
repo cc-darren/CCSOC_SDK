@@ -518,6 +518,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\platform\drvi\drvi_timer.c</FilePath>
             </File>
+            <File>
+              <FileName>drvi_spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\drvi\drvi_spi.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1710,6 +1715,11 @@
               <FileName>drvi_timer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\drvi\drvi_timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>drvi_spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\drvi\drvi_spi.c</FilePath>
             </File>
           </Files>
         </Group>

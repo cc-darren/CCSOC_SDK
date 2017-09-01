@@ -48,7 +48,7 @@ Head Block of The File
 #endif
 
 #if (DISPLAY_OLED_SSD1306)
-    #define OLED_SSD1306_SPI            2
+    #define OLED_SSD1306_SPI           SPIM2
     #define OLED_SSD1306_PWR           15
     #define OLED_SSD1306_RST           31
     #define OLED_SSD1306_DC            14

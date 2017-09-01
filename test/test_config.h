@@ -54,6 +54,10 @@ Head Block of The File
 #define TEST_GPI                    1
 #define TEST_RTC                    1
 
+#if (TEST_SPI)
+#define TEST_SPIM SPIM1
+#endif
+
 /******************************************************************************
 Declaration of External Variables & Functions
 ******************************************************************************/
