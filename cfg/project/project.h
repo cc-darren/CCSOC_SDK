@@ -39,6 +39,8 @@ Head Block of The File
 // Sec 0: Comment block of the file
 
 // Sec 1: Include File
+#include "asic_supported.h"
+#include "sensor_supported.h"
 
 // Sec 2: Constant Definitions, Imported Symbols, miscellaneous
 
@@ -51,6 +53,10 @@ Head Block of The File
 #else
     #error "There is no defined project. Please select one project!!"
 #endif
+
+
+
+//#include "option_check.h"
 
 
 /******************************************************************************
