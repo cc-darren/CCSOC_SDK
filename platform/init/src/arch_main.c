@@ -30,6 +30,7 @@
 #include "cfg_ble_ip.h"
 #include "tracer.h"
 #include "drvi_clock.h"
+#include "project.h"
 
 #define APP_TIMER_PRESCALER                     0                                           /**< Value of the RTC1 PRESCALER register. */
 #define APP_TIMER_OP_QUEUE_SIZE                 4                                           /**< Size of timer operation queues. */
@@ -62,6 +63,9 @@ uint32_t readSensor;
 
 extern void pwm_start_test(void);
 extern void sys_InitMain(void);
+#if defined(DHRY_TEST) && DHRY_TEST
+extern void dhry_main(void);
+#endif
 
 static void system_idle_timeout_handler(void * p_context)
 {
@@ -346,8 +350,12 @@ int main(void)
 #endif
 
     GLOBAL_INT_START();
-    //TracerInfo("== CC6801 Start ==\n");
+    TracerInfo("== CC6801 Start ==\n");
 
+#if defined(DHRY_TEST) && DHRY_TEST
+	//At least start one SW timer to enable timer tick
+    dhry_main();
+#endif 
     //sensor_init();
     //_app_init();
 

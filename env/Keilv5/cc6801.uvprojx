@@ -1048,6 +1048,16 @@
               <FileType>1</FileType>
               <FilePath>..\..\test\src\test_clock.c</FilePath>
             </File>
+            <File>
+              <FileName>test_dhry_1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_dhry_1.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_dhry_2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_dhry_2.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2245,6 +2255,16 @@
               <FileName>test_clock.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\test\src\test_clock.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_dhry_1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_dhry_1.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_dhry_2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_dhry_2.c</FilePath>
             </File>
           </Files>
         </Group>

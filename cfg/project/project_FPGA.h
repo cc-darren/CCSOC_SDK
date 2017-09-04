@@ -44,9 +44,13 @@ Head Block of The File
 
 
 #define XTAL_MHZ                48      //uint: MHz
-#define SYSTEM_CLOCK_MHZ        48      //unit: MHz
+#define SYSTEM_CLOCK_MHZ        32      //unit: MHz
 
 
+//#define DHRY_TEST               1
+#define MSC_CLOCK               1
+#define CLK_TCK                 32000		//HW timer clock is 32KHz for Dhrystone measurement
+#define Number_Of_Runs          1000000
 
 /******************************************************************************
 Declaration of External Variables & Functions
