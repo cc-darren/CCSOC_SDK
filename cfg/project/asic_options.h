@@ -39,4 +39,11 @@
 #define FIND_ASIC(file) STRINGIZE(CAT(file, _options.h))
 #include FIND_ASIC(ASIC)
 
+
+
+#define UseInterface(_type,_id) _Interface_##_type##_id##_
+#define GetInterfaceType(_func_IF) (_func_IF & 0xF0)
+#define GetInterfaceID(_func_IF)   (_func_IF & 0x0F)
+
+
 #endif  //_ASIC_OPTIONS_H_

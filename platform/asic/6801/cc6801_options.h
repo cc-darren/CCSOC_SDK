@@ -33,12 +33,22 @@
 #define _CC6801_OPTIONS_H_
 
 
-#define SPI0    0
-#define SPI1    1
-#define SPI2    2
 
-#define I2C0    3
-#define I2C1    4
+// Interface List
+
+#define _IF_SPI_     0x10
+#define _IF_I2C_     0x20
+#define _IF_UART_    0x30
+
+#define _Interface_SPI0_    0x10
+#define _Interface_SPI1_    0x11
+#define _Interface_SPI2_    0x12
+#define _Interface_I2C0_    0x20
+#define _Interface_I2C1_    0x21
+#define _Interface_UART0_   0x30
+#define _Interface_UART1_   0x31
+#define _Interface_UART2_   0x32
+
 
 
 

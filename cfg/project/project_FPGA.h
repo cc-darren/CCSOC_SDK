@@ -84,8 +84,10 @@ Head Block of The File
 *   (pick one ACC sensor from sensor_supported.h)
 *
 ***************************************************/
-#define SENSOR_ACC              ACC_ST_LSM303C
-#define ACC_IF                  SPI0
+#define SENSOR_ACC              ACC_ST_LSM6DSL
+#define ACC_IF                  UseInterface(SPI,1)
+
+
 
 /**************************************************
 *
@@ -93,8 +95,8 @@ Head Block of The File
 *   (pick one MAG sensor from sensor_supported.h)
 *
 ***************************************************/
-#define SENSOR_MAG              MAG_ST_LSM303C
-#define MAG_IF                  SPI1
+#define SENSOR_MAG              MAG_AKM_AK09912C
+#define MAG_IF                  UseInterface(I2C,0)
 
 /**************************************************
 *
@@ -103,14 +105,14 @@ Head Block of The File
 *
 ***************************************************/
 #define SENSOR_GYR              GYR_ST_LSM6DSL
-#define GYR_IF                  I2C0
+#define GYR_IF                  UseInterface(SPI,1)
 
 /**************************************************
 *
 *   Choose OLED model and config OLED interface
 *
 ***************************************************/
-#define OLED_IF                 SPI2
+#define OLED_IF                 UseInterface(SPI,2)
 
 
 
@@ -121,6 +123,11 @@ Declaration of External Variables & Functions
 // Sec 3: declaration of external variable
 
 // Sec 4: declaration of external function prototype
+
+
+//I2C parameters
+
+//UART parameters
 
 /******************************************************************************
 Declaration of data structure

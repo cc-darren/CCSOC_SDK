@@ -223,12 +223,13 @@ static void timers_init(void)
 
 void sensor_init(void)
 {
-    if(init_done == 0)
-    {
-        spi_init(1);
-        spi_init(2);
+    if (init_done==0) {
+    #if defined SENSOR_ACC && (SENSOR_ACC)
         ACC_Init();
-        //MAG_Init();
+    #endif
+    #if defined SENSOR_MAG && (SENSOR_MAG)
+        MAG_Init();
+    #endif
         init_done = 1;
     }
 }
@@ -356,7 +357,7 @@ int main(void)
 	//At least start one SW timer to enable timer tick
     dhry_main();
 #endif 
-    //sensor_init();
+    sensor_init();
     //_app_init();
 
 

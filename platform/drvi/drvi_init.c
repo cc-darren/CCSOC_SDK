@@ -22,6 +22,34 @@ void drvi_initialize(void)
     drvi_gpio_pinmux_init();
     drvi_pwm0_init((void*)NULL);
     drvi_wdt_init(30000);
+    
+    #if defined _SPI0_INUSE_ && (_SPI0_INUSE_)
+    drvi_SpiInit(0);
+    #endif
+    #if defined _SPI1_INUSE_ && (_SPI1_INUSE_)
+    drvi_SpiInit(1);
+    #endif
+    #if defined _SPI2_INUSE_ && (_SPI2_INUSE_)
+    drvi_SpiInit(2);
+    #endif
+    
+    #if defined _I2C0_INUSE_ && (_I2C0_INUSE_)
+    drvi_I2CInit(0);
+    #endif
+    #if defined _I2C1_INUSE_ && (_I2C1_INUSE_)
+    drvi_I2CInit(1);
+    #endif
+    
+    
+    #if defined _UART0_INUSE_ && (_UART0_INUSE_)
+    drvi_UartInit(0);
+    #endif
+    #if defined _UART1_INUSE_ && (_UART0_INUSE_)
+    drvi_UartInit(1);
+    #endif
+    #if defined _UART2_INUSE_ && (_UART0_INUSE_)
+    drvi_UartInit(2);
+    #endif
 }
 
 
