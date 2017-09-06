@@ -913,7 +913,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\platform\sensor\ak09912.c</PathWithFileName>
+      <PathWithFileName>..\..\platform\module\ak09912.c</PathWithFileName>
       <FilenameWithoutPath>ak09912.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -925,7 +925,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\platform\sensor\i2c_sensor.c</PathWithFileName>
+      <PathWithFileName>..\..\platform\module\i2c_sensor.c</PathWithFileName>
       <FilenameWithoutPath>i2c_sensor.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -937,7 +937,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\platform\sensor\LSM6DS3_ACC_GYRO_driver.c</PathWithFileName>
+      <PathWithFileName>..\..\platform\module\LSM6DS3_ACC_GYRO_driver.c</PathWithFileName>
       <FilenameWithoutPath>LSM6DS3_ACC_GYRO_driver.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -949,7 +949,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\platform\sensor\spi_sensor.c</PathWithFileName>
+      <PathWithFileName>..\..\platform\module\spi_sensor.c</PathWithFileName>
       <FilenameWithoutPath>spi_sensor.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>

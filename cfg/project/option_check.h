@@ -14,34 +14,37 @@
 #if defined(MODULE_ACC)
   #if (MODULE_ACC & 0x1000)
     #if (MODULE_ACC == ACC_ST_LSM303C)
-      #include "AK09912.h"
+      #include "STLSM303C_ACC.h"
 
     #elif (MODULE_ACC == ACC_ST_LSM303D)
-      #include "AK09913.h"
+      #include "STLSM303D_ACC.h"
       
     #elif (MODULE_ACC == ACC_ST_LIS2DH12)
-      #include "AK09914.h"
+      #include "STLIS2DH12_ACC.h"
       
     #elif (MODULE_ACC == ACC_ST_LIS2DW12)
-      #include "AK09914.h"
+      #include "STLIS2DW12_ACC.h"
       
     #elif (MODULE_ACC == ACC_KIX_KX022_1020)
-      #include "AK09914.h"
+      #include "KIXKX022_ACC.h"
       
     #elif (MODULE_ACC == ACC_KIX_KXG03)
-      #include "AK09914.h"
+      #include "KIXKXG03_ACC.h"
       
     #elif (MODULE_ACC == ACC_AD_ADXL362)
-      #include "AK09914.h"
+      #include "ADXL362_ACC.h"
       
     #elif (MODULE_ACC == ACC_ST_LSM6DSL)
       #include "LSM6DS3_ACC_GYRO_DRIVER.h"
-      
+
+    #elif (MODULE_ACC == ACC_NULL)
+      #include "acc_null.h"
+
     #else
-      #error "no ACC define"
+      #error " no matched ACC driver "
     #endif
   #else
-    #error "ACC wrong"
+    #error "not a ACC driver"
   #endif
   
   #if ((defined ACC_IF) && (ACC_IF))
@@ -59,22 +62,25 @@
       #include "AK09912.h"
 
     #elif (MODULE_MAG == MAG_AKM_AK09915C)
-      #include "AK09913.h"
+      #include "AK09915.h"
       
     #elif (MODULE_MAG == MAG_ST_LSM303C)
-      #include "AK09914.h"
+      #include "STLSM303C.h"
       
     #elif (MODULE_MAG == MAG_ST_LSM303D)
-      #include "AK09914.h"
+      #include "STLSM303D.h"
       
     #elif (MODULE_MAG == MAG_ST_LIS2MDL)
-      #include "AK09914.h"
+      #include "STLIS2MDL.h"
       
+    #elif (MODULE_MAG == MAG_NULL)
+      #include "mag_null.h"
+
     #else
-      #error "no MAG define"
+      #error " no matched MAG driver "
     #endif
   #else
-    #error "MAG wrong"
+    #error "not a MAG driver"
   #endif
   
   #if ((defined MAG_IF) && (MAG_IF))
@@ -91,11 +97,14 @@
     #if (MODULE_GYR == GYR_ST_LSM6DSL)
       #include "LSM6DS3_ACC_GYRO_DRIVER.h"
 
+    #elif (MODULE_GYR == GYR_NULL)
+      #include "gyr_null.h"
+
     #else
-      #error "no GYR define"
+      #error " no matched GYR driver "
     #endif
   #else
-    #error "GYR wrong"
+    #error "not a GYR driver"
   #endif
   
   #if ((defined GYR_IF) && (GYR_IF))
@@ -112,11 +121,14 @@
     #if (MODULE_OLED == OLED_SSD_1306)
       #include "ssd1306_spi.h"
 
+    #elif (MODULE_OLED == OLED_NULL)
+      #include "oled_null.h"
+
     #else
-      #error "no OLED define"
+      #error " no matched oled driver "
     #endif
   #else
-    #error "OLED wrong"
+    #error "not a OLED driver"
   #endif
   
   #if ((defined OLED_IF) && (OLED_IF))

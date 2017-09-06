@@ -41,6 +41,7 @@
 #define ACC_KIX_KXG03           0x1006
 #define ACC_AD_ADXL362          0x1007
 #define ACC_ST_LSM6DSL          0x1008
+#define ACC_NULL                0x1FFF //choose this if ACC is not in using
 
 //Supported MAG sensors
 #define MAG_AKM_AK09912C        0x2001
@@ -48,13 +49,17 @@
 #define MAG_ST_LSM303C          0x2003
 #define MAG_ST_LSM303D          0x2004
 #define MAG_ST_LIS2MDL          0x2005
+#define MAG_NULL                0x2FFF //choose this if MAG is not in using
 
 
 //Supported GYRO sensors
 #define GYR_ST_LSM6DSL          0x3001
+#define GYR_NULL                0x3FFF //choose this if GYR is not in using
+
 
 
 //Supported OLED displays
 #define OLED_SSD_1306           0x4001
+#define OLED_NULL               0x4FFF //choose this if OLED is not in using
 
 #endif  //_MODULE_SUPPORTED_H_

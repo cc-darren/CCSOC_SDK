@@ -224,12 +224,8 @@ static void timers_init(void)
 void sensor_init(void)
 {
     if (init_done==0) {
-    #if defined MODULE_ACC && (MODULE_ACC)
         ACC_Init();
-    #endif
-    #if defined MODULE_MAG && (MODULE_MAG)
         MAG_Init();
-    #endif
         init_done = 1;
     }
 }

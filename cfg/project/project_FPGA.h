@@ -90,22 +90,23 @@ Head Block of The File
 /**************************************************
 *   Choose ACC sensor and config ACC interface
 *   (pick one ACC sensor from module_supported.h)
+*   (please select ACC_NULL if ACC is not in use)
 *
 *   ACC_IF :  the interface assigned to ACC
-
 ***************************************************/
-#define MODULE_ACC              ACC_ST_LSM6DSL
-#define ACC_IF                  UseInterface(SPI,1) 
+#define MODULE_ACC              ACC_NULL
+#define ACC_IF                  UseInterface(SPI,1)
 
 
 
 /**************************************************
 *   Choose MAG sensor and config MAG interface
 *   (pick one MAG sensor from module_supported.h)
+*   (please select MAG_NULL if MAG is not in use)
 *
 *   MAG_IF :  the interface assigned to MAG
 ***************************************************/
-#define MODULE_MAG              MAG_AKM_AK09912C
+#define MODULE_MAG              MAG_NULL
 #define MAG_IF                  UseInterface(I2C,0)
 
 
@@ -113,6 +114,7 @@ Head Block of The File
 /**************************************************
 *   Choose GYRO sensor and config GYRO interface
 *   (pick one GYRO sensor from module_supported.h)
+*   (please select GYR_NULL if GYR is not in use)
 *
 *   GYR_IF :  the interface assigned to GYR
 ***************************************************/
@@ -124,6 +126,7 @@ Head Block of The File
 /**************************************************
 *   Choose OLED model and config OLED interface
 *   (pick one GYRO sensor from module_supported.h)
+*   (please select OLED_NULL if OLED is not in use)
 *
 *   OLED_IF : the interface assigned to OLED
 ***************************************************/

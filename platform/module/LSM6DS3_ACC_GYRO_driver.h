@@ -36,8 +36,8 @@
  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __LSM6DS3_ACC_GYRO_DRIVER__H
-#define __LSM6DS3_ACC_GYRO_DRIVER__H
+#ifndef __LSM6DS3_ACC_DRIVER__H
+#define __LSM6DS3_ACC_DRIVER__H
 
 /* Includes ------------------------------------------------------------------*/
 #include <stdint.h>
@@ -95,10 +95,13 @@ typedef enum
 #endif /*__SHARED__TYPES*/
 
 /* Exported macro ------------------------------------------------------------*/
-//ACC sensor interface
+#ifndef _ACC_SHARE_TYPE_
+#define _ACC_SHARE_TYPE_
+
 #define ACC_Init()                                     LSM6DS3_X_Init()
 #define ACC_Data_Get(x,y)                              LSM6DS3_ACC_GYRO_GetRawAccData(x,y)
 
+#endif //_ACC_SHARE_TYPE_
 
 /* Exported constants --------------------------------------------------------*/
 
