@@ -40,7 +40,7 @@ Head Block of The File
 
 // Sec 1: Include File
 #include "asic_supported.h"
-#include "sensor_supported.h"
+#include "module_supported.h"
 
 // Sec 2: Constant Definitions, Imported Symbols, miscellaneous
 

@@ -77,41 +77,57 @@ Head Block of The File
 //PWM duty cycle
 
 
-
 /**************************************************
-*
+*  UseInterface(_type,_id) helps to define the interface type and id
+*               _type can be set to : SPI/I2C/UART
+*               _id   can be set to : 0/1/2/3 , dependson ASIC channels num.
+*  
+*  GetIFType(_func_IF) Retrieve interface type from _fucn_IF, ACC_IF/MAG_IF/...etc.
+*  GetIFID(_func_IF)   Retrieve interface id from _fucn_IF, ACC_IF/MAG_IF/...etc.
+*  
+*  
+***************************************************/
+/**************************************************
 *   Choose ACC sensor and config ACC interface
-*   (pick one ACC sensor from sensor_supported.h)
+*   (pick one ACC sensor from module_supported.h)
 *
+*   ACC_IF :  the interface assigned to ACC
+
 ***************************************************/
-#define SENSOR_ACC              ACC_ST_LSM6DSL
-#define ACC_IF                  UseInterface(SPI,1)
+#define MODULE_ACC              ACC_ST_LSM6DSL
+#define ACC_IF                  UseInterface(SPI,1) 
 
 
 
 /**************************************************
-*
 *   Choose MAG sensor and config MAG interface
-*   (pick one MAG sensor from sensor_supported.h)
+*   (pick one MAG sensor from module_supported.h)
 *
+*   MAG_IF :  the interface assigned to MAG
 ***************************************************/
-#define SENSOR_MAG              MAG_AKM_AK09912C
+#define MODULE_MAG              MAG_AKM_AK09912C
 #define MAG_IF                  UseInterface(I2C,0)
 
-/**************************************************
-*
-*   Choose GYRO sensor and config GYRO interface
-*   (pick one GYRO sensor from sensor_supported.h)
-*
-***************************************************/
-#define SENSOR_GYR              GYR_ST_LSM6DSL
-#define GYR_IF                  UseInterface(SPI,1)
+
 
 /**************************************************
+*   Choose GYRO sensor and config GYRO interface
+*   (pick one GYRO sensor from module_supported.h)
 *
-*   Choose OLED model and config OLED interface
-*
+*   GYR_IF :  the interface assigned to GYR
 ***************************************************/
+#define MODULE_GYR              GYR_ST_LSM6DSL
+#define GYR_IF                  UseInterface(SPI,1)
+
+
+
+/**************************************************
+*   Choose OLED model and config OLED interface
+*   (pick one GYRO sensor from module_supported.h)
+*
+*   OLED_IF : the interface assigned to OLED
+***************************************************/
+#define MODULE_OLED             OLED_SSD_1306
 #define OLED_IF                 UseInterface(SPI,2)
 
 

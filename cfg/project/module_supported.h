@@ -12,7 +12,7 @@
 /******************************************************************************
 *  Filename:
 *  ---------
-*  sensor_supported.h
+*  module_supported.h
 *
 *  Project:
 *  --------
@@ -20,7 +20,7 @@
 *
 *  Description:
 *  ------------
-*  supported sensors list
+*  supported modules list
 *
 *  Author:
 *  -------
@@ -29,8 +29,8 @@
 *===========================================================================
 *
 ******************************************************************************/
-#ifndef _SENSOR_SUPPORTED_H_
-#define _SENSOR_SUPPORTED_H_
+#ifndef _MODULE_SUPPORTED_H_
+#define _MODULE_SUPPORTED_H_
 
 //Supported ACC sensors
 #define ACC_ST_LSM303C          0x1001
@@ -54,5 +54,7 @@
 #define GYR_ST_LSM6DSL          0x3001
 
 
+//Supported OLED displays
+#define OLED_SSD_1306           0x4001
 
-#endif  //_SENSOR_SUPPORTED_H_
+#endif  //_MODULE_SUPPORTED_H_

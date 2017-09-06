@@ -546,7 +546,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>sensor</GroupName>
+          <GroupName>module</GroupName>
           <Files>
             <File>
               <FileName>ak09912.c</FileName>
@@ -1754,7 +1754,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>sensor</GroupName>
+          <GroupName>module</GroupName>
           <Files>
             <File>
               <FileName>ak09912.c</FileName>
