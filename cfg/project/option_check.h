@@ -118,8 +118,8 @@
 
 #if defined(MODULE_OLED)
   #if (MODULE_OLED & 0x4000)
-    #if (MODULE_OLED == OLED_SSD_1306)
-      #include "ssd1306_spi.h"
+    #if (MODULE_OLED == OLED_SOLOMON_SSD1306)
+      #include "ssd1306.h"
 
     #elif (MODULE_OLED == OLED_NULL)
       #include "oled_null.h"
@@ -136,7 +136,8 @@
   #else
     #error "OLED interface not found"
   #endif
-
+#else
+  #include "oled_null.h"
 #endif
 
 

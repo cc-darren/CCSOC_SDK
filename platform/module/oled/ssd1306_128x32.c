@@ -31,7 +31,7 @@
 ******************************************************************************/
 
 #include "font.h"
-#include "ssd1306_spi.h"
+#include "ssd1306.h"
 
 void ssd1306_SetPosition(uint8_t x, uint8_t y)
 {

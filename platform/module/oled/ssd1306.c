@@ -33,7 +33,7 @@
 #include "drvi_gpio.h"
 #include "drvi_spi.h"
 
-#include "ssd1306_spi.h"
+#include "ssd1306.h"
 #include "ssd1306_128x32.h"
 
 #define OLED_DELAY(x) delayns(x*1000)

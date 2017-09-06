@@ -59,7 +59,7 @@
 
 
 //Supported OLED displays
-#define OLED_SSD_1306           0x4001
+#define OLED_SOLOMON_SSD1306    0x4001
 #define OLED_NULL               0x4FFF //choose this if OLED is not in using
 
 #endif  //_MODULE_SUPPORTED_H_

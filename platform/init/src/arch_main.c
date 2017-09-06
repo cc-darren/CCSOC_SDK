@@ -23,7 +23,6 @@
 //#include "ak09912.h"
 #include "LSM6DS3_ACC_GYRO_driver.h"
 #include "spi_sensor.h"
-//#include "ssd1306_spi.h"
 #include "appDisplay.h"
 #include "FP_PED_8Bit.h"
 #include "jump_table.h"

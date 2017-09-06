@@ -2113,7 +2113,7 @@
   </Group>
 
   <Group>
-    <GroupName>display</GroupName>
+    <GroupName>oled</GroupName>
     <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
@@ -2125,8 +2125,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\platform\display\src\ssd1306_128x32.c</PathWithFileName>
-      <FilenameWithoutPath>ssd1306_128x32.c</FilenameWithoutPath>
+      <PathWithFileName>..\..\platform\module\oled\ssd1306.c</PathWithFileName>
+      <FilenameWithoutPath>ssd1306.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -2137,8 +2137,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\platform\display\src\ssd1306_spi.c</PathWithFileName>
-      <FilenameWithoutPath>ssd1306_spi.c</FilenameWithoutPath>
+      <PathWithFileName>..\..\platform\module\oled\ssd1306_128x32.c</PathWithFileName>
+      <FilenameWithoutPath>ssd1306_128x32.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

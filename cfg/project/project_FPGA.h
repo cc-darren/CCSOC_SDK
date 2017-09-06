@@ -130,7 +130,7 @@ Head Block of The File
 *
 *   OLED_IF : the interface assigned to OLED
 ***************************************************/
-#define MODULE_OLED             OLED_SSD_1306
+#define MODULE_OLED             OLED_SOLOMON_SSD1306
 #define OLED_IF                 UseInterface(SPI,2)
 
 
