@@ -36,9 +36,10 @@
 
 // Interface List
 
-#define _IF_SPI_     0x10
-#define _IF_I2C_     0x20
-#define _IF_UART_    0x30
+#define _IF_SPI_    0x10
+#define _IF_I2C_    0x20
+#define _IF_UART_   0x30
+#define _IF_NULL_   0xFF
 
 #define _Interface_SPI0_    0x10
 #define _Interface_SPI1_    0x11

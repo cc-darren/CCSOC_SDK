@@ -39,9 +39,10 @@
 
     #elif (MODULE_ACC == ACC_NULL)
       #include "acc_null.h"
-
+      #undef ACC_IF
+      #define ACC_IF _IF_NULL_
     #else
-      #error " no matched ACC driver "
+      #error " no matched ACC driver found"
     #endif
   #else
     #error "not a ACC driver"
@@ -52,7 +53,8 @@
   #else
     #error "ACC interface not found"
   #endif
-
+#else
+  #error "Please choose 'ACC_NULL' if ACC is not in use."
 #endif
 
 
@@ -75,9 +77,10 @@
       
     #elif (MODULE_MAG == MAG_NULL)
       #include "mag_null.h"
-
+      #undef MAG_IF
+      #define MAG_IF _IF_NULL_
     #else
-      #error " no matched MAG driver "
+      #error " no matched MAG driver found"
     #endif
   #else
     #error "not a MAG driver"
@@ -88,7 +91,8 @@
   #else
     #error "MAG interface not found"
   #endif
-
+#else
+  #error "Please choose 'MAG_NULL' if MAG is not in use."
 #endif
 
 
@@ -99,9 +103,10 @@
 
     #elif (MODULE_GYR == GYR_NULL)
       #include "gyr_null.h"
-
+      #undef GYR_IF
+      #define GYR_IF _IF_NULL_
     #else
-      #error " no matched GYR driver "
+      #error " no matched GYR driver found"
     #endif
   #else
     #error "not a GYR driver"
@@ -112,7 +117,8 @@
   #else
     #error "GYR interface not found"
   #endif
-
+#else
+  #error "Please choose 'GYR_NULL' if GYR is not in use."
 #endif
 
 
@@ -123,9 +129,10 @@
 
     #elif (MODULE_OLED == OLED_NULL)
       #include "oled_null.h"
-
+      #undef OLED_IF
+      #define OLED_IF _IF_NULL_
     #else
-      #error " no matched oled driver "
+      #error " no matched oled driver found"
     #endif
   #else
     #error "not a OLED driver"
@@ -137,26 +144,33 @@
     #error "OLED interface not found"
   #endif
 #else
-  #include "oled_null.h"
+  #error "Please choose 'OLED_NULL' if OLED is not in use."
 #endif
 
 
 //check which interface is used
 #if   ((ACC_IF==_Interface_SPI0_) || (MAG_IF==_Interface_SPI0_) || (GYR_IF==_Interface_SPI0_) || (OLED_IF==_Interface_SPI0_))
   #define _SPI0_INUSE_  TRUE
-#elif ((ACC_IF==_Interface_SPI1_) || (MAG_IF==_Interface_SPI1_) || (GYR_IF==_Interface_SPI1_) || (OLED_IF==_Interface_SPI1_))
+#endif
+#if ((ACC_IF==_Interface_SPI1_) || (MAG_IF==_Interface_SPI1_) || (GYR_IF==_Interface_SPI1_) || (OLED_IF==_Interface_SPI1_))
   #define _SPI1_INUSE_  TRUE
-#elif ((ACC_IF==_Interface_SPI2_) || (MAG_IF==_Interface_SPI2_) || (GYR_IF==_Interface_SPI2_) || (OLED_IF==_Interface_SPI2_))
+#endif
+#if ((ACC_IF==_Interface_SPI2_) || (MAG_IF==_Interface_SPI2_) || (GYR_IF==_Interface_SPI2_) || (OLED_IF==_Interface_SPI2_))
   #define _SPI2_INUSE_  TRUE
-#elif ((ACC_IF==_Interface_I2C0_) || (MAG_IF==_Interface_I2C0_) || (GYR_IF==_Interface_I2C0_) || (OLED_IF==_Interface_I2C0_))
+#endif
+#if ((ACC_IF==_Interface_I2C0_) || (MAG_IF==_Interface_I2C0_) || (GYR_IF==_Interface_I2C0_) || (OLED_IF==_Interface_I2C0_))
   #define _I2C0_INUSE_  TRUE
-#elif ((ACC_IF==_Interface_I2C1_) || (MAG_IF==_Interface_I2C1_) || (GYR_IF==_Interface_I2C1_) || (OLED_IF==_Interface_I2C1_))
+#endif
+#if ((ACC_IF==_Interface_I2C1_) || (MAG_IF==_Interface_I2C1_) || (GYR_IF==_Interface_I2C1_) || (OLED_IF==_Interface_I2C1_))
   #define _I2C1_INUSE_  TRUE
-#elif ((ACC_IF==_Interface_UART0_) || (MAG_IF==_Interface_UART0_) || (GYR_IF==_Interface_UART0_) || (OLED_IF==_Interface_UART0_))
+#endif
+#if ((ACC_IF==_Interface_UART0_) || (MAG_IF==_Interface_UART0_) || (GYR_IF==_Interface_UART0_) || (OLED_IF==_Interface_UART0_))
   #define _UART0_INUSE_ TRUE
-#elif ((ACC_IF==_Interface_UART1_) || (MAG_IF==_Interface_UART1_) || (GYR_IF==_Interface_UART1_) || (OLED_IF==_Interface_UART1_))
+#endif
+#if ((ACC_IF==_Interface_UART1_) || (MAG_IF==_Interface_UART1_) || (GYR_IF==_Interface_UART1_) || (OLED_IF==_Interface_UART1_))
   #define _UART1_INUSE_ TRUE
-#elif ((ACC_IF==_Interface_UART2_) || (MAG_IF==_Interface_UART2_) || (GYR_IF==_Interface_UART2_) || (OLED_IF==_Interface_UART2_))
+#endif
+#if ((ACC_IF==_Interface_UART2_) || (MAG_IF==_Interface_UART2_) || (GYR_IF==_Interface_UART2_) || (OLED_IF==_Interface_UART2_))
   #define _UART2_INUSE_ TRUE
 #endif
 
