@@ -33,7 +33,7 @@ void spi_event_handler(E_DrviSpiEvent * p_event)
 
 int spi_init(uint8_t spi_id)
 {
-    return drvi_SpiInit(spi_id);
+//    return drvi_SpiInit(spi_id);
 }
 
 void spi_data_write_then_read(uint8_t reg_addr, uint8_t *reg_data, uint8_t cnt, uint8_t spi_id)

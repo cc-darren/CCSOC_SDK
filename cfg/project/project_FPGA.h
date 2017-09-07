@@ -134,6 +134,16 @@ Head Block of The File
 #define OLED_IF                 UseInterface(SPI,2)
 
 
+/**************************************************
+*   Set SPI master configuration
+*   (all the configs are in cc6801_options.h)
+*   (please using OR operation to choose more than 2 configs)
+*
+*    Ex : SPIM0_CONFIG         (_SPI_MODE_0_ | _SPI_CS_HIGH_)
+***************************************************/
+#define SPIM0_CONFIG             (_SPI_MODE_0_)
+#define SPIM1_CONFIG             (_SPI_MODE_3_)
+#define SPIM2_CONFIG             (_SPI_MODE_3_)
 
 
 /******************************************************************************

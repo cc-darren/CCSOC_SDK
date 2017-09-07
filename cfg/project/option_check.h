@@ -160,6 +160,10 @@
   #define _UART2_INUSE_ TRUE
 #endif
 
+#if ((_SPI0_INUSE_) || (_SPI1_INUSE_) || (_SPI2_INUSE_))
+  #define _SPI_INUSE_
+#endif
+
 
 //remove IF check temporately, I2C interface can connect to mutilple slave
 /*

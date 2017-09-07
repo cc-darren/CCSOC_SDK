@@ -10,46 +10,36 @@
  *
  ****************************************************************************************
  */
-#include "global.h"
 #include "drvi_spi.h"
+#include "tracer.h"
 
-T_SpiDevice g_tSpiDev[3] = {0};
-
-int drvi_SpiInit(uint8_t bBusNum)
+int drvi_SpiInit(void)
 {
-    g_tSpiDev[bBusNum].bBusNum = bBusNum;
+    T_SpiDevice tSpiDev;
+    int iResult = 0;
 
-    if (SPIM0 == bBusNum)
-        g_tSpiDev[bBusNum].wMode = SPIM0_CONFIG_MODE;
-    else if (SPIM1 == bBusNum)
-        g_tSpiDev[bBusNum].wMode = SPIM1_CONFIG_MODE;
-    else if (SPIM2 == bBusNum)
-        g_tSpiDev[bBusNum].wMode = SPIM2_CONFIG_MODE;
-    else
-        TracerWarn("Not Support SPI%d\r\n", bBusNum);
+    #if defined _SPI0_INUSE_ && (_SPI0_INUSE_)
+    tSpiDev.bBusNum = 0;
+    tSpiDev.wMode = SPIM0_CONFIG;
+    iResult = cc6801_SpimInit(&tSpiDev);
+    if (!iResult)
+        TracerErr("SPI0 initial error\n");
+    #endif
+    #if defined _SPI1_INUSE_ && (_SPI1_INUSE_)
+    tSpiDev.bBusNum = 1;
+    tSpiDev.wMode = SPIM1_CONFIG;
+    iResult = cc6801_SpimInit(&tSpiDev);
+    if (!iResult)
+        TracerErr("SPI1 initial error\n");
+    #endif
+    #if defined _SPI2_INUSE_ && (_SPI2_INUSE_)
+    tSpiDev.bBusNum = 2;
+    tSpiDev.wMode = SPIM2_CONFIG;
+    iResult = cc6801_SpimInit(&tSpiDev);
+    if (!iResult)
+        TracerErr("SPI2 initial error\n");
+    #endif
 
-    return cc6801_SpimInit(&g_tSpiDev[bBusNum]);
+    return iResult;
 }
 
-int drvi_SpiWrite(uint8_t bBusNum,
-                  uint8_t const * pTxBuf,
-                  uint8_t         bTxBufLen)
-{
-    return cc6801_SpimWrite(&g_tSpiDev[bBusNum], pTxBuf, bTxBufLen);
-}
-
-int drvi_SpiRead(uint8_t bBusNum,
-                 uint8_t       * pRxBuf,
-                 uint8_t         bRxBufLen)
-{
-    return cc6801_SpimRead(&g_tSpiDev[bBusNum], pRxBuf, bRxBufLen);
-}
-
-int drvi_SpiWriteThenRead(uint8_t bBusNum,
-                          uint8_t const * pTxBuf,
-                          uint8_t         bTxBufLen,
-                          uint8_t       * pRxBuf,
-                          uint8_t         bRxBufLen)
-{
-    return cc6801_SpimWriteThenRead(&g_tSpiDev[bBusNum], pTxBuf, bTxBufLen, pRxBuf, bRxBufLen);
-}

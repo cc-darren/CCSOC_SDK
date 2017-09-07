@@ -55,7 +55,7 @@ Head Block of The File
 #define TEST_RTC                    1
 
 #if (TEST_SPI)
-#define TEST_SPIM SPIM1
+#define TEST_SPIM GetIFID(TEST_SPI)
 #endif
 
 /******************************************************************************

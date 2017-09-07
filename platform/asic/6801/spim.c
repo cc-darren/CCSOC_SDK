@@ -39,21 +39,23 @@ volatile uint32_t SPI0_M_INTR = 0;
 volatile uint32_t SPI1_M_INTR = 0;
 volatile uint32_t SPI2_M_INTR = 0;
 
+T_SpiMaster g_tSpim[SPIM_TOTAL_SUPPORTED] = {0};
+
 void SPI0_M_IRQHandler(void)
 {
-    regSPI0->dw.spiInt |= (SPIM_INT_ERROR_STATUS_MASK | SPIM_INT_EVENT_STATUS_MASK);
+    regSPI0->dw.spiInt |= (SPIM_INT_ERROR_STATUS_CLEAR_MASK | SPIM_INT_EVENT_STATUS_CLEAR_MASK);
     SPI0_M_INTR = 1;
 }
 
 void SPI1_M_IRQHandler(void)
 {
-    regSPI1->dw.spiInt |= (SPIM_INT_ERROR_STATUS_MASK | SPIM_INT_EVENT_STATUS_MASK);
+    regSPI1->dw.spiInt |= (SPIM_INT_ERROR_STATUS_CLEAR_MASK | SPIM_INT_EVENT_STATUS_CLEAR_MASK);
     SPI1_M_INTR = 1;
 }
 
 void SPI2_M_IRQHandler(void)
 {
-    regSPI2->dw.spiInt |= (SPIM_INT_ERROR_STATUS_MASK | SPIM_INT_EVENT_STATUS_MASK);
+    regSPI2->dw.spiInt |= (SPIM_INT_ERROR_STATUS_CLEAR_MASK | SPIM_INT_EVENT_STATUS_CLEAR_MASK);
     SPI2_M_INTR = 1;
 }
 
@@ -115,41 +117,13 @@ static void cc6801_SpimRxBufferSet(U_regSPI * pSpimBase,
 
 static void cc6801_SpimIntStatusClr(U_regSPI * pSpimBase)
 {
-    pSpimBase->dw.spiInt |= (SPIM_INT_ERROR_STATUS_MASK | SPIM_INT_EVENT_STATUS_MASK);
+    pSpimBase->dw.spiInt |= (SPIM_INT_ERROR_STATUS_CLEAR_MASK | SPIM_INT_EVENT_STATUS_CLEAR_MASK);
 }
 
-static T_SpiMaster cc6801_SpiMasterGet(uint8_t bSpimId)
+static int cc6801_SpimTransfer(uint8_t bBusNum,
+                               T_SpimTransfer const * pXfer)
 {
-    T_SpiMaster master;
-
-    switch (bSpimId)
-    {
-        case SPIM_0:
-            master.pReg = (void *)regSPI0,
-            master.index = SPIM_0,
-            master.fpSpimXfer = cc6801_Spim0Xfer;
-            break;
-        case SPIM_1:
-            master.pReg = (void *)regSPI1,
-            master.index = SPIM_1,
-            master.fpSpimXfer = cc6801_Spim1Xfer;
-            break;
-        case SPIM_2:
-            master.pReg = (void *)regSPI2,
-            master.index = SPIM_2,
-            master.fpSpimXfer = cc6801_Spim2Xfer;
-            break;
-        default:
-            break;
-    }
-
-    return master;
-}
-
-static int cc6801_SpimTransfer(T_SpiMaster const * const pSpim,
-                                T_SpimTransfer const * pXfer)
-{
-    U_regSPI *pSpimBase = pSpim->pReg;
+    U_regSPI *pSpimBase = g_tSpim[bBusNum].pReg;
 
     if (((uint32_t)pXfer->pTxBuffer & 0x3UL) ||
          ((uint32_t)pXfer->pRxBuffer & 0x3UL))
@@ -176,7 +150,7 @@ static int cc6801_SpimTransfer(T_SpiMaster const * const pSpim,
 
     cc6801_SpimIntStatusClr(pSpimBase);
 
-    return pSpim->fpSpimXfer(pSpimBase);
+    return g_tSpim[bBusNum].fpSpimXfer(pSpimBase);
 }
 
 __STATIC_INLINE void cc6801_SpimConfig(U_regSPI * pSpimBase,
@@ -185,59 +159,76 @@ __STATIC_INLINE void cc6801_SpimConfig(U_regSPI * pSpimBase,
     uint32_t dwDmaCtrl = pSpimBase->dw.DmaCtrl;
     uint32_t dwSpiCtrl = pSpimBase->dw.spiCtrl;
 
-    if (spi->wMode & DRVI_SPI_LSB_FIRST)
+    if (spi->wMode & _SPI_LSB_FIRST_)
     {
-        dwDmaCtrl |= SPIM_DMA_BYTE_SWAP_TX_MASK;
-        dwDmaCtrl |= SPIM_DMA_BYTE_SWAP_RX_MASK;
+        dwDmaCtrl |= SPIM_DMA_BYTE_SWAP_TX_MSB_MASK;
+        dwDmaCtrl |= SPIM_DMA_BYTE_SWAP_RX_MSB_MASK;
     }
     else
     {
-        dwDmaCtrl &= ~SPIM_DMA_BYTE_SWAP_TX_MASK;
-        dwDmaCtrl &= ~SPIM_DMA_BYTE_SWAP_RX_MASK;
+        dwDmaCtrl &= ~SPIM_DMA_BYTE_SWAP_TX_MSB_MASK;
+        dwDmaCtrl &= ~SPIM_DMA_BYTE_SWAP_RX_MSB_MASK;
     }
 
-    if (spi->wMode & DRVI_SPI_CPHA)
-        dwSpiCtrl |= SPIM_CTRL_CPHA_MASK;
+    if (spi->wMode & _SPI_CPHA_)
+        dwSpiCtrl |= SPIM_CTRL_CPHA_PHASE_SHIFT_MASK;
     else
-        dwSpiCtrl &= ~SPIM_CTRL_CPHA_MASK;
+        dwSpiCtrl &= ~SPIM_CTRL_CPHA_PHASE_SHIFT_MASK;
 
-    if (spi->wMode & DRVI_SPI_CPOL)
-        dwSpiCtrl |= SPIM_CTRL_CPOL_MASK;
+    if (spi->wMode & _SPI_CPOL_)
+        dwSpiCtrl |= SPIM_CTRL_CPOL_EDGE_FALLING_MASK;
     else
-        dwSpiCtrl &= ~SPIM_CTRL_CPOL_MASK;
+        dwSpiCtrl &= ~SPIM_CTRL_CPOL_EDGE_FALLING_MASK;
 
-    if (spi->wMode & DRVI_SPI_CS_HIGH)
-        dwSpiCtrl &= ~SPIM_CTRL_CS_POLARITY_MASK;
+    if (spi->wMode & _SPI_CS_HIGH_)
+        dwSpiCtrl &= ~SPIM_CTRL_CS_POLARITY_LOW_MASK;
     else
-        dwSpiCtrl |= SPIM_CTRL_CS_POLARITY_MASK;
+        dwSpiCtrl |= SPIM_CTRL_CS_POLARITY_LOW_MASK;
 
     pSpimBase->dw.spiCtrl = dwSpiCtrl;
     pSpimBase->dw.DmaCtrl = dwDmaCtrl;
 
-    printf("setup mode %d, %s%s%s %lu Hz max\n",
-        (int) (spi->wMode & (DRVI_SPI_CPOL | DRVI_SPI_CPHA)),
-        (spi->wMode & DRVI_SPI_CS_HIGH) ? "cs_high, " : "",
-        (spi->wMode & DRVI_SPI_LSB_FIRST) ? "lsb, " : "",
-        (spi->wMode & DRVI_SPI_3WIRE) ? "3wire, " : "",
+    printf("setup mode %d, %s%s%s %u Hz max\n",
+        (int) (spi->wMode & (_SPI_CPOL_ | _SPI_CPHA_)),
+        (spi->wMode & _SPI_CS_HIGH_) ? "cs_high, " : "",
+        (spi->wMode & _SPI_LSB_FIRST_) ? "lsb, " : "",
+        (spi->wMode & _SPI_3WIRE_) ? "3wire, " : "",
         spi->dwMaxSpeedHz);
 }
 
 int cc6801_SpimInit(T_SpiDevice *pSpiDev)
 {
-    T_SpiMaster master = cc6801_SpiMasterGet(pSpiDev->bBusNum);
-    U_regSPI *pSpimBase = master.pReg;
+    U_regSPI *pSpimBase;
+    uint8_t bIdx = pSpiDev->bBusNum;
 
-    if (master.index > SPIM_TOTAL_SUPPORTED)
+    if (pSpiDev->bBusNum == SPIM_0)
     {
-        printf("Not Support SPI%d\r\n", master.index);
+        g_tSpim[bIdx].pReg = (void *)regSPI0,
+        g_tSpim[bIdx].fpSpimXfer = cc6801_Spim0Xfer;
+    }
+    else if (pSpiDev->bBusNum == SPIM_1)
+    {
+        g_tSpim[bIdx].pReg = (void *)regSPI1,
+        g_tSpim[bIdx].fpSpimXfer = cc6801_Spim1Xfer;
+    }
+    else if (pSpiDev->bBusNum == SPIM_2)
+    {
+        g_tSpim[bIdx].pReg = (void *)regSPI2,
+        g_tSpim[bIdx].fpSpimXfer = cc6801_Spim2Xfer;
+    }
+    else
+    {
+        printf("Not Support SPI%d\r\n", pSpiDev->bBusNum);
         return CC_ERROR_INVALID_PARAM;
     }
+
+    pSpimBase = g_tSpim[bIdx].pReg;
 
     regCKGEN->bf.spi0ClkDiv = 2;
     regCKGEN->bf.spi1ClkDiv = 2;
     regCKGEN->bf.spi2ClkDiv = 2;
 
-    cc6801_SpimConfig(pSpimBase, pSpiDev);
+    cc6801_SpimConfig(g_tSpim[bIdx].pReg, pSpiDev);
 
     pSpimBase->bf.spi_m_en = SPIM_CTRL_ENABLE_BIT;
 
@@ -247,44 +238,38 @@ int cc6801_SpimInit(T_SpiDevice *pSpiDev)
     return CC_SUCCESS;
 }
 
-int cc6801_SpimWrite(T_SpiDevice const * const pSpiDev,
-                         uint8_t const * pTxBuf,
-                         uint8_t         bTxBufLen)
+int cc6801_SpimWrite(uint8_t         bBusNum,
+                     uint8_t const * pTxBuf,
+                     uint8_t         bTxBufLen)
 {
-    T_SpiMaster master = cc6801_SpiMasterGet(pSpiDev->bBusNum);
-
     T_SpimTransfer xfer =
     {
         xfer.pTxBuffer = pTxBuf,
         xfer.bTxLength = bTxBufLen,
     };
 
-    return cc6801_SpimTransfer(&master, &xfer);
+    return cc6801_SpimTransfer(bBusNum, &xfer);
 }
 
-int cc6801_SpimRead(T_SpiDevice const * const pSpiDev,
-                        uint8_t       * pRxBuf,
-                        uint8_t         bRxBufLen)
+int cc6801_SpimRead(uint8_t   bBusNum,
+                    uint8_t * pRxBuf,
+                    uint8_t   bRxBufLen)
 {
-    T_SpiMaster master = cc6801_SpiMasterGet(pSpiDev->bBusNum);
-
     T_SpimTransfer xfer =
     {
         xfer.pRxBuffer = pRxBuf,
         xfer.bRxLength = bRxBufLen,
     };
 
-    return cc6801_SpimTransfer(&master, &xfer);
+    return cc6801_SpimTransfer(bBusNum, &xfer);
 }
 
-int cc6801_SpimWriteThenRead(T_SpiDevice const * const pSpiDev,
-                                 uint8_t const * pTxBuf,
-                                 uint8_t         bTxBufLen,
-                                 uint8_t       * pRxBuf,
-                                 uint8_t         bRxBufLen)
+int cc6801_SpimWriteThenRead(uint8_t         bBusNum,
+                             uint8_t const * pTxBuf,
+                             uint8_t         bTxBufLen,
+                             uint8_t       * pRxBuf,
+                             uint8_t         bRxBufLen)
 {
-    T_SpiMaster master = cc6801_SpiMasterGet(pSpiDev->bBusNum);
-
     T_SpimTransfer xfer =
     {
         xfer.pTxBuffer = pTxBuf,
@@ -293,5 +278,5 @@ int cc6801_SpimWriteThenRead(T_SpiDevice const * const pSpiDev,
         xfer.bRxLength = bRxBufLen,
     };
 
-    return cc6801_SpimTransfer(&master, &xfer);
+    return cc6801_SpimTransfer(bBusNum, &xfer);
 }

@@ -155,7 +155,6 @@ static void winbond_ReadData(uint32_t dwAddr, uint8_t *pbBuf, int iSize)
 
 int TEST_SpiInit(void)
 {
-    drvi_SpiInit(TEST_SPIM);
     return CC_SUCCESS;
 }
 

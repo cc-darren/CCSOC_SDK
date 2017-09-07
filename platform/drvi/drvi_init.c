@@ -23,14 +23,8 @@ void drvi_initialize(void)
     drvi_pwm0_init((void*)NULL);
     drvi_wdt_init(30000);
     
-    #if defined _SPI0_INUSE_ && (_SPI0_INUSE_)
-    drvi_SpiInit(0);
-    #endif
-    #if defined _SPI1_INUSE_ && (_SPI1_INUSE_)
-    drvi_SpiInit(1);
-    #endif
-    #if defined _SPI2_INUSE_ && (_SPI2_INUSE_)
-    drvi_SpiInit(2);
+    #if defined _SPI_INUSE_ && (_SPI_INUSE_)
+    drvi_SpiInit();
     #endif
     
     #if defined _I2C0_INUSE_ && (_I2C0_INUSE_)

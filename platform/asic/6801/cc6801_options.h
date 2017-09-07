@@ -50,6 +50,18 @@
 #define _Interface_UART2_   0x32
 
 
+// SPI Configuration List
+
+#define _SPI_CPHA_              0x01            /* clock phase */
+#define _SPI_CPOL_              0x02            /* clock polarity */
+#define _SPI_MODE_0_            (0|0)
+#define _SPI_MODE_1_            (0|_SPI_CPHA_)
+#define _SPI_MODE_2_            (_SPI_CPOL_|0)
+#define _SPI_MODE_3_            (_SPI_CPOL_|_SPI_CPHA_)
+#define _SPI_CS_HIGH_           0x04            /* chipselect active high? */
+#define _SPI_LSB_FIRST_         0x08            /* per-word bits-on-wire */
+#define _SPI_3WIRE_             0x10            /* SI/SO signals shared */
+
 
 
 

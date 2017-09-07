@@ -81,8 +81,6 @@ static void ssd1306_SpiInit(void)
     ssd1306_SetDataCmdLow();
 
     //ssd1306BoardInfo.fpComplete = ssd1306_EventHandlerCB;
-
-    drvi_SpiInit(OLED_SSD1306_SPI);
 }
 
 void ssd1306_SendCommand(uint8_t bByte)
