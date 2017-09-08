@@ -60,11 +60,15 @@
 #define _SPI_MODE_2_            (_SPI_CPOL_|0)
 #define _SPI_MODE_3_            (_SPI_CPOL_|_SPI_CPHA_)
 #define _SPI_CS_HIGH_           0x04            /* chipselect active high? */
-#define _SPI_LSB_FIRST_         0x08            /* per-word bits-on-wire */
+#define _SPI_LSB_FIRST_         0x08
 #define _SPI_3WIRE_             0x10            /* SI/SO signals shared */
 
 
+// I2C Configuration List
 
+#define _I2C_FREQ_100K_         100000
+#define _I2C_FREQ_200K_         200000
+#define _I2C_FREQ_400K_         400000
 
 #endif //_CC6801_OPTIONS_H_
 

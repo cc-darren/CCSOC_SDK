@@ -58,6 +58,12 @@ Head Block of The File
 #define TEST_SPIM GetIFID(TEST_SPI)
 #endif
 
+#if defined(TEST_I2C) && TEST_I2C
+#define TEST_I2C_BUS        GetIFID(TEST_I2C)
+#define TEST_I2C_ADDRESS    0x50
+#define TEST_I2C_CLKRATE    CC_I2C_FREQ_100K
+#endif
+
 /******************************************************************************
 Declaration of External Variables & Functions
 ******************************************************************************/

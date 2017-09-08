@@ -175,9 +175,12 @@
 #endif
 
 #if ((_SPI0_INUSE_) || (_SPI1_INUSE_) || (_SPI2_INUSE_))
-  #define _SPI_INUSE_
+  #define _SPI_INUSE_ TRUE
 #endif
 
+#if ((_I2C0_INUSE_) || (_I2C1_INUSE_))
+  #define _I2C_INUSE_ TRUE
+#endif
 
 //remove IF check temporately, I2C interface can connect to mutilple slave
 /*

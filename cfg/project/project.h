@@ -39,6 +39,7 @@ Head Block of The File
 // Sec 0: Comment block of the file
 
 // Sec 1: Include File
+#include "global.h"
 #include "asic_supported.h"
 #include "module_supported.h"
 

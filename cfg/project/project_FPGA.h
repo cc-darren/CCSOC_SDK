@@ -141,9 +141,12 @@ Head Block of The File
 *
 *    Ex : SPIM0_CONFIG         (_SPI_MODE_0_ | _SPI_CS_HIGH_)
 ***************************************************/
-#define SPIM0_CONFIG             (_SPI_MODE_0_)
-#define SPIM1_CONFIG             (_SPI_MODE_3_)
-#define SPIM2_CONFIG             (_SPI_MODE_3_)
+#define SPIM0_CONFIG            (_SPI_MODE_0_)
+#define SPIM1_CONFIG            (_SPI_MODE_3_)
+#define SPIM2_CONFIG            (_SPI_MODE_3_)
+
+#define I2C0_CLOCK              (_I2C_FREQ_100K_)
+#define I2C1_CLOCK              (_I2C_FREQ_100K_)
 
 
 /******************************************************************************

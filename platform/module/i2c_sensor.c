@@ -10,7 +10,7 @@
 ******************************************************************************/
 
 #include "global.h"
-#include "i2c.h"
+#include "drvi_i2c.h"
 #include "i2c_sensor.h"
 #include "ak09912.h"
 
@@ -19,7 +19,6 @@
 #define I2C0_CONFIG_FREQUENCY    CC_I2C_FREQ_100K
 #define I2C0_CONFIG_ADDRESS      AK09912_MAG_MEMS_I2C_ADDRESS
 
-static const cc_drv_i2c_t m_i2c_sensor = CC_DRV_I2C_INSTANCE(0);
 static volatile bool i2c_rx_done;  /**< Flag used to indicate that i2c instance completed the Rx transfer. */
 static volatile bool i2c_tx_done;  /**< Flag used to indicate that i2c instance completed the Tx transfer. */
 
@@ -27,15 +26,15 @@ static volatile bool i2c_tx_done;  /**< Flag used to indicate that i2c instance 
 /**
  * @brief i2c events handler.
  */
-void i2c_handler(cc_drv_i2c_evt_t const * p_event, void * p_context)
+void i2c_handler(T_I2cEvent const * p_event)
 {
 
-    switch(p_event->type)
+    switch(p_event->eType)
     {
-        case CC_DRV_I2C_RX_DONE:
+        case DRVI_I2C_READ_DONE:
             i2c_rx_done = true;
             break;
-        case CC_DRV_I2C_TX_DONE:
+        case DRVI_I2C_WRITE_DONE:
             i2c_tx_done = true;
             break;
         default:
@@ -48,19 +47,19 @@ void i2c_handler(cc_drv_i2c_evt_t const * p_event, void * p_context)
  */
 void i2c_init (void)
 {
-    const cc_drv_i2c_config_t i2c_sensor_config = {
-       .address            = I2C0_CONFIG_ADDRESS,
-       .frequency          = I2C0_CONFIG_FREQUENCY,
+    T_I2cDevice i2c_sensor_config = {
+       .bBusNum          = I2C0_INSTANCE_INDEX,
+       .bAddr            = I2C0_CONFIG_ADDRESS,
     };
 
-    cc_drv_i2c_init(&m_i2c_sensor, &i2c_sensor_config, i2c_handler, NULL);
+    drvi_I2cDeviceRegister(&i2c_sensor_config);
 }
 
 void i2c_data_read(uint8_t reg_addr, uint8_t *reg_data, uint8_t cnt)
 {
     //send i2c device address first
     i2c_tx_done = false;
-    cc_drv_i2c_tx(&m_i2c_sensor, &reg_addr, sizeof(reg_addr), true);
+    drvi_I2cWrite(I2C0_INSTANCE_INDEX, &reg_addr, sizeof(reg_addr));
 
     #if 0
     while(!i2c_tx_done)
@@ -71,7 +70,7 @@ void i2c_data_read(uint8_t reg_addr, uint8_t *reg_data, uint8_t cnt)
     #endif
     //Read data from i2c
     i2c_rx_done = false;
-    cc_drv_i2c_rx(&m_i2c_sensor, reg_data, cnt, false);
+    drvi_I2cRead(I2C0_INSTANCE_INDEX, reg_data, cnt);
     //APP_ERROR_CHECK(err_code);
     #if 0
     while(!i2c_rx_done)
@@ -89,7 +88,7 @@ void i2c_data_write(uint8_t reg_addr, uint8_t *reg_data)
     reg[1] = *reg_data;
 
     i2c_tx_done = false;
-    cc_drv_i2c_tx(&m_i2c_sensor, reg, sizeof(reg), false);
+    drvi_I2cWrite(I2C0_INSTANCE_INDEX, reg, sizeof(reg));
     #if 0
     while(!i2c_tx_done)
     {

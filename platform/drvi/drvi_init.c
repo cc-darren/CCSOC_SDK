@@ -11,9 +11,11 @@
  ****************************************************************************************
  */
 #include <stddef.h>
-#include "drvi_timer.h"
-#include "drvi_pwm.h"
 #include "drvi_gpio.h"
+#include "drvi_i2c.h"
+#include "drvi_pwm.h"
+#include "drvi_timer.h"
+#include "drvi_spi.h"
 #include "drvi_wdt.h"
 
 void drvi_initialize(void)
@@ -27,11 +29,8 @@ void drvi_initialize(void)
     drvi_SpiInit();
     #endif
     
-    #if defined _I2C0_INUSE_ && (_I2C0_INUSE_)
-    drvi_I2CInit(0);
-    #endif
-    #if defined _I2C1_INUSE_ && (_I2C1_INUSE_)
-    drvi_I2CInit(1);
+    #if defined _I2C_INUSE_ && (_I2C_INUSE_)
+    drvi_I2cInit();
     #endif
     
     

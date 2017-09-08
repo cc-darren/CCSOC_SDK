@@ -40,7 +40,7 @@ Head Block of The File
 #include <stdio.h>
 #include <string.h>
 
-#include "i2c.h"
+#include "drvi_i2c.h"
 
 #define I2C_BUFFER_SIZE 64
 
@@ -69,17 +69,10 @@ Declaration of Global Variables & Functions
 /******************************************************************************
 Declaration of static Global Variables & Functions
 ******************************************************************************/
-#define I2C0_INSTANCE_INDEX      0
-#define I2C0_CONFIG_FREQUENCY    CC_I2C_FREQ_100K
-#define I2C0_CONFIG_ADDRESS      0x50
-
-static const cc_drv_i2c_t i2c = CC_DRV_I2C_INSTANCE(0);
-//static const cc_drv_i2c_t i2c = CC_DRV_I2C_INSTANCE(1);
-
 __align(4) static T_I2CTxBuffer g_tI2c0TxBuffer = {0, {0}};
 __align(4) static UINT8 g_baI2c0RxBuffer[I2C_BUFFER_SIZE] = {0};
 
-INT16 microchip_24xx16_write(const cc_drv_i2c_t *i2c, UINT8 bAddr, UINT8 *pbBuf, INT16 iSize)
+INT16 microchip_24xx16_write(UINT8 bAddr, UINT8 *pbBuf, INT16 iSize)
 {
     INT16 iWSize = 0;
     UINT8 bWAddr = bAddr;
@@ -99,7 +92,7 @@ INT16 microchip_24xx16_write(const cc_drv_i2c_t *i2c, UINT8 bAddr, UINT8 *pbBuf,
 
         g_tI2c0TxBuffer.bAddr = bWAddr & 0xFF;
 
-        iRet = cc_drv_i2c_tx(i2c, (UINT8 const *) &g_tI2c0TxBuffer, iWSize+sizeof(g_tI2c0TxBuffer.bAddr), true);
+        iRet = drvi_I2cWrite(TEST_I2C_BUS, (UINT8 const *) &g_tI2c0TxBuffer, iWSize+sizeof(g_tI2c0TxBuffer.bAddr));
         if (CC_SUCCESS != iRet)
             continue;
 
@@ -110,25 +103,25 @@ INT16 microchip_24xx16_write(const cc_drv_i2c_t *i2c, UINT8 bAddr, UINT8 *pbBuf,
     return iRet;
 }
 
-void microchip_24xx16_read(const cc_drv_i2c_t *i2c, UINT8 bAddr, UINT8 *pbBuf, INT16 iSize)
+void microchip_24xx16_read(UINT8 bAddr, UINT8 *pbBuf, INT16 iSize)
 {
     INT16 iRet = CC_SUCCESS;
 
     do
     {
-        iRet = cc_drv_i2c_tx(i2c, &bAddr, sizeof(bAddr), true);
+        iRet = drvi_I2cWrite(TEST_I2C_BUS, &bAddr, sizeof(bAddr));
     } while(CC_SUCCESS != iRet);
 
     do
     {
-        iRet = cc_drv_i2c_rx(i2c, pbBuf, iSize, false);
+        iRet = drvi_I2cRead(TEST_I2C_BUS, pbBuf, iSize);
     } while(CC_SUCCESS != iRet);
 }
 
 
-INT16 TEST_I2cInit(cc_drv_i2c_config_t *config)
+INT16 TEST_I2cInit(T_I2cDevice *tConfig)
 {
-    cc_drv_i2c_init(&i2c, config, NULL, NULL);
+    drvi_I2cDeviceRegister(tConfig);
 
     return CC_SUCCESS;
 }
@@ -140,9 +133,9 @@ void TEST_I2cRW(UINT32 dwCount)
     INT16 iSize = 0;
     UINT8 bAddr = 0;
 
-    cc_drv_i2c_config_t i2c_config = {
-       .address            = I2C0_CONFIG_ADDRESS,
-       .frequency          = I2C0_CONFIG_FREQUENCY,
+    T_I2cDevice i2c_config = {
+       .bBusNum          = TEST_I2C_BUS,
+       .bAddr            = TEST_I2C_ADDRESS,
     };
 
     printf("I2C RW test Start!\r\n");
@@ -155,7 +148,7 @@ void TEST_I2cRW(UINT32 dwCount)
         if (iSize >= I2C_BUFFER_SIZE)
             iSize = 0;
 
-        i2c_config.address = (I2C0_CONFIG_ADDRESS | iBlock++);
+        i2c_config.bAddr = (TEST_I2C_ADDRESS | iBlock++);
         TEST_I2cInit(&i2c_config);
 
         bAddr = 0x00;
@@ -183,9 +176,9 @@ void TEST_I2cRW(UINT32 dwCount)
 //        memset(&g_tI2c0TxBuffer.baBuffer[56], 0x00, 4);
 //        memset(&g_tI2c0TxBuffer.baBuffer[60], 0x99, 4);
 
-        microchip_24xx16_write(&i2c, bAddr, g_tI2c0TxBuffer.baBuffer, iSize);
+        microchip_24xx16_write(bAddr, g_tI2c0TxBuffer.baBuffer, iSize);
 
-        microchip_24xx16_read(&i2c, bAddr, g_baI2c0RxBuffer, iSize);
+        microchip_24xx16_read(bAddr, g_baI2c0RxBuffer, iSize);
 
         if (memcmp(g_tI2c0TxBuffer.baBuffer, g_baI2c0RxBuffer, iSize))
             printf("I2C RW test Fail, w[0x%X],r[0x%X],s[%d]\r\n", g_tI2c0TxBuffer.baBuffer[0], g_baI2c0RxBuffer[0], iSize);
