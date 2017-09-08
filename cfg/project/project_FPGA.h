@@ -81,11 +81,6 @@ Head Block of The File
 *  UseInterface(_type,_id) helps to define the interface type and id
 *               _type can be set to : SPI/I2C/UART
 *               _id   can be set to : 0/1/2/3 , dependson ASIC channels num.
-*  
-*  GetIFType(_func_IF) Retrieve interface type from _fucn_IF, ACC_IF/MAG_IF/...etc.
-*  GetIFID(_func_IF)   Retrieve interface id from _fucn_IF, ACC_IF/MAG_IF/...etc.
-*  
-*  
 ***************************************************/
 /**************************************************
 *   Choose ACC sensor and config ACC interface
@@ -93,8 +88,12 @@ Head Block of The File
 *   (please select ACC_NULL if ACC is not in use)
 *
 *   ACC_IF :  the interface assigned to ACC
+*
+*   ACC_IF_TYPE / ACC_IF_ID will be generated automatically.
+*   ACC_IF_TYPE : the ACC interface tpye
+*   ACC_IF_ID   : the ACC interface id
 ***************************************************/
-#define MODULE_ACC              ACC_NULL
+#define MODULE_ACC              ACC_ST_LSM6DSL
 #define ACC_IF                  UseInterface(SPI,1)
 
 
@@ -105,6 +104,10 @@ Head Block of The File
 *   (please select MAG_NULL if MAG is not in use)
 *
 *   MAG_IF :  the interface assigned to MAG
+*
+*   MAG_IF_TYPE / MAG_IF_ID will be generated automatically.
+*   MAG_IF_TYPE : the MAG interface tpye
+*   MAG_IF_ID   : the MAG interface id
 ***************************************************/
 #define MODULE_MAG              MAG_NULL
 #define MAG_IF                  UseInterface(I2C,0)
@@ -117,8 +120,12 @@ Head Block of The File
 *   (please select GYR_NULL if GYR is not in use)
 *
 *   GYR_IF :  the interface assigned to GYR
+*
+*   GYR_IF_TYPE / GYR_IF_ID will be generated automatically.
+*   GYR_IF_TYPE : the GYR interface tpye
+*   GYR_IF_ID   : the GYR interface id
 ***************************************************/
-#define MODULE_GYR              GYR_ST_LSM6DSL
+#define MODULE_GYR              GYR_NULL
 #define GYR_IF                  UseInterface(SPI,1)
 
 
@@ -129,6 +136,10 @@ Head Block of The File
 *   (please select OLED_NULL if OLED is not in use)
 *
 *   OLED_IF : the interface assigned to OLED
+*
+*   OLED_IF_TYPE / OLED_IF_ID will be generated automatically.
+*   OLED_IF_TYPE : the OLED interface tpye
+*   OLED_IF_ID   : the OLED interface id
 ***************************************************/
 #define MODULE_OLED             OLED_SOLOMON_SSD1306
 #define OLED_IF                 UseInterface(SPI,2)

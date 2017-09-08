@@ -49,7 +49,8 @@
   #endif
   
   #if ((defined ACC_IF) && (ACC_IF))
-    //TODO: ACC interface available
+    #define ACC_IF_TYPE (ACC_IF&0xF0)
+    #define ACC_IF_ID   (ACC_IF&0x0F)
   #else
     #error "ACC interface not found"
   #endif
@@ -87,7 +88,8 @@
   #endif
   
   #if ((defined MAG_IF) && (MAG_IF))
-    //TODO: MAG interface available
+    #define MAG_IF_TYPE (MAG_IF&0xF0)
+    #define MAG_IF_ID   (MAG_IF&0x0F)
   #else
     #error "MAG interface not found"
   #endif
@@ -113,7 +115,8 @@
   #endif
   
   #if ((defined GYR_IF) && (GYR_IF))
-    //TODO: GYR interface available
+    #define GYR_IF_TYPE (GYR_IF&0xF0)
+    #define GYR_IF_ID   (GYR_IF&0x0F)
   #else
     #error "GYR interface not found"
   #endif
@@ -139,7 +142,8 @@
   #endif
   
   #if ((defined OLED_IF) && (OLED_IF))
-    //TODO: OLED interface available
+    #define OLED_IF_TYPE (OLED_IF&0xF0)
+    #define OLED_IF_ID   (OLED_IF&0x0F)
   #else
     #error "OLED interface not found"
   #endif

@@ -37,10 +37,13 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "LSM6DS3_ACC_GYRO_driver.h"
-#include "spi_sensor.h"
+#include "project.h"
+#include "drvi_spi.h"
 
 #define SPI_ID 1
 
+static uint8_t m_rx_buf[32];
+static uint8_t m_tx_buf[32];
 /* Private typedef -----------------------------------------------------------*/
 
 /* Private define ------------------------------------------------------------*/
@@ -54,8 +57,8 @@
 //extern uint8_t Sensor_IO_Read(void *handle, uint8_t ReadAddr, uint8_t *pBuffer, uint16_t nBytesToRead);
 
 /* Private function prototypes -----------------------------------------------*/
-static status_t LSM6DS3_ACC_GYRO_ReadReg(void *handle, u8_t Reg, u8_t *Data);
-static status_t LSM6DS3_ACC_GYRO_WriteReg(void *handle, u8_t Reg, u8_t Data);
+static status_t LSM6DS3_ACC_GYRO_ReadReg(void *handle, u8_t RegAddr, u8_t *Data);
+static status_t LSM6DS3_ACC_GYRO_WriteReg(void *handle, u8_t RegAddr, u8_t Data);
 
 /* Private functions ---------------------------------------------------------*/
 
@@ -67,10 +70,16 @@ static status_t LSM6DS3_ACC_GYRO_WriteReg(void *handle, u8_t Reg, u8_t Data);
 * Output          : Data REad
 * Return          : None
 *******************************************************************************/
-static status_t LSM6DS3_ACC_GYRO_ReadReg(void *handle, u8_t Reg, u8_t *Data)
+static status_t LSM6DS3_ACC_GYRO_ReadReg(void *handle, u8_t RegAddr, u8_t *Data)
 {
 
-  spi_data_write_then_read(Reg, Data, 1, 1);
+    //spi_data_write_then_read(Reg, Data, 1, 1);
+
+    m_tx_buf[0] = RegAddr | 0x80;
+
+    DRV_WRITE_THEN_READ(ACC_IF_ID,m_tx_buf,1,m_rx_buf,1);
+    
+    *Data = m_rx_buf[0];
 //  if (Sensor_IO_Read(handle, Reg, Data, 1))
 //  {
 //    return MEMS_ERROR;
@@ -89,10 +98,16 @@ static status_t LSM6DS3_ACC_GYRO_ReadReg(void *handle, u8_t Reg, u8_t *Data)
 * Output          : None
 * Return          : None
 *******************************************************************************/
-static status_t LSM6DS3_ACC_GYRO_WriteReg(void *handle, u8_t Reg, u8_t Data)
+static status_t LSM6DS3_ACC_GYRO_WriteReg(void *handle, u8_t RegAddr, u8_t Data)
 {
+    //int i;
+    //spi_data_write(Reg, &Data, 1, 1);
+  
+    m_tx_buf[0] = RegAddr & 0xFF;
+    m_tx_buf[1] = Data;
+    
 
-  spi_data_write(Reg, &Data, 1, 1);
+    DRV_WRITE(ACC_IF_ID, m_tx_buf,2);
 //  if (Sensor_IO_Write(handle, Reg, &Data, 1))
 //  {
 //    return MEMS_ERROR;
@@ -112,11 +127,22 @@ static status_t LSM6DS3_ACC_GYRO_WriteReg(void *handle, u8_t Reg, u8_t Data)
 * Output          : None
 * Return          : None
 *******************************************************************************/
-u8_t LSM6DS3_ACC_GYRO_WriteMulti(void *handle, u8_t Reg, u8_t *Bufp, u16_t len)
+u8_t LSM6DS3_ACC_GYRO_WriteMulti(void *handle, u8_t RegAddr, u8_t *Bufp, u16_t len)
 {
+    u8_t *reg_data;
+    
+    m_tx_buf[0] = RegAddr & 0xFF;
+    reg_data = Bufp;
 
-  spi_data_write(Reg, Bufp, len, SPI_ID);
-  return MEMS_SUCCESS;
+    for(int i=1;i<len+1;i++)
+    {
+        m_tx_buf[i] = *reg_data;
+        reg_data++;
+    }
+
+    DRV_WRITE(ACC_IF_ID, m_tx_buf, len+1);
+    
+    return MEMS_SUCCESS;
 //  if (Sensor_IO_Write(handle, Reg, Bufp, len))
 //  {
 //    return MEMS_ERROR;
@@ -136,11 +162,22 @@ u8_t LSM6DS3_ACC_GYRO_WriteMulti(void *handle, u8_t Reg, u8_t *Bufp, u16_t len)
 * Output          : None
 * Return          : None
 *******************************************************************************/
-u8_t LSM6DS3_ACC_GYRO_ReadMulti(void *handle, u8_t Reg, u8_t *Bufp, u16_t len)
+u8_t LSM6DS3_ACC_GYRO_ReadMulti(void *handle, u8_t RegAddr, u8_t *Bufp, u16_t len)
 {
 
-  spi_data_write_then_read(Reg, Bufp, len, SPI_ID);
-  return MEMS_SUCCESS;	
+    
+    m_tx_buf[0] = RegAddr | 0x80;
+
+    DRV_WRITE_THEN_READ(ACC_IF_ID,m_tx_buf,1,m_rx_buf,len);
+    
+    for(int i=0;i<len;i++)
+    {
+        *Bufp = m_rx_buf[i];
+        Bufp++;
+    }
+
+
+    return MEMS_SUCCESS;	
 //  if (Sensor_IO_Read(handle, Reg, Bufp, len))
 //  {
 //    return MEMS_ERROR;

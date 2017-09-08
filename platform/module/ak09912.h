@@ -8,10 +8,12 @@
 
 /* Includes ------------------------------------------------------------------*/
 /* Exported types ------------------------------------------------------------*/
+#ifndef _MAG_SHARE_TYPE_
+#define _MAG_SHARE_TYPE_
 #define MAG_Init()                              AK09912_MAG_Init()
 #define MAG_GetMagRaw(buf)                      AK09912_MAG_GetMagRaw(buf)
 #define MAG_GetMagRawBurst(buf, buf_size)       AK09912_MAG_GetMagRawBurst(buf, buf_size)
-
+#endif //_MAG_SHARE_TYPE_
 //these could change accordingly with the architecture
 
 #ifndef __ARCHDEP__TYPES

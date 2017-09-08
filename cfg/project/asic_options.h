@@ -42,8 +42,7 @@
 
 
 #define UseInterface(_type,_id)   _Interface_##_type##_id##_
-#define GetIFType(_func_IF)       (_func_IF & 0xF0)
-#define GetIFID(_func_IF)         (_func_IF & 0x0F)
+
 
 
 #endif  //_ASIC_OPTIONS_H_

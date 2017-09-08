@@ -55,11 +55,11 @@ Head Block of The File
 #define TEST_RTC                    1
 
 #if (TEST_SPI)
-#define TEST_SPIM GetIFID(TEST_SPI)
+#define TEST_SPIM ACC_IF_ID
 #endif
 
 #if defined(TEST_I2C) && TEST_I2C
-#define TEST_I2C_BUS        GetIFID(TEST_I2C)
+#define TEST_I2C_BUS        MAG_IF_ID
 #define TEST_I2C_ADDRESS    0x50
 #define TEST_I2C_CLKRATE    CC_I2C_FREQ_100K
 #endif

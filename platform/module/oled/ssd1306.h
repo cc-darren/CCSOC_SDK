@@ -42,7 +42,7 @@
 #define oled_DrawBitmap(x0,y0,x1,y1,bmp)              ssd1306_DrawBitmap(x0,y0,x1,y1,bmp)
 #endif //_OLED_SHARE_TYPE_
 
-#define OLED_SSD1306_SPI                              GetIFID(OLED_IF)
+#define OLED_SSD1306_SPI                              OLED_IF_ID
 #define OLED_SSD1306_PWR                              15
 #define OLED_SSD1306_RST                              31
 #define OLED_SSD1306_DC                               14

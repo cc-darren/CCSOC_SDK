@@ -105,6 +105,23 @@ typedef enum
 
 /* Exported constants --------------------------------------------------------*/
 
+
+
+/* Imported macro ------------------------------------------------------------*/
+#if (ACC_IF_TYPE == _IF_SPI_)
+    #define DRV_WRITE_THEN_READ(bus,tbuf,tlen,rbuf,rlen)    drvi_SpiWriteThenRead(bus,tbuf,tlen,rbuf,rlen)
+    #define DRV_WRITE(bus,buf,len)                          drvi_SpiWrite(bus,buf,len)
+#elif (ACC_IF_TYPE == _IF_I2C_)
+    #define DRV_WRITE_THEN_READ(bus,tbuf,tlen,rbuf,rlen)    drvi_I2CWriteThenRead(bus,tbuf,tlen,rbuf,rlen)
+    #define DRV_WRITE(bus,buf,len)                          drvi_I2CWrite(bus,buf,len)
+#else
+    #define DRV_WRITE_THEN_READ(bus,tbuf,tlen,rbuf,rlen)    drvi_SpiWriteThenRead
+    #define DRV_WRITE(bus,buf,len)                          drvi_SpiWrite
+#endif
+/* Imported constants --------------------------------------------------------*/
+
+
+
 /************** I2C Address *****************/
 
 #define LSM6DS3_ACC_GYRO_I2C_ADDRESS_LOW   0xD4  // SAD[0] = 0
@@ -2920,7 +2937,7 @@ status_t LSM6DS3_ACC_GYRO_SH0_WriteByte(void *handle, u8_t SlvAddr, u8_t Reg, u8
 
 /************** Generic Function  *******************/
 
-u8_t LSM6DS3_ACC_GYRO_WriteMulti( void *handle, u8_t Reg, u8_t *Bufp, u16_t len );
+u8_t LSM6DS3_ACC_GYRO_WriteMulti( void *handle, u8_t RegAddr, u8_t *Bufp, u16_t len );
 u8_t LSM6DS3_ACC_GYRO_ReadMulti( void *handle, u8_t Reg, u8_t *Bufp, u16_t len );
 
 status_t LSM6DS3_X_Init( void );
