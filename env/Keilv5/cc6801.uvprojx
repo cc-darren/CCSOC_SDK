@@ -568,11 +568,6 @@
               <FileType>1</FileType>
               <FilePath>..\..\platform\module\LSM6DS3_ACC_GYRO_driver.c</FilePath>
             </File>
-            <File>
-              <FileName>spi_sensor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\module\spi_sensor.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -1780,11 +1775,6 @@
               <FileName>LSM6DS3_ACC_GYRO_driver.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\module\LSM6DS3_ACC_GYRO_driver.c</FilePath>
-            </File>
-            <File>
-              <FileName>spi_sensor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\module\spi_sensor.c</FilePath>
             </File>
           </Files>
         </Group>
