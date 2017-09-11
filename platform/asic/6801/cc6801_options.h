@@ -51,6 +51,35 @@
 #define _Interface_UART2_   0x32
 
 
+// GPIO Configuration List
+
+#define GPIO_MODE_GPIO          0
+#define GPIO_MODE_SPI_4WIRE     1
+#define GPIO_MODE_I2S_MASTER    2
+#define GPIO_MODE_I2S_SLAVE     3
+#define GPIO_MODE_UART          4
+#define GPIO_MODE_DMIC          5
+//#define GPIO_MODE_DMIC        6        //Not Support
+#define GPIO_MODE_I2C_GPIO      7
+#define GPIO_MODE_GPIO_I2C      8
+#define GPIO_MODE_PWM_GPIO      9
+#define GPIO_MODE_GPIO_PWM      10
+#define GPIO_MODE_SPI_3WIRE     11
+
+#define GPIO_PULL_DOWN          0x01
+#define GPIO_PULL_UP            0x02
+
+#define GPIO_PINMUX_DISABLE     0x04
+#define GPIO_PINMUX_ENABLE      0x08
+
+#define GPIO_DIR_INPUT          0x10
+#define GPIO_DIR_OUTPUT         0x11
+
+#define GPIO_INPUT_NOPULL       0x12
+#define GPIO_OUTPUT_LOW         0x14
+#define GPIO_OUTPUT_HIGH        0x18
+
+
 // SPI Configuration List
 
 #define _SPI_CPHA_              0x01            /* clock phase */

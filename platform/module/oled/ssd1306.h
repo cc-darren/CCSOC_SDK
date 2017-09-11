@@ -20,6 +20,7 @@
 
 #include <stdint.h>
 #include "project.h"
+#include "drvi_gpio.h"
 #include "ssd1306_128x32.h"
 
 /* Exported macro ------------------------------------------------------------*/
@@ -43,9 +44,9 @@
 #endif //_OLED_SHARE_TYPE_
 
 #define OLED_SSD1306_SPI                              OLED_IF_ID
-#define OLED_SSD1306_PWR                              15
-#define OLED_SSD1306_RST                              31
-#define OLED_SSD1306_DC                               14
+#define OLED_SSD1306_PWR                              GPIO_PIN_15
+#define OLED_SSD1306_RST                              GPIO_PIN_31
+#define OLED_SSD1306_DC                               GPIO_PIN_14
 
 #define SSD1306_LCDWIDTH                              128
 #define SSD1306_LCDHEIGHT                             32

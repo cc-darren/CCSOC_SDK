@@ -12,19 +12,68 @@
  */
 #ifndef _DRVI_GPIO_H_
 #define _DRVI_GPIO_H_
+#include "project.h"
 #include "gpio.h"
 
+#define drvi_GpioPinMuxInit()             cc6801_gpio_pinmux_init()
+#define drvi_GpioDirectInput(x)           cc6801_GpioDirectInput(x)
+#define drvi_GpioDirectOutput(x)          cc6801_GpioDirectOutput(x)
 
-#define drvi_gpio_pinmux_init()            cc6801_gpio_pinmux_init()
-#define drvi_gpio_direction_input(x)       cc6801_gpio_direction_input(x)
-#define drvi_gpio_direction_output(x)      cc6801_gpio_direction_output(x)
+#define drvi_GpioRead(x)                  cc6801_GpioRead(x)
+#define drvi_GpioWrite(x,y)               cc6801_GpioWrite(x,y)
 
-#define drvi_gpio_read(x)                  cc6801_gpio_read(x)
-#define drvi_gpio_write(x,y)               cc6801_gpio_write(x,y)
+#define drvi_RequestIrq(pin,func,type)    cc6801_RequestIrq(pin,func,type);
+#define drvi_EnableIrq(pin)               cc6801_IrqEnable(pin);
+#define drvi_DisableIrq(pin)              cc6801_IrqDisable(pin);
 
-#define drvi_request_irq(pin,func,type)    cc6801_request_irq(pin,func,type);
-#define drvi_enable_irq(pin)               cc6801_enable_irq(pin);
-#define drvi_disable_irq(pin)              cc6801_disable_irq(pin);
+#define GPIO_PIN_0               0
+#define GPIO_PIN_1               1
+#define GPIO_PIN_2               2
+#define GPIO_PIN_3               3
+#define GPIO_PIN_4               4
+#define GPIO_PIN_5               5
+#define GPIO_PIN_6               6
+#define GPIO_PIN_7               7
+#define GPIO_PIN_8               8
+#define GPIO_PIN_9               9
+#define GPIO_PIN_10              10
+#define GPIO_PIN_11              11
+#define GPIO_PIN_12              12
+#define GPIO_PIN_13              13
+#define GPIO_PIN_14              14
+#define GPIO_PIN_15              15
+#define GPIO_PIN_16              16
+#define GPIO_PIN_17              17
+#define GPIO_PIN_18              18
+#define GPIO_PIN_19              19
+#define GPIO_PIN_20              20
+#define GPIO_PIN_21              21
+#define GPIO_PIN_22              22
+#define GPIO_PIN_23              23
+#define GPIO_PIN_24              24
+#define GPIO_PIN_25              25
+#define GPIO_PIN_26              26
+#define GPIO_PIN_27              27
+#define GPIO_PIN_28              28
+#define GPIO_PIN_29              29
+#define GPIO_PIN_30              30
+#define GPIO_PIN_31              31
+#define GPIO_PIN_32              32
+#define GPIO_PIN_33              33
+#define GPIO_PIN_34              34
+#define GPIO_PIN_35              35
+#define GPIO_PIN_36              36
+#define GPIO_PIN_37              37
+#define GPIO_PIN_38              38
+#define GPIO_PIN_39              39
+#define GPIO_PIN_40              40
+#define GPIO_PIN_41              41
+#define GPIO_PIN_42              42
+#define GPIO_PIN_43              43
+#define GPIO_PIN_44              44
+#define GPIO_PIN_45              45
+#define GPIO_PIN_46              46
+#define GPIO_PIN_47              47
 
 
 /*
@@ -53,6 +102,8 @@ enum
 
     IRQ_TYPE_PROBE      = 0x00000010,
 };
+
+typedef void (*fpGpiIrqHandler)(void);
 
 
 

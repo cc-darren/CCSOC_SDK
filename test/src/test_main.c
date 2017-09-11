@@ -159,14 +159,14 @@ static int cc6801_Init(void)
 {
     memset(&S_Count, 0, sizeof(struct S_ModuleExecCount));
 
-    drvi_gpio_pinmux_init();
+    drvi_GpioPinMuxInit();
 #if (TEST_AES)
     TEST_AesInit();
 #endif
     if (g_GpiTestStart)
     {
-        drvi_request_irq(1, Gpi_Callback, IRQ_TYPE_EDGE_FALLING);
-        drvi_enable_irq(1);
+        drvi_RequestIrq(1, Gpi_Callback, IRQ_TYPE_EDGE_FALLING);
+        drvi_EnableIrq(1);
     }
 #if (TEST_UART0_TXDMA) || (TEST_UART0_RXDMA)
     TEST_UartInit();
@@ -310,8 +310,8 @@ int TEST_Main(void)
 #endif
         if (((dwLoop >> 3) << 3) == dwLoop)
         {
-            drvi_gpio_write(3, 0);
-            drvi_gpio_write(3, 1);
+            drvi_GpioWrite(3, 0);
+            drvi_GpioWrite(3, 1);
         }
         dwLoop++;
     }

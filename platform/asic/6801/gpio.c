@@ -35,291 +35,371 @@
 
 volatile uint32_t GPIO_INTR = 0;
 
-static cc6801_irq_handler cc6801_isr[NUMBER_OF_PINS] = {0};
+static fpGpiIrqHandler g_fpGpiIsr[NUMBER_OF_PINS] = {0};
 
 void GPIO_IRQHandler(void)
 {
-    uint32_t pin_number;
-    cc6801_irq_handler callback;
+    uint32_t dwPinNum;
+    fpGpiIrqHandler callback;
 
-    volatile unsigned int int_status;
-    unsigned int    mask;
+    volatile uint32_t dwIntStatus;
+    uint32_t dwMask;
 
     //get vectors
-    int_status = *((volatile unsigned int *)(&regGPIO0->dw.intSts));
+    dwIntStatus = *((volatile unsigned int *)(&regGPIO0->dw.intSts));
 
-    while(int_status)
+    while(dwIntStatus)
     {
-        mask = int_status & (~int_status+1);
-        switch(mask)
+        dwMask = dwIntStatus & (~dwIntStatus+1);
+        switch(dwMask)
         {
-            case 0x00000001: pin_number = 0;    break;
-            case 0x00000002: pin_number = 1;    break;
-            case 0x00000004: pin_number = 2;    break;
-            case 0x00000008: pin_number = 3;    break;
-            case 0x00000010: pin_number = 4;    break;
-            case 0x00000020: pin_number = 5;    break;
-            case 0x00000040: pin_number = 6;    break;
-            case 0x00000080: pin_number = 7;    break;
-            case 0x00000100: pin_number = 8;    break;
-            case 0x00000200: pin_number = 9;    break;
-            case 0x00000400: pin_number = 10;   break;
-            case 0x00000800: pin_number = 11;   break;
-            case 0x00001000: pin_number = 12;   break;
-            case 0x00002000: pin_number = 13;   break;
-            case 0x00004000: pin_number = 14;   break;
-            case 0x00008000: pin_number = 15;   break;
-            case 0x00010000: pin_number = 16;   break;
-            case 0x00020000: pin_number = 17;   break;
-            case 0x00040000: pin_number = 18;   break;
-            case 0x00080000: pin_number = 19;   break;
-            case 0x00100000: pin_number = 20;   break;
-            case 0x00200000: pin_number = 21;   break;
-            case 0x00400000: pin_number = 22;   break;
-            case 0x00800000: pin_number = 23;   break;
-            case 0x01000000: pin_number = 24;   break;
-            case 0x02000000: pin_number = 25;   break;
-            case 0x04000000: pin_number = 26;   break;
-            case 0x08000000: pin_number = 27;   break;
-            case 0x10000000: pin_number = 28;   break;
-            case 0x20000000: pin_number = 29;   break;
-            case 0x40000000: pin_number = 30;   break;
-            case 0x80000000: pin_number = 31;   break;
+            case 0x00000001: dwPinNum = 0;    break;
+            case 0x00000002: dwPinNum = 1;    break;
+            case 0x00000004: dwPinNum = 2;    break;
+            case 0x00000008: dwPinNum = 3;    break;
+            case 0x00000010: dwPinNum = 4;    break;
+            case 0x00000020: dwPinNum = 5;    break;
+            case 0x00000040: dwPinNum = 6;    break;
+            case 0x00000080: dwPinNum = 7;    break;
+            case 0x00000100: dwPinNum = 8;    break;
+            case 0x00000200: dwPinNum = 9;    break;
+            case 0x00000400: dwPinNum = 10;   break;
+            case 0x00000800: dwPinNum = 11;   break;
+            case 0x00001000: dwPinNum = 12;   break;
+            case 0x00002000: dwPinNum = 13;   break;
+            case 0x00004000: dwPinNum = 14;   break;
+            case 0x00008000: dwPinNum = 15;   break;
+            case 0x00010000: dwPinNum = 16;   break;
+            case 0x00020000: dwPinNum = 17;   break;
+            case 0x00040000: dwPinNum = 18;   break;
+            case 0x00080000: dwPinNum = 19;   break;
+            case 0x00100000: dwPinNum = 20;   break;
+            case 0x00200000: dwPinNum = 21;   break;
+            case 0x00400000: dwPinNum = 22;   break;
+            case 0x00800000: dwPinNum = 23;   break;
+            case 0x01000000: dwPinNum = 24;   break;
+            case 0x02000000: dwPinNum = 25;   break;
+            case 0x04000000: dwPinNum = 26;   break;
+            case 0x08000000: dwPinNum = 27;   break;
+            case 0x10000000: dwPinNum = 28;   break;
+            case 0x20000000: dwPinNum = 29;   break;
+            case 0x40000000: dwPinNum = 30;   break;
+            case 0x80000000: dwPinNum = 31;   break;
             default: break;
         }
 
-        callback = cc6801_isr[pin_number];
+        callback = g_fpGpiIsr[dwPinNum];
         if (callback)
             callback();
 
         //Write 1 clear interrupt
-        *((volatile unsigned int *)(&regGPIO0->dw.intSts)) = mask;
-        int_status &= ~mask;
+        *((volatile uint32_t *)(&regGPIO0->dw.intSts)) = dwMask;
+        dwIntStatus &= ~dwMask;
     }
 
-    int_status = *((volatile unsigned int *)(&regGPIO1->dw.intSts));
+    dwIntStatus = *((volatile uint32_t *)(&regGPIO1->dw.intSts));
 
-    while(int_status)
+    while(dwIntStatus)
     {
-        mask = int_status & (~int_status+1);
-        switch(mask)
+        dwMask = dwIntStatus & (~dwIntStatus+1);
+        switch(dwMask)
         {
-            case 0x00000001: pin_number = 32;   break;
-            case 0x00000002: pin_number = 33;   break;
-            case 0x00000004: pin_number = 34;   break;
-            case 0x00000008: pin_number = 35;   break;
-            case 0x00000010: pin_number = 36;   break;
-            case 0x00000020: pin_number = 37;   break;
-            case 0x00000040: pin_number = 38;   break;
-            case 0x00000080: pin_number = 39;   break;
-            case 0x00000100: pin_number = 40;   break;
-            case 0x00000200: pin_number = 41;   break;
-            case 0x00000400: pin_number = 42;   break;
-            case 0x00000800: pin_number = 43;   break;
-            case 0x00001000: pin_number = 44;   break;
-            case 0x00002000: pin_number = 45;   break;
-            case 0x00004000: pin_number = 46;   break;
-            case 0x00008000: pin_number = 47;   break;
+            case 0x00000001: dwPinNum = 32;   break;
+            case 0x00000002: dwPinNum = 33;   break;
+            case 0x00000004: dwPinNum = 34;   break;
+            case 0x00000008: dwPinNum = 35;   break;
+            case 0x00000010: dwPinNum = 36;   break;
+            case 0x00000020: dwPinNum = 37;   break;
+            case 0x00000040: dwPinNum = 38;   break;
+            case 0x00000080: dwPinNum = 39;   break;
+            case 0x00000100: dwPinNum = 40;   break;
+            case 0x00000200: dwPinNum = 41;   break;
+            case 0x00000400: dwPinNum = 42;   break;
+            case 0x00000800: dwPinNum = 43;   break;
+            case 0x00001000: dwPinNum = 44;   break;
+            case 0x00002000: dwPinNum = 45;   break;
+            case 0x00004000: dwPinNum = 46;   break;
+            case 0x00008000: dwPinNum = 47;   break;
             default: break;
         }
 
-        callback = cc6801_isr[pin_number];
+        callback = g_fpGpiIsr[dwPinNum];
         if (callback)
             callback();
 
         //Write 1 clear interrupt
-        *((volatile unsigned int *)(&regGPIO1->dw.intSts)) = mask;
-        int_status &= ~mask;
+        *((volatile uint32_t *)(&regGPIO1->dw.intSts)) = dwMask;
+        dwIntStatus &= ~dwMask;
     }
 
     GPIO_INTR = 1;
 }
 
-static int cc6801_gpio_irq_set_type(uint32_t pin_number, uint32_t type)
+void cc6801_IrqEnable(uint32_t dwPinNum)
+{
+    REG_GPIO(dwPinNum)->dw.intSts |= (1UL << PIN(dwPinNum));
+    REG_GPIO(dwPinNum)->dw.intEn |= (1UL << PIN(dwPinNum));
+}
+
+void cc6801_IrqDisable(uint32_t dwPinNum)
+{
+    REG_GPIO(dwPinNum)->dw.intEn &= ~(1UL << PIN(dwPinNum));
+}
+
+static int cc6801_IrqTypeSet(uint32_t dwPinNum, uint32_t dwType)
 {
 
-    switch (type & IRQ_TYPE_SENSE_MASK)
+    switch (dwType & IRQ_TYPE_SENSE_MASK)
     {
         case IRQ_TYPE_EDGE_RISING:
-            REG_GPIO(pin_number)->dw.intType |= (1 << PIN(pin_number));
-            REG_GPIO(pin_number)->dw.intPolarity &= ~(1 << PIN(pin_number));
+            REG_GPIO(dwPinNum)->dw.intType |= (1 << PIN(dwPinNum));
+            REG_GPIO(dwPinNum)->dw.intPolarity &= ~(1 << PIN(dwPinNum));
             break;
 
         case IRQ_TYPE_EDGE_FALLING:
-            REG_GPIO(pin_number)->dw.intType |= (1 << PIN(pin_number));
-            REG_GPIO(pin_number)->dw.intPolarity |= (1 << PIN(pin_number));
+            REG_GPIO(dwPinNum)->dw.intType |= (1 << PIN(dwPinNum));
+            REG_GPIO(dwPinNum)->dw.intPolarity |= (1 << PIN(dwPinNum));
             break;
 
         case IRQ_TYPE_LEVEL_HIGH:
-            REG_GPIO(pin_number)->dw.intType &= ~(1 << PIN(pin_number));
-            REG_GPIO(pin_number)->dw.intPolarity &= ~(1 << PIN(pin_number));
+            REG_GPIO(dwPinNum)->dw.intType &= ~(1 << PIN(dwPinNum));
+            REG_GPIO(dwPinNum)->dw.intPolarity &= ~(1 << PIN(dwPinNum));
             break;
 
         case IRQ_TYPE_LEVEL_LOW:
-            REG_GPIO(pin_number)->dw.intType &= ~(1 << PIN(pin_number));
-            REG_GPIO(pin_number)->dw.intPolarity |= (1 << PIN(pin_number));
+            REG_GPIO(dwPinNum)->dw.intType &= ~(1 << PIN(dwPinNum));
+            REG_GPIO(dwPinNum)->dw.intPolarity |= (1 << PIN(dwPinNum));
             break;
 
         default:
             return CC_ERROR_INVALID_DATA;
     }
 
-    REG_GPIO(pin_number)->dw.intTrig |= (1UL << PIN(pin_number));
+    REG_GPIO(dwPinNum)->dw.intTrig |= (1UL << PIN(dwPinNum));
 
     return CC_SUCCESS;
 }
 
 
-void cc6801_request_irq(uint32_t pin_number,
-                        cc6801_irq_handler callback,
-                        uint32_t type)
+void cc6801_RequestIrq(uint32_t dwPinNum,
+                        fpGpiIrqHandler callback,
+                        uint32_t dwType)
 {
-    cc6801_isr[pin_number] = callback;
-    cc6801_gpio_irq_set_type(pin_number, type);
+    g_fpGpiIsr[dwPinNum] = callback;
+    cc6801_IrqTypeSet(dwPinNum, dwType);
 
     //Clear interrupt status before request
-    REG_GPIO(pin_number)->dw.intSts |= (1UL << PIN(pin_number));
+    REG_GPIO(dwPinNum)->dw.intSts |= (1UL << PIN(dwPinNum));
 }
 
-#define DEFAULT_PINMUX(_pupd, _pinmux, _io, _od)  \
-    {                                                       \
-        .pupd       = CC6801_GPIO_PUPD_##_pupd,                 \
-        .pinmux     = CC6801_GPIO_PINMUX_##_pinmux,             \
-        .io         = CC6801_GPIO_DIR_##_io,                    \
-        .od         = CC6801_GPIO_##_io##_##_od,                \
-    }
 
-cc6801_gpio_port_mode_t cc6801_fpga_port_mode_table[] =
+static void cc6801_GpioDirectSet(uint32_t dwPinNum, cc6801_gpio_dir_t eDir)
 {
-    CC6801_GPIO_PORT_MODE_1,
-    CC6801_GPIO_PORT_MODE_1,
-    CC6801_GPIO_PORT_MODE_1,
-    CC6801_GPIO_PORT_MODE_5,
-    CC6801_GPIO_PORT_MODE_7,
-    CC6801_GPIO_PORT_MODE_7,
-    CC6801_GPIO_PORT_MODE_4,
-    CC6801_GPIO_PORT_MODE_9,
-    CC6801_GPIO_PORT_MODE_3,
-    CC6801_GPIO_PORT_MODE_4,
-    CC6801_GPIO_PORT_MODE_4,
-    CC6801_GPIO_PORT_MODE_0
-};
-
-static struct cc6801_gpio_config cc6801_fpga_pinmux[] =
-{
-/*                 PU-EN       AUX     OE      OUT             */
-    DEFAULT_PINMUX(PULL_DOWN,  ENABLE, OUTPUT, HIGH),          //SPI0_CLK,
-    DEFAULT_PINMUX(PULL_DOWN,  ENABLE, OUTPUT, HIGH),          //SPI0_CS,
-    DEFAULT_PINMUX(PULL_DOWN,  ENABLE, OUTPUT, HIGH),          //SPI0_DO,
-    DEFAULT_PINMUX(PULL_DOWN,  ENABLE,  INPUT, NOPULL),        //SPI0_DI,
-    DEFAULT_PINMUX(PULL_DOWN,  ENABLE, OUTPUT, HIGH),          //SPI1_CLK,
-    DEFAULT_PINMUX(PULL_DOWN,  ENABLE, OUTPUT, HIGH),          //SPI1_CS,
-    DEFAULT_PINMUX(PULL_DOWN,  ENABLE, OUTPUT, HIGH),          //SPI1_DO,
-    DEFAULT_PINMUX(PULL_DOWN,  ENABLE,  INPUT, NOPULL),        //SPI1_DI,
-    DEFAULT_PINMUX(PULL_DOWN,  ENABLE, OUTPUT, HIGH),          //SPI2_CLK,
-    DEFAULT_PINMUX(PULL_DOWN,  ENABLE, OUTPUT, HIGH),          //SPI2_CS,
-    DEFAULT_PINMUX(PULL_DOWN,  ENABLE, OUTPUT, HIGH),          //SPI2_DO,
-    DEFAULT_PINMUX(PULL_DOWN,  ENABLE,  INPUT, NOPULL),        //SPI2_DI,
-    DEFAULT_PINMUX(PULL_DOWN,  ENABLE, OUTPUT, HIGH),          //DMIC_CLK,
-    DEFAULT_PINMUX(PULL_DOWN,  ENABLE,  INPUT, NOPULL),        //DMIC_DI,
-    DEFAULT_PINMUX(PULL_DOWN, DISABLE, OUTPUT, LOW),           //GPIO_14,
-    DEFAULT_PINMUX(PULL_DOWN, DISABLE, OUTPUT, LOW),           //GPIO_15,
-    DEFAULT_PINMUX(PULL_UP  ,  ENABLE,  INPUT, NOPULL),        //I2C1_SCL,
-    DEFAULT_PINMUX(PULL_UP  ,  ENABLE,  INPUT, NOPULL),        //I2C1_SDA,
-    DEFAULT_PINMUX(PULL_DOWN, DISABLE,  INPUT, NOPULL),        //GPIO_18,
-    DEFAULT_PINMUX(PULL_DOWN, DISABLE,  INPUT, NOPULL),        //GPIO_19,
-    DEFAULT_PINMUX(PULL_UP  ,  ENABLE,  INPUT, NOPULL),        //I2C0_SCL,
-    DEFAULT_PINMUX(PULL_UP  ,  ENABLE,  INPUT, NOPULL),        //I2C0_SDA,
-    DEFAULT_PINMUX(PULL_DOWN, DISABLE,  INPUT, NOPULL),        //GPIO_22,
-    DEFAULT_PINMUX(PULL_DOWN, DISABLE,  INPUT, NOPULL),        //GPIO_23,
-    DEFAULT_PINMUX(PULL_DOWN,  ENABLE, OUTPUT, HIGH),          //UART0_TX,
-    DEFAULT_PINMUX(PULL_DOWN,  ENABLE, OUTPUT, HIGH),          //UART0_RTS,
-    DEFAULT_PINMUX(PULL_DOWN,  ENABLE,  INPUT, NOPULL),        //UART0_CTS,
-    DEFAULT_PINMUX(PULL_DOWN,  ENABLE,  INPUT, NOPULL),        //UART0_RX,
-    DEFAULT_PINMUX(PULL_DOWN,  ENABLE, OUTPUT, HIGH),          //PWM0,
-    DEFAULT_PINMUX(PULL_DOWN,  ENABLE, OUTPUT, HIGH),          //PWM1,
-    DEFAULT_PINMUX(PULL_DOWN, DISABLE, OUTPUT, LOW),           //GPIO_30,
-    DEFAULT_PINMUX(PULL_DOWN, DISABLE, OUTPUT, LOW),           //GPIO_31,
-    DEFAULT_PINMUX(PULL_DOWN,  ENABLE, OUTPUT, HIGH),          //I2S_CLK,
-    DEFAULT_PINMUX(PULL_DOWN,  ENABLE, OUTPUT, HIGH),          //I2S_WS,
-    DEFAULT_PINMUX(PULL_DOWN,  ENABLE, OUTPUT, HIGH),          //I2S_DO,
-    DEFAULT_PINMUX(PULL_DOWN,  ENABLE,  INPUT, NOPULL),        //I2S_DI,
-    DEFAULT_PINMUX(PULL_DOWN,  ENABLE, OUTPUT, HIGH),          //UART1_TX,
-    DEFAULT_PINMUX(PULL_DOWN,  ENABLE, OUTPUT, HIGH),          //UART1_RTS,
-    DEFAULT_PINMUX(PULL_DOWN,  ENABLE,  INPUT, NOPULL),        //UART1_CTS,
-    DEFAULT_PINMUX(PULL_DOWN,  ENABLE,  INPUT, NOPULL),        //UART1_RX,
-    DEFAULT_PINMUX(PULL_DOWN,  ENABLE, OUTPUT, HIGH),          //UART2_TX,
-    DEFAULT_PINMUX(PULL_DOWN,  ENABLE, OUTPUT, HIGH),          //UART2_RTS,
-    DEFAULT_PINMUX(PULL_DOWN,  ENABLE,  INPUT, NOPULL),        //UART2_CTS,
-    DEFAULT_PINMUX(PULL_DOWN,  ENABLE,  INPUT, NOPULL),        //UART2_RX,
-    DEFAULT_PINMUX(PULL_DOWN, DISABLE, OUTPUT, HIGH),          //GPIO_44,
-    DEFAULT_PINMUX(PULL_DOWN, DISABLE, OUTPUT, HIGH),          //GPIO_45,
-    DEFAULT_PINMUX(PULL_DOWN, DISABLE, OUTPUT, HIGH),          //GPIO_46,
-    DEFAULT_PINMUX(PULL_DOWN, DISABLE, OUTPUT, HIGH),          //GPIO_47,
-};
-
-static void cc6801_gpio_pinmux_config(uint8_t pin, const struct cc6801_gpio_config *config)
-{
-    cc6801_gpio_pupd_t pupd          = config->pupd;
-    cc6801_gpio_pinmux_t pinmux      = config->pinmux;
-    cc6801_gpio_dir_t io             = config->io;
-    cc6801_gpio_drive_t od           = config->od;
-
-    if (pupd)
-        cc6801_gpio_set_pullup(pin);
-    else
-        cc6801_gpio_clear_pullup(pin);
-
-    if (pinmux)
-        cc6801_gpio_set_pinmux(pin);
-    else
-        cc6801_gpio_clear_pinmux(pin);
-
-    if (io)
-        cc6801_gpio_set_dir(pin, CC6801_GPIO_DIR_OUTPUT);
-    else
-        cc6801_gpio_set_dir(pin, CC6801_GPIO_DIR_INPUT);
-
-    cc6801_gpio_write(pin, od);
-}
-
-void cc6801_gpio_pinmux_config_table(const struct cc6801_gpio_config *config, int len)
-{
-    int i;
-
-    for (i = 0; i < len; i++)
-        cc6801_gpio_pinmux_config(i, &config[i]);
-}
-
-void cc6801_gpio_mode_config_table(cc6801_gpio_port_mode_t *mode, int len)
-{
-    U_regGPIO *group;
-    uint8_t i, port;
-
-    for (i = 0; i < len; i++)
+    if (eDir == CC6801_GPIO_DIR_OUTPUT)
     {
-        if (i < NUMBER_OF_PORT_MODES_GPIO0)
+        REG_GPIO(dwPinNum)->dw.outputEn |= (1UL << PIN(dwPinNum));
+    }
+    else
+    {
+        REG_GPIO(dwPinNum)->dw.outputEn &= ~(1UL << PIN(dwPinNum));
+    }
+}
+
+void cc6801_GpioDirectInput(uint32_t dwPinNum)
+{
+    cc6801_GpioDirectSet(dwPinNum, CC6801_GPIO_DIR_INPUT);
+}
+
+void cc6801_GpioDirectOutput(uint32_t dwPinNum)
+{
+    cc6801_GpioDirectSet(dwPinNum, CC6801_GPIO_DIR_OUTPUT);
+}
+
+static void cc6801_GpioSet(uint32_t dwPinNum)
+{
+    REG_GPIO(dwPinNum)->dw.output |= (1UL << PIN(dwPinNum));
+}
+
+static void cc6801_GpioClear(uint32_t dwPinNum)
+{
+    REG_GPIO(dwPinNum)->dw.output &= ~(1UL << PIN(dwPinNum));
+}
+
+uint32_t cc6801_GpioRead(uint32_t dwPinNum)
+{
+    return ((REG_GPIO(dwPinNum)->dw.input) >> PIN(dwPinNum)) & 1UL;
+}
+
+void cc6801_GpioWrite(uint32_t dwPinNum, uint32_t dwValue)
+{
+    if (dwValue == CC6801_GPIO_OUTPUT_LOW)
+    {
+        cc6801_GpioClear(dwPinNum);
+    }
+    else
+    {
+        cc6801_GpioSet(dwPinNum);
+    }
+}
+
+void cc6801_GpioPuPdSet(uint32_t dwPinNum)
+{
+    REG_GPIO(dwPinNum)->dw.puEn |= (1UL << PIN(dwPinNum));
+}
+
+void cc6801_GpioPuPdClear(uint32_t dwPinNum)
+{
+    REG_GPIO(dwPinNum)->dw.puEn &= ~(1UL << PIN(dwPinNum));
+}
+
+void cc6801_GpioPinmuxSet(uint32_t dwPinNum)
+{
+    REG_GPIO(dwPinNum)->dw.pinmux |= (1UL << PIN(dwPinNum));
+}
+
+void cc6801_GpioPinmuxClear(uint32_t dwPinNum)
+{
+    REG_GPIO(dwPinNum)->dw.pinmux &= ~(1UL << PIN(dwPinNum));
+}
+
+
+void cc6801_GpioPortModeSet(U_regGPIO *pGpioBase,
+                                   uint8_t bPort,
+                                   uint8_t bMode)
+{
+    pGpioBase->dw.portModeSel = (pGpioBase->dw.portModeSel & ~CC6801_GPIO_PORT_MODE_MASK(bPort)) |
+                                ((bMode << CC6801_GPIO_PORT_MODE_SHIFT(bPort)) &
+                                CC6801_GPIO_PORT_MODE_MASK(bPort));
+}
+
+static void cc6801_GpioPinmuxConfig(uint8_t bPin, const uint8_t bConfig)
+{
+    if (bConfig & GPIO_PULL_UP)
+        cc6801_GpioPuPdSet(bPin);
+    else
+        cc6801_GpioPuPdClear(bPin);
+
+    if (bConfig & GPIO_PINMUX_ENABLE)
+        cc6801_GpioPinmuxSet(bPin);
+    else
+        cc6801_GpioPinmuxClear(bPin);
+
+    if (bConfig & GPIO_DIR_OUTPUT)
+        cc6801_GpioDirectSet(bPin, CC6801_GPIO_DIR_OUTPUT);
+    else
+        cc6801_GpioDirectSet(bPin, CC6801_GPIO_DIR_INPUT);
+
+    if (bConfig & GPIO_OUTPUT_HIGH)
+        cc6801_GpioWrite(bPin, 1);
+    else
+        cc6801_GpioWrite(bPin, 0);
+}
+
+static void cc6801_GpioPinmuxTableConfig(const uint8_t *pConfig, int wLen)
+{
+    int wIndex;
+
+    for (wIndex = 0; wIndex < wLen; wIndex++)
+        cc6801_GpioPinmuxConfig(wIndex, pConfig[wIndex]);
+}
+
+static void cc6801_GpioPinGroupTableConfig(uint8_t *pPortModeTable, int wLen)
+{
+    U_regGPIO *pGpioBase;
+    uint8_t bIndex, bPort;
+
+    for (bIndex = 0; bIndex < wLen; bIndex++)
+    {
+        if (bIndex < NUMBER_OF_PORT_MODES_GPIO0)
         {
-            group = regGPIO0;
-            port = i;
+            pGpioBase = regGPIO0;
+            bPort = bIndex;
         }
         else
         {
-            group = regGPIO1;
-            port = i - NUMBER_OF_PORT_MODES_GPIO0;
+            pGpioBase = regGPIO1;
+            bPort = bIndex - NUMBER_OF_PORT_MODES_GPIO0;
         }
 
-        cc6801_gpio_set_port_mode(group, port, mode[i]);
+        cc6801_GpioPortModeSet(pGpioBase, bPort, pPortModeTable[bIndex]);
     }
 }
 
 int cc6801_gpio_pinmux_init(void)
 {
-    cc6801_gpio_mode_config_table(cc6801_fpga_port_mode_table,
-                    ARRAY_SIZE(cc6801_fpga_port_mode_table));
+    uint8_t bGpioPortModeTable[] =
+    {
+        GPIO_MODE_PINGROUP0,
+        GPIO_MODE_PINGROUP1,
+        GPIO_MODE_PINGROUP2,
+        GPIO_MODE_PINGROUP3,
+        GPIO_MODE_PINGROUP4,
+        GPIO_MODE_PINGROUP5,
+        GPIO_MODE_PINGROUP6,
+        GPIO_MODE_PINGROUP7,
+        GPIO_MODE_PINGROUP8,
+        GPIO_MODE_PINGROUP9,
+        GPIO_MODE_PINGROUP10,
+        GPIO_MODE_PINGROUP11
+    };
 
-    cc6801_gpio_pinmux_config_table(cc6801_fpga_pinmux,
-                    ARRAY_SIZE(cc6801_fpga_pinmux));
+    uint8_t bGpioConfig[] =
+    {
+        GPIO0_CONFIG,
+        GPIO1_CONFIG,
+        GPIO2_CONFIG,
+        GPIO3_CONFIG,
+        GPIO4_CONFIG,
+        GPIO5_CONFIG,
+        GPIO6_CONFIG,
+        GPIO7_CONFIG,
+        GPIO8_CONFIG,
+        GPIO9_CONFIG,
+        GPIO10_CONFIG,
+        GPIO11_CONFIG,
+        GPIO12_CONFIG,
+        GPIO13_CONFIG,
+        GPIO14_CONFIG,
+        GPIO15_CONFIG,
+        GPIO16_CONFIG,
+        GPIO17_CONFIG,
+        GPIO18_CONFIG,
+        GPIO19_CONFIG,
+        GPIO20_CONFIG,
+        GPIO21_CONFIG,
+        GPIO22_CONFIG,
+        GPIO23_CONFIG,
+        GPIO24_CONFIG,
+        GPIO25_CONFIG,
+        GPIO26_CONFIG,
+        GPIO27_CONFIG,
+        GPIO28_CONFIG,
+        GPIO29_CONFIG,
+        GPIO30_CONFIG,
+        GPIO31_CONFIG,
+        GPIO32_CONFIG,
+        GPIO33_CONFIG,
+        GPIO34_CONFIG,
+        GPIO35_CONFIG,
+        GPIO36_CONFIG,
+        GPIO37_CONFIG,
+        GPIO38_CONFIG,
+        GPIO39_CONFIG,
+        GPIO40_CONFIG,
+        GPIO41_CONFIG,
+        GPIO42_CONFIG,
+        GPIO43_CONFIG,
+        GPIO44_CONFIG,
+        GPIO45_CONFIG,
+        GPIO46_CONFIG,
+        GPIO47_CONFIG
+    };
+
+    cc6801_GpioPinGroupTableConfig(bGpioPortModeTable,
+                    ARRAY_SIZE(bGpioPortModeTable));
+
+    cc6801_GpioPinmuxTableConfig(bGpioConfig,
+                    ARRAY_SIZE(bGpioConfig));
 
     NVIC_EnableIRQ(GPIO_IRQn);
     return 0;

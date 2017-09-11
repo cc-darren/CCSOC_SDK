@@ -30,7 +30,6 @@
 *  20170804 Blake initial version
 ******************************************************************************/
 
-#include "drvi_gpio.h"
 #include "drvi_spi.h"
 
 #include "ssd1306.h"
@@ -42,32 +41,32 @@ static volatile int8_t cSpiXferDone;
 
 static void ssd1306_SetPwrCtlHigh(void)
 {
-    drvi_gpio_write(OLED_SSD1306_PWR, 1);
+    drvi_GpioWrite(OLED_SSD1306_PWR, 1);
 }
 
 static void ssd1306_SetPwrCtlLow(void)
 {
-    drvi_gpio_write(OLED_SSD1306_PWR, 0);
+    drvi_GpioWrite(OLED_SSD1306_PWR, 0);
 }
 
 static void ssd1306_SetDataCmdHigh(void)
 {
-    drvi_gpio_write(OLED_SSD1306_DC, 1);
+    drvi_GpioWrite(OLED_SSD1306_DC, 1);
 }
 
 static void ssd1306_SetDataCmdLow(void)
 {
-    drvi_gpio_write(OLED_SSD1306_DC, 0);
+    drvi_GpioWrite(OLED_SSD1306_DC, 0);
 }
 
 static void ssd1306_SetResetHigh(void)
 {
-    drvi_gpio_write(OLED_SSD1306_RST, 1);
+    drvi_GpioWrite(OLED_SSD1306_RST, 1);
 }
 
 static void ssd1306_SetResetLow(void)
 {
-    drvi_gpio_write(OLED_SSD1306_RST, 0);
+    drvi_GpioWrite(OLED_SSD1306_RST, 0);
 }
 
 //static void ssd1306_EventHandlerCB(E_DrviSpiEvent * p_event)
