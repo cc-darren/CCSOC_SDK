@@ -7,33 +7,47 @@
 #define __AK09912_MAG_DRIVER__H
 
 /* Includes ------------------------------------------------------------------*/
+#include <stdint.h>
+#include "project.h"
+#include "drvi_spi.h"
+#include "drvi_i2c.h"
 /* Exported types ------------------------------------------------------------*/
 #ifndef _MAG_SHARE_TYPE_
 #define _MAG_SHARE_TYPE_
 #define MAG_Init()                              AK09912_MAG_Init()
 #define MAG_GetMagRaw(buf)                      AK09912_MAG_GetMagRaw(buf)
 #define MAG_GetMagRawBurst(buf, buf_size)       AK09912_MAG_GetMagRawBurst(buf, buf_size)
+
+/* Imported macro ------------------------------------------------------------*/
+#if (MAG_IF_TYPE == _IF_SPI_)
+    #include "drvi_spi.h"
+    #define MAGIF_WRITE_THEN_READ(bus,tbuf,tlen,rbuf,rlen)    drvi_SpiWriteThenRead(bus,tbuf,tlen,rbuf,rlen)
+    #define MAGIF_WRITE(bus,buf,len)                          drvi_SpiWrite(bus,buf,len)
+#elif (MAG_IF_TYPE == _IF_I2C_)
+    #include "drvi_i2c.h"
+    #define MAGIF_WRITE_THEN_READ(bus,tbuf,tlen,rbuf,rlen)    drvi_I2cWriteThenRead(bus,tbuf,tlen,rbuf,rlen)
+    #define MAGIF_WRITE(bus,buf,len)                          drvi_I2cWrite(bus,buf,len)
+#else
+    #define MAGIF_WRITE_THEN_READ(bus,tbuf,tlen,rbuf,rlen)      
+    #define MAGIF_WRITE(bus,buf,len)                            
+#endif
+/* Imported constants --------------------------------------------------------*/
+
 #endif //_MAG_SHARE_TYPE_
+
+
+
+
 //these could change accordingly with the architecture
 
 #ifndef __ARCHDEP__TYPES
 #define __ARCHDEP__TYPES
 typedef unsigned char u8_t;
+typedef signed char i8_t;
 typedef unsigned short int u16_t;
 typedef short int i16_t;
-typedef signed char i8_t;
-#endif /*__ARCHDEP__TYPES*/
-
-typedef u8_t AK09912_MAG_Int1PinConf_t;
-typedef u8_t AK09912_MAG_Int2PinConf_t;
-typedef u8_t AK09912_MAG_Int1Conf_t;
-typedef u8_t AK09912_MAG_Axis_t;
-
-/* Exported common structure --------------------------------------------------------*/
-
-#ifndef __SHARED__TYPES
-#define __SHARED__TYPES
-
+typedef unsigned int u32_t;
+typedef int i32_t;
 typedef enum {
   MEMS_SUCCESS				=		0x01,
   MEMS_ERROR				=		0x00	
@@ -43,12 +57,26 @@ typedef enum {
   MEMS_ENABLE				=		0x01,
   MEMS_DISABLE				=		0x00	
 } State_t;
+#endif /*__ARCHDEP__TYPES*/
+
+
+
+typedef u8_t AK09912_MAG_Int1PinConf_t;
+typedef u8_t AK09912_MAG_Int2PinConf_t;
+typedef u8_t AK09912_MAG_Int1Conf_t;
+typedef u8_t AK09912_MAG_Axis_t;
+
+/* Exported common structure --------------------------------------------------------*/
+
+#ifndef __AK09912_SHARED__TYPES
+#define __AK09912_SHARED__TYPES
+
 
 typedef u8_t IntPinConf_t;
 typedef u8_t Axis_t;
 typedef u8_t IntConf_t;
 
-#endif /*__SHARED__TYPES*/
+#endif /*__AK09912_SHARED__TYPES*/
 
 #ifndef __AK09912__SHARED
 #define __AK09912__SHARED
@@ -178,9 +206,6 @@ typedef enum {
 #define AKM_RST_ON(akm_rst_mask) do {  NRF_GPIO->OUTCLR = (akm_rst_mask) & (AKM_RST_MASK & AKM_RST_INV_MASK); \
                            NRF_GPIO->OUTSET = (akm_rst_mask) & (AKM_RST_MASK & ~AKM_RST_INV_MASK); } while (0)
 
-/************** I2C Address *****************/
-
-#define AK09912_MAG_MEMS_I2C_ADDRESS         0x0C
 
 /* Exported functions --------------------------------------------------------*/
 

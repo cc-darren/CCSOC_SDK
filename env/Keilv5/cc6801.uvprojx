@@ -559,11 +559,6 @@
               <FilePath>..\..\platform\module\ak09912.c</FilePath>
             </File>
             <File>
-              <FileName>i2c_sensor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\module\i2c_sensor.c</FilePath>
-            </File>
-            <File>
               <FileName>LSM6DS3_ACC_GYRO_driver.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\module\LSM6DS3_ACC_GYRO_driver.c</FilePath>
@@ -1765,11 +1760,6 @@
               <FileName>ak09912.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\module\ak09912.c</FilePath>
-            </File>
-            <File>
-              <FileName>i2c_sensor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\module\i2c_sensor.c</FilePath>
             </File>
             <File>
               <FileName>LSM6DS3_ACC_GYRO_driver.c</FileName>

@@ -109,7 +109,7 @@ Head Block of The File
 *   MAG_IF_TYPE : the MAG interface tpye
 *   MAG_IF_ID   : the MAG interface id
 ***************************************************/
-#define MODULE_MAG              MAG_NULL
+#define MODULE_MAG              MAG_AKM_AK09912C
 #define MAG_IF                  UseInterface(I2C,0)
 
 

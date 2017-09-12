@@ -19,7 +19,7 @@
 #define drvi_I2cWrite(bus,buf,len)                           cc6801_I2cWrite(bus,buf,len)
 #define drvi_I2cRead(bus,buf,len)                            cc6801_I2cRead(bus,buf,len)
 
-#define drvi_I2CWriteThenRead(bus,tbuf,tlen,rbuf,rlen)       {  \
+#define drvi_I2cWriteThenRead(bus,tbuf,tlen,rbuf,rlen)       {  \
                                                                 drvi_I2cWrite(bus,tbuf,tlen);   \
                                                                 drvi_I2cRead(bus,rbuf,rlen);      \
                                                              }

@@ -41,6 +41,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include <stdint.h>
+#include "project.h"
 
 #define FIFO_DEPTH 32
 #define FIFO_DEPTH_T FIFO_DEPTH*3  //3 Axes
@@ -53,20 +54,24 @@
 
 #ifndef __ARCHDEP__TYPES
 #define __ARCHDEP__TYPES
-
 typedef unsigned char u8_t;
+typedef signed char i8_t;
 typedef unsigned short int u16_t;
+typedef short int i16_t;
 typedef unsigned int u32_t;
 typedef int i32_t;
-typedef short int i16_t;
-typedef signed char i8_t;
 
+typedef enum
+{
+  MEMS_SUCCESS        =   0x01,
+  MEMS_ERROR        =   0x00
+} status_t;
 #endif /*__ARCHDEP__TYPES*/
 
 /* Exported common structure --------------------------------------------------------*/
 
-#ifndef __SHARED__TYPES
-#define __SHARED__TYPES
+#ifndef __LSM6DS3_SHARED__TYPES
+#define __LSM6DS3_SHARED__TYPES
 
 typedef union
 {
@@ -86,13 +91,8 @@ typedef union
   u8_t u8bit[4];
 } Type1Axis32bit_U;
 
-typedef enum
-{
-  MEMS_SUCCESS        =   0x01,
-  MEMS_ERROR        =   0x00
-} status_t;
 
-#endif /*__SHARED__TYPES*/
+#endif /*__LSM6DS3_SHARED__TYPES*/
 
 /* Exported macro ------------------------------------------------------------*/
 #ifndef _ACC_SHARE_TYPE_
@@ -100,25 +100,27 @@ typedef enum
 
 #define ACC_Init()                                     LSM6DS3_X_Init()
 #define ACC_Data_Get(x,y)                              LSM6DS3_ACC_GYRO_GetRawAccData(x,y)
-
-#endif //_ACC_SHARE_TYPE_
-
 /* Exported constants --------------------------------------------------------*/
 
 
 
 /* Imported macro ------------------------------------------------------------*/
 #if (ACC_IF_TYPE == _IF_SPI_)
-    #define DRV_WRITE_THEN_READ(bus,tbuf,tlen,rbuf,rlen)    drvi_SpiWriteThenRead(bus,tbuf,tlen,rbuf,rlen)
-    #define DRV_WRITE(bus,buf,len)                          drvi_SpiWrite(bus,buf,len)
+    #include "drvi_spi.h"
+    #define ACCIF_WRITE_THEN_READ(bus,tbuf,tlen,rbuf,rlen)    drvi_SpiWriteThenRead(bus,tbuf,tlen,rbuf,rlen)
+    #define ACCIF_WRITE(bus,buf,len)                          drvi_SpiWrite(bus,buf,len)
 #elif (ACC_IF_TYPE == _IF_I2C_)
-    #define DRV_WRITE_THEN_READ(bus,tbuf,tlen,rbuf,rlen)    drvi_I2CWriteThenRead(bus,tbuf,tlen,rbuf,rlen)
-    #define DRV_WRITE(bus,buf,len)                          drvi_I2CWrite(bus,buf,len)
+    #include "drvi_i2c.h"
+    #define ACCIF_WRITE_THEN_READ(bus,tbuf,tlen,rbuf,rlen)    drvi_I2CWriteThenRead(bus,tbuf,tlen,rbuf,rlen)
+    #define ACCIF_WRITE(bus,buf,len)                          drvi_I2CWrite(bus,buf,len)
 #else
-    #define DRV_WRITE_THEN_READ(bus,tbuf,tlen,rbuf,rlen)    drvi_SpiWriteThenRead
-    #define DRV_WRITE(bus,buf,len)                          drvi_SpiWrite
+    #define ACCIF_WRITE_THEN_READ(bus,tbuf,tlen,rbuf,rlen)      
+    #define ACCIF_WRITE(bus,buf,len)                            
 #endif
 /* Imported constants --------------------------------------------------------*/
+
+
+#endif //_ACC_SHARE_TYPE_
 
 
 
