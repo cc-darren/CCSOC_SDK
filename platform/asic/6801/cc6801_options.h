@@ -66,18 +66,18 @@
 #define GPIO_MODE_GPIO_PWM      10
 #define GPIO_MODE_SPI_3WIRE     11
 
-#define GPIO_PULL_DOWN          0x01
-#define GPIO_PULL_UP            0x02
+#define GPIO_PULL_DOWN          0x0001
+#define GPIO_PULL_UP            0x0002
 
-#define GPIO_PINMUX_DISABLE     0x04
-#define GPIO_PINMUX_ENABLE      0x08
+#define GPIO_PINMUX_DISABLE     0x0004
+#define GPIO_PINMUX_ENABLE      0x0008
 
-#define GPIO_DIR_INPUT          0x10
-#define GPIO_DIR_OUTPUT         0x11
+#define GPIO_DIR_INPUT          0x0010
+#define GPIO_DIR_OUTPUT         0x0020
 
-#define GPIO_INPUT_NOPULL       0x12
-#define GPIO_OUTPUT_LOW         0x14
-#define GPIO_OUTPUT_HIGH        0x18
+#define GPIO_INPUT_NOPULL       0x0100
+#define GPIO_OUTPUT_LOW         0x0200
+#define GPIO_OUTPUT_HIGH        0x0400
 
 
 // SPI Configuration List

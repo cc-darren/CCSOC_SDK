@@ -272,30 +272,30 @@ void cc6801_GpioPortModeSet(U_regGPIO *pGpioBase,
                                 CC6801_GPIO_PORT_MODE_MASK(bPort));
 }
 
-static void cc6801_GpioPinmuxConfig(uint8_t bPin, const uint8_t bConfig)
+static void cc6801_GpioPinmuxConfig(uint8_t bPin, const uint16_t wConfig)
 {
-    if (bConfig & GPIO_PULL_UP)
+    if (wConfig & GPIO_PULL_UP)
         cc6801_GpioPuPdSet(bPin);
     else
         cc6801_GpioPuPdClear(bPin);
 
-    if (bConfig & GPIO_PINMUX_ENABLE)
+    if (wConfig & GPIO_PINMUX_ENABLE)
         cc6801_GpioPinmuxSet(bPin);
     else
         cc6801_GpioPinmuxClear(bPin);
 
-    if (bConfig & GPIO_DIR_OUTPUT)
+    if (wConfig & GPIO_DIR_OUTPUT)
         cc6801_GpioDirectSet(bPin, CC6801_GPIO_DIR_OUTPUT);
     else
         cc6801_GpioDirectSet(bPin, CC6801_GPIO_DIR_INPUT);
 
-    if (bConfig & GPIO_OUTPUT_HIGH)
+    if (wConfig & GPIO_OUTPUT_HIGH)
         cc6801_GpioWrite(bPin, 1);
     else
         cc6801_GpioWrite(bPin, 0);
 }
 
-static void cc6801_GpioPinmuxTableConfig(const uint8_t *pConfig, int wLen)
+static void cc6801_GpioPinmuxTableConfig(const uint16_t *pConfig, int wLen)
 {
     int wIndex;
 
@@ -343,7 +343,7 @@ int cc6801_gpio_pinmux_init(void)
         GPIO_MODE_PINGROUP11
     };
 
-    uint8_t bGpioConfig[] =
+    uint16_t wGpioConfig[] =
     {
         GPIO0_CONFIG,
         GPIO1_CONFIG,
@@ -398,8 +398,8 @@ int cc6801_gpio_pinmux_init(void)
     cc6801_GpioPinGroupTableConfig(bGpioPortModeTable,
                     ARRAY_SIZE(bGpioPortModeTable));
 
-    cc6801_GpioPinmuxTableConfig(bGpioConfig,
-                    ARRAY_SIZE(bGpioConfig));
+    cc6801_GpioPinmuxTableConfig(wGpioConfig,
+                    ARRAY_SIZE(wGpioConfig));
 
     NVIC_EnableIRQ(GPIO_IRQn);
     return 0;
