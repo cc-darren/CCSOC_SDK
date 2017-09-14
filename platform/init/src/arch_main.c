@@ -328,7 +328,6 @@ int main(void)
 #endif
     drvi_initialize();
 
-    Tracer_Init();
     timers_init();
 
     //start interrupt handling

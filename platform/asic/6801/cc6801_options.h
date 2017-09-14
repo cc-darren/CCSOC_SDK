@@ -82,22 +82,57 @@
 
 // SPI Configuration List
 
-#define _SPI_CPHA_              0x01            /* clock phase */
-#define _SPI_CPOL_              0x02            /* clock polarity */
-#define _SPI_MODE_0_            (0|0)
-#define _SPI_MODE_1_            (0|_SPI_CPHA_)
-#define _SPI_MODE_2_            (_SPI_CPOL_|0)
-#define _SPI_MODE_3_            (_SPI_CPOL_|_SPI_CPHA_)
-#define _SPI_CS_HIGH_           0x04            /* chipselect active high? */
-#define _SPI_LSB_FIRST_         0x08
-#define _SPI_3WIRE_             0x10            /* SI/SO signals shared */
+#define SPI_CPHA                 0x01            /* clock phase */
+#define SPI_CPOL                 0x02            /* clock polarity */
+#define SPI_MODE_0               (0|0)
+#define SPI_MODE_1               (0|SPI_CPHA)
+#define SPI_MODE_2               (SPI_CPOL|0)
+#define SPI_MODE_3               (SPI_CPOL|SPI_CPHA)
+#define SPI_CS_HIGH              0x04            /* chipselect active high? */
+#define SPI_LSB_FIRST            0x08
+#define SPI_3WIRE                0x10            /* SI/SO signals shared */
+
+
+// UART Configuration List
+
+#define UART_BAUDRATE            0x0000000F
+#define  UART_BAUDRATE_1200       0x00000001
+#define  UART_BAUDRATE_1800       0x00000002
+#define  UART_BAUDRATE_2400       0x00000003
+#define  UART_BAUDRATE_4800       0x00000004
+#define  UART_BAUDRATE_9600       0x00000005
+#define  UART_BAUDRATE_14400      0x00000006
+#define  UART_BAUDRATE_19200      0x00000007
+#define  UART_BAUDRATE_38400      0x00000008
+#define  UART_BAUDRATE_57600      0x00000009
+#define  UART_BAUDRATE_115200     0x0000000A
+#define  UART_BAUDRATE_230400     0x0000000B
+#define  UART_BAUDRATE_460800     0x0000000C
+#define  UART_BAUDRATE_500000     0x0000000D
+#define  UART_BAUDRATE_576000     0x0000000E
+#define  UART_BAUDRATE_921600     0x0000000F
+
+#define UART_DATA_BITS           0x00000030
+#define  UART_DATA_BITS_7         0x00000010
+#define  UART_DATA_BITS_8         0x00000020
+#define  UART_DATA_BITS_9         0x00000030
+
+#define UART_STOP_BITS_2         0x00080000
+
+#define UART_PARITY_ENABLE       0x00100000
+#define  UART_PARITY_ODD         0x00200000
+#define  UART_PARITY_EVEN        0x00400000
+#define  UART_PARITY_MARK        0x00800000  /* mark parity */
+#define  UART_PARITY_SPACE       0x01000000  /* space parity */
+
+#define UART_RTSCTS              0x02000000  /* flow control */
 
 
 // I2C Configuration List
 
-#define _I2C_FREQ_100K_         100000
-#define _I2C_FREQ_200K_         200000
-#define _I2C_FREQ_400K_         400000
+#define I2C_FREQ_100K           100000
+#define I2C_FREQ_200K           200000
+#define I2C_FREQ_400K           400000
 
 #endif //_CC6801_OPTIONS_H_
 

@@ -37,7 +37,6 @@
 #define TracerDebug(fmt, ...) \
     Tracer_Printf(TRACE_DEBUG TracerFormat(fmt), ##__VA_ARGS__)
 
-void Tracer_Init(void);
 int Tracer_Printf(const char *fmt, ...);
 
 #endif //_TRACER_H_

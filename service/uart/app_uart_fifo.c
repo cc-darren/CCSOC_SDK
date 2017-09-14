@@ -34,13 +34,6 @@ static app_fifo_t                  m_tx_fifo;                               /**<
 
 #define APP_UART_PORT            0
 
-static T_UartPort app_uart0 =
-{
-    .bPortNum = APP_UART_PORT,
-    .dwConfig = DRVI_UART_B1152000 | DRVI_UART_S8,
-    .fpComplete = uart_event_handler,
-};
-
 static void uart_event_handler(T_UartEvent * p_event)
 {
     app_uart_evt_t app_uart_event;
@@ -69,7 +62,7 @@ static void uart_event_handler(T_UartEvent * p_event)
         }
         if (FIFO_LENGTH(m_rx_fifo) <= m_rx_fifo.buf_size_mask)
         {
-            (void)cc6801_UartRx(&app_uart0, rx_buffer, 1);
+            (void)drvi_UartRx(TRACER_IF_ID, rx_buffer, 1);
         }
     }
     else if (p_event->type == DRVI_UART_EVENT_ERROR)
@@ -83,7 +76,7 @@ static void uart_event_handler(T_UartEvent * p_event)
         // Get next byte from FIFO.
         if (app_fifo_get(&m_tx_fifo, tx_buffer) == CC_SUCCESS)
         {
-            (void)cc6801_UartTx(&app_uart0, tx_buffer, 1);
+            (void)drvi_UartTx(TRACER_IF_ID, tx_buffer, 1);
         }
         if (FIFO_LENGTH(m_tx_fifo) == 0)
         {
@@ -124,12 +117,7 @@ uint32_t app_uart_init(const app_uart_comm_params_t * p_comm_params,
         return err_code;
     }
 
-    err_code = drvi_UartInit(&app_uart0);
-
-    if (err_code != CC_SUCCESS)
-    {
-        return err_code;
-    }
+    drvi_UartRxDoneRegister(TRACER_IF_ID, uart_event_handler);
 
     return CC_SUCCESS;
 }
@@ -159,7 +147,7 @@ uint32_t app_uart_get(uint8_t * p_byte)
     // If FIFO was full new request to receive one byte was not scheduled. Must be done here.
     if (FIFO_LENGTH(m_rx_fifo) == m_rx_fifo.buf_size_mask)
     {
-        uint32_t err_code = cc6801_UartRx(&app_uart0, rx_buffer,1);
+        uint32_t err_code = drvi_UartRx(TRACER_IF_ID, rx_buffer,1);
         if (err_code != CC_SUCCESS)
         {
             return CC_ERROR_NOT_FOUND;
@@ -173,7 +161,7 @@ uint32_t app_uart_put(uint8_t byte)
     uint32_t err_code;
 
     tx_tmp = byte;
-    err_code = cc6801_UartTx(&app_uart0, &tx_tmp, 1);
+    err_code = drvi_UartTx(TRACER_IF_ID, &tx_tmp, 1);
 
     if (err_code == CC_ERROR_BUSY)
     {

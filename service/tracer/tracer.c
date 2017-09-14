@@ -37,14 +37,6 @@ static uint16_t g_wLogStart;
 static uint16_t g_wConStart;
 static uint16_t g_wLogEnd;
 
-
-static T_UartPort TracerUart0 =
-{
-    .bPortNum = 0,
-    .dwConfig = DRVI_UART_B1152000 | DRVI_UART_S8,
-    //.fpComplete = uart_event_handler,
-};
-
 static inline int
 vscnprintf(char *buf, size_t size, const char *fmt, va_list args)
 {
@@ -171,7 +163,7 @@ int Tracer_PrintfEmit(const char *fmt, va_list args)
             g_bNewTextLine = 1;
     }
 
-    drvi_UartTx(&TracerUart0, (const uint8_t*)&LOG_BUF(g_wConStart), g_wLogEnd - g_wConStart);
+    drvi_UartTx(TRACER_IF_ID, (const uint8_t*)&LOG_BUF(g_wConStart), g_wLogEnd - g_wConStart);
     if (g_wLogEnd & 0x3UL)
     {
         g_wLogEnd = ((g_wLogEnd >> 2) +1) << 2;
@@ -193,9 +185,3 @@ int Tracer_Printf(const char *fmt, ...)
 
     return r;
 }
-
-void Tracer_Init(void)
-{
-    drvi_UartInit(&TracerUart0);
-}
-

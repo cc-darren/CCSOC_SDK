@@ -152,6 +152,21 @@
 #endif
 
 
+#if ((defined TRACER_IF) && (TRACER_IF))
+  #define TRACER_IF_TYPE (TRACER_IF&0xF0)
+  #define TRACER_IF_ID   (TRACER_IF&0x0F)
+#else
+  #error "Tracer interface not found"
+#endif
+
+#if ((defined HCI_IF) && (HCI_IF))
+  #define HCI_IF_TYPE (HCI_IF&0xF0)
+  #define HCI_IF_ID   (HCI_IF&0x0F)
+#else
+  #error "HCI interface not found"
+#endif
+
+
 //check which interface is used
 #if   ((ACC_IF==_Interface_SPI0_) || (MAG_IF==_Interface_SPI0_) || (GYR_IF==_Interface_SPI0_) || (OLED_IF==_Interface_SPI0_))
   #define _SPI0_INUSE_  TRUE
@@ -168,13 +183,13 @@
 #if ((ACC_IF==_Interface_I2C1_) || (MAG_IF==_Interface_I2C1_) || (GYR_IF==_Interface_I2C1_) || (OLED_IF==_Interface_I2C1_))
   #define _I2C1_INUSE_  TRUE
 #endif
-#if ((ACC_IF==_Interface_UART0_) || (MAG_IF==_Interface_UART0_) || (GYR_IF==_Interface_UART0_) || (OLED_IF==_Interface_UART0_))
+#if ((TRACER_IF==_Interface_UART0_) || (HCI_IF==_Interface_UART0_))
   #define _UART0_INUSE_ TRUE
 #endif
-#if ((ACC_IF==_Interface_UART1_) || (MAG_IF==_Interface_UART1_) || (GYR_IF==_Interface_UART1_) || (OLED_IF==_Interface_UART1_))
+#if ((TRACER_IF==_Interface_UART1_) || (HCI_IF==_Interface_UART1_))
   #define _UART1_INUSE_ TRUE
 #endif
-#if ((ACC_IF==_Interface_UART2_) || (MAG_IF==_Interface_UART2_) || (GYR_IF==_Interface_UART2_) || (OLED_IF==_Interface_UART2_))
+#if ((TRACER_IF==_Interface_UART2_) || (HCI_IF==_Interface_UART2_))
   #define _UART2_INUSE_ TRUE
 #endif
 
@@ -184,6 +199,10 @@
 
 #if ((_I2C0_INUSE_) || (_I2C1_INUSE_))
   #define _I2C_INUSE_ TRUE
+#endif
+
+#if ((_UART0_INUSE_) || (_UART1_INUSE_) || (_UART2_INUSE_))
+  #define _UART_INUSE_ TRUE
 #endif
 
 //remove IF check temporately, I2C interface can connect to mutilple slave

@@ -67,21 +67,21 @@ Declaration of static Global Variables & Functions
 //static T_UartPort TestUart0 =
 //{
 //    .bPortNum = 0,
-//    .dwConfig = DRVI_UART_B1152000 | DRVI_UART_S8,
+//    .dwConfig = UART_BAUDRATE_1152000 | DRVI_UART_S8,
 //    .fpComplete = test_Uart0EventHandler,
 //};
 
 static T_UartPort TestUart1 =
 {
     .bPortNum = 1,
-    .dwConfig = DRVI_UART_B1152000 | DRVI_UART_S8 | DRVI_UART_READ,
+    .dwConfig = UART_BAUDRATE_1152000 | UART_DATA_BITS_8,
     .fpComplete = test_Uart1EventHandler,
 };
 
 static T_UartPort TestUart2 =
 {
     .bPortNum = 2,
-    .dwConfig = DRVI_UART_B1152000 | DRVI_UART_S8 | DRVI_UART_READ,
+    .dwConfig = UART_BAUDRATE_1152000 | UART_DATA_BITS_8,
     .fpComplete = test_Uart2EventHandler,
 };
 
@@ -134,46 +134,46 @@ static INT16 test_UartConigInit(void)
 
     uint32_t dwaTestBaud[] =
     {
-        DRVI_UART_B1200,
-        DRVI_UART_B2400,
-        DRVI_UART_B4800,
-        DRVI_UART_B9600,
-        DRVI_UART_B19200,
-        DRVI_UART_B38400,
-        DRVI_UART_B57600,
-        DRVI_UART_B115200,
-        DRVI_UART_B230400,
-        DRVI_UART_B460800,
-        DRVI_UART_B576000,
-        DRVI_UART_B921600
+        UART_BAUDRATE_1200,
+        UART_BAUDRATE_2400,
+        UART_BAUDRATE_4800,
+        UART_BAUDRATE_9600,
+        UART_BAUDRATE_19200,
+        UART_BAUDRATE_38400,
+        UART_BAUDRATE_57600,
+        UART_BAUDRATE_115200,
+        UART_BAUDRATE_230400,
+        UART_BAUDRATE_460800,
+        UART_BAUDRATE_576000,
+        UART_BAUDRATE_921600
     };
 
     uint32_t dwaTestParity[] =
     {
         0,
-        DRVI_UART_PARENB,
-        DRVI_UART_PARENB | DRVI_UART_PAREVEN,
-        DRVI_UART_PARENB | DRVI_UART_MPAR,
-        DRVI_UART_PARENB | DRVI_UART_SPAR,
+        UART_PARITY_ENABLE,
+        UART_PARITY_ENABLE | UART_PARITY_EVEN,
+        UART_PARITY_ENABLE | UART_PARITY_MARK,
+        UART_PARITY_ENABLE | UART_PARITY_SPACE,
     };
 
     uint32_t dwaTestSize[] =
     {
-        DRVI_UART_S7,
-        DRVI_UART_S8,
-        DRVI_UART_S9,
+        UART_DATA_BITS_7,
+        UART_DATA_BITS_8,
+        UART_DATA_BITS_9,
     };
 
     uint32_t dwaTestStopBit[] =
     {
         0,
-        DRVI_UART_STOPB,
+        UART_STOP_BITS_2,
     };
 
     uint32_t dwaTestHwFlowCtrl[] =
     {
         0,
-        DRVI_UART_RTSCTS,
+        UART_RTSCTS,
     };
 
     uint8_t bBIdx, bDIdx, bPIdx, bSIdx, bHIdx;
@@ -188,7 +188,7 @@ static INT16 test_UartConigInit(void)
                     {
                         g_dwaUartConfig[iIndex] = dwaTestBaud[bBIdx] | dwaTestParity[bPIdx] |
                                                   dwaTestSize[bDIdx] | dwaTestStopBit[bSIdx] |
-                                                  dwaTestHwFlowCtrl[bHIdx] | DRVI_UART_READ; 
+                                                  dwaTestHwFlowCtrl[bHIdx];
                         iIndex++;
                     }
     return iIndex;
@@ -198,9 +198,7 @@ INT16 TEST_UartInit(void)
 {
     INT16 iError = CC_SUCCESS;
 
-    Tracer_Init();
-
-    //iError = drvi_UartInit(&TestUart0);
+    //iError = drvi_UartConfigSet(&TestUart0);
     //if (iError)
     //    return iError;
 

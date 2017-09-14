@@ -12,37 +12,39 @@
  */
 #include <stddef.h>
 #include "drvi_gpio.h"
+#if defined _I2C_INUSE_ && (_I2C_INUSE_)
 #include "drvi_i2c.h"
+#endif
 #include "drvi_pwm.h"
 #include "drvi_timer.h"
+#if defined _SPI_INUSE_ && (_SPI_INUSE_)
 #include "drvi_spi.h"
+#endif
+#if defined _UART_INUSE_ && (_UART_INUSE_)
+#include "drvi_uart.h"
+#endif
 #include "drvi_wdt.h"
 
 void drvi_initialize(void)
 {
     drvi_timer0_init((void*)NULL);
     drvi_GpioPinMuxInit();
+
+    #if defined _UART_INUSE_ && (_UART_INUSE_)
+    drvi_UartInit();
+    #endif
+
     drvi_pwm0_init((void*)NULL);
     drvi_wdt_init(30000);
     
     #if defined _SPI_INUSE_ && (_SPI_INUSE_)
     drvi_SpiInit();
     #endif
-    
+
     #if defined _I2C_INUSE_ && (_I2C_INUSE_)
     drvi_I2cInit();
     #endif
-    
-    
-    #if defined _UART0_INUSE_ && (_UART0_INUSE_)
-    drvi_UartInit(0);
-    #endif
-    #if defined _UART1_INUSE_ && (_UART0_INUSE_)
-    drvi_UartInit(1);
-    #endif
-    #if defined _UART2_INUSE_ && (_UART0_INUSE_)
-    drvi_UartInit(2);
-    #endif
+
 }
 
 

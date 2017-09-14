@@ -44,8 +44,8 @@ Head Block of The File
 #define TEST_MEM                    0
 #define TEST_SPI                    1
 #define TEST_I2C                    1
-#define TEST_UART0_TXDMA            1
-#define TEST_UART0_RXDMA            1
+#define TEST_UART0_TXDMA            0
+#define TEST_UART0_RXDMA            0
 #define TEST_AES                    1
 #define TEST_WDT                    1
 #define TEST_EFLASH                 0

@@ -90,7 +90,7 @@ Head Block of The File
 *   ACC_IF :  the interface assigned to ACC
 *
 *   ACC_IF_TYPE / ACC_IF_ID will be generated automatically.
-*   ACC_IF_TYPE : the ACC interface tpye
+*   ACC_IF_TYPE : the ACC interface type
 *   ACC_IF_ID   : the ACC interface id
 ***************************************************/
 #define MODULE_ACC              ACC_ST_LSM6DSL
@@ -106,7 +106,7 @@ Head Block of The File
 *   MAG_IF :  the interface assigned to MAG
 *
 *   MAG_IF_TYPE / MAG_IF_ID will be generated automatically.
-*   MAG_IF_TYPE : the MAG interface tpye
+*   MAG_IF_TYPE : the MAG interface type
 *   MAG_IF_ID   : the MAG interface id
 ***************************************************/
 #define MODULE_MAG              MAG_AKM_AK09912C
@@ -122,7 +122,7 @@ Head Block of The File
 *   GYR_IF :  the interface assigned to GYR
 *
 *   GYR_IF_TYPE / GYR_IF_ID will be generated automatically.
-*   GYR_IF_TYPE : the GYR interface tpye
+*   GYR_IF_TYPE : the GYR interface type
 *   GYR_IF_ID   : the GYR interface id
 ***************************************************/
 #define MODULE_GYR              GYR_NULL
@@ -138,31 +138,65 @@ Head Block of The File
 *   OLED_IF : the interface assigned to OLED
 *
 *   OLED_IF_TYPE / OLED_IF_ID will be generated automatically.
-*   OLED_IF_TYPE : the OLED interface tpye
+*   OLED_IF_TYPE : the OLED interface type
 *   OLED_IF_ID   : the OLED interface id
 ***************************************************/
 #define MODULE_OLED             OLED_SOLOMON_SSD1306
 #define OLED_IF                 UseInterface(SPI,2)
 
+/**************************************************
+*   Config Tracer interface
+*
+*   TRACER_IF : the interface assigned to Tracer
+*
+*   TRACER_IF_TYPE / TRACER_IF_ID will be generated automatically.
+*   TRACER_IF_TYPE : the Tracer interface type
+*   TRACER_IF_ID   : the Tracer interface id
+***************************************************/
+#define TRACER_IF               UseInterface(UART,0)
+
+/**************************************************
+*   Config HCI interface
+*
+*   HCI_IF : the interface assigned to HCI
+*
+*   HCI_IF_TYPE / HCI_IF_ID will be generated automatically.
+*   HCI_IF_TYPE : the HCI interface type
+*   HCI_IF_ID   : the HCI interface id
+***************************************************/
+#define HCI_IF                  UseInterface(UART,1)
 
 /******************************************************************************************************************
 *   Set SPI master configuration
 *   (all the configs are in cc6801_options.h)
 *   (please using OR operation to choose more than 2 configs)
 *
-*    Ex : SPIM0_CONFIG         (_SPI_MODE_0_ | _SPI_CS_HIGH_)
+*    Ex : SPIM0_CONFIG         (SPI_MODE_0 | SPI_CS_HIGH)
 *******************************************************************************************************************/
-#define SPIM0_CONFIG            (_SPI_MODE_0_)
-#define SPIM1_CONFIG            (_SPI_MODE_3_)
-#define SPIM2_CONFIG            (_SPI_MODE_3_)
+#define SPIM0_CONFIG            (SPI_MODE_0)
+#define SPIM1_CONFIG            (SPI_MODE_3)
+#define SPIM2_CONFIG            (SPI_MODE_3)
 
 
 /******************************************************************************************************************
 *   Set I2C clock configuration
 *   (all the configs are in cc6801_options.h)
 *******************************************************************************************************************/
-#define I2C0_CLOCK              (_I2C_FREQ_100K_)
-#define I2C1_CLOCK              (_I2C_FREQ_100K_)
+#define I2C0_CLOCK              (I2C_FREQ_100K)
+#define I2C1_CLOCK              (I2C_FREQ_100K)
+
+
+/******************************************************************************************************************
+*   Set Uart configuration
+*   (all the configs are in cc6801_options.h)
+*   (please using OR operation to choose more than 2 configs)
+*
+*    Ex : UART0_CONFIG         (UART_BAUDRATE_115200 | UART_DATA_BITS_8)
+*******************************************************************************************************************/
+#define UART_USE_DMA            1
+#define UART0_CONFIG            ((UART_BAUDRATE_115200) | (UART_DATA_BITS_8))
+#define UART1_CONFIG            ((UART_BAUDRATE_115200) | (UART_DATA_BITS_8))
+#define UART2_CONFIG            ((UART_BAUDRATE_115200) | (UART_DATA_BITS_8))
 
 
 /******************************************************************************************************************

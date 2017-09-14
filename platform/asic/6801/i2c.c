@@ -36,9 +36,9 @@
 
 typedef enum
 {
-    CC6801_I2C_100K = _I2C_FREQ_100K_,
-    CC6801_I2C_200K = _I2C_FREQ_200K_,
-    CC6801_I2C_400K = _I2C_FREQ_400K_,
+    CC6801_I2C_100K = I2C_FREQ_100K,
+    CC6801_I2C_200K = I2C_FREQ_200K,
+    CC6801_I2C_400K = I2C_FREQ_400K,
 } E_I2cFreq;
 
 static int g_iError = 0;

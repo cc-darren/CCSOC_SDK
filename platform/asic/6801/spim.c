@@ -159,7 +159,7 @@ __STATIC_INLINE void cc6801_SpimConfig(U_regSPI * pSpimBase,
     uint32_t dwDmaCtrl = pSpimBase->dw.DmaCtrl;
     uint32_t dwSpiCtrl = pSpimBase->dw.spiCtrl;
 
-    if (spi->wMode & _SPI_LSB_FIRST_)
+    if (spi->wMode & SPI_LSB_FIRST)
     {
         dwDmaCtrl |= SPIM_DMA_BYTE_SWAP_TX_MSB_MASK;
         dwDmaCtrl |= SPIM_DMA_BYTE_SWAP_RX_MSB_MASK;
@@ -170,17 +170,17 @@ __STATIC_INLINE void cc6801_SpimConfig(U_regSPI * pSpimBase,
         dwDmaCtrl &= ~SPIM_DMA_BYTE_SWAP_RX_MSB_MASK;
     }
 
-    if (spi->wMode & _SPI_CPHA_)
+    if (spi->wMode & SPI_CPHA)
         dwSpiCtrl |= SPIM_CTRL_CPHA_PHASE_SHIFT_MASK;
     else
         dwSpiCtrl &= ~SPIM_CTRL_CPHA_PHASE_SHIFT_MASK;
 
-    if (spi->wMode & _SPI_CPOL_)
+    if (spi->wMode & SPI_CPOL)
         dwSpiCtrl |= SPIM_CTRL_CPOL_EDGE_FALLING_MASK;
     else
         dwSpiCtrl &= ~SPIM_CTRL_CPOL_EDGE_FALLING_MASK;
 
-    if (spi->wMode & _SPI_CS_HIGH_)
+    if (spi->wMode & SPI_CS_HIGH)
         dwSpiCtrl &= ~SPIM_CTRL_CS_POLARITY_LOW_MASK;
     else
         dwSpiCtrl |= SPIM_CTRL_CS_POLARITY_LOW_MASK;
@@ -189,10 +189,10 @@ __STATIC_INLINE void cc6801_SpimConfig(U_regSPI * pSpimBase,
     pSpimBase->dw.DmaCtrl = dwDmaCtrl;
 
     printf("setup mode %d, %s%s%s %u Hz max\n",
-        (int) (spi->wMode & (_SPI_CPOL_ | _SPI_CPHA_)),
-        (spi->wMode & _SPI_CS_HIGH_) ? "cs_high, " : "",
-        (spi->wMode & _SPI_LSB_FIRST_) ? "lsb, " : "",
-        (spi->wMode & _SPI_3WIRE_) ? "3wire, " : "",
+        (int) (spi->wMode & (SPI_CPOL | SPI_CPHA)),
+        (spi->wMode & SPI_CS_HIGH) ? "cs_high, " : "",
+        (spi->wMode & SPI_LSB_FIRST) ? "lsb, " : "",
+        (spi->wMode & SPI_3WIRE) ? "3wire, " : "",
         spi->dwMaxSpeedHz);
 }
 

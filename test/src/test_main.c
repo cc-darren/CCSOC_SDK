@@ -59,7 +59,6 @@ Head Block of The File
 #endif
 #if (TEST_UART0_TXDMA) || (TEST_UART0_RXDMA)
 #include "test_uart.h"
-#include "uart.h"
 #endif
 #if (TEST_WDT)
 #include "drvi_wdt.h"
@@ -116,7 +115,7 @@ Declaration of static Global Variables & Functions
 static T_UartPort TestUart0 =
 {
     .bPortNum = 0,
-    .dwConfig = DRVI_UART_B1152000 | DRVI_UART_S8,
+    .dwConfig = UART_BAUDRATE_115200 | UART_DATA_BITS_8,
 };
 #endif
 // Exported function
@@ -207,14 +206,7 @@ static int cc6801_Init(void)
 
 int TEST_Main(void)
 {
-    INT8 cUartTxBuf[128];
-    INT8 cStrBuf[128];
-    UINT8 bUartRxBuf;
-
     //UINT8 bEflashBuf[64];
-
-    S_rtcInfo S_Time;
-
     UINT32 dwLoop = 0;
 
     cc6801_Init();
@@ -244,14 +236,6 @@ int TEST_Main(void)
             //mem_rw();
             S_Count.dwMem++;
         }
-#if (TEST_UART0_RXDMA)
-        if (g_Uart0RxDmaTestStart)
-        {
-            g_Uart0RxDmaTestStart = 0;
-            cc6801_UartRx(&TestUart0, &bUartRxBuf, 1);
-            S_Count.dwUart0Rx++;
-        }
-#endif
         if (g_EflashTestStart)
         {
             g_EflashTestStart = 0;
@@ -277,37 +261,6 @@ int TEST_Main(void)
         {
             g_GpiTestStart = 0;
         }
-        if (g_RtcTestStart)
-        {
-            g_RtcTestStart = 0;
-            S_Time = cc6801_rtcGetTime();
-        }
-#if (TEST_UART0_TXDMA)
-        if (g_Uart0TxDmaTestStart)
-        {
-            g_Uart0TxDmaTestStart = 0;
-
-            UINT32 *p_mod = (UINT32 *)&S_Count;
-            int i = 0;
-            //n = sprintf(cUartTxBuf, "%d\r\n", aes);
-            sprintf(cUartTxBuf, "[%02d:%02d:%02d]", S_Time.hour, S_Time.min, S_Time.sec);
-            strcat(cUartTxBuf, "[");
-            for (i=0; i<(sizeof(struct S_ModuleExecCount)/sizeof(UINT32)); i++)
-            {
-                sprintf(cStrBuf, "%lu", *(p_mod+i));
-                strcat(cUartTxBuf, cStrBuf);
-            }
-            strcat(cUartTxBuf, "]\r\n");
-
-            //sprintf(cStrBuf, "[%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d]\r\n",\
-            //                         S_Count.mem, S_Count.spi1, S_Count.spi2,\
-            //                         S_Count.i2c0, S_Count.i2c1, S_Count.eflash,\
-            //                         S_Count.aes, S_Count.gpi, S_Count.uart0_rx, S_Count.wdt, S_Count.wktm0);
-            //strcat(cUartTxBuf, cStrBuf);
-            cc6801_UartTx(&TestUart0, (const UINT8 *)cUartTxBuf, strlen(cUartTxBuf));
-            S_Count.dwUart0Tx++;
-        }
-#endif
         if (((dwLoop >> 3) << 3) == dwLoop)
         {
             drvi_GpioWrite(3, 0);

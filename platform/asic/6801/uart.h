@@ -100,6 +100,8 @@
 #define UART_MDSL_RTS_ENABLE_MASK (UART_MDSL_RTS_ENABLE_BIT << 7)
 
 typedef struct S_UartPort T_UartPort;
+typedef struct S_UartEvent T_UartEvent;
+typedef void (*fpUartRxDone)(T_UartEvent *p_event);
 
 typedef enum
 {
@@ -113,19 +115,30 @@ typedef struct
 {
     void *pDmaReg;
     void *pCtrlReg;
-    E_UartSupported index;
     int (*fpUartXfer)(void const * const pReg);
     int (*fpUartRcvr)(void const * const pReg);
+
+    uint8_t *pRxBuffer;
+    uint32_t dwRxCount;
+    uint32_t dwRxBufferLen;
+
+    void (*fbRxDoneHandler)(T_UartEvent *p_event);
 } T_cc6801UartPort;
 
 int cc6801_UartInit(T_UartPort *pUartPort);
 
-int cc6801_UartTx(T_UartPort *pUartPort,
-                    uint8_t const * const pData, uint8_t bLen);
+void cc6801_UartConfigSet(T_UartPort *pUartPort);
 
-int cc6801_UartRx(T_UartPort *pUartPort,
-                    uint8_t * pData, uint8_t bLen);
+void cc6801_UartRxDoneRegister(uint8_t bIdx, fpUartRxDone RxCallBack);
 
-__STATIC_INLINE void rx_done_event(uint8_t idx, uint8_t bytes);
+int cc6801_UartTxDMA(uint8_t bPortNum,
+                   uint8_t const * const pData, uint8_t bLen);
+
+int cc6801_UartRxDMA(uint8_t bPortNum, uint8_t *pData, uint8_t bLen);
+
+int cc6801_UartTx(uint8_t bPortNum,
+                   uint8_t const * const pData, uint8_t bLen);
+
+int cc6801_UartRx(uint8_t bPortNum, uint8_t *pData, uint8_t bLen);
 
 #endif //_UART_H
