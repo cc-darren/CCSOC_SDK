@@ -41,7 +41,7 @@
 
 
 
-#define UseInterface(_type,_id)   _Interface_##_type##_id##_
+#define UseInterface(_type,_id)   Interface_##_type##_id
 
 
 

@@ -3,7 +3,9 @@
 *******************************************************************************/
 
 /* Includes ------------------------------------------------------------------*/
-#include "AK09912.h"
+#include "project.h"
+
+#if (MODULE_MAG == MAG_AKM_AK09912C)
 
 /* Private macro -------------------------------------------------------------*/
 #define AK09912_IF_ADDRESS      0x0C
@@ -28,7 +30,7 @@ u8_t AK09912_MAG_ReadReg(u8_t Reg, u8_t* Data) {
   //i2c_data_read(Reg, Data, 1);
   m_tx_buf[0] = Reg;
 
-  MAGIF_WRITE_THEN_READ(MAG_IF_ID,m_tx_buf,1,Data,1);
+  AK09912_IF_WriteThenRead(MAG_IF_ID,m_tx_buf,1,Data,1);
     
   *Data = m_rx_buf[0];
    
@@ -56,7 +58,7 @@ u8_t AK09912_MAG_WriteReg(u8_t Reg, u8_t Data) {
   m_tx_buf[0] = Reg;
   m_tx_buf[1] = Data;
 
-  MAGIF_WRITE(MAG_IF_ID,m_tx_buf,2);
+  AK09912_IF_Write(MAG_IF_ID,m_tx_buf,2);
   return MEMS_SUCCESS;
   //EXAMPLE  
   //I2C_ByteWrite(&Data,  AK09912_MAG_MEMS_I2C_ADDRESS,  Reg); 
@@ -273,7 +275,7 @@ status_t  AK09912_MAG_GetMagRawBurst(u8_t* buff, u8_t buffer_size)
     {
         //i2c_data_read(AK09912_MAG_HXL, buff, buffer_size);
         m_tx_buf[0] = AK09912_MAG_HXL;
-        MAGIF_WRITE_THEN_READ(MAG_IF_ID,m_tx_buf,1,buff,buffer_size);
+        AK09912_IF_WriteThenRead(MAG_IF_ID,m_tx_buf,1,buff,buffer_size);
         return MEMS_SUCCESS;
     }
 }
@@ -384,14 +386,14 @@ status_t AK09912_MAG_Init(void)
 {
 	status_t response;
     u8_t id;
-    
+    #if (MAG_IF_TYPE == IF_SPI)
     T_I2cDevice i2c_sensor_config = {
        .bBusNum          = MAG_IF_ID,
        .bAddr            = AK09912_IF_ADDRESS,
     };
 
     drvi_I2cDeviceRegister(&i2c_sensor_config);
-
+    #endif
  response = AK09912_MAG_GetAKMID(&id);
  if(id != AKM_COMPANY_ID) {
      return MEMS_ERROR;
@@ -427,22 +429,4 @@ status_t AK09912_MAG_SLEEP(void)
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#endif //#if (MODULE_MAG == MAG_AKM_AK09912C)

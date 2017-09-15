@@ -35,26 +35,25 @@
 
 
 // Interface List
+#define IF_SPI    0x10
+#define IF_I2C    0x20
+#define IF_UART   0x30
+#define IF_WKT    0x40
+#define IF_PWM    0x50
+#define IF_NULL   0xFF
 
-#define _IF_SPI_    0x10
-#define _IF_I2C_    0x20
-#define _IF_UART_   0x30
-#define _IF_WKT_    0x40
-#define _IF_PWM_    0x50
-#define _IF_NULL_   0xFF
-
-#define _Interface_SPI0_    0x10
-#define _Interface_SPI1_    0x11
-#define _Interface_SPI2_    0x12
-#define _Interface_I2C0_    0x20
-#define _Interface_I2C1_    0x21
-#define _Interface_UART0_   0x30
-#define _Interface_UART1_   0x31
-#define _Interface_UART2_   0x32
-#define _Interface_WKT0_    0x40
-#define _Interface_WKT1_    0x41
-#define _Interface_PWM0_    0x50
-#define _Interface_PWM1_    0x51
+#define Interface_SPI0    0x10
+#define Interface_SPI1    0x11
+#define Interface_SPI2    0x12
+#define Interface_I2C0    0x20
+#define Interface_I2C1    0x21
+#define Interface_UART0   0x30
+#define Interface_UART1   0x31
+#define Interface_UART2   0x32
+#define Interface_WKT0    0x40
+#define Interface_WKT1    0x41
+#define Interface_PWM0    0x50
+#define Interface_PWM1    0x51
 
 // GPIO Configuration List
 

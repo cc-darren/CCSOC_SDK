@@ -20,7 +20,7 @@ int drvi_I2cInit(void)
     uint32_t dwClock = 0;
     int iResult = 0;
 
-    #if defined _I2C0_INUSE_ && (_I2C0_INUSE_)
+    #if defined I2C0_INUSE && (I2C0_INUSE)
     bBusNum = 0;
     iResult = cc6801_I2cInit(bBusNum);
     if (!iResult)
@@ -29,7 +29,7 @@ int drvi_I2cInit(void)
     dwClock = I2C0_CLOCK;
     cc6801_I2cFreqSet(bBusNum, dwClock);
     #endif
-    #if defined _I2C1_INUSE_ && (_I2C1_INUSE_)
+    #if defined I2C1_INUSE && (I2C1_INUSE)
     bBusNum = 1;
     iResult = cc6801_I2cInit(bBusNum);
     if (!iResult)

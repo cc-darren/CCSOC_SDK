@@ -3,38 +3,31 @@
 *******************************************************************************/
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __AK09912_MAG_DRIVER__H
-#define __AK09912_MAG_DRIVER__H
+#ifndef _MAG_AK09912_H_
+#define _MAG_AK09912_H_
 
 /* Includes ------------------------------------------------------------------*/
 #include <stdint.h>
 #include "project.h"
-#include "drvi_spi.h"
-#include "drvi_i2c.h"
+
 /* Exported types ------------------------------------------------------------*/
-#ifndef _MAG_SHARE_TYPE_
-#define _MAG_SHARE_TYPE_
 #define MAG_Init()                              AK09912_MAG_Init()
 #define MAG_GetMagRaw(buf)                      AK09912_MAG_GetMagRaw(buf)
 #define MAG_GetMagRawBurst(buf, buf_size)       AK09912_MAG_GetMagRawBurst(buf, buf_size)
 
-/* Imported macro ------------------------------------------------------------*/
-#if (MAG_IF_TYPE == _IF_SPI_)
-    #include "drvi_spi.h"
-    #define MAGIF_WRITE_THEN_READ(bus,tbuf,tlen,rbuf,rlen)    drvi_SpiWriteThenRead(bus,tbuf,tlen,rbuf,rlen)
-    #define MAGIF_WRITE(bus,buf,len)                          drvi_SpiWrite(bus,buf,len)
-#elif (MAG_IF_TYPE == _IF_I2C_)
-    #include "drvi_i2c.h"
-    #define MAGIF_WRITE_THEN_READ(bus,tbuf,tlen,rbuf,rlen)    drvi_I2cWriteThenRead(bus,tbuf,tlen,rbuf,rlen)
-    #define MAGIF_WRITE(bus,buf,len)                          drvi_I2cWrite(bus,buf,len)
-#else
-    #define MAGIF_WRITE_THEN_READ(bus,tbuf,tlen,rbuf,rlen)      
-    #define MAGIF_WRITE(bus,buf,len)                            
-#endif
 /* Imported constants --------------------------------------------------------*/
 
-#endif //_MAG_SHARE_TYPE_
-
+/* Imported macro ------------------------------------------------------------*/
+#if (MAG_IF_TYPE == IF_SPI)
+    #define AK09912_IF_WriteThenRead(bus,tbuf,tlen,rbuf,rlen)   drvi_SpiWriteThenRead(bus,tbuf,tlen,rbuf,rlen)
+    #define AK09912_IF_Write(bus,buf,len)                       drvi_SpiWrite(bus,buf,len)
+#elif (MAG_IF_TYPE == IF_I2C)
+    #define AK09912_IF_WriteThenRead(bus,tbuf,tlen,rbuf,rlen)   drvi_I2cWriteThenRead(bus,tbuf,tlen,rbuf,rlen)
+    #define AK09912_IF_Write(bus,buf,len)                       drvi_I2cWrite(bus,buf,len)
+#else
+    #define AK09912_IF_WriteThenRead(bus,tbuf,tlen,rbuf,rlen)      
+    #define AK09912_IF_Write(bus,buf,len)                            
+#endif
 
 
 
@@ -236,7 +229,7 @@ status_t AK09912_MAG_Init(void);
 status_t AK09912_MAG_SLEEP(void);
 
 
-#endif /* __AK09912_MAG_H */
+#endif /* _MAG_AK09912_H_ */
 
 /******************* (C) COPYRIGHT 2013 STMicroelectronics *****END OF FILE****/
 

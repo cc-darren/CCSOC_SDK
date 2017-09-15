@@ -36,8 +36,8 @@
  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __LSM6DS3_ACC_DRIVER__H
-#define __LSM6DS3_ACC_DRIVER__H
+#ifndef _ACC_LSM6DS3_H_
+#define _ACC_LSM6DS3_H_
 
 /* Includes ------------------------------------------------------------------*/
 #include <stdint.h>
@@ -95,34 +95,23 @@ typedef union
 #endif /*__LSM6DS3_SHARED__TYPES*/
 
 /* Exported macro ------------------------------------------------------------*/
-#ifndef _ACC_SHARE_TYPE_
-#define _ACC_SHARE_TYPE_
-
 #define ACC_Init()                                     LSM6DS3_X_Init()
 #define ACC_Data_Get(x,y)                              LSM6DS3_ACC_GYRO_GetRawAccData(x,y)
 /* Exported constants --------------------------------------------------------*/
 
 
-
 /* Imported macro ------------------------------------------------------------*/
-#if (ACC_IF_TYPE == _IF_SPI_)
-    #include "drvi_spi.h"
-    #define ACCIF_WRITE_THEN_READ(bus,tbuf,tlen,rbuf,rlen)    drvi_SpiWriteThenRead(bus,tbuf,tlen,rbuf,rlen)
-    #define ACCIF_WRITE(bus,buf,len)                          drvi_SpiWrite(bus,buf,len)
-#elif (ACC_IF_TYPE == _IF_I2C_)
-    #include "drvi_i2c.h"
-    #define ACCIF_WRITE_THEN_READ(bus,tbuf,tlen,rbuf,rlen)    drvi_I2CWriteThenRead(bus,tbuf,tlen,rbuf,rlen)
-    #define ACCIF_WRITE(bus,buf,len)                          drvi_I2CWrite(bus,buf,len)
+#if (ACC_IF_TYPE == IF_SPI)
+    #define LSM6DS3_IF_WriteThenRead(bus,tbuf,tlen,rbuf,rlen)    drvi_SpiWriteThenRead(bus,tbuf,tlen,rbuf,rlen)
+    #define LSM6DS3_IF_Write(bus,buf,len)                          drvi_SpiWrite(bus,buf,len)
+#elif (ACC_IF_TYPE == IF_I2C)
+    #define LSM6DS3_IF_WriteThenRead(bus,tbuf,tlen,rbuf,rlen)    drvi_I2CWriteThenRead(bus,tbuf,tlen,rbuf,rlen)
+    #define LSM6DS3_IF_Write(bus,buf,len)                          drvi_I2CWrite(bus,buf,len)
 #else
-    #define ACCIF_WRITE_THEN_READ(bus,tbuf,tlen,rbuf,rlen)      
-    #define ACCIF_WRITE(bus,buf,len)                            
+    #define LSM6DS3_IF_WriteThenRead(bus,tbuf,tlen,rbuf,rlen)      
+    #define LSM6DS3_IF_Write(bus,buf,len)                            
 #endif
 /* Imported constants --------------------------------------------------------*/
-
-
-#endif //_ACC_SHARE_TYPE_
-
-
 
 /************** I2C Address *****************/
 
@@ -2945,4 +2934,4 @@ u8_t LSM6DS3_ACC_GYRO_ReadMulti( void *handle, u8_t Reg, u8_t *Bufp, u16_t len )
 status_t LSM6DS3_X_Init( void );
 status_t LSM6DS3_X_SLEEP( void );
 
-#endif
+#endif //_ACC_LSM6DS3_H_

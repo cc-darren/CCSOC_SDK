@@ -46,6 +46,8 @@ extern "C" {
 #define delayns(x)  do{uint32_t ipp;for(ipp=0;ipp<x;ipp++){volatile uint32_t iqq;iqq=0;}}while(0);
 #define wr(x,y)     *((volatile unsigned int *)(x)) = y
 #define rd(x,y)     y = *((volatile unsigned int *)(x))
+#define setbit(x,y) *((volatile unsigned int *)(x)) |= y
+#define clrbit(x,y) *((volatile unsigned int *)(x)) &= (~y)
 
 
 //// clock
@@ -274,15 +276,13 @@ extern "C" {
 #define HS_STS_REG                  (HS_ADDR_BASE + 0x00000004)
 #define HS_DR_PDN_REG               (HS_ADDR_BASE + 0x00000008)
 #define HS_DR0_PUP_REG              (HS_ADDR_BASE + 0x0000000c)
-#define HS_DR0_PUP1_REG             (HS_ADDR_BASE + 0x00000010)
 #define HS_DR0_INTR_REG             (HS_ADDR_BASE + 0x00000014)
 #define HS_DR1_PUP_REG              (HS_ADDR_BASE + 0x00000018)
-#define HS_DR1_PUP1_REG             (HS_ADDR_BASE + 0x0000001c)
 #define HS_DR1_INTR_REG             (HS_ADDR_BASE + 0x00000020)
 #define HS_DR2_PUP_REG              (HS_ADDR_BASE + 0x00000024)
-#define HS_DR2_PUP1_REG             (HS_ADDR_BASE + 0x00000028)
 #define HS_DR2_INTR_REG             (HS_ADDR_BASE + 0x0000002c)
-#define HS_SCRATCH_BASE_REG         (HS_ADDR_BASE + 0x00000030)
+#define HS_PSO_PDN_REG              (HS_ADDR_BASE + 0x00000030)
+#define HS_LDO_PDN_REG              (HS_ADDR_BASE + 0x00000034)
 
 #define AES_INTR_REG                (AES_ADDR_BASE + 0x00000000)
 #define AES_CTRL_REG                (AES_ADDR_BASE + 0x00000004)
@@ -361,6 +361,8 @@ typedef union U_regSCU
         uint32_t osc40K:1;          //Ring oscillator 40KHz, 0:disable, 1:enable
         uint32_t dctrlGatedClk:1;   //DCTRL Gated Clock, 0:disable, 1:enable
         uint32_t reserved9:18;
+        //0x18 reserved
+        uint32_t reserved10:32;
         //0x1C Chip ID
         uint32_t subVer:4;          //Sub Version
         uint32_t mainVer:4;         //Main Version
@@ -394,7 +396,7 @@ typedef union U_regSCU
         uint32_t gpio_iso:1;        //0:isolation disable, 1:isolation enable
         uint32_t clkGen_iso:1;      //0:isolation disable, 1:isolation enable
         uint32_t testLogic_iso:1;   //0:isolation disable, 1:isolation enable
-        uint32_t reserved10:1;      //0:isolation disable, 1:isolation enable
+        uint32_t reserved11:1;      //0:isolation disable, 1:isolation enable
         uint32_t blePhy_iso:1;      //0:isolation disable, 1:isolation enable
         uint32_t coreAo_iso:1;      //0:isolation disable, 1:isolation enable
         uint32_t padNao_iso:1;      //0:isolation disable, 1:isolation enable
@@ -427,37 +429,37 @@ typedef union U_regSCU
         uint32_t gpio_off:1;        //0:power shut off disable, 1:power shut off enable
         uint32_t clkGen_off:1;      //0:power shut off disable, 1:power shut off enable
         uint32_t testLogic_off:1;   //0:power shut off disable, 1:power shut off enable
-        uint32_t reserved11:1;      //0:power shut off disable, 1:power shut off enable
-        uint32_t blePhy_off:1;      //0:power shut off disable, 1:power shut off enable
         uint32_t reserved12:1;      //0:power shut off disable, 1:power shut off enable
+        uint32_t blePhy_off:1;      //0:power shut off disable, 1:power shut off enable
+        uint32_t reserved13:2;      
         //0x28 Retention Enable
         uint32_t m0pRet:1;          //0:retention disable, 1:retention enable
         uint32_t m4Ret:1;           //0:retention disable, 1:retention enable
-        uint32_t reserved13:30;
+        uint32_t reserved14:30;
         //0x2C External Auxilary Selection
         uint32_t extAuxSel:2;       //External auxilary selection
-        uint32_t reserved14:30;
+        uint32_t reserved15:30;
         //0x30 Code Remap
         uint32_t remap:1;           //0:disable, 1:enable, remap memory address 0x20000000 to 0x00
-        uint32_t reserved15:31;
+        uint32_t reserved16:31;
         //0x34 I-Cache Control/Booting Control
         uint32_t flushEn:1;         //I-Cache flush enable, 0:disable, 1:enable
-        uint32_t reserved16:7;
+        uint32_t reserved17:7;
         uint32_t extFlashBoot:1;    //to indicate booting from external flash, Ready Only
-        uint32_t reserved17:1;
+        uint32_t reserved18:1;
         uint32_t pdm25:1;           //PDM25 control(optional), 0:rising edge without impact, 1:falling edge to enable
-        uint32_t reserved18:5;
+        uint32_t reserved19:5;
         uint32_t mcuSwReset:1;      //Software reset enable, 0:reset, 1:un-reset
         uint32_t clkRstGenRst:1;    //0:reset, 1:un-reset
-        uint32_t reserved19:13;
+        uint32_t reserved20:13;
         uint32_t flushDone:1;       //I-Cache flush done, 0:not complete, 1:complete, Read Only
         //0x38 Clock 32KHz calibration
         uint32_t calib32K:26;       //Clock 32KHz calibration value
-        uint32_t reserved20:6;
+        uint32_t reserved21:6;
         //0x3C Chip Interrupt enable
         uint32_t inten;             //apply to CPU non-mask interrupt, 0:disable, 1:enable, refer to 0x40 for bit definition
         //0x40 Chip Interrupt status (all read only)
-        uint32_t reserved21:1;
+        uint32_t reserved22:1;
         uint32_t wdt_intSts:1;
         uint32_t rtc_intSts:1;
         uint32_t pwm0_intSts:1;
@@ -487,7 +489,7 @@ typedef union U_regSCU
         uint32_t ccu_intSts:1;
         uint32_t aes_intSts:1;
         uint32_t dmu_intSts:1;
-        uint32_t reserved22:1;
+        uint32_t reserved23:1;
         uint32_t ef_intSts:1;
     }bf;    //bit-field
 }U_regSCU;

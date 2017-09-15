@@ -43,7 +43,7 @@ Head Block of The File
 #include "test_aes.h"
 #endif
 #if (TEST_EFLASH)
-#include "eflash.h"
+#include "drvi_eflash.h"
 #endif
 #if (TEST_I2C)
 #include "test_i2c.h"

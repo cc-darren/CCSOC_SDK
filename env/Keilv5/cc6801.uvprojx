@@ -559,14 +559,29 @@
           <GroupName>module</GroupName>
           <Files>
             <File>
-              <FileName>ak09912.c</FileName>
+              <FileName>acc_lsm6ds3.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\module\ak09912.c</FilePath>
+              <FilePath>..\..\platform\module\acc_lsm6ds3.c</FilePath>
             </File>
             <File>
-              <FileName>LSM6DS3_ACC_GYRO_driver.c</FileName>
+              <FileName>acc_null.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\module\LSM6DS3_ACC_GYRO_driver.c</FilePath>
+              <FilePath>..\..\platform\module\acc_null.c</FilePath>
+            </File>
+            <File>
+              <FileName>gyr_null.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\module\gyr_null.c</FilePath>
+            </File>
+            <File>
+              <FileName>mag_ak09912.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\module\mag_ak09912.c</FilePath>
+            </File>
+            <File>
+              <FileName>mag_null.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\module\mag_null.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1767,14 +1782,29 @@
           <GroupName>module</GroupName>
           <Files>
             <File>
-              <FileName>ak09912.c</FileName>
+              <FileName>acc_lsm6ds3.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\module\ak09912.c</FilePath>
+              <FilePath>..\..\platform\module\acc_lsm6ds3.c</FilePath>
             </File>
             <File>
-              <FileName>LSM6DS3_ACC_GYRO_driver.c</FileName>
+              <FileName>acc_null.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\module\LSM6DS3_ACC_GYRO_driver.c</FilePath>
+              <FilePath>..\..\platform\module\acc_null.c</FilePath>
+            </File>
+            <File>
+              <FileName>gyr_null.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\module\gyr_null.c</FilePath>
+            </File>
+            <File>
+              <FileName>mag_ak09912.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\module\mag_ak09912.c</FilePath>
+            </File>
+            <File>
+              <FileName>mag_null.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\module\mag_null.c</FilePath>
             </File>
           </Files>
         </Group>
