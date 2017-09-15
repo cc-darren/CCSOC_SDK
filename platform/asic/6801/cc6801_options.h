@@ -39,6 +39,8 @@
 #define _IF_SPI_    0x10
 #define _IF_I2C_    0x20
 #define _IF_UART_   0x30
+#define _IF_WKT_    0x40
+#define _IF_PWM_    0x50
 #define _IF_NULL_   0xFF
 
 #define _Interface_SPI0_    0x10
@@ -49,7 +51,10 @@
 #define _Interface_UART0_   0x30
 #define _Interface_UART1_   0x31
 #define _Interface_UART2_   0x32
-
+#define _Interface_WKT0_    0x40
+#define _Interface_WKT1_    0x41
+#define _Interface_PWM0_    0x50
+#define _Interface_PWM1_    0x51
 
 // GPIO Configuration List
 
