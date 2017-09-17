@@ -12,7 +12,7 @@
  */
 #include "drvi_uart.h"
 
-#if defined _UART_INUSE_ && (_UART_INUSE_)
+#if defined UART_INUSE && (UART_INUSE)
 int drvi_UartInit(void)
 {
     T_UartPort tUartPort;

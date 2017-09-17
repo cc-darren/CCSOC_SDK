@@ -13,7 +13,7 @@
 #include "drvi_i2c.h"
 #include "tracer.h"
 
-#if defined _I2C_INUSE_ && (_I2C_INUSE_)
+#if defined I2C_INUSE && (I2C_INUSE)
 int drvi_I2cInit(void)
 {
     uint8_t bBusNum = 0;

@@ -10,16 +10,19 @@
  *
  ****************************************************************************************
  */
+#include "project.h"
 #include "drvi_wktm.h"
 
+#if defined(WKTM_INUSE) && WKTM_INUSE
 void drvi_wktmInit(void)
 {
-    #if defined(_WKTM0_INUSE_) && _WKTM0_INUSE_
+    #if defined(WKTM0_INUSE) && WKTM0_INUSE
     cc6801_wktmInit(WKTM_0);
     #endif
     
-    #if defined(_WKTM1_INUSE_) && _WKTM1_INUSE_
+    #if defined(WKTM1_INUSE) && WKTM1_INUSE
     cc6801_wktmInit(WKTM_1);
     #endif
 }
+#endif
 
