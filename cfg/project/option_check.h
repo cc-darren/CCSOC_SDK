@@ -182,6 +182,19 @@
   #error "HCI interface not found"
 #endif
 
+#if ((defined SWT_IF) && (SWT_IF))
+  #define SWT_IF_TYPE (SWT_IF&0xF0)
+  #define SWT_IF_ID   (SWT_IF&0x0F)
+#else
+  #error "SWT interface not found"
+#endif
+
+#if ((defined VIBRATOR_IF) && (VIBRATOR_IF))
+  #define VIBRATOR_IF_TYPE (VIBRATOR_IF&0xF0)
+  #define VIBRATOR_IF_ID   (VIBRATOR_IF&0x0F)
+#else
+  #error "VIBRATOR interface not found"
+#endif
 
 //check which interface is used
 #if   ((ACC_IF==Interface_SPI0) || (MAG_IF==Interface_SPI0) || (GYR_IF==Interface_SPI0) || (OLED_IF==Interface_SPI0))
@@ -209,6 +222,24 @@
   #define UART2_INUSE TRUE
 #endif
 
+#if (SWT_IF ==Interface_WKTM0)
+  #define WKTM0_INUSE TRUE
+#endif
+
+#if (SWT_IF ==Interface_WKTM1)
+  #define WKTM1_INUSE TRUE
+#endif
+
+#if (VIBRATOR_IF ==Interface_PWM0)
+  #define PWM0_INUSE TRUE
+#endif
+
+#if (VIBRATOR_IF ==Interface_PWM1)
+  #define PWM1_INUSE TRUE
+#endif
+
+/************************  SOC peripheral INUSE definition ***********************/
+
 #if ((SPI0_INUSE) || (SPI1_INUSE) || (SPI2_INUSE))
   #include "drvi_spi.h"
   #define SPI_INUSE TRUE
@@ -222,6 +253,14 @@
 #if ((UART0_INUSE) || (UART1_INUSE) || (UART2_INUSE))
   #include "drvi_uart.h"
   #define UART_INUSE TRUE
+#endif
+
+#if ((WKTM0_INUSE) || (WKTM1_INUSE))
+  #define WKTM_INUSE TRUE
+#endif
+
+#if ((PWM0_INUSE) || (PWM1_INUSE))
+  #define PWM_INUSE TRUE
 #endif
 
 //remove IF check temporately, I2C interface can connect to mutilple slave

@@ -861,8 +861,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\platform\drvi\drvi_timer.c</PathWithFileName>
-      <FilenameWithoutPath>drvi_timer.c</FilenameWithoutPath>
+      <PathWithFileName>..\..\platform\drvi\drvi_uart.c</PathWithFileName>
+      <FilenameWithoutPath>drvi_uart.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -873,8 +873,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\platform\drvi\drvi_uart.c</PathWithFileName>
-      <FilenameWithoutPath>drvi_uart.c</FilenameWithoutPath>
+      <PathWithFileName>..\..\platform\drvi\drvi_wktm.c</PathWithFileName>
+      <FilenameWithoutPath>drvi_wktm.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

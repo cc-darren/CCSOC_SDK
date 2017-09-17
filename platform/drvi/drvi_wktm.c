@@ -1,7 +1,7 @@
 /**
  ****************************************************************************************
  *
- * @file drvi_timer.c
+ * @file drvi_wktm.c
  *
  * @brief HW timer interface for all SOC.
  *
@@ -10,8 +10,16 @@
  *
  ****************************************************************************************
  */
-#include "global.h"
-#include "drvi_timer.h"
+#include "drvi_wktm.h"
 
-
+void drvi_wktmInit(void)
+{
+    #if defined(_WKTM0_INUSE_) && _WKTM0_INUSE_
+    cc6801_wktmInit(WKTM_0);
+    #endif
+    
+    #if defined(_WKTM1_INUSE_) && _WKTM1_INUSE_
+    cc6801_wktmInit(WKTM_1);
+    #endif
+}
 

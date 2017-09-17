@@ -18,9 +18,9 @@
  *
  * @brief Application timer functionality.
  *
- * @details This module enables the application to create multiple timer instances based on the RTC1
+ * @details This module enables the application to create multiple timer instances based on the HW
  *          peripheral. Checking for time-outs and invokation of user time-out handlers is performed
- *          in the RTC1 interrupt handler. List handling is done using a software interrupt (SWI0).
+ *          in the HW interrupt handler. List handling is done using a software interrupt (SWI0).
  *          Both interrupt handlers are running in APP_LOW priority level.
  *
  * @details When calling app_timer_start() or app_timer_stop(), the timer operation is just queued,
@@ -44,10 +44,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include "global.h"
-#include "drvi_timer.h"
-//#include "app_error.h"
-//#include "app_util.h"
-//#include "compiler_abstraction.h"
+#include "drvi_wktm.h"
 
 #define APP_ERROR_CHECK(x)
 
@@ -93,7 +90,7 @@
  *         ticks value that is not supported by this module.
  *
  * @param[in]  MS          Milliseconds.
- * @param[in]  PRESCALER   Value of the RTC1 PRESCALER register (must be the same value that was
+ * @param[in]  PRESCALER   Value of the HW PRESCALER register (must be the same value that was
  *                         passed to APP_TIMER_INIT()). 
  *
  * @return     Number of timer ticks.
@@ -144,7 +141,7 @@ typedef enum
  *          SoftDevice init. 
  *
  *
- * @param[in]  PRESCALER        Value of the RTC1 PRESCALER register. This will decide the
+ * @param[in]  PRESCALER        Value of the HW PRESCALER register. This will decide the
  *                              timer tick rate. Set to 0 for no prescaling.
  * @param[in]  OP_QUEUES_SIZE   Size of queues holding timer operations that are pending execution.
  * @param[in]  SCHEDULER_FUNC   Pointer to scheduler event handler
@@ -173,7 +170,7 @@ typedef enum
  *       allocate the buffers needed by the timer module (including aligning the buffers correctly)
  *       and take care of connecting the timer module to the scheduler (if specified).
  *
- * @param[in]  prescaler           Value of the RTC1 PRESCALER register. Set to 0 for no prescaling.
+ * @param[in]  prescaler           Value of the HW PRESCALER register. Set to 0 for no prescaling.
  * @param[in]  op_queues_size      Size of queues holding timer operations that are pending
  *                                 execution. Note that due to the queue implementation, this size must
  *                                 be one more than the size that is actually needed.
@@ -221,7 +218,7 @@ uint32_t app_timer_create(app_timer_id_t const *      p_timer_id,
 /**@brief Function for starting a timer.
  *
  * @param[in]       timer_id      Timer identifier.
- * @param[in]       timeout_ticks Number of ticks (of RTC1, including prescaling) to time-out event
+ * @param[in]       timeout_ticks Number of ticks (of HW, including prescaling) to time-out event
  *                                (minimum 5 ticks).
  * @param[in]       p_context     General purpose pointer. Will be passed to the time-out handler when
  *                                the timer expires.
@@ -260,15 +257,15 @@ uint32_t app_timer_stop(app_timer_id_t timer_id);
  */
 uint32_t app_timer_stop_all(void);
 
-/**@brief Function for returning the current value of the RTC1 counter.
+/**@brief Function for returning the current value of the HW counter.
  *
- * @param[out] p_ticks   Current value of the RTC1 counter.
+ * @param[out] p_ticks   Current value of the HW counter.
  *
  * @retval     NRF_SUCCESS   If the counter was successfully read.
  */
 uint32_t app_timer_cnt_get(uint32_t * p_ticks);
 
-/**@brief Function for computing the difference between two RTC1 counter values.
+/**@brief Function for computing the difference between two HW counter values.
  *
  * @param[in]  ticks_to       Value returned by app_timer_cnt_get().
  * @param[in]  ticks_from     Value returned by app_timer_cnt_get().

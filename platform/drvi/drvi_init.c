@@ -16,7 +16,9 @@
 #include "drvi_i2c.h"
 #endif
 #include "drvi_pwm.h"
-#include "drvi_timer.h"
+#if defined(_WKTM_INUSE_) && _WKTM_INUSE_
+#include "drvi_wktm.h"
+#endif
 #if defined _SPI_INUSE_ && (_SPI_INUSE_)
 #include "drvi_spi.h"
 #endif
@@ -27,7 +29,10 @@
 
 void drvi_initialize(void)
 {
-    drvi_timer0_init((void*)NULL);
+    #if defined(_WKTM_INUSE_) && _WKTM_INUSE_
+    drvi_wktmInit();
+    #endif
+    
     drvi_GpioPinMuxInit();
 
     #if defined _UART_INUSE_ && (_UART_INUSE_)

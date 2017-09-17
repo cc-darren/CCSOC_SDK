@@ -31,16 +31,17 @@
 ******************************************************************************/
 #ifndef _CC6801_OPTIONS_H_
 #define _CC6801_OPTIONS_H_
-
+#include "wktm.h"
 
 
 // Interface List
+
 #define IF_SPI    0x10
 #define IF_I2C    0x20
 #define IF_UART   0x30
-#define IF_WKT    0x40
+#define IF_WKTM   0x40
 #define IF_PWM    0x50
-#define IF_NULL   0xFF
+#define IF_NULL   0xFF    //also be a mask for all interface
 
 #define Interface_SPI0    0x10
 #define Interface_SPI1    0x11
@@ -50,8 +51,8 @@
 #define Interface_UART0   0x30
 #define Interface_UART1   0x31
 #define Interface_UART2   0x32
-#define Interface_WKT0    0x40
-#define Interface_WKT1    0x41
+#define Interface_WKTM0   ((IF_WKTM) | (WKTM_0) & (IF_NULL))
+#define Interface_WKTM1   ((IF_WKTM) | (WKTM_1) & (IF_NULL))
 #define Interface_PWM0    0x50
 #define Interface_PWM1    0x51
 

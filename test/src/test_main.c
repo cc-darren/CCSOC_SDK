@@ -64,7 +64,7 @@ Head Block of The File
 #include "drvi_wdt.h"
 #endif
 #if (TEST_WKTM0)
-#include "drvi_timer.h"
+#include "drvi_wktm.h"
 #endif
 
 
@@ -121,7 +121,7 @@ static T_UartPort TestUart0 =
 // Exported function
 void Timer_Callback(void *para)
 {
-    drvi_timer0_counterClear();
+    drvi_wktmCounterClear(WKTM_0);
     S_Count.dwWktm0++;
 }
 
@@ -180,9 +180,10 @@ static int cc6801_Init(void)
     {
         //timers_init();
         //timers_start_test();
-        drvi_timer0_init(Timer_Callback);
-        drvi_timer0_start();
-        drvi_timer0_counterLoad(30000);
+        cc6801_wktmInit(WKTM_0);
+        drvi_wktmRegisterCallback(WKTM_0, Timer_Callback);
+        drvi_wktmStart(WKTM_0);
+        drvi_wktmCounterLoad(WKTM_0, 30000);
     }
     if (g_Pwm0TestStart)
     {

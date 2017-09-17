@@ -11,13 +11,8 @@
  */
 
 #include "sw_timer.h"
+#include "project.h"
 #include <stdlib.h>
-//#include "nrf.h"
-//#include "nrf_soc.h"
-//#include "app_error.h"
-//#include "nrf_delay.h"
-//#include "app_util.h"
-//#include "app_util_platform.h"
 
 //#define RTC1_IRQ_PRI            APP_IRQ_PRIORITY_LOW                        /**< Priority of the RTC1 interrupt (used for checking for timeouts and executing timeout handlers). */
 //#define SWI_IRQ_PRI             APP_IRQ_PRIORITY_LOW                        /**< Priority of the SWI  interrupt (used for updating the timer list). */
@@ -37,13 +32,13 @@
 
 #define MAX_RTC_TASKS_DELAY     47                                          /**< Maximum delay until an RTC task is executed. */
 
-#ifdef NRF51
-#define SWI_IRQn SWI0_IRQn
-#define SWI_IRQHandler SWI0_IRQHandler
-#elif defined NRF52
-#define SWI_IRQn SWI0_EGU0_IRQn
-#define SWI_IRQHandler SWI0_EGU0_IRQHandler
-#endif
+//#ifdef NRF51
+//#define SWI_IRQn SWI0_IRQn
+//#define SWI_IRQHandler SWI0_IRQHandler
+//#elif defined NRF52
+//#define SWI_IRQn SWI0_EGU0_IRQn
+//#define SWI_IRQHandler SWI0_EGU0_IRQHandler
+//#endif
 
 /**@brief Timer node type. The nodes will be used form a linked list of running timers. */
 typedef struct
@@ -131,26 +126,25 @@ static uint32_t                      m_ticks_elapsed[CONTEXT_QUEUE_SIZE_MAX];   
 static uint8_t                       m_ticks_elapsed_q_read_ind;                /**< Timer internal elapsed ticks queue read index. */
 static uint8_t                       m_ticks_elapsed_q_write_ind;               /**< Timer internal elapsed ticks queue write index. */
 static app_timer_evt_schedule_func_t m_evt_schedule_func;                       /**< Pointer to function for propagating timeout events to the scheduler. */
-static bool                          m_rtc1_running;                            /**< Boolean indicating if RTC1 is running. */
-static bool                          m_rtc1_reset;                              /**< Boolean indicating if RTC1 counter has been reset due to last timer removed from timer list during the timer list handling. */
+static bool                          m_hw_running;                            /**< Boolean indicating if HW is running. */
+static bool                          m_hw_reset;                              /**< Boolean indicating if HW counter has been reset due to last timer removed from timer list during the timer list handling. */
 
+/*************************************************************************/
+/************* Start HW timer Interface functions ************************/
+/******** Below functions are the interface between HW and SW ************/
+/*************************************************************************/
 
-/**@brief Function for initializing the RTC1 counter.
- *
- * @param[in] prescaler   Value of the RTC1 PRESCALER register. Set to 0 for no prescaling.
- */
-static void rtc1_init(uint32_t prescaler)
+static void hw_init(uint32_t prescaler)
 {
-    //NRF_RTC1->PRESCALER = prescaler;
-    //NVIC_SetPriority(RTC1_IRQn, RTC1_IRQ_PRI);
-    
-    drvi_timer0_init(SW_TimerIsrCallback);
+    //HW timer init has been done in drvi_initialize, no need to do it again here
+    //only need to hook SW timer call back function
+    drvi_wktmRegisterCallback(SWT_IF_ID, SW_TimerIsrCallback);
 }
 
 
-/**@brief Function for starting the RTC1 timer.
+/**@brief Function for starting the HW timer.
  */
-static void rtc1_start(void)
+static void hw_start(void)
 {
     //NRF_RTC1->EVTENSET = RTC_EVTEN_COMPARE0_Msk;
     //NRF_RTC1->INTENSET = RTC_INTENSET_COMPARE0_Msk;
@@ -159,16 +153,16 @@ static void rtc1_start(void)
     NVIC_EnableIRQ(WKTM0_IRQn);
 
     //NRF_RTC1->TASKS_START = 1;
-    drvi_timer0_start();
+    drvi_wktmStart(SWT_IF_ID);
     cc_delay_us(MAX_RTC_TASKS_DELAY);
 
-    m_rtc1_running = true;
+    m_hw_running = true;
 }
 
 
-/**@brief Function for stopping the RTC1 timer.
+/**@brief Function for stopping the HW timer.
  */
-static void rtc1_stop(void)
+static void hw_stop(void)
 {
     NVIC_DisableIRQ(WKTM0_IRQn);
 
@@ -176,52 +170,57 @@ static void rtc1_stop(void)
     //NRF_RTC1->INTENCLR = RTC_INTENSET_COMPARE0_Msk;
 
     //NRF_RTC1->TASKS_STOP = 1;
-    drvi_timer0_stop();
+    drvi_wktmStop(SWT_IF_ID);
     cc_delay_us(MAX_RTC_TASKS_DELAY);
 
     //NRF_RTC1->TASKS_CLEAR = 1;
-    drvi_timer0_counterClear();
+    drvi_wktmCounterClear(SWT_IF_ID);
     m_ticks_latest        = 0;
     cc_delay_us(MAX_RTC_TASKS_DELAY);
 
-    m_rtc1_running = false;
+    m_hw_running = false;
 }
 
 
-/**@brief Function for returning the current value of the RTC1 counter.
+/**@brief Function for returning the current value of the HW counter.
  *
- * @return     Current value of the RTC1 counter.
+ * @return     Current value of the HW counter.
  */
-static __INLINE uint32_t rtc1_counter_get(void)
+static __INLINE uint32_t hw_counter_get(void)
 {
     //return NRF_RTC1->COUNTER;
     
     uint32_t cnt;
-    drvi_timer0_counterGet(&cnt);
+    drvi_wktmCounterGet(SWT_IF_ID, &cnt);
     
     return cnt;
 }
 
 
-/**@brief Function for computing the difference between two RTC1 counter values.
+/**@brief Function for setting the HW Capture Compare register 0, and enabling the corresponding
+ *        event.
+ *
+ * @param[in] value   New value of Capture Compare register 0.
+ */
+static __INLINE void hw_compare0_set(uint32_t value)
+{
+    //NRF_RTC1->CC[0] = value;
+    drvi_wktmCounterLoad(SWT_IF_ID, value);
+}
+
+
+/*************************************************************************/
+/************* Start SW timer functions **********************************/
+/*************************************************************************/
+
+
+/**@brief Function for computing the difference between two HW counter values.
  *
  * @return     Number of ticks elapsed from ticks_old to ticks_now.
  */
 static __INLINE uint32_t ticks_diff_get(uint32_t ticks_now, uint32_t ticks_old)
 {
     return ((ticks_now - ticks_old) & MAX_RTC_COUNTER_VAL);
-}
-
-
-/**@brief Function for setting the RTC1 Capture Compare register 0, and enabling the corresponding
- *        event.
- *
- * @param[in] value   New value of Capture Compare register 0.
- */
-static __INLINE void rtc1_compare0_set(uint32_t value)
-{
-    //NRF_RTC1->CC[0] = value;
-    drvi_timer0_counterLoad(value);
 }
 
 
@@ -309,13 +308,13 @@ static void timer_list_remove(timer_node_t * p_timer)
     {
         mp_timer_id_head = mp_timer_id_head->next;
 
-        // No more timers in the list. Reset RTC1 in case Start timer operations are present in the queue.
+        // No more timers in the list. Reset HW in case Start timer operations are present in the queue.
         if (mp_timer_id_head == NULL)
         {
             //NRF_RTC1->TASKS_CLEAR = 1;
-            drvi_timer0_counterClear();
+            drvi_wktmCounterClear(SWT_IF_ID);
             m_ticks_latest        = 0;
-            m_rtc1_reset          = true;
+            m_hw_reset          = true;
         }
     }
 
@@ -334,7 +333,7 @@ static void timer_list_remove(timer_node_t * p_timer)
 }
 
 
-/**@brief Function for scheduling a check for timeouts by generating a RTC1 interrupt.
+/**@brief Function for scheduling a check for timeouts by generating a HW interrupt.
  */
 static void timer_timeouts_check_sched(void)
 {
@@ -385,7 +384,7 @@ static void timer_timeouts_check(void)
         ticks_expired = 0;
 
         // ticks_elapsed is collected here, job will use it.
-        ticks_elapsed = ticks_diff_get(rtc1_counter_get(), m_ticks_latest);
+        ticks_elapsed = ticks_diff_get(hw_counter_get(), m_ticks_latest);
 
         // Auto variable containing the head of timers expiring.
         p_timer = mp_timer_id_head;
@@ -633,7 +632,7 @@ static bool list_insertions_handler(timer_node_t * p_restart_list_head)
                 p_timer->ticks_periodic_interval = p_user_op->params.start.ticks_periodic_interval;
                 p_timer->p_context               = p_user_op->params.start.p_context;
 
-                if (m_rtc1_reset)
+                if (m_hw_reset)
                 {
                     p_timer->ticks_at_start = 0;
                 }
@@ -686,25 +685,25 @@ static void compare_reg_update(timer_node_t * p_timer_id_head_old)
     if (mp_timer_id_head != NULL)
     {
         uint32_t ticks_to_expire = mp_timer_id_head->ticks_to_expire;
-        uint32_t pre_counter_val = rtc1_counter_get();
+        uint32_t pre_counter_val = hw_counter_get();
         uint32_t cc              = m_ticks_latest;
         uint32_t ticks_elapsed   = ticks_diff_get(pre_counter_val, cc) + RTC_COMPARE_OFFSET_MIN;
 
-        if (!m_rtc1_running)
+        if (!m_hw_running)
         {
             // No timers were already running, start RTC
-            rtc1_start();
+            hw_start();
         }
 
         cc += (ticks_elapsed < ticks_to_expire) ? ticks_to_expire : ticks_elapsed;
         if (cc > MAX_RTC_COUNTER_VAL)
-            drvi_timer0_counterClear();
+            drvi_wktmCounterClear(SWT_IF_ID);
 
         cc &= MAX_RTC_COUNTER_VAL;
 
-        rtc1_compare0_set(cc);
+        hw_compare0_set(cc);
 
-        uint32_t post_counter_val = rtc1_counter_get();
+        uint32_t post_counter_val = hw_counter_get();
 
         if (
             (ticks_diff_get(post_counter_val, pre_counter_val) + RTC_COMPARE_OFFSET_MIN)
@@ -717,7 +716,7 @@ static void compare_reg_update(timer_node_t * p_timer_id_head_old)
             // (i.e post_counter_val = N), writing N or N+1 to a CC register may not trigger a
             // COMPARE event. Hence the RTC interrupt is forcefully pended by calling the following
             // function.
-            rtc1_compare0_set(rtc1_counter_get());  // this should prevent CC to fire again in the background while the code is in RTC-ISR
+            hw_compare0_set(hw_counter_get());  // this should prevent CC to fire again in the background while the code is in RTC-ISR
             cc_delay_us(MAX_RTC_TASKS_DELAY);
             timer_timeouts_check_sched();
         }
@@ -725,7 +724,7 @@ static void compare_reg_update(timer_node_t * p_timer_id_head_old)
     else
     {
         // No timers are running, stop RTC
-        rtc1_stop();
+        hw_stop();
     }
 }
 
@@ -770,7 +769,7 @@ static void timer_list_handler(void)
     {
         compare_reg_update(p_timer_id_head_old);
     }
-    m_rtc1_reset = false;
+    m_hw_reset = false;
 }
 
 
@@ -842,7 +841,7 @@ static uint32_t timer_start_op_schedule(timer_user_id_t user_id,
 
     p_user_op->op_type                              = TIMER_USER_OP_TYPE_START;
     p_user_op->p_node                               = p_node;
-    p_user_op->params.start.ticks_at_start          = rtc1_counter_get();
+    p_user_op->params.start.ticks_at_start          = hw_counter_get();
     p_user_op->params.start.ticks_first_interval    = timeout_initial;
     p_user_op->params.start.ticks_periodic_interval = timeout_periodic;
     p_user_op->params.start.p_context               = p_context;
@@ -909,7 +908,7 @@ static uint32_t timer_stop_all_op_schedule(timer_user_id_t user_id)
 }
 
 
-/**@brief Function for handling the RTC1 interrupt.
+/**@brief Function for handling the HW interrupt.
  *
  * @details Checks for timeouts, and executes timeout handlers for expired timers.
  */
@@ -960,7 +959,7 @@ uint32_t app_timer_init(uint32_t                      prescaler,
     }
 
     // Stop RTC to prevent any running timers from expiring (in case of reinitialization)
-    rtc1_stop();
+    hw_stop();
 
     m_evt_schedule_func = evt_schedule_func;
 
@@ -993,9 +992,9 @@ uint32_t app_timer_init(uint32_t                      prescaler,
     //NVIC_SetPriority(SWI0_IRQn, SWI_IRQ_PRI);
     NVIC_EnableIRQ(SWI0_IRQn);
 
-    rtc1_init(prescaler);
+    hw_init(prescaler);
 
-    m_ticks_latest = rtc1_counter_get();
+    m_ticks_latest = hw_counter_get();
 
     return CC_SUCCESS;
 }
@@ -1126,7 +1125,7 @@ uint32_t app_timer_stop_all(void)
 
 uint32_t app_timer_cnt_get(uint32_t * p_ticks)
 {
-    *p_ticks = rtc1_counter_get();
+    *p_ticks = hw_counter_get();
     return CC_SUCCESS;
 }
 

@@ -524,14 +524,14 @@
               <FilePath>..\..\platform\drvi\drvi_spi.c</FilePath>
             </File>
             <File>
-              <FileName>drvi_timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_timer.c</FilePath>
-            </File>
-            <File>
               <FileName>drvi_uart.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\drvi\drvi_uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>drvi_wktm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\drvi\drvi_wktm.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1747,14 +1747,14 @@
               <FilePath>..\..\platform\drvi\drvi_spi.c</FilePath>
             </File>
             <File>
-              <FileName>drvi_timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_timer.c</FilePath>
-            </File>
-            <File>
               <FileName>drvi_uart.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\drvi\drvi_uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>drvi_wktm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\drvi\drvi_wktm.c</FilePath>
             </File>
           </Files>
         </Group>

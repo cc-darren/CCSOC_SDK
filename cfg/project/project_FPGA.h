@@ -166,6 +166,29 @@ Head Block of The File
 ***************************************************/
 #define HCI_IF                  UseInterface(UART,1)
 
+/**************************************************
+*   Config SWT interface (Software Timer)
+*
+*   SWT_IF : the interface assigned to SWT
+*   SWT_IF available : WKTM0, WKTM1
+*
+*   SWT_IF_TYPE / SWT_IF_ID will be generated automatically.
+*   SWT_IF_TYPE : the SWT interface type
+*   SWT_IF_ID   : the SWT interface id
+***************************************************/
+#define SWT_IF                  UseInterface(WKTM,0)
+
+/**************************************************
+*   Config VIBRATOR interface
+*
+*   VIBRATOR_IF : the interface assigned to SWT
+*
+*   VIBRATOR_IF_TYPE / VIBRATOR_IF_ID will be generated automatically.
+*   VIBRATOR_IF_TYPE : the SWT interface type
+*   VIBRATOR_IF_ID   : the SWT interface id
+***************************************************/
+#define VIBRATOR_IF             UseInterface(PWM,0)
+
 /******************************************************************************************************************
 *   Set SPI master configuration
 *   (all the configs are in cc6801_options.h)
