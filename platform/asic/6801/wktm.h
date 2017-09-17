@@ -38,7 +38,6 @@ void cc6801_wktmStop(E_wktmTotal);
 void cc6801_wktmRegisterCallback(E_wktmTotal, T_callback);
 
 
-void cc6801_timer1_init(T_callback);
 
 
 

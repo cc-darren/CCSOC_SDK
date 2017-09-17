@@ -15,18 +15,15 @@
 #include "pwm.h"
 
 
-#define drvi_pwm0_init(x)           cc6801_pwm0_init(x)
-#define drvi_pwm0_counterGet(x)     cc6801_pwm0_counterGet(x)
-#define drvi_pwm0_counterClear()    cc6801_pwm0_counterClear()
-#define drvi_pwm0_duty(x)           cc6801_pwm0_duty(x)
-#define drvi_pwm0_start()           cc6801_pwm0_start()
-#define drvi_pwm0_stop()            cc6801_pwm0_stop()
-#define drvi_pwm0_loadPrescaler(x)  cc6801_pwm0_loadPrescaler(x)
+#define drvi_pwmCounterGet(x,y)     	cc6801_pwmCounterGet((E_pwmTotal)x,y)
+#define drvi_pwmCounterClear(x)    		cc6801_pwmCounterClear((E_pwmTotal)x)
+#define drvi_pwmDuty(x,y)           	cc6801_pwmDuty((E_pwmTotal)x,y)
+#define drvi_pwmStart(x)           		cc6801_pwmStart((E_pwmTotal)x)
+#define drvi_pwmStop(x)            		cc6801_pwmStop((E_pwmTotal)x)
+#define drvi_pwmLoadPrescaler(x,y)  	cc6801_pwmLoadPrescaler((E_pwmTotal)x,y)
+#define drvi_pwmRegisterCallback(x,y)	cc6801_pwmRegisterCallback((E_pwmTotal)x,y)
 
-
-#define drvi_pwm1_init(x)         cc6801_pwm1_init(x)
-#define drvi_pwm1_counterGet(x)   cc6801_pwm1_counterGet(x)
-
+void drvi_pwmInit(void);
 
 
 

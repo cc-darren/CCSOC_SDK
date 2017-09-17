@@ -128,9 +128,9 @@ void Timer_Callback(void *para)
 void Pwm_Callback(void *para)
 {
     if (S_Count.dwPwm0 < 5000)
-        drvi_pwm0_stop();
+        drvi_pwmStop(PWM_0);
     else if ((S_Count.dwPwm0 < 7000))
-        drvi_pwm0_start();
+        drvi_pwmStart(PWM_0);
     else
         S_Count.dwPwm0 = 0;
 
@@ -188,9 +188,10 @@ static int cc6801_Init(void)
     if (g_Pwm0TestStart)
     {
         //pwm_start_test();
-        drvi_pwm0_init(Pwm_Callback);
-        drvi_pwm0_loadPrescaler(0);
-        drvi_pwm0_duty(50);
+        drvi_pwmInit();
+        drvi_pwmRegisterCallback(PWM_0, Pwm_Callback);
+        drvi_pwmLoadPrescaler(PWM_0, 0);
+        drvi_pwmDuty(PWM_0, 50);
     }
     if (g_WdtTestStart)
     {

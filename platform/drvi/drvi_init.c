@@ -15,7 +15,9 @@
 #if defined I2C_INUSE && (I2C_INUSE)
 #include "drvi_i2c.h"
 #endif
+#if defined(PWM_INUSE) && PWM_INUSE
 #include "drvi_pwm.h"
+#endif
 #if defined(WKTM_INUSE) && WKTM_INUSE
 #include "drvi_wktm.h"
 #endif
@@ -39,7 +41,10 @@ void drvi_initialize(void)
     drvi_UartInit();
     #endif
 
-    drvi_pwm0_init((void*)NULL);
+	#if defined(PWM_INUSE) && PWM_INUSE
+    drvi_pwmInit();
+	#endif
+
     drvi_wdt_init(30000);
     
     #if defined SPI_INUSE && (SPI_INUSE)

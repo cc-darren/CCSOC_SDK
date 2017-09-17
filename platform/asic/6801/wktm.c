@@ -30,8 +30,6 @@
 *  20170206 PAT initial version
 ******************************************************************************/
 #include <stdio.h>
-#include "global.h"
-#include "cc6801_reg.h"
 #include "wktm.h"
 
 static T_wktmPort  g_taWktm[WKTM_TOTAL];
