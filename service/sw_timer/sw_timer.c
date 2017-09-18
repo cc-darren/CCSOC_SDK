@@ -149,8 +149,8 @@ static void hw_start(void)
     //NRF_RTC1->EVTENSET = RTC_EVTEN_COMPARE0_Msk;
     //NRF_RTC1->INTENSET = RTC_INTENSET_COMPARE0_Msk;
     
-    NVIC_ClearPendingIRQ(WKTM0_IRQn);
-    NVIC_EnableIRQ(WKTM0_IRQn);
+    NVIC_ClearPendingIRQ(SWT_IF_IRQ);
+    NVIC_EnableIRQ(SWT_IF_IRQ);
 
     //NRF_RTC1->TASKS_START = 1;
     drvi_wktmStart(SWT_IF_ID);
@@ -164,7 +164,7 @@ static void hw_start(void)
  */
 static void hw_stop(void)
 {
-    NVIC_DisableIRQ(WKTM0_IRQn);
+    NVIC_DisableIRQ(SWT_IF_IRQ);
 
     //NRF_RTC1->EVTENCLR = RTC_EVTEN_COMPARE0_Msk;
     //NRF_RTC1->INTENCLR = RTC_INTENSET_COMPARE0_Msk;
@@ -337,7 +337,7 @@ static void timer_list_remove(timer_node_t * p_timer)
  */
 static void timer_timeouts_check_sched(void)
 {
-    NVIC_SetPendingIRQ(WKTM0_IRQn);
+    NVIC_SetPendingIRQ(SWT_IF_IRQ);
 }
 
 

@@ -157,7 +157,7 @@ void cc6801_wktmInit(E_wktmTotal bPort)
 {
     if(bPort < WKTM_TOTAL)
     {
-        g_taWktm[bPort].pReg = regWKTM0+(bPort*0x100);
+        g_taWktm[bPort].pReg = (U_regPWMWKTM*)((uint32_t)regWKTM0+(bPort*0x100));
     
         g_taWktm[bPort].pReg->bf.enable = 0;
         g_taWktm[bPort].pReg->bf.intEn = 0;         //default disable interrupt;

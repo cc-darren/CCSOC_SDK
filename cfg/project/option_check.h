@@ -7,6 +7,8 @@
 #ifndef _OPTION_CHECK_H_
 #define _OPTION_CHECK_H_
 
+#include "ARMCM.h"
+
 //This file is an example about how to add options check.
 //It will be deleted after everything is done
 
@@ -224,10 +226,12 @@
 
 #if (SWT_IF ==Interface_WKTM0)
   #define WKTM0_INUSE TRUE
+  #define SWT_IF_IRQ  WKTM0_IRQn
 #endif
 
 #if (SWT_IF ==Interface_WKTM1)
   #define WKTM1_INUSE TRUE
+  #define SWT_IF_IRQ  WKTM1_IRQn
 #endif
 
 #if (VIBRATOR_IF ==Interface_PWM0)

@@ -51,8 +51,8 @@
 #define Interface_UART0   0x30
 #define Interface_UART1   0x31
 #define Interface_UART2   0x32
-#define Interface_WKTM0   ((IF_WKTM) | (WKTM_0) & (IF_NULL))
-#define Interface_WKTM1   ((IF_WKTM) | (WKTM_1) & (IF_NULL))
+#define Interface_WKTM0   0x40//((IF_WKTM) | (WKTM_0) & (IF_NULL))
+#define Interface_WKTM1   0x41//((IF_WKTM) | (WKTM_1) & (IF_NULL))
 #define Interface_PWM0    0x50
 #define Interface_PWM1    0x51
 
