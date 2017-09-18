@@ -65,7 +65,7 @@ void cc6801_pwmRegisterCallback(E_pwmTotal bPort, T_callback tCB)
     {
         //return error;
     }
-        
+
 }
 
 void cc6801_pwmLoadPrescaler(E_pwmTotal bPort, uint32_t prescaler)
@@ -155,7 +155,7 @@ void cc6801_pwmStop(E_pwmTotal bPort)
     {
         //return error;
 	}
-	
+
     //Note: stop pwm won't clear counter value
 }
 
@@ -164,7 +164,7 @@ void cc6801_pwmInit(E_pwmTotal bPort)
 {
 	if(bPort < PWM_TOTAL)
 	{
-        g_taPwm[bPort].pReg = regPWM0+(bPort*0x100);
+        g_taPwm[bPort].pReg = (U_regPWMWKTM*)((uint32_t)regPWM0+(bPort*0x100));
 
 	    g_taPwm[bPort].pReg->bf.enable = 0;
 	    g_taPwm[bPort].pReg->bf.intEn = 0;         //default disable interrupt;
