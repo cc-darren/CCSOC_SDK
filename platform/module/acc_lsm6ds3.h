@@ -95,23 +95,18 @@ typedef union
 #endif /*__LSM6DS3_SHARED__TYPES*/
 
 /* Exported macro ------------------------------------------------------------*/
-#define ACC_Init()                                     LSM6DS3_X_Init()
-#define ACC_Data_Get(x,y)                              LSM6DS3_ACC_GYRO_GetRawAccData(x,y)
+#define ACC_Init()                                      LSM6DS3_X_Init()
+#define ACC_Enable()
+#define ACC_Disable()
+#define ACC_Setmode()
+#define ACC_SetOdr()
+#define ACC_GetRawAccData(x,y)                          LSM6DS3_ACC_GYRO_GetRawAccData(x,y)
+#define ACC_Reset()
+
 /* Exported constants --------------------------------------------------------*/
 
 
-/* Imported macro ------------------------------------------------------------*/
-#if (ACC_IF_TYPE == IF_SPI)
-    #define LSM6DS3_IF_WriteThenRead(bus,tbuf,tlen,rbuf,rlen)    drvi_SpiWriteThenRead(bus,tbuf,tlen,rbuf,rlen)
-    #define LSM6DS3_IF_Write(bus,buf,len)                          drvi_SpiWrite(bus,buf,len)
-#elif (ACC_IF_TYPE == IF_I2C)
-    #define LSM6DS3_IF_WriteThenRead(bus,tbuf,tlen,rbuf,rlen)    drvi_I2CWriteThenRead(bus,tbuf,tlen,rbuf,rlen)
-    #define LSM6DS3_IF_Write(bus,buf,len)                          drvi_I2CWrite(bus,buf,len)
-#else
-    #define LSM6DS3_IF_WriteThenRead(bus,tbuf,tlen,rbuf,rlen)      
-    #define LSM6DS3_IF_Write(bus,buf,len)                            
-#endif
-/* Imported constants --------------------------------------------------------*/
+
 
 /************** I2C Address *****************/
 

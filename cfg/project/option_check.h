@@ -25,7 +25,7 @@
     #error "ACC interface not found"
   #endif
 
-  #if (MODULE_ACC & 0x1000)
+  #if ((MODULE_ACC & 0xF000) == 0x1000)
     #if (MODULE_ACC == ACC_ST_LSM303C)
       #include "STLSM303C_ACC.h"
 
@@ -78,7 +78,7 @@
     #error "MAG interface not found"
   #endif
 
-  #if (MODULE_MAG & 0x2000)
+  #if ((MODULE_MAG & 0xF000) == 0x2000)
     #if (MODULE_MAG == MAG_AKM_AK09912C)
       #include "mag_ak09912.h"
     #elif (MODULE_MAG == MAG_AKM_AK09915C)
@@ -120,7 +120,7 @@
     #error "GYR interface not found"
   #endif
 
-  #if (MODULE_GYR & 0x2000)
+  #if ((MODULE_GYR & 0xF000) == 0x3000)
     #if (MODULE_GYR == GYR_ST_LSM6DSL)
       #include "LSM6DS3_ACC_GYRO_DRIVER.h"
 
@@ -151,7 +151,7 @@
     #error "OLED interface not found"
   #endif
 
-  #if (MODULE_OLED & 0x4000)
+  #if ((MODULE_OLED & 0xF000) == 0x4000)
     #if (MODULE_OLED == OLED_SOLOMON_SSD1306)
       #include "ssd1306.h"
 
@@ -245,17 +245,14 @@
 /************************  SOC peripheral INUSE definition ***********************/
 
 #if ((SPI0_INUSE) || (SPI1_INUSE) || (SPI2_INUSE))
-  #include "drvi_spi.h"
   #define SPI_INUSE TRUE
 #endif
 
 #if ((I2C0_INUSE) || (I2C1_INUSE))
-  #include "drvi_i2c.h"
   #define I2C_INUSE TRUE
 #endif
 
 #if ((UART0_INUSE) || (UART1_INUSE) || (UART2_INUSE))
-  #include "drvi_uart.h"
   #define UART_INUSE TRUE
 #endif
 

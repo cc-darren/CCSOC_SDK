@@ -7,6 +7,23 @@
 
 #if (MODULE_MAG == MAG_AKM_AK09912C)
 
+/* Imported constants --------------------------------------------------------*/
+
+/* Imported macro ------------------------------------------------------------*/
+#if (MAG_IF_TYPE == IF_SPI)
+    #include "drvi_spi.h"
+    #define AK09912_IF_WriteThenRead(tbuf,tlen,rbuf,rlen)   drvi_SpiWriteThenRead(MAG_IF_ID,tbuf,tlen,rbuf,rlen)
+    #define AK09912_IF_Write(buf,len)                       drvi_SpiWrite(MAG_IF_ID,buf,len)
+#elif (MAG_IF_TYPE == IF_I2C)
+    #include "drvi_i2c.h"
+    #define AK09912_IF_WriteThenRead(tbuf,tlen,rbuf,rlen)   drvi_I2cWriteThenRead(MAG_IF_ID,tbuf,tlen,rbuf,rlen)
+    #define AK09912_IF_Write(buf,len)                       drvi_I2cWrite(MAG_IF_ID,buf,len)
+#else
+    #define AK09912_IF_WriteThenRead(tbuf,tlen,rbuf,rlen)      
+    #define AK09912_IF_Write(buf,len)                            
+#endif
+
+
 /* Private macro -------------------------------------------------------------*/
 #define AK09912_IF_ADDRESS      0x0C
 /* Private variables ---------------------------------------------------------*/
@@ -30,7 +47,7 @@ u8_t AK09912_MAG_ReadReg(u8_t Reg, u8_t* Data) {
   //i2c_data_read(Reg, Data, 1);
   m_tx_buf[0] = Reg;
 
-  AK09912_IF_WriteThenRead(MAG_IF_ID,m_tx_buf,1,Data,1);
+  AK09912_IF_WriteThenRead(m_tx_buf,1,Data,1);
     
   *Data = m_rx_buf[0];
    
@@ -58,7 +75,7 @@ u8_t AK09912_MAG_WriteReg(u8_t Reg, u8_t Data) {
   m_tx_buf[0] = Reg;
   m_tx_buf[1] = Data;
 
-  AK09912_IF_Write(MAG_IF_ID,m_tx_buf,2);
+  AK09912_IF_Write(m_tx_buf,2);
   return MEMS_SUCCESS;
   //EXAMPLE  
   //I2C_ByteWrite(&Data,  AK09912_MAG_MEMS_I2C_ADDRESS,  Reg); 
@@ -275,7 +292,7 @@ status_t  AK09912_MAG_GetMagRawBurst(u8_t* buff, u8_t buffer_size)
     {
         //i2c_data_read(AK09912_MAG_HXL, buff, buffer_size);
         m_tx_buf[0] = AK09912_MAG_HXL;
-        AK09912_IF_WriteThenRead(MAG_IF_ID,m_tx_buf,1,buff,buffer_size);
+        AK09912_IF_WriteThenRead(m_tx_buf,1,buff,buffer_size);
         return MEMS_SUCCESS;
     }
 }
@@ -386,7 +403,7 @@ status_t AK09912_MAG_Init(void)
 {
 	status_t response;
     u8_t id;
-    #if (MAG_IF_TYPE == IF_SPI)
+    #if (MAG_IF_TYPE == IF_I2C)
     T_I2cDevice i2c_sensor_config = {
        .bBusNum          = MAG_IF_ID,
        .bAddr            = AK09912_IF_ADDRESS,

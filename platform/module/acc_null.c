@@ -5,6 +5,8 @@
 /******************************************************************
 *   place all function and private variables in this part
 ******************************************************************/
+#define AccNull_IF_WriteThenRead(tbuf,tlen,rbuf,rlen)           
+#define AccNull_IF_Write(buf,len)                               
 
 
 

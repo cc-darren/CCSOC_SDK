@@ -39,7 +39,20 @@
 #include "project.h"
 
 #if (MODULE_ACC == ACC_ST_LSM6DSL)
-
+/* Imported macro ------------------------------------------------------------*/
+#if (ACC_IF_TYPE == IF_SPI)
+    #include "drvi_spi.h"
+    #define LSM6DS3_IF_WriteThenRead(tbuf,tlen,rbuf,rlen)       drvi_SpiWriteThenRead(ACC_IF_ID,tbuf,tlen,rbuf,rlen)
+    #define LSM6DS3_IF_Write(buf,len)                           drvi_SpiWrite(ACC_IF_ID,buf,len)
+#elif (ACC_IF_TYPE == IF_I2C)
+    #include "drvi_i2c.h"
+    #define LSM6DS3_IF_WriteThenRead(tbuf,tlen,rbuf,rlen)       drvi_I2CWriteThenRead(ACC_IF_ID,tbuf,tlen,rbuf,rlen)
+    #define LSM6DS3_IF_Write(buf,len)                           drvi_I2CWrite(ACC_IF_ID,buf,len)
+#else
+    #define LSM6DS3_IF_WriteThenRead(tbuf,tlen,rbuf,rlen)      
+    #define LSM6DS3_IF_Write(buf,len)                            
+#endif
+/* Imported constants --------------------------------------------------------*/
 static uint8_t m_rx_buf[32];
 static uint8_t m_tx_buf[32];
 /* Private typedef -----------------------------------------------------------*/
@@ -75,7 +88,7 @@ static status_t LSM6DS3_ACC_GYRO_ReadReg(void *handle, u8_t RegAddr, u8_t *Data)
 
     m_tx_buf[0] = RegAddr | 0x80;
 
-    LSM6DS3_IF_WriteThenRead(ACC_IF_ID,m_tx_buf,1,m_rx_buf,1);
+    LSM6DS3_IF_WriteThenRead(m_tx_buf,1,m_rx_buf,1);
     
     *Data = m_rx_buf[0];
 //  if (Sensor_IO_Read(handle, Reg, Data, 1))
@@ -105,7 +118,7 @@ static status_t LSM6DS3_ACC_GYRO_WriteReg(void *handle, u8_t RegAddr, u8_t Data)
     m_tx_buf[1] = Data;
     
 
-    LSM6DS3_IF_Write(ACC_IF_ID, m_tx_buf,2);
+    LSM6DS3_IF_Write(m_tx_buf,2);
 //  if (Sensor_IO_Write(handle, Reg, &Data, 1))
 //  {
 //    return MEMS_ERROR;
@@ -138,7 +151,7 @@ u8_t LSM6DS3_ACC_GYRO_WriteMulti(void *handle, u8_t RegAddr, u8_t *Bufp, u16_t l
         reg_data++;
     }
 
-    LSM6DS3_IF_Write(ACC_IF_ID, m_tx_buf, len+1);
+    LSM6DS3_IF_Write(m_tx_buf, len+1);
     
     return MEMS_SUCCESS;
 //  if (Sensor_IO_Write(handle, Reg, Bufp, len))
@@ -166,7 +179,7 @@ u8_t LSM6DS3_ACC_GYRO_ReadMulti(void *handle, u8_t RegAddr, u8_t *Bufp, u16_t le
     
     m_tx_buf[0] = RegAddr | 0x80;
 
-    LSM6DS3_IF_WriteThenRead(ACC_IF_ID,m_tx_buf,1,m_rx_buf,len);
+    LSM6DS3_IF_WriteThenRead(m_tx_buf,1,m_rx_buf,len);
     
     for(int i=0;i<len;i++)
     {

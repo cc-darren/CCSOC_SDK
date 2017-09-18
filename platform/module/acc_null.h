@@ -7,13 +7,15 @@
 
 /* Exported macro ------------------------------------------------------------*/
 //ACC interface
-#ifndef _ACC_SHARE_TYPE_
-#define _ACC_SHARE_TYPE_
+#define ACC_Init()                                      
+#define ACC_Enable()
+#define ACC_Disable()
+#define ACC_Setmode()
+#define ACC_SetOdr()
+#define ACC_GetRawAccData(x,y)                          
+#define ACC_Reset()
 
-#define ACC_Init()
-#define ACC_Data_Get(x,y)
 
-#endif //_ACC_SHARE_TYPE_
 
 
 /* Exported constants --------------------------------------------------------*/

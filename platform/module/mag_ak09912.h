@@ -12,23 +12,12 @@
 
 /* Exported types ------------------------------------------------------------*/
 #define MAG_Init()                              AK09912_MAG_Init()
-#define MAG_GetMagRaw(buf)                      AK09912_MAG_GetMagRaw(buf)
-#define MAG_GetMagRawBurst(buf, buf_size)       AK09912_MAG_GetMagRawBurst(buf, buf_size)
-
-/* Imported constants --------------------------------------------------------*/
-
-/* Imported macro ------------------------------------------------------------*/
-#if (MAG_IF_TYPE == IF_SPI)
-    #define AK09912_IF_WriteThenRead(bus,tbuf,tlen,rbuf,rlen)   drvi_SpiWriteThenRead(bus,tbuf,tlen,rbuf,rlen)
-    #define AK09912_IF_Write(bus,buf,len)                       drvi_SpiWrite(bus,buf,len)
-#elif (MAG_IF_TYPE == IF_I2C)
-    #define AK09912_IF_WriteThenRead(bus,tbuf,tlen,rbuf,rlen)   drvi_I2cWriteThenRead(bus,tbuf,tlen,rbuf,rlen)
-    #define AK09912_IF_Write(bus,buf,len)                       drvi_I2cWrite(bus,buf,len)
-#else
-    #define AK09912_IF_WriteThenRead(bus,tbuf,tlen,rbuf,rlen)      
-    #define AK09912_IF_Write(bus,buf,len)                            
-#endif
-
+#define MAG_Enable()  
+#define MAG_Disable()
+#define MAG_SetMode(modeSetting)
+#define MAG_SetOdr(OdrSetting)
+#define MAG_GetRawMagData(pBuf,bBuf_size)       AK09912_MAG_GetMagRawBurst(pBuf,bBuf_size)
+#define MAG_Reset()
 
 
 //these could change accordingly with the architecture

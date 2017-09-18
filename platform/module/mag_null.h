@@ -8,14 +8,13 @@
 
 /* Exported macro ------------------------------------------------------------*/
 //MAG sensor interface
-#ifndef _MAG_SHARE_TYPE_
-#define _MAG_SHARE_TYPE_
-
-#define MAG_Init()
-#define MAG_GetMagRaw(buf)
-#define MAG_GetMagRawBurst(buf, buf_size)
-
-#endif //_MAG_SHARE_TYPE_
+#define MAG_Init()                              
+#define MAG_Enable()                            
+#define MAG_Disable()                           
+#define MAG_SetMode(modeSetting)                
+#define MAG_SetOdr(OdrSetting)                  
+#define MAG_GetMagRawData(pBuf,bBuf_size)       
+#define MAG_Reset()                             
 
 
 /* Exported constants --------------------------------------------------------*/
