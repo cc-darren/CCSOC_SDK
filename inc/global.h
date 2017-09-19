@@ -27,6 +27,8 @@
 #define TRUE                (1)
 #define SUCCESS             TRUE
 #define FAIL                FALSE
+#define ENABLE              TRUE
+#define DISABLE             FALSE
 
 typedef void (*T_callback)(void* p);
 

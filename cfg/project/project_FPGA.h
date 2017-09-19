@@ -39,6 +39,7 @@ Head Block of The File
 // Sec 0: Comment block of the file
 
 // Sec 1: Include File
+#include "global.h"
 
 // Sec 2: Constant Definitions, Imported Symbols, miscellaneous
 
@@ -222,6 +223,30 @@ Head Block of The File
 #define UART0_CONFIG            ((UART_BAUDRATE_115200) | (UART_DATA_BITS_8))
 #define UART1_CONFIG            ((UART_BAUDRATE_115200) | (UART_DATA_BITS_8))
 #define UART2_CONFIG            ((UART_BAUDRATE_115200) | (UART_DATA_BITS_8))
+
+
+/******************************************************************************************************************
+*   Set RTC configuration   (all the configs are in cc6801_options.h)
+*   Options:
+*   RTC_SUPPORT             ENABLE or DISABLE
+*   RTC_DEFAULT_YEAR        2017, 2018, 2019 ...    must NOT be less than 2000
+*   RTC_DEFAULT_MONTH       RTC_JAN ~ RTC_DEC
+*   RTC_DEFAULT_DAY         1~31
+*   RTC_DEFAULT_HOUR        0~59
+*   RTC_DEFAULT_MIN         0~59
+*   RTC_DEFAULT_SEC         0~59
+*   RTC_DEFAULT_WEEK        RTC_SUNDAY ~ RTC_SATURDAY
+*   RTC_DEFAULT_H24         RTC_HOUR_24H, RTC_HOUR_AM, RTC_HOUR_PM
+*******************************************************************************************************************/
+#define RTC_SUPPORT             ENABLE
+#define RTC_DEFAULT_YEAR        2017
+#define RTC_DEFAULT_MONTH       RTC_JAN
+#define RTC_DEFAULT_DAY         1
+#define RTC_DEFAULT_HOUR        0
+#define RTC_DEFAULT_MIN         0
+#define RTC_DEFAULT_SEC         0
+#define RTC_DEFAULT_WEEK        RTC_SUNDAY   //2017-1-1 is Sunday
+#define RTC_DEFAULT_H24         RTC_HOUR_AM   
 
 
 /******************************************************************************************************************

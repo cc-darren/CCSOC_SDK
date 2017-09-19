@@ -133,7 +133,7 @@ void cc6801_rtcInit(void)
     regRTC->bf.dataMode = 1;
     
     //set hourformat to 24-hour
-    regRTC->bf.hourFormat = 1;
+    regRTC->bf.hourFormat = rtc.h24;
     
     //Init RTC and alarm counter
     cc6801_rtcSetTime(rtc,0);
@@ -149,7 +149,7 @@ S_rtcInfo cc6801_rtcGetTime(void)
     time.hour       = regRTC->bf.hour;
     time.day        = regRTC->bf.day;
     time.weekDay    = regRTC->bf.weekDay;
-    time.year       = regRTC->bf.year+RTC_START_YEAR;
+    time.year       = regRTC->bf.year+RTC_BASE_YEAR;
     return time;
 }
 
@@ -157,7 +157,8 @@ uint32_t cc6801_rtcSetTime(S_rtcInfo rtcTarget,uint32_t ErrorMask)
 {
     uint32_t errcode;
     errcode = CheckRTC(&rtcTarget);
-    if (errcode & ErrorMask) {
+    if (errcode & ErrorMask)
+    {
         return errcode;
     }
     regRTC->bf.sec      = rtcTarget.sec;
@@ -166,16 +167,19 @@ uint32_t cc6801_rtcSetTime(S_rtcInfo rtcTarget,uint32_t ErrorMask)
     regRTC->bf.day      = rtcTarget.day;
     regRTC->bf.month    = rtcTarget.month;
     regRTC->bf.weekDay  = rtcTarget.weekDay;
-    regRTC->bf.year     = (rtcTarget.year-RTC_START_YEAR);
+    regRTC->bf.year     = (rtcTarget.year-RTC_BASE_YEAR);
     return errcode;
 }
 
 
 void cc6801_rtcSetAlarmEN(uint32_t isEnable)
 {
-    if (isEnable) {
+    if (isEnable)
+    {
         regRTC->bf.alarm1IntEn = 1;
-    } else {
+    }
+    else
+    {
         regRTC->bf.alarm1IntEn = 0;
     }
 }
@@ -184,13 +188,13 @@ S_rtcInfo cc6801_rtcGetAlarm(void)
 {
     S_rtcInfo alarm;
     
-    alarm .sec      = regRTC->bf.alarm1Sec;
+    alarm.sec       = regRTC->bf.alarm1Sec;
     alarm.min       = regRTC->bf.alarm1Min;
     alarm.hour      = regRTC->bf.alarm1Hour;
     alarm.day       = regRTC->bf.alarm1Day;
     alarm.month     = regRTC->bf.alarm1Month;
     alarm.weekDay   = 0xFF;
-    alarm.year      = 0xFFFF;
+    alarm.year      = 0xFF;
     return alarm;
 }
 
@@ -198,7 +202,8 @@ uint32_t cc6801_rtcSetAlarm(S_rtcInfo rtcTarget,uint32_t ErrorMask)
 {
     uint32_t errcode;
     errcode = CheckRTC(&rtcTarget);
-    if (errcode & ErrorMask) {
+    if (errcode & ErrorMask)
+    {
         return errcode;
     }
     regRTC->bf.alarm1Sec    = rtcTarget.sec;
@@ -209,4 +214,9 @@ uint32_t cc6801_rtcSetAlarm(S_rtcInfo rtcTarget,uint32_t ErrorMask)
     return errcode;
 }
 
+void cc6801_rtcRegisterCallback(T_callback tCB)
+{
+    
+    
+}
 

@@ -139,7 +139,6 @@
 #define I2C_FREQ_200K           200000
 #define I2C_FREQ_400K           400000
 
-
 // Tracer Configuration List
 
 #define TRACER_LOGBUF_64                (1<<6)
@@ -157,6 +156,33 @@
 #define TRACER_LOGLEVEL_INFO            6
 #define TRACER_LOGLEVEL_DEBUG           7
 #define TRACER_LOGLEVEL_ALL             8
+
+// RTC Configuration List
+#define RTC_HOUR_24H            1
+#define RTC_HOUR_AM             2
+#define RTC_HOUR_PM             3
+
+#define RTC_SUNDAY              0
+#define RTC_MONDAY              1
+#define RTC_TUESDAY             2
+#define RTC_WEDNESDAY           3
+#define RTC_THURSDAY            4
+#define RTC_FRIDAY              5
+#define RTC_SATURDAY            6
+
+#define RTC_JAN                 1
+#define RTC_FEB                 2
+#define RTC_MAR                 3
+#define RTC_APR                 4
+#define RTC_MAY                 5
+#define RTC_JUN                 6
+#define RTC_JUL                 7
+#define RTC_AUG                 8
+#define RTC_SEP                 9
+#define RTC_OCT                 10
+#define RTC_NOV                 11
+#define RTC_DEC                 12
+
 
 #endif //_CC6801_OPTIONS_H_
 
