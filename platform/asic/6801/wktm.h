@@ -14,12 +14,13 @@
 #define _WKTM_H_
 #include "global.h"
 #include "cc6801_reg.h"
+#include "cc6801_options.h"
 
 typedef enum
 {
-    WKTM_0 = 0,
-    WKTM_1,
-    WKTM_TOTAL
+    WKTM_0 = WKTM_PORT_0,
+    WKTM_1 = WKTM_PORT_1,
+    WKTM_TOTAL = WKTM_PORT_TOTAL
 } E_wktmTotal;
 
 typedef struct

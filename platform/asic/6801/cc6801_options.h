@@ -31,8 +31,11 @@
 ******************************************************************************/
 #ifndef _CC6801_OPTIONS_H_
 #define _CC6801_OPTIONS_H_
-#include "wktm.h"
 
+//WKTM configuration List
+#define WKTM_PORT_0         0   //must be 0 for array index
+#define WKTM_PORT_1         1   //must be 1 for array index
+#define WKTM_PORT_TOTAL     2   //must be 2 for array index checking
 
 // Interface List
 
@@ -51,8 +54,8 @@
 #define Interface_UART0   0x30
 #define Interface_UART1   0x31
 #define Interface_UART2   0x32
-#define Interface_WKTM0   0x40//((IF_WKTM) | (WKTM_0) & (IF_NULL))
-#define Interface_WKTM1   0x41//((IF_WKTM) | (WKTM_1) & (IF_NULL))
+#define Interface_WKTM0   (((IF_WKTM) | (WKTM_PORT_0)) & (IF_NULL))
+#define Interface_WKTM1   (((IF_WKTM) | (WKTM_PORT_1)) & (IF_NULL))
 #define Interface_PWM0    0x50
 #define Interface_PWM1    0x51
 
