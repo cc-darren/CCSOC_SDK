@@ -47,7 +47,7 @@ u8_t AK09912_MAG_ReadReg(u8_t Reg, u8_t* Data) {
   //i2c_data_read(Reg, Data, 1);
   m_tx_buf[0] = Reg;
 
-  AK09912_IF_WriteThenRead(m_tx_buf,1,Data,1);
+  AK09912_IF_WriteThenRead(m_tx_buf,1,m_rx_buf,1);
     
   *Data = m_rx_buf[0];
    
