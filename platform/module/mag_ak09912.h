@@ -16,7 +16,7 @@
 #define MAG_Disable()
 #define MAG_SetMode(modeSetting)
 #define MAG_SetOdr(OdrSetting)
-#define MAG_GetRawMagData(pBuf,bBuf_size)       AK09912_MAG_GetMagRawBurst(pBuf,bBuf_size)
+#define MAG_GetRawMagData(pBuf)                 AK09912_MAG_GetMagRaw(pBuf)
 #define MAG_Reset()
 
 

@@ -100,7 +100,7 @@ typedef union
 #define ACC_Disable()
 #define ACC_Setmode()
 #define ACC_SetOdr()
-#define ACC_GetRawAccData(x,y)                          LSM6DS3_ACC_GYRO_GetRawAccData(x,y)
+#define ACC_GetRawAccData(pBuf)                          LSM6DS3_ACC_GYRO_GetRawAccData(NULL,pBuf)
 #define ACC_Reset()
 
 /* Exported constants --------------------------------------------------------*/
