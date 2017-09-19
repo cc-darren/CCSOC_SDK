@@ -15,15 +15,12 @@
 
 #include "tracer.h"
 
-#define CONFIG_LOG_BUF_SHIFT 10
-
-#define CONFIG_CONSOLE_LOGLEVEL 8
 #define CONFIG_DEFAULT_LOGLEVEL 4
 
-#define CONSOLE_LOGLEVEL         CONFIG_CONSOLE_LOGLEVEL
+#define CONSOLE_LOGLEVEL         TRACER_LOGLEVEL
 #define DEFAULT_LOGLEVEL         CONFIG_DEFAULT_LOGLEVEL
 
-#define LOG_BUF_LEN   (1 << CONFIG_LOG_BUF_SHIFT)
+#define LOG_BUF_LEN   TRACER_LOGBUF_SIZE
 #define LOG_BUF_MASK (LOG_BUF_LEN-1)
 #define LOG_BUF(idx) (g_pLogBuf[(idx) & LOG_BUF_MASK])
 
@@ -33,9 +30,8 @@ static char g_baPrintfBuf[1024];
 static char g_baLogBuf[LOG_BUF_LEN];
 static char *g_pLogBuf = g_baLogBuf;
 
-static uint16_t g_wLogStart;
-static uint16_t g_wConStart;
-static uint16_t g_wLogEnd;
+static uint16_t g_wLogStart = 0;
+static uint16_t g_wLogEnd = 0;
 
 static inline int
 vscnprintf(char *buf, size_t size, const char *fmt, va_list args)
@@ -72,10 +68,6 @@ static void Tracer_EmitLogChar(char c)
 {
     LOG_BUF(g_wLogEnd) = c;
     g_wLogEnd++;
-    if (g_wLogEnd - g_wLogStart > LOG_BUF_LEN)
-        g_wLogStart = g_wLogEnd - LOG_BUF_LEN;
-	if (g_wLogEnd - g_wConStart > LOG_BUF_LEN)
-		g_wConStart = g_wLogEnd - LOG_BUF_LEN;
 }
 
 int Tracer_PrintfEmit(const char *fmt, va_list args)
@@ -86,8 +78,8 @@ int Tracer_PrintfEmit(const char *fmt, va_list args)
     char *pPrintfBuf;
 
     /* Emit the output into the temporary buffer */
-    wPrintedLen += vscnprintf(g_baPrintfBuf + wPrintedLen,
-                  sizeof(g_baPrintfBuf) - wPrintedLen, fmt, args);
+    wPrintedLen = vscnprintf(g_baPrintfBuf,
+                   sizeof(g_baPrintfBuf), fmt, args);
 
     pPrintfBuf = g_baPrintfBuf;
 
@@ -96,11 +88,11 @@ int Tracer_PrintfEmit(const char *fmt, va_list args)
     if (bPrefixLen)
     {
         pPrintfBuf += bPrefixLen;
-        if (!g_bNewTextLine)
-        {
-            Tracer_EmitLogChar('\n');
-            g_bNewTextLine = 1;
-        }
+//        if (!g_bNewTextLine)
+//        {
+//            Tracer_EmitLogChar('\n');
+//            g_bNewTextLine = 1;
+//        }
     }
     if ((bCurrentLogLevel > CONSOLE_LOGLEVEL))
     {
@@ -117,23 +109,23 @@ int Tracer_PrintfEmit(const char *fmt, va_list args)
         if (g_bNewTextLine)
         {
             g_bNewTextLine = 0;
-            if (bPrefixLen)
-            {
-                /* Copy original log prefix */
-                int i;
+//            if (bPrefixLen)
+//            {
+//                /* Copy original log prefix */
+//                int i;
 
-                for (i = 0; i < bPrefixLen; i++)
-                    Tracer_EmitLogChar(g_baPrintfBuf[i]);
-                wPrintedLen += bPrefixLen;
-            }
-            else
-            {
-                /* Add log prefix */
-                Tracer_EmitLogChar('<');
-                Tracer_EmitLogChar(bCurrentLogLevel + '0');
-                Tracer_EmitLogChar('>');
-                wPrintedLen += 3;
-            }
+//                for (i = 0; i < bPrefixLen; i++)
+//                    Tracer_EmitLogChar(g_baPrintfBuf[i]);
+//                wPrintedLen += bPrefixLen;
+//            }
+//            else
+//            {
+//                /* Add log prefix */
+//                Tracer_EmitLogChar('<');
+//                Tracer_EmitLogChar(bCurrentLogLevel + '0');
+//                Tracer_EmitLogChar('>');
+//                wPrintedLen += 3;
+//            }
 
 //          if (printk_time)
 //          {
@@ -163,13 +155,8 @@ int Tracer_PrintfEmit(const char *fmt, va_list args)
             g_bNewTextLine = 1;
     }
 
-    drvi_UartTx(TRACER_IF_ID, (const uint8_t*)&LOG_BUF(g_wConStart), g_wLogEnd - g_wConStart);
-    if (g_wLogEnd & 0x3UL)
-    {
-        g_wLogEnd = ((g_wLogEnd >> 2) +1) << 2;
-        g_wConStart = g_wLogEnd;		/* Flush */
-    }
-
+    drvi_UartTx(TRACER_IF_ID, (const uint8_t*)g_pLogBuf, g_wLogEnd - g_wLogStart);
+    g_wLogEnd = g_wLogStart;
 
     return wPrintedLen;
 }

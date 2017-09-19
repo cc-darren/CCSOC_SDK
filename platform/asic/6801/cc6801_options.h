@@ -139,6 +139,25 @@
 #define I2C_FREQ_200K           200000
 #define I2C_FREQ_400K           400000
 
+
+// Tracer Configuration List
+
+#define TRACER_LOGBUF_64                (1<<6)
+#define TRACER_LOGBUF_128               (1<<7)
+#define TRACER_LOGBUF_256               (1<<8)
+#define TRACER_LOGBUF_512               (1<<9)
+#define TRACER_LOGBUF_1024              (1<<10)
+
+#define TRACER_LOGLEVEL_EMERG           0
+#define TRACER_LOGLEVEL_ALERT           1
+#define TRACER_LOGLEVEL_CRIT            2
+#define TRACER_LOGLEVEL_ERROR           3
+#define TRACER_LOGLEVEL_WARN            4
+#define TRACER_LOGLEVEL_NOTICE          5
+#define TRACER_LOGLEVEL_INFO            6
+#define TRACER_LOGLEVEL_DEBUG           7
+#define TRACER_LOGLEVEL_ALL             8
+
 #endif //_CC6801_OPTIONS_H_
 
 

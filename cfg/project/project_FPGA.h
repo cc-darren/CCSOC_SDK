@@ -154,6 +154,8 @@ Head Block of The File
 *   TRACER_IF_ID   : the Tracer interface id
 ***************************************************/
 #define TRACER_IF               UseInterface(UART,0)
+#define TRACER_LOGBUF_SIZE      TRACER_LOGBUF_1024
+#define TRACER_LOGLEVEL         TRACER_LOGLEVEL_ALL
 
 /**************************************************
 *   Config HCI interface
