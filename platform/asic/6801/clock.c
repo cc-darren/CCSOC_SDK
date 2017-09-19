@@ -232,21 +232,21 @@ PARAMETERS
 RETURNS
     none
 ******************************************************************************/
-static void cc6801_ClockEflashCfg(E_ClockSupported clk)
-{
-    if(clk >= CLOCK_TOTAL_SUPPORTED)
-    {
-        return;
-    }
-
-    regEFLASH->dwTcpsTadhTah = g_aEflashTable[clk].dwTcpsTadhTah;
-    regEFLASH->dwTwkTpgs     = g_aEflashTable[clk].dwTwkTpgs;
-    regEFLASH->dwTrcvTnvh    = g_aEflashTable[clk].dwTrcvTnvh;
-    regEFLASH->dwTprog       = g_aEflashTable[clk].dwTprog;
-    regEFLASH->dwTerase      = g_aEflashTable[clk].dwTerase;
-    regEFLASH->dwTme         = g_aEflashTable[clk].dwTme;
-    regEFLASH->dwTnvsTnvh1   = g_aEflashTable[clk].dwTnvsTnvh1;
-}
+//static void cc6801_ClockEflashCfg(E_ClockSupported clk)
+//{
+//    if(clk >= CLOCK_TOTAL_SUPPORTED)
+//    {
+//        return;
+//    }
+//
+//    regEFLASH->dwTcpsTadhTah = g_aEflashTable[clk].dwTcpsTadhTah;
+//    regEFLASH->dwTwkTpgs     = g_aEflashTable[clk].dwTwkTpgs;
+//    regEFLASH->dwTrcvTnvh    = g_aEflashTable[clk].dwTrcvTnvh;
+//    regEFLASH->dwTprog       = g_aEflashTable[clk].dwTprog;
+//    regEFLASH->dwTerase      = g_aEflashTable[clk].dwTerase;
+//    regEFLASH->dwTme         = g_aEflashTable[clk].dwTme;
+//    regEFLASH->dwTnvsTnvh1   = g_aEflashTable[clk].dwTnvsTnvh1;
+//}
 
 /******************************************************************************
 FUNCTION
