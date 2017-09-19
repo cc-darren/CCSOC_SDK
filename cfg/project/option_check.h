@@ -27,31 +27,31 @@
 
   #if ((MODULE_ACC & 0xF000) == 0x1000)
     #if (MODULE_ACC == ACC_ST_LSM303C)
-      #include "STLSM303C_ACC.h"
+      #define ACC_HEADER acc_STLSM303C
 
     #elif (MODULE_ACC == ACC_ST_LSM303D)
-      #include "STLSM303D_ACC.h"
+      #define ACC_HEADER acc_STLSM303D
       
     #elif (MODULE_ACC == ACC_ST_LIS2DH12)
-      #include "STLIS2DH12_ACC.h"
+      #define ACC_HEADER acc_STLIS2DH12
       
     #elif (MODULE_ACC == ACC_ST_LIS2DW12)
-      #include "STLIS2DW12_ACC.h"
+      #define ACC_HEADER acc_STLIS2DW12
       
     #elif (MODULE_ACC == ACC_KIX_KX022_1020)
-      #include "KIXKX022_ACC.h"
+      #define ACC_HEADER acc_KIXKX022
       
     #elif (MODULE_ACC == ACC_KIX_KXG03)
-      #include "KIXKXG03_ACC.h"
+      #define ACC_HEADER acc_KIXKXG03
       
     #elif (MODULE_ACC == ACC_AD_ADXL362)
-      #include "ADXL362_ACC.h"
+      #define ACC_HEADER acc_ADXL362
       
     #elif (MODULE_ACC == ACC_ST_LSM6DSL)
-      #include "acc_lsm6ds3.h"
+      #define ACC_HEADER acc_lsm6ds3
 
     #elif (MODULE_ACC == ACC_NULL)
-      #include "acc_null.h"
+      #define ACC_HEADER acc_null
       #undef ACC_IF
       #define ACC_IF IF_NULL
     #else
@@ -62,7 +62,7 @@
   #endif
   
 #else
-  #error "Please choose 'ACC_NULL' if ACC is not in use."
+  #error "Please select ACC module from module_supported.h"
 #endif
 
 
@@ -80,21 +80,22 @@
 
   #if ((MODULE_MAG & 0xF000) == 0x2000)
     #if (MODULE_MAG == MAG_AKM_AK09912C)
-      #include "mag_ak09912.h"
+      #define MAG_HEADER mag_ak09912
+
     #elif (MODULE_MAG == MAG_AKM_AK09915C)
-      #include "AK09915.h"
+      #define MAG_HEADER mag_AK09915
       
     #elif (MODULE_MAG == MAG_ST_LSM303C)
-      #include "STLSM303C.h"
+      #define MAG_HEADER mag_STLSM303C
       
     #elif (MODULE_MAG == MAG_ST_LSM303D)
-      #include "STLSM303D.h"
+      #define MAG_HEADER mag_STLSM303D
       
     #elif (MODULE_MAG == MAG_ST_LIS2MDL)
-      #include "STLIS2MDL.h"
+      #define MAG_HEADER mag_ST_LIS2MDL
       
     #elif (MODULE_MAG == MAG_NULL)
-      #include "mag_null.h"
+      #define MAG_HEADER mag_null
       #undef MAG_IF
       #define MAG_IF IF_NULL
     #else
@@ -104,7 +105,7 @@
     #error "not a MAG driver"
   #endif
 #else
-  #error "Please choose 'MAG_NULL' if MAG is not in use."
+  #error "Please select MAG module from module_supported.h"
 #endif
 
 
@@ -122,10 +123,10 @@
 
   #if ((MODULE_GYR & 0xF000) == 0x3000)
     #if (MODULE_GYR == GYR_ST_LSM6DSL)
-      #include "LSM6DS3_ACC_GYRO_DRIVER.h"
+      #define GYR_HEADER gyr_LSM6DS3
 
     #elif (MODULE_GYR == GYR_NULL)
-      #include "gyr_null.h"
+      #define GYR_HEADER gyr_null
       #undef GYR_IF
       #define GYR_IF IF_NULL
     #else
@@ -135,7 +136,7 @@
     #error "not a GYR driver"
   #endif
 #else
-  #error "Please choose 'GYR_NULL' if GYR is not in use."
+  #error "Please select GYR module from module_supported.h"
 #endif
 
 
@@ -153,10 +154,10 @@
 
   #if ((MODULE_OLED & 0xF000) == 0x4000)
     #if (MODULE_OLED == OLED_SOLOMON_SSD1306)
-      #include "ssd1306.h"
+      #define OLED_HEADER ssd1306
 
     #elif (MODULE_OLED == OLED_NULL)
-      #include "oled_null.h"
+      #define OLED_HEADER oled_null
       #undef OLED_IF
       #define OLED_IF IF_NULL
     #else
@@ -166,7 +167,7 @@
     #error "not a OLED driver"
   #endif
 #else
-  #error "Please choose 'OLED_NULL' if OLED is not in use."
+  #error "Please select OLED module from module_supported.h"
 #endif
 
 
@@ -264,13 +265,20 @@
   #define PWM_INUSE TRUE
 #endif
 
-//remove IF check temporately, I2C interface can connect to mutilple slave
-/*
-#if (ACC_IF == MAGIF)
-  #error "ACC == MAG"
-#elif (MAG_IF == GYR_IF)
-  #error "MAG == GYR"
-#endif
-*/
+
+
+/************************  Include module driver header ************************
+    Module driver should be included at the last. Module driver may use the 
+  definitions in this doc. If header is included before "#define XXX yyy" appears,
+  definition XXX will be discarded in module driver.
+********************************************************************************/
+#define FIND_MODULE(headername) STRINGIZE(CAT(headername, .h))
+
+#include FIND_MODULE(ACC_HEADER)
+#include FIND_MODULE(MAG_HEADER)
+#include FIND_MODULE(GYR_HEADER)
+#include FIND_MODULE(OLED_HEADER)
+ 
+
 
 #endif //_OPTION_CHECK_H_
