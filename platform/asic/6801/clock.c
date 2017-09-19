@@ -269,7 +269,7 @@ void cc6801_ClockSysClkAdjust(E_ClockSupported clk)
     cc6801_ClockSysClkSet(clk);   //current clock will be updated
 
     //before go back to eFlash, must update eFlash parameters for current clock
-    cc6801_ClockEflashCfg(clk);
+    //cc6801_ClockEflashCfg(clk);
 }
 
 /******************************************************************************
