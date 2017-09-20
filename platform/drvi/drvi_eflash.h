@@ -14,11 +14,11 @@
 
 #include "eflash.h"
 
-#define EflashInit()        cc6801_EflashInit()
-#define EflashFlush()       cc6801_EflashFlush()
-#define EflashEraseALL()    cc6801_EflashEraseALL()
-#define EflashErasePage(dwEflashAdr)  cc6801_EflashErasePage(dwEflashAdr)
-#define EflashProgram(dwEflashAdr,pBufAdr,dwBufSize)  cc6801_EflashProgram(dwEflashAdr,pBufAdr,dwBufSize)
+#define drvi_EflashInit()        cc6801_EflashInit()
+#define drvi_EflashFlush()       cc6801_EflashFlush()
+#define drvi_EflashEraseALL()    cc6801_EflashEraseALL()
+#define drvi_EflashErasePage(dwEflashAdr)  cc6801_EflashErasePage(dwEflashAdr)
+#define drvi_EflashProgram(dwEflashAdr,pBufAdr,dwBufSize)  cc6801_EflashProgram(dwEflashAdr,pBufAdr,dwBufSize)
 
 
 
