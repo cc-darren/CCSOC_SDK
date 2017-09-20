@@ -335,7 +335,7 @@
               <MiscControls>--no_inline --no_multifile -DMSC_CLOCK --preinclude ..\..\cfg\cfg_ble_ip.h --preinclude ..\..\inc\global.h</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\algo\8bit_ped_50hz;..\..\inc;..\..\inc\CMSIS;..\..\mmi;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\platform\module;..\..\platform\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\ble\ip\ble\profiles\htp;..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\cfg;..\..\service\tracer;..\..\test;..\..\test\ext;..\..\cfg\project</IncludePath>
+              <IncludePath>..\..\inc;..\..\inc\CMSIS;..\..\mmi;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\platform\module;..\..\platform\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\ble\ip\ble\profiles\htp;..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\cfg;..\..\service\tracer;..\..\test;..\..\test\ext;..\..\cfg\project</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -376,44 +376,7 @@
       </TargetOption>
       <Groups>
         <Group>
-          <GroupName>cfg</GroupName>
-          <Files>
-            <File>
-              <FileName>cfg_ble_ip.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\cfg\cfg_ble_ip.h</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>algo</GroupName>
-          <Files>
-            <File>
-              <FileName>FP_PED_8Bit.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\algo\8bit_ped_50hz\FP_PED_8Bit.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>mmi</GroupName>
-          <Files>
-            <File>
-              <FileName>appDisplay.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\mmi\appDisplay.c</FilePath>
-            </File>
-            <File>
-              <FileName>font.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\mmi\font.c</FilePath>
-            </File>
-            <File>
-              <FileName>icon.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\mmi\icon.c</FilePath>
-            </File>
-          </Files>
         </Group>
         <Group>
           <GroupName>asic</GroupName>
@@ -496,127 +459,47 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>drvi</GroupName>
+          <GroupName>ble_app</GroupName>
           <Files>
             <File>
-              <FileName>drvi_aes.c</FileName>
+              <FileName>app.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_aes.c</FilePath>
+              <FilePath>..\..\ble\modules\app\src\app.c</FilePath>
             </File>
             <File>
-              <FileName>drvi_i2c.c</FileName>
+              <FileName>app_batt.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_i2c.c</FilePath>
+              <FilePath>..\..\ble\modules\app\src\app_batt.c</FilePath>
             </File>
             <File>
-              <FileName>drvi_init.c</FileName>
+              <FileName>app_dis.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_init.c</FilePath>
+              <FilePath>..\..\ble\modules\app\src\app_dis.c</FilePath>
             </File>
             <File>
-              <FileName>drvi_pwm.c</FileName>
+              <FileName>app_display.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_pwm.c</FilePath>
+              <FilePath>..\..\ble\modules\app\src\app_display.c</FilePath>
             </File>
             <File>
-              <FileName>drvi_rtc.c</FileName>
+              <FileName>app_hid.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_rtc.c</FilePath>
+              <FilePath>..\..\ble\modules\app\src\app_hid.c</FilePath>
             </File>
             <File>
-              <FileName>drvi_spi.c</FileName>
+              <FileName>app_ht.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_spi.c</FilePath>
+              <FilePath>..\..\ble\modules\app\src\app_ht.c</FilePath>
             </File>
             <File>
-              <FileName>drvi_uart.c</FileName>
+              <FileName>app_sec.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_uart.c</FilePath>
+              <FilePath>..\..\ble\modules\app\src\app_sec.c</FilePath>
             </File>
             <File>
-              <FileName>drvi_wktm.c</FileName>
+              <FileName>app_task.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_wktm.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>init</GroupName>
-          <Files>
-            <File>
-              <FileName>arch_main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\init\src\arch_main.c</FilePath>
-            </File>
-            <File>
-              <FileName>system_init.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\init\src\system_init.c</FilePath>
-            </File>
-            <File>
-              <FileName>jump_table.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\init\src\jump_table.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>module</GroupName>
-          <Files>
-            <File>
-              <FileName>acc_lsm6ds3.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\module\acc_lsm6ds3.c</FilePath>
-            </File>
-            <File>
-              <FileName>acc_null.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\module\acc_null.c</FilePath>
-            </File>
-            <File>
-              <FileName>gyr_null.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\module\gyr_null.c</FilePath>
-            </File>
-            <File>
-              <FileName>mag_ak09912.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\module\mag_ak09912.c</FilePath>
-            </File>
-            <File>
-              <FileName>mag_null.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\module\mag_null.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>service</GroupName>
-          <Files>
-            <File>
-              <FileName>sw_timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\sw_timer\sw_timer.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_fifo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\fifo\app_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_uart_fifo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\uart\app_uart_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>retarget.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\uart\retarget.c</FilePath>
-            </File>
-            <File>
-              <FileName>tracer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\tracer\tracer.c</FilePath>
+              <FilePath>..\..\ble\modules\app\src\app_task.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -991,47 +874,172 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>ble_app</GroupName>
+          <GroupName>cfg</GroupName>
           <Files>
             <File>
-              <FileName>app.c</FileName>
+              <FileName>cfg_ble_ip.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\cfg\cfg_ble_ip.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>drvi</GroupName>
+          <Files>
+            <File>
+              <FileName>drvi_aes.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\app\src\app.c</FilePath>
+              <FilePath>..\..\platform\drvi\drvi_aes.c</FilePath>
             </File>
             <File>
-              <FileName>app_batt.c</FileName>
+              <FileName>drvi_i2c.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\app\src\app_batt.c</FilePath>
+              <FilePath>..\..\platform\drvi\drvi_i2c.c</FilePath>
             </File>
             <File>
-              <FileName>app_dis.c</FileName>
+              <FileName>drvi_init.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\app\src\app_dis.c</FilePath>
+              <FilePath>..\..\platform\drvi\drvi_init.c</FilePath>
             </File>
             <File>
-              <FileName>app_display.c</FileName>
+              <FileName>drvi_pwm.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\app\src\app_display.c</FilePath>
+              <FilePath>..\..\platform\drvi\drvi_pwm.c</FilePath>
             </File>
             <File>
-              <FileName>app_hid.c</FileName>
+              <FileName>drvi_rtc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\app\src\app_hid.c</FilePath>
+              <FilePath>..\..\platform\drvi\drvi_rtc.c</FilePath>
             </File>
             <File>
-              <FileName>app_ht.c</FileName>
+              <FileName>drvi_spi.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\app\src\app_ht.c</FilePath>
+              <FilePath>..\..\platform\drvi\drvi_spi.c</FilePath>
             </File>
             <File>
-              <FileName>app_sec.c</FileName>
+              <FileName>drvi_uart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\app\src\app_sec.c</FilePath>
+              <FilePath>..\..\platform\drvi\drvi_uart.c</FilePath>
             </File>
             <File>
-              <FileName>app_task.c</FileName>
+              <FileName>drvi_wktm.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\app\src\app_task.c</FilePath>
+              <FilePath>..\..\platform\drvi\drvi_wktm.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>init</GroupName>
+          <Files>
+            <File>
+              <FileName>arch_main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\init\src\arch_main.c</FilePath>
+            </File>
+            <File>
+              <FileName>system_init.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\init\src\system_init.c</FilePath>
+            </File>
+            <File>
+              <FileName>jump_table.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\init\src\jump_table.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>mmi</GroupName>
+          <Files>
+            <File>
+              <FileName>appDisplay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\mmi\appDisplay.c</FilePath>
+            </File>
+            <File>
+              <FileName>font.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\mmi\font.c</FilePath>
+            </File>
+            <File>
+              <FileName>icon.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\mmi\icon.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>module</GroupName>
+          <Files>
+            <File>
+              <FileName>acc_lsm6ds3.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\module\acc_lsm6ds3.c</FilePath>
+            </File>
+            <File>
+              <FileName>acc_null.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\module\acc_null.c</FilePath>
+            </File>
+            <File>
+              <FileName>gyr_null.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\module\gyr_null.c</FilePath>
+            </File>
+            <File>
+              <FileName>mag_ak09912.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\module\mag_ak09912.c</FilePath>
+            </File>
+            <File>
+              <FileName>mag_null.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\module\mag_null.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>oled</GroupName>
+          <Files>
+            <File>
+              <FileName>ssd1306.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\module\oled\ssd1306.c</FilePath>
+            </File>
+            <File>
+              <FileName>ssd1306_128x32.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\module\oled\ssd1306_128x32.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>service</GroupName>
+          <Files>
+            <File>
+              <FileName>sw_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\sw_timer\sw_timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_fifo.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\fifo\app_fifo.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_uart_fifo.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\uart\app_uart_fifo.c</FilePath>
+            </File>
+            <File>
+              <FileName>retarget.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\uart\retarget.c</FilePath>
+            </File>
+            <File>
+              <FileName>tracer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\tracer\tracer.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1077,21 +1085,6 @@
               <FileName>test_dhry_2.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\test\src\test_dhry_2.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>oled</GroupName>
-          <Files>
-            <File>
-              <FileName>ssd1306.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\module\oled\ssd1306.c</FilePath>
-            </File>
-            <File>
-              <FileName>ssd1306_128x32.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\module\oled\ssd1306_128x32.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1563,7 +1556,7 @@
               <MiscControls> --preinclude ..\..\cfg\cfg_ble_ip.h --preinclude ..\..\inc\global.h</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\algo\8bit_ped_50hz;..\..\inc;..\..\inc\CMSIS;..\..\mmi;..\..\platform\asic\6801;..\..\platform\drvi;..\..\platform\init\inc;..\..\platform\module;..\..\platform\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\ble\ip\ble\profiles\htp;..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\service\tracer;..\..\test;..\..\test\ext;..\..\cfg;..\..\cfg\project</IncludePath>
+              <IncludePath>..\..\inc;..\..\inc\CMSIS;..\..\mmi;..\..\platform\asic\6801;..\..\platform\drvi;..\..\platform\init\inc;..\..\platform\module;..\..\platform\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\ble\ip\ble\profiles\htp;..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\service\tracer;..\..\test;..\..\test\ext;..\..\cfg;..\..\cfg\project</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1604,44 +1597,7 @@
       </TargetOption>
       <Groups>
         <Group>
-          <GroupName>cfg</GroupName>
-          <Files>
-            <File>
-              <FileName>cfg_ble_ip.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\cfg\cfg_ble_ip.h</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>algo</GroupName>
-          <Files>
-            <File>
-              <FileName>FP_PED_8Bit.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\algo\8bit_ped_50hz\FP_PED_8Bit.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>mmi</GroupName>
-          <Files>
-            <File>
-              <FileName>appDisplay.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\mmi\appDisplay.c</FilePath>
-            </File>
-            <File>
-              <FileName>font.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\mmi\font.c</FilePath>
-            </File>
-            <File>
-              <FileName>icon.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\mmi\icon.c</FilePath>
-            </File>
-          </Files>
         </Group>
         <Group>
           <GroupName>asic</GroupName>
@@ -1724,127 +1680,47 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>drvi</GroupName>
+          <GroupName>ble_app</GroupName>
           <Files>
             <File>
-              <FileName>drvi_aes.c</FileName>
+              <FileName>app.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_aes.c</FilePath>
+              <FilePath>..\..\ble\modules\app\src\app.c</FilePath>
             </File>
             <File>
-              <FileName>drvi_i2c.c</FileName>
+              <FileName>app_batt.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_i2c.c</FilePath>
+              <FilePath>..\..\ble\modules\app\src\app_batt.c</FilePath>
             </File>
             <File>
-              <FileName>drvi_init.c</FileName>
+              <FileName>app_dis.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_init.c</FilePath>
+              <FilePath>..\..\ble\modules\app\src\app_dis.c</FilePath>
             </File>
             <File>
-              <FileName>drvi_pwm.c</FileName>
+              <FileName>app_display.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_pwm.c</FilePath>
+              <FilePath>..\..\ble\modules\app\src\app_display.c</FilePath>
             </File>
             <File>
-              <FileName>drvi_rtc.c</FileName>
+              <FileName>app_hid.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_rtc.c</FilePath>
+              <FilePath>..\..\ble\modules\app\src\app_hid.c</FilePath>
             </File>
             <File>
-              <FileName>drvi_spi.c</FileName>
+              <FileName>app_ht.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_spi.c</FilePath>
+              <FilePath>..\..\ble\modules\app\src\app_ht.c</FilePath>
             </File>
             <File>
-              <FileName>drvi_uart.c</FileName>
+              <FileName>app_sec.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_uart.c</FilePath>
+              <FilePath>..\..\ble\modules\app\src\app_sec.c</FilePath>
             </File>
             <File>
-              <FileName>drvi_wktm.c</FileName>
+              <FileName>app_task.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_wktm.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>init</GroupName>
-          <Files>
-            <File>
-              <FileName>arch_main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\init\src\arch_main.c</FilePath>
-            </File>
-            <File>
-              <FileName>system_init.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\init\src\system_init.c</FilePath>
-            </File>
-            <File>
-              <FileName>jump_table.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\init\src\jump_table.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>module</GroupName>
-          <Files>
-            <File>
-              <FileName>acc_lsm6ds3.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\module\acc_lsm6ds3.c</FilePath>
-            </File>
-            <File>
-              <FileName>acc_null.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\module\acc_null.c</FilePath>
-            </File>
-            <File>
-              <FileName>gyr_null.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\module\gyr_null.c</FilePath>
-            </File>
-            <File>
-              <FileName>mag_ak09912.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\module\mag_ak09912.c</FilePath>
-            </File>
-            <File>
-              <FileName>mag_null.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\module\mag_null.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>service</GroupName>
-          <Files>
-            <File>
-              <FileName>sw_timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\sw_timer\sw_timer.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_fifo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\fifo\app_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_uart_fifo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\uart\app_uart_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>retarget.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\uart\retarget.c</FilePath>
-            </File>
-            <File>
-              <FileName>tracer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\tracer\tracer.c</FilePath>
+              <FilePath>..\..\ble\modules\app\src\app_task.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2219,47 +2095,172 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>ble_app</GroupName>
+          <GroupName>cfg</GroupName>
           <Files>
             <File>
-              <FileName>app.c</FileName>
+              <FileName>cfg_ble_ip.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\cfg\cfg_ble_ip.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>drvi</GroupName>
+          <Files>
+            <File>
+              <FileName>drvi_aes.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\app\src\app.c</FilePath>
+              <FilePath>..\..\platform\drvi\drvi_aes.c</FilePath>
             </File>
             <File>
-              <FileName>app_batt.c</FileName>
+              <FileName>drvi_i2c.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\app\src\app_batt.c</FilePath>
+              <FilePath>..\..\platform\drvi\drvi_i2c.c</FilePath>
             </File>
             <File>
-              <FileName>app_dis.c</FileName>
+              <FileName>drvi_init.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\app\src\app_dis.c</FilePath>
+              <FilePath>..\..\platform\drvi\drvi_init.c</FilePath>
             </File>
             <File>
-              <FileName>app_display.c</FileName>
+              <FileName>drvi_pwm.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\app\src\app_display.c</FilePath>
+              <FilePath>..\..\platform\drvi\drvi_pwm.c</FilePath>
             </File>
             <File>
-              <FileName>app_hid.c</FileName>
+              <FileName>drvi_rtc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\app\src\app_hid.c</FilePath>
+              <FilePath>..\..\platform\drvi\drvi_rtc.c</FilePath>
             </File>
             <File>
-              <FileName>app_ht.c</FileName>
+              <FileName>drvi_spi.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\app\src\app_ht.c</FilePath>
+              <FilePath>..\..\platform\drvi\drvi_spi.c</FilePath>
             </File>
             <File>
-              <FileName>app_sec.c</FileName>
+              <FileName>drvi_uart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\app\src\app_sec.c</FilePath>
+              <FilePath>..\..\platform\drvi\drvi_uart.c</FilePath>
             </File>
             <File>
-              <FileName>app_task.c</FileName>
+              <FileName>drvi_wktm.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\app\src\app_task.c</FilePath>
+              <FilePath>..\..\platform\drvi\drvi_wktm.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>init</GroupName>
+          <Files>
+            <File>
+              <FileName>arch_main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\init\src\arch_main.c</FilePath>
+            </File>
+            <File>
+              <FileName>system_init.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\init\src\system_init.c</FilePath>
+            </File>
+            <File>
+              <FileName>jump_table.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\init\src\jump_table.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>mmi</GroupName>
+          <Files>
+            <File>
+              <FileName>appDisplay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\mmi\appDisplay.c</FilePath>
+            </File>
+            <File>
+              <FileName>font.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\mmi\font.c</FilePath>
+            </File>
+            <File>
+              <FileName>icon.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\mmi\icon.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>module</GroupName>
+          <Files>
+            <File>
+              <FileName>acc_lsm6ds3.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\module\acc_lsm6ds3.c</FilePath>
+            </File>
+            <File>
+              <FileName>acc_null.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\module\acc_null.c</FilePath>
+            </File>
+            <File>
+              <FileName>gyr_null.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\module\gyr_null.c</FilePath>
+            </File>
+            <File>
+              <FileName>mag_ak09912.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\module\mag_ak09912.c</FilePath>
+            </File>
+            <File>
+              <FileName>mag_null.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\module\mag_null.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>oled</GroupName>
+          <Files>
+            <File>
+              <FileName>ssd1306.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\module\oled\ssd1306.c</FilePath>
+            </File>
+            <File>
+              <FileName>ssd1306_128x32.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\module\oled\ssd1306_128x32.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>service</GroupName>
+          <Files>
+            <File>
+              <FileName>sw_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\sw_timer\sw_timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_fifo.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\fifo\app_fifo.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_uart_fifo.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\uart\app_uart_fifo.c</FilePath>
+            </File>
+            <File>
+              <FileName>retarget.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\uart\retarget.c</FilePath>
+            </File>
+            <File>
+              <FileName>tracer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\tracer\tracer.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2305,21 +2306,6 @@
               <FileName>test_dhry_2.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\test\src\test_dhry_2.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>oled</GroupName>
-          <Files>
-            <File>
-              <FileName>ssd1306.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\module\oled\ssd1306.c</FilePath>
-            </File>
-            <File>
-              <FileName>ssd1306_128x32.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\module\oled\ssd1306_128x32.c</FilePath>
             </File>
           </Files>
         </Group>
