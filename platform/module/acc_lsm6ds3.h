@@ -95,12 +95,12 @@ typedef union
 #endif /*__LSM6DS3_SHARED__TYPES*/
 
 /* Exported macro ------------------------------------------------------------*/
-#define ACC_Init()                                      LSM6DS3_X_Init()
+#define ACC_Init()                                  LSM6DS3_X_Init()
 #define ACC_Enable()
 #define ACC_Disable()
-#define ACC_Setmode()
-#define ACC_SetOdr()
-#define ACC_GetRawAccData(pBuf)                          LSM6DS3_ACC_GYRO_GetRawAccData(NULL,pBuf)
+#define ACC_Setmode(modesetting)                    LSM6DS3_ACC_GYRO_W_FIFO_MODE(NULL,modesetting)
+#define ACC_SetOdr(odrsetting)                      LSM6DS3_ACC_GYRO_W_ODR_FIFO(NULL,odrsetting)
+#define ACC_GetRawAccData(pBuf)                     LSM6DS3_ACC_GYRO_GetRawAccData(NULL,pBuf)
 #define ACC_Reset()
 
 /* Exported constants --------------------------------------------------------*/

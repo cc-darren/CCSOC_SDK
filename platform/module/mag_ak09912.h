@@ -12,12 +12,12 @@
 
 /* Exported types ------------------------------------------------------------*/
 #define MAG_Init()                              AK09912_MAG_Init()
-#define MAG_Enable()  
-#define MAG_Disable()
-#define MAG_SetMode(modeSetting)
-#define MAG_SetOdr(OdrSetting)
+#define MAG_Enable()                            AK09912_MAG_SetMode(AK09912_MAG_SINGLE)
+#define MAG_Disable()                           AK09912_MAG_SetMode(AK09912_MAG_POWER_DOWN)
+#define MAG_SetMode(modeSetting)                AK09912_MAG_SetMode(modeSetting)
+#define MAG_SetOdr(OdrSetting)                  AK09912_MAG_SetMode(OdrSetting)
 #define MAG_GetRawMagData(pBuf)                 AK09912_MAG_GetMagRaw(pBuf)
-#define MAG_Reset()
+#define MAG_Reset()                             AK09912_MAG_SoftReset(AK09912_MAG_SOFT_RST_ENABLE)
 
 
 //these could change accordingly with the architecture

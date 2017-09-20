@@ -614,6 +614,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\service\tracer\tracer.c</FilePath>
             </File>
+            <File>
+              <FileName>low_power.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\low_power\low_power.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1407,6 +1412,11 @@
               <FileName>tracer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\service\tracer\tracer.c</FilePath>
+            </File>
+            <File>
+              <FileName>low_power.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\low_power\low_power.c</FilePath>
             </File>
           </Files>
         </Group>
