@@ -246,7 +246,7 @@ int cc6801_I2cRead(uint8_t bBusNum,
 {
     U_regI2C *pI2cBase = tI2cBus[bBusNum].pReg;
 
-    pI2cBase->bf.dma_str_raddr = (uint32_t)pData;
+    pI2cBase->bf.dma_str_waddr = (uint32_t)pData;
     pI2cBase->bf.wdata_byte_num = wLen - 1;
     pI2cBase->bf.rdata_byte_num = wLen - 1;
     pI2cBase->bf.op_mode = 1;
