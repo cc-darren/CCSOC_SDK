@@ -228,7 +228,7 @@ Head Block of The File
 /******************************************************************************************************************
 *   Set RTC configuration   (all the configs are in cc6801_options.h)
 *   Options:
-*   RTC_SUPPORT             ENABLE or DISABLE
+*   RTC_INUSE               TRUE or FALSE
 *   RTC_DEFAULT_YEAR        2017, 2018, 2019 ...    must NOT be less than 2000
 *   RTC_DEFAULT_MONTH       RTC_JAN ~ RTC_DEC
 *   RTC_DEFAULT_DAY         1~31
@@ -238,7 +238,7 @@ Head Block of The File
 *   RTC_DEFAULT_WEEK        RTC_SUNDAY ~ RTC_SATURDAY
 *   RTC_DEFAULT_H24         RTC_HOUR_24H, RTC_HOUR_AM, RTC_HOUR_PM
 *******************************************************************************************************************/
-#define RTC_SUPPORT             ENABLE
+#define RTC_INUSE               TRUE
 #define RTC_DEFAULT_YEAR        2017
 #define RTC_DEFAULT_MONTH       RTC_JAN
 #define RTC_DEFAULT_DAY         1
