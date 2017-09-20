@@ -1,18 +1,11 @@
 
-//#include "CC_global_config.h"
-#include "appDisplay.h"
 #include <stdio.h>
-#include <stdbool.h>
-#include <stdlib.h>
 #include <string.h>
+#include "appDisplay.h"
 #include "project.h"
-//#include "appHRM.h"
+#include "tracer.h"
 
-#define NRF_LOG_MODULE_NAME "APP"
-//#include "nrf_log.h"
-//#include "nrf_log_ctrl.h"
-
-#define NRF_LOG_INFO(x) printf(x)
+#define fmt "APP: "
 
 /**
  * -----------------------------------------------------------------------------
@@ -150,7 +143,7 @@ int16_t app_displayoled_routine(void)
     break;
     case E_OLED_PWRSTATE_ERR:
     default:
-        NRF_LOG_INFO("ERROR STATE");
+        TracerErr("ERROR STATE");
 
     break;
    }
@@ -209,7 +202,7 @@ void app_displayoled_start(void)
 
     }
 
-    NRF_LOG_INFO("done.");
+    TracerInfo("done.");
 }
 
 void app_displayoled_stop(void)
@@ -223,7 +216,7 @@ void app_displayoled_stop(void)
 
 
 
-    NRF_LOG_INFO("done.");
+    TracerInfo("done.");
 }
 
 void app_displayoled_reset(void)
@@ -232,7 +225,7 @@ void app_displayoled_reset(void)
         return;
 
 
-    NRF_LOG_INFO("done.");
+    TracerInfo("done.");
 }
 
 

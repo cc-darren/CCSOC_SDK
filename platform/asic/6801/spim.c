@@ -34,6 +34,7 @@
 
 #include "drvi_spi.h"
 #include "spim.h"
+#include "tracer.h"
 
 volatile uint32_t SPI0_M_INTR = 0;
 volatile uint32_t SPI1_M_INTR = 0;
@@ -188,7 +189,7 @@ __STATIC_INLINE void cc6801_SpimConfig(U_regSPI * pSpimBase,
     pSpimBase->dw.spiCtrl = dwSpiCtrl;
     pSpimBase->dw.DmaCtrl = dwDmaCtrl;
 
-    printf("setup mode %d, %s%s%s %u Hz max\n",
+    TracerInfo("setup mode %d, %s%s%s %u Hz max\n",
         (int) (spi->wMode & (SPI_CPOL | SPI_CPHA)),
         (spi->wMode & SPI_CS_HIGH) ? "cs_high, " : "",
         (spi->wMode & SPI_LSB_FIRST) ? "lsb, " : "",
@@ -218,7 +219,7 @@ int cc6801_SpimInit(T_SpiDevice *pSpiDev)
     }
     else
     {
-        printf("Not Support SPI%d\r\n", pSpiDev->bBusNum);
+        TracerErr("Not Support SPI%d\r\n", pSpiDev->bBusNum);
         return CC_ERROR_INVALID_PARAM;
     }
 
