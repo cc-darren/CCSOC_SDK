@@ -177,7 +177,7 @@ uint32_t app_uart_close(void)
 }
 
 
-
+#ifdef CFG_BLE_APP
 /******************************************************************************
  ***    APIs required by BLE SW IP 
  ***    for HCI / AHI / etc.
@@ -241,4 +241,4 @@ const struct rwip_eif_api* rwip_eif_get(uint8_t type)
     }
     return ret;
 }
-
+#endif
