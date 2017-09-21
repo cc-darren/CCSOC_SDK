@@ -21,8 +21,11 @@
 #include "drvi_init.h"
 #include "tracer.h"
 #include "project.h"
+#include "rwble.h"  //avoid warning or rwble_isr()
 
 extern void sys_InitMain(void);
+extern void rwip_init(uint32_t);
+extern void rwip_schedule(void);
 
 /*
  * MAIN FUNCTION

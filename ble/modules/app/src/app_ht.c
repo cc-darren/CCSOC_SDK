@@ -97,6 +97,7 @@ static void app_ht_temp_send(void)
     ke_msg_send(req);
 }
 
+#if (DISPLAY_SUPPORT)
 static void app_ht_update_type_string(uint8_t temp_type)
 {
     switch (temp_type)
@@ -136,6 +137,7 @@ static void app_ht_update_type_string(uint8_t temp_type)
             break;
     }
 }
+#endif
 
 /*
  * GLOBAL FUNCTION DEFINITIONS
