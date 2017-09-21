@@ -1009,12 +1009,12 @@
             <File>
               <FileName>ssd1306.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\module\oled\ssd1306.c</FilePath>
+              <FilePath>..\..\module\oled\ssd1306.c</FilePath>
             </File>
             <File>
               <FileName>ssd1306_128x32.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\module\oled\ssd1306_128x32.c</FilePath>
+              <FilePath>..\..\module\oled\ssd1306_128x32.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2240,12 +2240,12 @@
             <File>
               <FileName>ssd1306.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\module\oled\ssd1306.c</FilePath>
+              <FilePath>..\..\module\oled\ssd1306.c</FilePath>
             </File>
             <File>
               <FileName>ssd1306_128x32.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\module\oled\ssd1306_128x32.c</FilePath>
+              <FilePath>..\..\module\oled\ssd1306_128x32.c</FilePath>
             </File>
           </Files>
         </Group>
