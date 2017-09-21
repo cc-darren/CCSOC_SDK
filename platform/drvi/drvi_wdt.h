@@ -14,13 +14,25 @@
 #define _DRVI_WDT_H_
 #include "wdt.h"
 
+__forceinline void drvi_WdtInit(uint32_t dwMSec)
+{
+    cc6801_WdtInit(dwMSec);
+}
 
-#define drvi_wdt_init(x)         cc6801_wdt_init(x)
-#define drvi_wdt_enable()        cc6801_wdt_enable()
-#define drvi_wdt_feed()          cc6801_wdt_feed()
+__forceinline void drvi_WdtEnable(void)
+{
+    cc6801_WdtEnable();
+}
 
+__forceinline void drvi_WdtDisable(void)
+{
+    cc6801_WdtDisable();
+}
 
-
+__forceinline void drvi_WdtFeed(void)
+{
+    cc6801_WdtFeed();
+}
 
 
 

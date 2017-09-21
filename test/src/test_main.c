@@ -195,8 +195,8 @@ static int cc6801_Init(void)
     }
     if (g_WdtTestStart)
     {
-        drvi_wdt_init(5000);
-        drvi_wdt_enable();
+        drvi_WdtInit(5000);
+        drvi_WdtEnable();
     }
     if (g_RtcTestStart)
     {
@@ -248,7 +248,7 @@ int TEST_Main(void)
         if (g_WdtTestStart)
         {
             g_WdtTestStart = 0;
-            drvi_wdt_feed();
+            drvi_WdtFeed();
             S_Count.dwWdt++;
         }
         if (g_Wktm0TestStart)

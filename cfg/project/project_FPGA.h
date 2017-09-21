@@ -250,6 +250,16 @@ Head Block of The File
 
 
 /******************************************************************************************************************
+*   Set WDT configuration   (all the configs are in cc6801_options.h)
+*   Options:
+*   WDT_INUSE               TRUE or FALSE
+*   WDT_DEFAULT_TIMEOUT     Unit : ms
+*******************************************************************************************************************/
+#define WDT_INUSE               TRUE
+#define WDT_DEFAULT_TIMEOUT     30000
+
+
+/******************************************************************************************************************
 *   Set GPIO configuration
 *   (all the configs are in cc6801_options.h)
 *   (please using OR operation to choose more than 2 configs)
