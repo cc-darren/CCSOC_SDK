@@ -21,11 +21,16 @@
 #include "drvi_init.h"
 #include "tracer.h"
 #include "project.h"
+#ifdef CFG_BLE_APP
 #include "rwble.h"  //avoid warning or rwble_isr()
+#endif
 
-extern void sys_InitMain(void);
+#ifdef CFG_BLE_APP
 extern void rwip_init(uint32_t);
 extern void rwip_schedule(void);
+#endif
+
+extern void sys_InitMain(void);
 
 /*
  * MAIN FUNCTION

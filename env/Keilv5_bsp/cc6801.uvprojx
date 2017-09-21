@@ -335,7 +335,7 @@
               <MiscControls>--no_inline --no_multifile -DMSC_CLOCK</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\mmi;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\platform\module;..\..\platform\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\service\tracer;..\..\test;..\..\test\ext</IncludePath>
+              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\mmi;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\service\tracer;..\..\test;..\..\test\ext</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -547,27 +547,27 @@
             <File>
               <FileName>acc_lsm6ds3.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\module\acc_lsm6ds3.c</FilePath>
+              <FilePath>..\..\module\mems\acc_lsm6ds3.c</FilePath>
             </File>
             <File>
               <FileName>acc_null.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\module\acc_null.c</FilePath>
+              <FilePath>..\..\module\mems\acc_null.c</FilePath>
             </File>
             <File>
               <FileName>gyr_null.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\module\gyr_null.c</FilePath>
+              <FilePath>..\..\module\mems\gyr_null.c</FilePath>
             </File>
             <File>
               <FileName>mag_ak09912.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\module\mag_ak09912.c</FilePath>
+              <FilePath>..\..\module\mems\mag_ak09912.c</FilePath>
             </File>
             <File>
               <FileName>mag_null.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\module\mag_null.c</FilePath>
+              <FilePath>..\..\module\mems\mag_null.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -577,12 +577,12 @@
             <File>
               <FileName>ssd1306.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\module\oled\ssd1306.c</FilePath>
+              <FilePath>..\..\module\oled\ssd1306.c</FilePath>
             </File>
             <File>
               <FileName>ssd1306_128x32.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\module\oled\ssd1306_128x32.c</FilePath>
+              <FilePath>..\..\module\oled\ssd1306_128x32.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1134,7 +1134,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\mmi;..\..\platform\asic\6801;..\..\platform\drvi;..\..\platform\init\inc;..\..\platform\module;..\..\platform\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\service\tracer;..\..\test;..\..\test\ext</IncludePath>
+              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\mmi;..\..\platform\asic\6801;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\service\tracer;..\..\test;..\..\test\ext</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1346,27 +1346,27 @@
             <File>
               <FileName>acc_lsm6ds3.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\module\acc_lsm6ds3.c</FilePath>
+              <FilePath>..\..\module\mems\acc_lsm6ds3.c</FilePath>
             </File>
             <File>
               <FileName>acc_null.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\module\acc_null.c</FilePath>
+              <FilePath>..\..\module\mems\acc_null.c</FilePath>
             </File>
             <File>
               <FileName>gyr_null.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\module\gyr_null.c</FilePath>
+              <FilePath>..\..\module\mems\gyr_null.c</FilePath>
             </File>
             <File>
               <FileName>mag_ak09912.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\module\mag_ak09912.c</FilePath>
+              <FilePath>..\..\module\mems\mag_ak09912.c</FilePath>
             </File>
             <File>
               <FileName>mag_null.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\module\mag_null.c</FilePath>
+              <FilePath>..\..\module\mems\mag_null.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1376,12 +1376,12 @@
             <File>
               <FileName>ssd1306.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\module\oled\ssd1306.c</FilePath>
+              <FilePath>..\..\module\oled\ssd1306.c</FilePath>
             </File>
             <File>
               <FileName>ssd1306_128x32.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\module\oled\ssd1306_128x32.c</FilePath>
+              <FilePath>..\..\module\oled\ssd1306_128x32.c</FilePath>
             </File>
           </Files>
         </Group>
