@@ -21,6 +21,7 @@ void lowpower_mode_Sleep(void);
 void lowpower_mode_DeepSleep(void);
 void lowpower_mode_Hibernater(void);
 
+void lowpower_SleepMs(uint16_t dTimeMs);
 
 
 #endif

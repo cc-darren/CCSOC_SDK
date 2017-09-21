@@ -36,8 +36,8 @@
  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef _ACC_LSM6DS3_H_
-#define _ACC_LSM6DS3_H_
+#ifndef _GYR_LSM6DS3_H_
+#define _GYR_LSM6DS3_H_
 
 /* Includes ------------------------------------------------------------------*/
 #include <stdint.h>
@@ -67,13 +67,13 @@ typedef enum
 /* Exported common structure --------------------------------------------------------*/
 
 /* Exported macro ------------------------------------------------------------*/
-#define ACC_Init()                                  LSM6DS3_X_Init()
-#define ACC_Enable()
-#define ACC_Disable()
-#define ACC_Setmode(modesetting)                    LSM6DS3_ACC_GYRO_W_FIFO_MODE(NULL,modesetting)
-#define ACC_SetOdr(odrsetting)                      LSM6DS3_ACC_GYRO_W_ODR_FIFO(NULL,odrsetting)
-#define ACC_GetRawAccData(pBuf)                     LSM6DS3_ACC_GYRO_GetRawAccData(NULL,pBuf)
-#define ACC_Reset()                                 LSM6DS3_ACC_GYRO_W_SW_RESET(NULL,LSM6DS3_ACC_GYRO_SW_RESET_RESET_DEVICE)
+#define GYR_Init()                                  LSM6DS3_X_Init()
+#define GYR_Enable()
+#define GYR_Disable()
+#define GYR_Setmode(modesetting)                    LSM6DS3_ACC_GYRO_W_FIFO_MODE(NULL,modesetting)
+#define GYR_SetOdr(odrsetting)                      LSM6DS3_ACC_GYRO_W_ODR_FIFO(NULL,odrsetting)
+#define GYR_GetRawGyrData(pBuf)                     LSM6DS3_ACC_GYRO_GetRawGyroData(NULL,pBuf)
+#define GYR_Reset()                                 LSM6DS3_ACC_GYRO_W_SW_RESET(NULL,LSM6DS3_ACC_GYRO_SW_RESET_RESET_DEVICE)
 
 /* Exported constants --------------------------------------------------------*/
 

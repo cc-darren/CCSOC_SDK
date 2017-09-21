@@ -545,14 +545,14 @@
           <GroupName>module</GroupName>
           <Files>
             <File>
-              <FileName>acc_lsm6ds3.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\module\mems\acc_lsm6ds3.c</FilePath>
-            </File>
-            <File>
               <FileName>acc_null.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\module\mems\acc_null.c</FilePath>
+            </File>
+            <File>
+              <FileName>mag_null.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\module\mems\mag_null.c</FilePath>
             </File>
             <File>
               <FileName>gyr_null.c</FileName>
@@ -560,14 +560,19 @@
               <FilePath>..\..\module\mems\gyr_null.c</FilePath>
             </File>
             <File>
+              <FileName>acc_lsm6ds3.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\module\mems\acc_lsm6ds3.c</FilePath>
+            </File>
+            <File>
               <FileName>mag_ak09912.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\module\mems\mag_ak09912.c</FilePath>
             </File>
             <File>
-              <FileName>mag_null.c</FileName>
+              <FileName>gyr_lsm6ds3.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\module\mems\mag_null.c</FilePath>
+              <FilePath>..\..\module\mems\gyr_lsm6ds3.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1344,14 +1349,14 @@
           <GroupName>module</GroupName>
           <Files>
             <File>
-              <FileName>acc_lsm6ds3.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\module\mems\acc_lsm6ds3.c</FilePath>
-            </File>
-            <File>
               <FileName>acc_null.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\module\mems\acc_null.c</FilePath>
+            </File>
+            <File>
+              <FileName>mag_null.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\module\mems\mag_null.c</FilePath>
             </File>
             <File>
               <FileName>gyr_null.c</FileName>
@@ -1359,14 +1364,19 @@
               <FilePath>..\..\module\mems\gyr_null.c</FilePath>
             </File>
             <File>
+              <FileName>acc_lsm6ds3.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\module\mems\acc_lsm6ds3.c</FilePath>
+            </File>
+            <File>
               <FileName>mag_ak09912.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\module\mems\mag_ak09912.c</FilePath>
             </File>
             <File>
-              <FileName>mag_null.c</FileName>
+              <FileName>gyr_lsm6ds3.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\module\mems\mag_null.c</FilePath>
+              <FilePath>..\..\module\mems\gyr_lsm6ds3.c</FilePath>
             </File>
           </Files>
         </Group>
