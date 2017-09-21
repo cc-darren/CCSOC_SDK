@@ -335,14 +335,14 @@
               <MiscControls>--no_inline --no_multifile -DMSC_CLOCK</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\mmi;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\service\tracer;..\..\test;..\..\test\ext</IncludePath>
+              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\service\tracer;..\..\test;..\..\test\ext</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
             <interw>1</interw>
             <Ropi>0</Ropi>
             <Rwpi>0</Rwpi>
-            <thumb>1</thumb>
+            <thumb>0</thumb>
             <SplitLS>0</SplitLS>
             <SwStkChk>0</SwStkChk>
             <NoWarn>0</NoWarn>
@@ -522,22 +522,22 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>mmi</GroupName>
+          <GroupName>app</GroupName>
           <Files>
             <File>
               <FileName>appDisplay.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\mmi\appDisplay.c</FilePath>
+              <FilePath>..\..\app\appDisplay.c</FilePath>
             </File>
             <File>
               <FileName>font.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\mmi\font.c</FilePath>
+              <FilePath>..\..\app\font.c</FilePath>
             </File>
             <File>
               <FileName>icon.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\mmi\icon.c</FilePath>
+              <FilePath>..\..\app\icon.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1139,14 +1139,14 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\mmi;..\..\platform\asic\6801;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\service\tracer;..\..\test;..\..\test\ext</IncludePath>
+              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app;..\..\platform\asic\6801;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\service\tracer;..\..\test;..\..\test\ext</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
             <interw>1</interw>
             <Ropi>0</Ropi>
             <Rwpi>0</Rwpi>
-            <thumb>1</thumb>
+            <thumb>0</thumb>
             <SplitLS>0</SplitLS>
             <SwStkChk>0</SwStkChk>
             <NoWarn>0</NoWarn>
@@ -1326,22 +1326,22 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>mmi</GroupName>
+          <GroupName>app</GroupName>
           <Files>
             <File>
               <FileName>appDisplay.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\mmi\appDisplay.c</FilePath>
+              <FilePath>..\..\app\appDisplay.c</FilePath>
             </File>
             <File>
               <FileName>font.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\mmi\font.c</FilePath>
+              <FilePath>..\..\app\font.c</FilePath>
             </File>
             <File>
               <FileName>icon.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\mmi\icon.c</FilePath>
+              <FilePath>..\..\app\icon.c</FilePath>
             </File>
           </Files>
         </Group>

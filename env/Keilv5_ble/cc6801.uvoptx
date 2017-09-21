@@ -1865,7 +1865,7 @@
   </Group>
 
   <Group>
-    <GroupName>mmi</GroupName>
+    <GroupName>app</GroupName>
     <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
@@ -1877,7 +1877,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\mmi\appDisplay.c</PathWithFileName>
+      <PathWithFileName>..\..\app\appDisplay.c</PathWithFileName>
       <FilenameWithoutPath>appDisplay.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -1889,7 +1889,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\mmi\font.c</PathWithFileName>
+      <PathWithFileName>..\..\app\font.c</PathWithFileName>
       <FilenameWithoutPath>font.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -1901,7 +1901,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\mmi\icon.c</PathWithFileName>
+      <PathWithFileName>..\..\app\icon.c</PathWithFileName>
       <FilenameWithoutPath>icon.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
