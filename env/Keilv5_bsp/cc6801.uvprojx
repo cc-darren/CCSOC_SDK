@@ -332,7 +332,7 @@
             <v6Lto>0</v6Lto>
             <v6WtE>0</v6WtE>
             <VariousControls>
-              <MiscControls>--no_inline --no_multifile -DMSC_CLOCK</MiscControls>
+              <MiscControls>--no_multifile -DMSC_CLOCK</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
               <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\service\tracer;..\..\test;..\..\test\ext</IncludePath>

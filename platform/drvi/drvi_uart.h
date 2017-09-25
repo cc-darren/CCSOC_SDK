@@ -16,16 +16,6 @@
 #include "project.h"
 #include "uart.h"
 
-#define drvi_UartConfigSet(port)                     cc6801_UartConfigSet(port)
-#define drvi_UartRxDoneRegister(port,func)           cc6801_UartRxDoneRegister(port,func)
-#if (UART_USE_DMA) && UART_USE_DMA
-#define drvi_UartTx(port,buf,len)                    cc6801_UartTxDMA(port,buf,len)
-#define drvi_UartRx(port,buf,len)                    cc6801_UartRxDMA(port,buf,len)
-#else
-#define drvi_UartTx(port,buf,len)                    cc6801_UartTx(port,buf,len)
-#define drvi_UartRx(port,buf,len)                    cc6801_UartRx(port,buf,len)
-#endif
-
 typedef enum
 {
     DRVI_UART_EVENT_TX_DONE,
@@ -50,9 +40,41 @@ typedef void (*fpUartRxDone)(T_UartEvent *p_event);
 
 int drvi_UartInit(void);
 
+__forceinline void drvi_UartConfigSet(T_UartPort *pUartPort)
+{
+    cc6801_UartConfigSet(pUartPort);
+}
 
+__forceinline void drvi_UartRxDoneRegister(uint8_t bIdx, fpUartRxDone RxCallBack)
+{
+    cc6801_UartRxDoneRegister(bIdx, RxCallBack);
+}
 
+#if (UART_USE_DMA) && UART_USE_DMA
+__forceinline int drvi_UartTx(uint8_t bPortNum,
+                              uint8_t const * const pData,
+                              uint8_t bLen)
+{
+    return cc6801_UartTxDMA(bPortNum, pData, bLen);
+}
 
+__forceinline int drvi_UartRx(uint8_t bPortNum, uint8_t *pData, uint8_t bLen)
+{
+    return cc6801_UartRxDMA(bPortNum, pData, bLen);
+}
+#else
+__forceinline int drvi_UartTx(uint8_t bPortNum,
+                              uint8_t const * const pData,
+                              uint8_t bLen)
+{
+    return cc6801_UartTx(bPortNum, pData, bLen);
+}
+
+__forceinline int drvi_UartRx(uint8_t bPortNum, uint8_t *pData, uint8_t bLen)
+{
+    return cc6801_UartRx(bPortNum, pData, bLen);
+}
+#endif
 
 
 #endif //_DRVI_UART_H_

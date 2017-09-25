@@ -14,7 +14,6 @@
 
 #include "global.h"
 #include "cc6801_reg.h"
-#include "drvi_uart.h"
 
 #define UART_CTRL_INT_EFCI_DISABLE_BIT (0)    /* Flow control interrupt Disable */
 #define UART_CTRL_INT_EFCI_DISABLE_MASK (UART_CTRL_INT_EFCI_DISABLE_BIT << 4)

@@ -31,6 +31,7 @@
 ******************************************************************************/
 
 #include "uart.h"
+#include "drvi_uart.h"
 
 volatile uint32_t UART0_RXDM_INTR = 0;
 volatile uint32_t UART0_TXDM_INTR = 0;

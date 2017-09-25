@@ -15,15 +15,6 @@
 #include "project.h"
 #include "i2c.h"
 
-#define drvi_I2cDeviceRegister(dev)                          cc6801_I2cDeviceRegister(dev)
-#define drvi_I2cWrite(bus,buf,len)                           cc6801_I2cWrite(bus,buf,len)
-#define drvi_I2cRead(bus,buf,len)                            cc6801_I2cRead(bus,buf,len)
-
-#define drvi_I2cWriteThenRead(bus,tbuf,tlen,rbuf,rlen)       {  \
-                                                                drvi_I2cWrite(bus,tbuf,tlen);   \
-                                                                drvi_I2cRead(bus,rbuf,rlen);      \
-                                                             }
-
 typedef enum
 {
     DRVI_I2C_READ_DONE,
@@ -48,6 +39,24 @@ typedef struct S_I2cDevice
 
 int drvi_I2cInit(void);
 
+__forceinline void drvi_I2cDeviceRegister(T_I2cDevice *tpDev)
+{
+    cc6801_I2cDeviceRegister(tpDev);
+}
+
+__forceinline int drvi_I2cWrite(uint8_t bBusNum, uint8_t const *pData, uint16_t wLen)
+{
+    return cc6801_I2cWrite(bBusNum, pData, wLen);
+}
+
+__forceinline int drvi_I2cRead(uint8_t bBusNum, uint8_t *pData, uint16_t wLen)
+{
+    return cc6801_I2cRead(bBusNum, pData, wLen);
+}
+
+int drvi_I2cWriteThenRead(uint8_t bBusNum,
+                          uint8_t const *pTxData, uint16_t wTxLen,
+                          uint8_t *pRxData, uint16_t wRxLen);
 #endif //_DRVI_I2C_H_
 
 

@@ -73,32 +73,32 @@ typedef void (*fpGpiIrqHandler)(void);
 
 int cc6801_gpio_pinmux_init(void);
 
-void cc6801_GpioDirectInput(uint32_t pin_number);
+void cc6801_GpioDirectInput(uint8_t bPinNum);
 
-void cc6801_GpioDirectOutput(uint32_t pin_number);
+void cc6801_GpioDirectOutput(uint8_t bPinNum);
 
-uint32_t cc6801_GpioRead(uint32_t pin_number);
+uint32_t cc6801_GpioRead(uint8_t bPinNum);
 
-void cc6801_GpioWrite(uint32_t pin_number, uint32_t value);
+void cc6801_GpioWrite(uint8_t bPinNum, uint8_t bVal);
 
-void cc6801_GpioPuPdSet(uint32_t pin_number);
+void cc6801_GpioPuPdSet(uint8_t bPinNum);
 
-void cc6801_GpioPuPdClear(uint32_t pin_number);
+void cc6801_GpioPuPdClear(uint8_t bPinNum);
 
-void cc6801_GpioPinmuxSet(uint32_t pin_number);
+void cc6801_GpioPinmuxSet(uint8_t bPinNum);
 
-void cc6801_GpioPinmuxClear(uint32_t pin_number);
+void cc6801_GpioPinmuxClear(uint8_t bPinNum);
 
 void cc6801_GpioPortModeSet(U_regGPIO *p_group,
                                 uint8_t port,
                                 uint8_t mode);
 
-void cc6801_IrqEnable(uint32_t pin_number);
+void cc6801_IrqEnable(uint8_t bPinNum);
 
-void cc6801_IrqDisable(uint32_t pin_number);
+void cc6801_IrqDisable(uint8_t bPinNum);
 
-void cc6801_RequestIrq(uint32_t pin_number,
+void cc6801_RequestIrq(uint8_t bPinNum,
                         fpGpiIrqHandler callback,
-                        uint32_t type);
+                        uint32_t dwType);
 
 #endif //_GPIO_H_

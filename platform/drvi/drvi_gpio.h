@@ -15,17 +15,6 @@
 #include "project.h"
 #include "gpio.h"
 
-#define drvi_GpioPinMuxInit()             cc6801_gpio_pinmux_init()
-#define drvi_GpioDirectInput(x)           cc6801_GpioDirectInput(x)
-#define drvi_GpioDirectOutput(x)          cc6801_GpioDirectOutput(x)
-
-#define drvi_GpioRead(x)                  cc6801_GpioRead(x)
-#define drvi_GpioWrite(x,y)               cc6801_GpioWrite(x,y)
-
-#define drvi_RequestIrq(pin,func,type)    cc6801_RequestIrq(pin,func,type);
-#define drvi_EnableIrq(pin)               cc6801_IrqEnable(pin);
-#define drvi_DisableIrq(pin)              cc6801_IrqDisable(pin);
-
 #define GPIO_PIN_0               0
 #define GPIO_PIN_1               1
 #define GPIO_PIN_2               2
@@ -106,15 +95,45 @@ enum
 typedef void (*fpGpiIrqHandler)(void);
 
 
+__forceinline int drvi_GpioPinMuxInit(void)
+{
+    return cc6801_gpio_pinmux_init();
+}
 
+__forceinline void drvi_GpioDirectInput(uint8_t bPinNum)
+{
+    cc6801_GpioDirectInput(bPinNum);
+}
 
+__forceinline void drvi_GpioDirectOutput(uint8_t bPinNum)
+{
+    cc6801_GpioDirectOutput(bPinNum);
+}
 
+__forceinline uint32_t drvi_GpioRead(uint8_t bPinNum)
+{
+    return cc6801_GpioRead(bPinNum);
+}
 
+__forceinline void drvi_GpioWrite(uint8_t bPinNum, uint8_t bVal)
+{
+    cc6801_GpioWrite(bPinNum, bVal);
+}
 
+__forceinline void drvi_EnableIrq(uint8_t bPinNum)
+{
+    cc6801_IrqEnable(bPinNum);
+}
 
+__forceinline void drvi_DisableIrq(uint8_t bPinNum)
+{
+    cc6801_IrqDisable(bPinNum);
+}
 
-
-
+__forceinline void drvi_RequestIrq(uint8_t bPinNum, fpGpiIrqHandler callback, uint32_t dwType)
+{
+    cc6801_RequestIrq(bPinNum, callback, dwType);
+}
 
 
 

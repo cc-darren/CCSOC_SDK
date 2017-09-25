@@ -41,4 +41,22 @@ int drvi_I2cInit(void)
 
     return iResult;
 }
+
+int drvi_I2cWriteThenRead(uint8_t bBusNum,
+                          uint8_t const *pTxData, uint16_t wTxLen,
+                          uint8_t *pRxData, uint16_t wRxLen)
+{
+    int iResult = 0;
+
+    do
+    {
+        iResult = cc6801_I2cWrite(bBusNum, pTxData, wTxLen);
+        if (CC_SUCCESS != iResult)
+            break;
+
+        iResult = cc6801_I2cRead(bBusNum, pRxData, wRxLen);
+    } while(0);
+
+    return iResult;
+}
 #endif

@@ -16,11 +16,6 @@
 #include "project.h"
 #include "spim.h"
 
-//#define drvi_SpiInit(dev)                                    cc6801_SpimInit(dev)
-#define drvi_SpiWrite(bus,buf,len)                           cc6801_SpimWrite(bus,buf,len)
-#define drvi_SpiRead(bus,buf,len)                            cc6801_SpimRead(bus,buf,len)
-#define drvi_SpiWriteThenRead(bus,tbuf,tlen,rbuf,rlen)       cc6801_SpimWriteThenRead(bus,tbuf,tlen,rbuf,rlen)
-
 typedef enum
 {
     DRVI_SPI_EVENT_DONE,
@@ -40,6 +35,28 @@ typedef struct S_SpiDevice
 
 int drvi_SpiInit(void);
 
+__forceinline int drvi_SpiWrite(uint8_t         bBusNum,
+                                uint8_t const * pTxBuf,
+                                uint8_t         bTxBufLen)
+{
+    return cc6801_SpimWrite(bBusNum, pTxBuf, bTxBufLen);
+}
+
+__forceinline int drvi_SpiRead(uint8_t   bBusNum,
+                               uint8_t * pRxBuf,
+                               uint8_t   bRxBufLen)
+{
+    return cc6801_SpimRead(bBusNum, pRxBuf, bRxBufLen);
+}
+
+__forceinline int drvi_SpiWriteThenRead(uint8_t         bBusNum,
+                                        uint8_t const * pTxBuf,
+                                        uint8_t         bTxBufLen,
+                                        uint8_t       * pRxBuf,
+                                        uint8_t         bRxBufLen)
+{
+    return cc6801_SpimWriteThenRead(bBusNum, pTxBuf, bTxBufLen, pRxBuf, bRxBufLen);
+}
 
 #endif //_DRVI_SPI_H_
 
