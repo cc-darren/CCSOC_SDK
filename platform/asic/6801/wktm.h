@@ -16,7 +16,7 @@
 #include "cc6801_reg.h"
 #include "cc6801_options.h"
 
-typedef enum
+typedef enum wktmPort
 {
     WKTM_0 = WKTM_PORT_0,
     WKTM_1 = WKTM_PORT_1,

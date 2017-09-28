@@ -31,5 +31,6 @@
 #define DISABLE             FALSE
 
 typedef void (*T_callback)(void* p);
+typedef uint32_t T_IF_ID;                   //peripheral Interface ID
 
 #endif //_GLOBAL_H_

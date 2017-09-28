@@ -31,6 +31,7 @@
 ******************************************************************************/
 #include <stdio.h>
 #include "wktm.h"
+#include "drvi_wktm.h"
 
 static T_wktmPort  g_taWktm[WKTM_TOTAL];
 
