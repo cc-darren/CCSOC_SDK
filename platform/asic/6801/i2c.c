@@ -194,7 +194,6 @@ void cc6801_I2cDeviceRegister(T_I2cDevice *tpDev)
     tI2cBus[bIdx].pReg->bf.cfg_core_select = 1;
 
     tI2cBus[bIdx].pReg->bf.ms_slave_addr = tpDev->bAddr;
-    tI2cBus[bIdx].pReg->bf.ms_word_addr = 0;
     tI2cBus[bIdx].pReg->bf.ms_no_stop = 0;
     tI2cBus[bIdx].pReg->bf.ms_addr_en = 0;
     tI2cBus[bIdx].pReg->bf.ms_addr_16bit = 0;
