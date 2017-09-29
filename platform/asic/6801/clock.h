@@ -207,7 +207,7 @@ Offset Address : 0x14 System Clock Configuration1
 
 
 /***************************************************
-eFlash setting
+eFlash setting for different clock
 ***************************************************/
 #define EF_TADH             3       //no need to change for different clock
 
@@ -223,7 +223,7 @@ eFlash setting
 #define EF_16M_TME          1600000
 #define EF_16M_TNVH1        1600
 #define EF_16M_TCPS_TADH_TAH    ((EF_16M_TCPS<<24)|(EF_TADH<<16)|(EF_16M_TAH))
-#define EF_16M_TWK_TPGS         ((EF_16M_TWK <<16)|(EF_16M_TPGS<<8))
+#define EF_16M_TWK_TPGS         ((EF_16M_TWK <<16)|(EF_16M_TPGS))
 #define EF_16M_TRCV_TNVH        ((EF_16M_TRCV<<16)|(EF_16M_TNVH))
 #define EF_16M_TNVS_TNVH1       ((EF_16M_TNVS<<16)|(EF_16M_TNVH1))
 
@@ -239,7 +239,7 @@ eFlash setting
 #define EF_24M_TME          1920000
 #define EF_24M_TNVH1        2400
 #define EF_24M_TCPS_TADH_TAH    ((EF_24M_TCPS<<24)|(EF_TADH<<16)|(EF_24M_TAH))
-#define EF_24M_TWK_TPGS         ((EF_24M_TWK <<16)|(EF_24M_TPGS<<8))
+#define EF_24M_TWK_TPGS         ((EF_24M_TWK <<16)|(EF_24M_TPGS))
 #define EF_24M_TRCV_TNVH        ((EF_24M_TRCV<<16)|(EF_24M_TNVH))
 #define EF_24M_TNVS_TNVH1       ((EF_24M_TNVS<<16)|(EF_24M_TNVH1))
 
@@ -255,7 +255,7 @@ eFlash setting
 #define EF_32M_TME          3200000
 #define EF_32M_TNVH1        3200
 #define EF_32M_TCPS_TADH_TAH    ((EF_32M_TCPS<<24)|(EF_TADH<<16)|(EF_32M_TAH))
-#define EF_32M_TWK_TPGS         ((EF_32M_TWK <<16)|(EF_32M_TPGS<<8))
+#define EF_32M_TWK_TPGS         ((EF_32M_TWK <<16)|(EF_32M_TPGS))
 #define EF_32M_TRCV_TNVH        ((EF_32M_TRCV<<16)|(EF_32M_TNVH))
 #define EF_32M_TNVS_TNVH1       ((EF_32M_TNVS<<16)|(EF_32M_TNVH1))
 
@@ -271,7 +271,7 @@ eFlash setting
 #define EF_48M_TME          3840000
 #define EF_48M_TNVH1        4800
 #define EF_48M_TCPS_TADH_TAH    ((EF_48M_TCPS<<24)|(EF_TADH<<16)|(EF_48M_TAH))
-#define EF_48M_TWK_TPGS         ((EF_48M_TWK <<16)|(EF_48M_TPGS<<8))
+#define EF_48M_TWK_TPGS         ((EF_48M_TWK <<16)|(EF_48M_TPGS))
 #define EF_48M_TRCV_TNVH        ((EF_48M_TRCV<<16)|(EF_48M_TNVH))
 #define EF_48M_TNVS_TNVH1       ((EF_48M_TNVS<<16)|(EF_48M_TNVH1))
 
@@ -287,7 +287,7 @@ eFlash setting
 #define EF_64M_TME          6400000
 #define EF_64M_TNVH1        6400
 #define EF_64M_TCPS_TADH_TAH    ((EF_64M_TCPS<<24)|(EF_TADH<<16)|(EF_64M_TAH))
-#define EF_64M_TWK_TPGS         ((EF_64M_TWK <<16)|(EF_64M_TPGS<<8))
+#define EF_64M_TWK_TPGS         ((EF_64M_TWK <<16)|(EF_64M_TPGS))
 #define EF_64M_TRCV_TNVH        ((EF_64M_TRCV<<16)|(EF_64M_TNVH))
 #define EF_64M_TNVS_TNVH1       ((EF_64M_TNVS<<16)|(EF_64M_TNVH1))
 
