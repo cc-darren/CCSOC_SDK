@@ -211,7 +211,11 @@ eFlash setting for different clock
 ***************************************************/
 #define EF_TADH             3       //no need to change for different clock
 
+#if defined(FPGA) && FPGA
+#define EF_16M_TAH          2
+#else
 #define EF_16M_TAH          1
+#endif
 #define EF_16M_TNVS         80
 #define EF_16M_TPGS         160
 #define EF_16M_TWK          32
@@ -227,7 +231,11 @@ eFlash setting for different clock
 #define EF_16M_TRCV_TNVH        ((EF_16M_TRCV<<16)|(EF_16M_TNVH))
 #define EF_16M_TNVS_TNVH1       ((EF_16M_TNVS<<16)|(EF_16M_TNVH1))
 
+#if defined(FPGA) && FPGA
+#define EF_24M_TAH          2
+#else
 #define EF_24M_TAH          1
+#endif
 #define EF_24M_TNVS         120
 #define EF_24M_TPGS         240
 #define EF_24M_TWK          48
@@ -243,7 +251,11 @@ eFlash setting for different clock
 #define EF_24M_TRCV_TNVH        ((EF_24M_TRCV<<16)|(EF_24M_TNVH))
 #define EF_24M_TNVS_TNVH1       ((EF_24M_TNVS<<16)|(EF_24M_TNVH1))
 
+#if defined(FPGA) && FPGA
+#define EF_32M_TAH          2
+#else
 #define EF_32M_TAH          1
+#endif
 #define EF_32M_TNVS         160
 #define EF_32M_TPGS         320
 #define EF_32M_TWK          64
