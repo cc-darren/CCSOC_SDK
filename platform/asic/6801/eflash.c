@@ -158,7 +158,7 @@ void cc6801_EflashProgram(uint32_t dwEflashAdr,unsigned char * pBufAdr,uint32_t 
             dwBufSize -= 16;
             dwEflashAdr += 16;
         } else {
-            tlen = ((sz+3)>>2);
+            tlen = ((dwBufSize+3)>>2);
             dwBufSize=0;
         }
         //set eflash length in DW-1

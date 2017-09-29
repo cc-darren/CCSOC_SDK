@@ -17,11 +17,16 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-void lowpower_mode_Sleep(void);
-void lowpower_mode_DeepSleep(void);
-void lowpower_mode_Hibernater(void);
+void cc6801_LowPower_Sleep(void);
+void cc6801_LowPower_DeepSleep(void);
+void cc6801_LowPower_Hibernate(void);
 
-void lowpower_SleepMs(uint16_t dTimeMs);
+void cc6801_LowPower_SleepMs(uint16_t dTimeMs);
+
+void cc6801_LowPower_SetPeripheralOn(uint32_t dwPeripheral);
+void cc6801_LowPower_SetPeripheralOff(uint32_t dwPeripheral);
 
 
+void cc6801_LowPower_SetPowerOn(uint32_t dwPeripheral);
+void cc6801_LowPower_SetPowerOff(uint32_t dwPeripheral);
 #endif
