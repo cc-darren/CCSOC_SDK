@@ -309,6 +309,7 @@ RETURNS
 ******************************************************************************/
 static __ASM void __INLINE cc6801_ClockDelayUs_16MHz(volatile uint32_t _us)
 {
+    subs    r0, r0, #1
 loop16
     subs    r0, r0, #1
         NOP
@@ -323,6 +324,10 @@ loop16
         NOP
         NOP
         NOP
+        NOP
+#if defined (ARMCM4_FP)
+        NOP
+#endif
     bne     loop16
     bx      lr
 }
@@ -345,6 +350,7 @@ RETURNS
 ******************************************************************************/
 static __ASM void __INLINE cc6801_ClockDelayUs_24MHz(volatile uint32_t _us)
 {
+    subs    r0, r0, #1
 loop24
     subs    r0, r0, #1
         NOP
@@ -359,6 +365,18 @@ loop24
         NOP
         NOP
         NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+#if defined (ARMCM4_FP)
+        NOP
+#endif        
     bne     loop24
     bx      lr
 }
@@ -381,6 +399,7 @@ RETURNS
 ******************************************************************************/
 static __ASM void __INLINE cc6801_ClockDelayUs_32MHz(volatile uint32_t _us)
 {
+    subs    r0, r0, #1
 loop32
     subs    r0, r0, #1
         NOP
@@ -395,6 +414,26 @@ loop32
         NOP
         NOP
         NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+#if defined (ARMCM4_FP)
+        NOP
+        NOP
+#endif
     bne     loop32
     bx      lr
 }
@@ -417,6 +456,7 @@ RETURNS
 ******************************************************************************/
 static __ASM void __INLINE cc6801_ClockDelayUs_48MHz(volatile uint32_t _us)
 {
+    subs    r0, r0, #1
 loop48
     subs    r0, r0, #1
         NOP
@@ -431,6 +471,43 @@ loop48
         NOP
         NOP
         NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+#if defined (ARMCM4_FP)
+        NOP
+#endif
     bne     loop48
     bx      lr
 }
@@ -453,6 +530,7 @@ RETURNS
 ******************************************************************************/
 static __ASM void __INLINE cc6801_ClockDelayUs_64MHz(volatile uint32_t _us)
 {
+    subs    r0, r0, #1
 loop64
     subs    r0, r0, #1
         NOP
@@ -467,6 +545,59 @@ loop64
         NOP
         NOP
         NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+        NOP
+#if defined (ARMCM4_FP)
+        NOP
+#endif
     bne     loop64
     bx      lr
 }
