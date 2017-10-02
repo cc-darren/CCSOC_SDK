@@ -100,21 +100,21 @@ static int cc6801_Spim2Xfer(U_regSPI * pSpim2Base)
     return CC_SUCCESS;
 }
 
-static void cc6801_SpimTxBufferSet(U_regSPI * pSpimBase,
-                                    uint8_t const * pBuffer,
-                                    uint8_t   bLength)
-{
-    pSpimBase->bf.dma_str_raddr = (uint32_t)pBuffer;
-    pSpimBase->bf.total_wbyte = bLength - 1;
-}
+//static void cc6801_SpimTxBufferSet(U_regSPI * pSpimBase,
+//                                    uint8_t const * pBuffer,
+//                                    uint8_t   bLength)
+//{
+//    pSpimBase->bf.dma_str_raddr = (uint32_t)pBuffer;
+//    pSpimBase->bf.total_wbyte = bLength - 1;
+//}
 
-static void cc6801_SpimRxBufferSet(U_regSPI * pSpimBase,
-                                    uint8_t const * pBuffer,
-                                    uint8_t   bLength)
-{
-    pSpimBase->bf.dma_str_waddr = (uint32_t)pBuffer;
-    pSpimBase->bf.total_rbyte = bLength - 1;
-}
+//static void cc6801_SpimRxBufferSet(U_regSPI * pSpimBase,
+//                                    uint8_t const * pBuffer,
+//                                    uint8_t   bLength)
+//{
+//    pSpimBase->bf.dma_str_waddr = (uint32_t)pBuffer;
+//    pSpimBase->bf.total_rbyte = bLength - 1;
+//}
 
 static void cc6801_SpimIntStatusClr(U_regSPI * pSpimBase)
 {
@@ -125,29 +125,51 @@ static int cc6801_SpimTransfer(uint8_t bBusNum,
                                T_SpimTransfer const * pXfer)
 {
     U_regSPI *pSpimBase = g_tSpim[bBusNum].pReg;
+    uint32_t dwSpiDmaCtrl = 0;
+    uint32_t dwDmaWrAddr = 0;
+    uint32_t dwDmaRdAddr = 0;
+    uint8_t bDmaWrByte = 0;
+    uint8_t bDmaRdByte = 0;
 
     if (((uint32_t)pXfer->pTxBuffer & 0x3UL) ||
          ((uint32_t)pXfer->pRxBuffer & 0x3UL))
         return CC_ERROR_INVALID_ADDR;
 
+    dwSpiDmaCtrl = pSpimBase->dw.DmaCtrl;
+
     if ((pXfer->pTxBuffer) && (pXfer->pRxBuffer))
     {
-        pSpimBase->bf.op_mode = SPIM_OP_MODE_WRITE_THEN_READ;
-        cc6801_SpimTxBufferSet(pSpimBase, pXfer->pTxBuffer, pXfer->bTxLength);
-        cc6801_SpimRxBufferSet(pSpimBase, pXfer->pRxBuffer, pXfer->bRxLength);
+        bDmaRdByte = pXfer->bTxLength - 1;
+        bDmaWrByte = pXfer->bRxLength - 1;
+        dwSpiDmaCtrl &= ~(SPIM_DMA_OP_MODE_MASK | SPIM_DMA_RDSIZE_MASK | SPIM_DMA_WRSIZE_MASK);
+        dwSpiDmaCtrl |= (bDmaRdByte << SPIM_DMA_RDSIZE_SHIFT |
+                         bDmaWrByte << SPIM_DMA_WRSIZE_SHIFT |
+                         SPIM_OP_MODE_WRITE_THEN_READ << SPIM_DMA_OP_MODE_SHIFT);
+        dwDmaRdAddr = (uint32_t)pXfer->pTxBuffer;
+        dwDmaWrAddr = (uint32_t)pXfer->pRxBuffer;
     }
     else if (pXfer->pTxBuffer)
     {
-        pSpimBase->bf.op_mode = SPIM_OP_MODE_WRITE;
-        cc6801_SpimTxBufferSet(pSpimBase, pXfer->pTxBuffer, pXfer->bTxLength);
+        bDmaRdByte = pXfer->bTxLength - 1;
+        dwSpiDmaCtrl &= ~(SPIM_DMA_OP_MODE_MASK | SPIM_DMA_RDSIZE_MASK | SPIM_DMA_WRSIZE_MASK);
+        dwSpiDmaCtrl |= (bDmaRdByte << SPIM_DMA_RDSIZE_SHIFT |
+                         SPIM_OP_MODE_WRITE << SPIM_DMA_OP_MODE_SHIFT);
+        dwDmaRdAddr = (uint32_t)pXfer->pTxBuffer;
     }
     else if (pXfer->pRxBuffer)
     {
-        pSpimBase->bf.op_mode = SPIM_OP_MODE_READ;
-        cc6801_SpimRxBufferSet(pSpimBase, pXfer->pRxBuffer, pXfer->bRxLength);
+        bDmaWrByte = pXfer->bRxLength - 1;
+        dwSpiDmaCtrl &= ~(SPIM_DMA_OP_MODE_MASK | SPIM_DMA_RDSIZE_MASK | SPIM_DMA_WRSIZE_MASK);
+        dwSpiDmaCtrl |= (bDmaWrByte << SPIM_DMA_WRSIZE_SHIFT |
+                         SPIM_OP_MODE_READ << SPIM_DMA_OP_MODE_SHIFT);
+        dwDmaWrAddr = (uint32_t)pXfer->pRxBuffer;
     }
     else
         return CC_ERROR_INVALID_ADDR;
+
+    pSpimBase->dw.wAddr = dwDmaWrAddr & SPIM_DMA_RWADDR_MASK;
+    pSpimBase->dw.rAddr = dwDmaRdAddr & SPIM_DMA_RWADDR_MASK;
+    pSpimBase->dw.DmaCtrl = dwSpiDmaCtrl;
 
     cc6801_SpimIntStatusClr(pSpimBase);
 

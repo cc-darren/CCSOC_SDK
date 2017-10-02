@@ -51,6 +51,18 @@
 #define SPIM_CTRL_ENABLE_BIT                           (1)
 #define SPIM_CTRL_ENABLE_MASK                          (SPIM_CTRL_ENABLE_BIT << 24)
 
+#define SPIM_DMA_RDSIZE_SHIFT                          (0)
+#define SPIM_DMA_RDSIZE_BIT                            (255)
+#define SPIM_DMA_RDSIZE_MASK                           (SPIM_DMA_RDSIZE_BIT << SPIM_DMA_RDSIZE_SHIFT)
+
+#define SPIM_DMA_WRSIZE_SHIFT                          (8)
+#define SPIM_DMA_WRSIZE_BIT                            (255)
+#define SPIM_DMA_WRSIZE_MASK                           (SPIM_DMA_WRSIZE_BIT << SPIM_DMA_WRSIZE_SHIFT)
+
+#define SPIM_DMA_OP_MODE_SHIFT                         (16)
+#define SPIM_DMA_OP_MODE_BIT                           (3)
+#define SPIM_DMA_OP_MODE_MASK                          (SPIM_DMA_OP_MODE_BIT << SPIM_DMA_OP_MODE_SHIFT)
+
 #define SPIM_DMA_BYTE_SWAP_TX_LSB_BIT                  (0)
 #define SPIM_DMA_BYTE_SWAP_TX_LSB_MASK                 (SPIM_DMA_BYTE_SWAP_TX_LSB_BITL << 18)
 #define SPIM_DMA_BYTE_SWAP_TX_MSB_BIT                  (1)
@@ -65,6 +77,10 @@
 #define SPIM_DMA_DISABLE_MASK                          (SPIM_DMA_DISABLE_BIT << 24)
 #define SPIM_DMA_ENABLE_BIT                            (1)
 #define SPIM_DMA_ENALBE_MASK                           (SPIM_DMA_ENABLE_BIT << 24)
+
+#define SPIM_DMA_RWADDR_BIT                            (0x1FFFF)
+#define SPIM_DMA_RWADDR_MASK                           (SPIM_DMA_RWADDR_BIT << 0)
+
 
 typedef struct S_SpiDevice T_SpiDevice;
 
