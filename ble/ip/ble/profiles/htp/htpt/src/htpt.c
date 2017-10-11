@@ -90,10 +90,16 @@ static uint8_t htpt_init(struct prf_task_env* env, uint16_t* start_hdl, uint16_t
 
     cfg_flag = htpt_compute_att_table(params->features);
 
+
+    // modified by Samuel
+    status = attm_svc_create_db(start_hdl, ATT_SVC_HEALTH_THERMOM, (uint8_t *)&cfg_flag,
+               HTS_IDX_NB, NULL, env->task, &htpt_att_db[0],
+              (sec_lvl & (PERM_MASK_SVC_DIS)) | PERM(SVC_MI, DISABLE) );
+/*
     status = attm_svc_create_db(start_hdl, ATT_SVC_HEALTH_THERMOM, (uint8_t *)&cfg_flag,
                HTS_IDX_NB, NULL, env->task, &htpt_att_db[0],
               (sec_lvl & (PERM_MASK_SVC_DIS | PERM_MASK_SVC_AUTH | PERM_MASK_SVC_EKS)) | PERM(SVC_MI, DISABLE) );
-
+*/
     if( status == ATT_ERR_NO_ERROR )
     {
         //-------------------- allocate memory required for the profile  ---------------------
@@ -135,11 +141,14 @@ static uint8_t htpt_init(struct prf_task_env* env, uint16_t* start_hdl, uint16_t
             }
 
             //Check if Measurement Interval Char. is writable
+
+            perm |= PERM(WRITE_REQ, ENABLE); // modified by Samuel
+            /*
             if (HTPT_IS_FEATURE_SUPPORTED(params->features, HTPT_MEAS_INTV_WR_SUP))
             {
                 perm |= PERM(WP, UNAUTH)|PERM(WRITE_REQ, ENABLE);
             }
-
+            */
             attm_att_set_permission(HTPT_HANDLE(HTS_IDX_MEAS_INTV_VAL), perm, 0);
         }
 

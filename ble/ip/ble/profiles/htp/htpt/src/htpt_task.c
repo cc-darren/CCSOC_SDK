@@ -36,11 +36,308 @@
 
 #include "ke_mem.h"
 #include "co_utils.h"
-
+#include "project.h"
+#include "tracer.h"
 /*
  * FUNCTION DEFINITIONS
  ****************************************************************************************
  */
+
+
+
+/*
+ * History function DEFINITIONS
+ ****************************************************************************************
+ */
+
+#define HISTORY_NOTIFY_INTERVAL		       10	
+#define SPEED_AND_CADENCE_NOTIFY_INTERVAL  1000
+
+void CC_VENUS_RscTimerStart(uint32_t interval_ms);
+void CC_VENUS_RscTimerStop(void);
+void CC_VENUS_Lock_SwimOff_TimerStart(void);
+void CC_VENUS_Lock_SwimOff_TimerStop(void);
+void CC_HRM_Post24HrModeEvent(uint8_t bSwitch);
+void CC_HRM_PostHeartRateStrapModeEvent(uint8_t bSwitch);
+void CC_Swim_OLED_Update(uint8_t _bSwitch);
+void CC_VENUS_AccelTimerStop(void);
+void CC_VENUS_AccelTimerReset(void);
+void CC_VENUS_AccelTimerFifoModeStart(void);
+void CC_AppSrv_HR_Set24HrPeriod(uint32_t dwPeriodicMeasurementTime_ms, uint32_t dwOneMeasurementMaxTime_ms);
+
+
+static uint8_t _cBleCmd_HistoryType=0;
+static uint16_t _cBleCmd_HistoryRecordIndex = 1;
+static uint8_t _cBleCmd_HistoryDayIndex = 1;
+static uint8_t _cBleCmd_SwimmingFlag=0;
+CC_SYNCDATA_T s_tVensuSyncData;
+static uint8_t  _NotifyShowFlag = 0;
+static eCALL_state_t _cBleCmd_NotifyCall;
+static eSMS_state_t _cBleCmd_NotifySms;   
+static eStete_t _cBleCmd_NotifyLongsit;
+static eStete_t _cBleCmd_NotifyLiftarm;
+static eStete_t _cBleCmd_NotifySetting_HeartRateStrapMode = eDisable;
+static eStete_t _cBleCmd_NotifySetting_24HHeartRateMode   = eDisable;
+
+void CC_BLE_Cmd_SetHistoryType(uint8_t cVal)
+{
+    _cBleCmd_HistoryRecordIndex = 1;
+    _cBleCmd_HistoryDayIndex = 1;
+
+    _cBleCmd_HistoryType = cVal;
+
+    //CC_HRM_PostLockHR();
+}
+
+void CC_BLE_Cmd_ClrHistoryType(void)
+{
+    //CC_HRM_PostUnlockHR();
+
+    _cBleCmd_HistoryType = 0x00;
+
+    _cBleCmd_HistoryRecordIndex = 1;
+    _cBleCmd_HistoryDayIndex = 1;
+}
+
+uint16_t CC_BLE_Cmd_GetHistoryRecordIndex(void)
+{
+    return _cBleCmd_HistoryRecordIndex;
+}
+
+void CC_BLE_Cmd_ClrHistoryRecordIndex(void)
+{
+	_cBleCmd_HistoryRecordIndex = 1;
+}
+
+uint8_t CC_BLE_Cmd_GetHistoryType(void)
+{
+    return _cBleCmd_HistoryType;
+}
+
+uint8_t CC_BLE_Cmd_GetHistoryDayIndex(void)
+{
+    return _cBleCmd_HistoryDayIndex;
+}
+
+void CC_BLE_Cmd_UpdateHistoryRecordIndex(void)
+{
+    _cBleCmd_HistoryRecordIndex++;
+}
+
+void CC_BLE_Cmd_UpdateHistoryDayIndex(void)
+{
+    _cBleCmd_HistoryDayIndex++;
+}
+
+void CC_BLE_Cmd_SetSwimmingEN(uint8_t cVal)
+{
+    _cBleCmd_SwimmingFlag = cVal;
+
+    CC_VENUS_Lock_SwimOff_TimerStop();
+
+    if(0x01 == cVal)
+        CC_VENUS_Lock_SwimOff_TimerStart(); 
+}
+
+uint8_t CC_BLE_Cmd_GetSwimmingEN(void)
+{
+    return _cBleCmd_SwimmingFlag;
+}
+
+
+
+void CC_BLE_Cmd_SetNotificaitonState(uint8_t state, uint8_t index)
+{
+    
+    _NotifyShowFlag =1;
+    if (index == eNOTIFYIDLE)
+        _NotifyShowFlag =0;
+    else if (index == eNOTIFYCALL)
+    {
+         _cBleCmd_NotifyCall = (eCALL_state_t)state;
+    }
+    else if (index == eNOTIFYSMS)
+    {
+        _cBleCmd_NotifySms= (eSMS_state_t)state;
+    }
+    else if (index == eNOTIFYLONGSIT)
+    {
+        _cBleCmd_NotifyLongsit= (eStete_t)state;
+    }
+    else if (index == eNOTIFYLIFTARM)
+    {
+        _cBleCmd_NotifyLiftarm= (eStete_t)state;
+    }
+    else if (eNOTIFY_SETTING_HEARTRATESTRAP_MODE == index)
+    {
+        if (_cBleCmd_NotifySetting_HeartRateStrapMode != ((eStete_t) state))
+        {
+            CC_HRM_PostHeartRateStrapModeEvent(state);
+
+            _cBleCmd_NotifySetting_HeartRateStrapMode = ((eStete_t) state);
+        }
+    }
+    else if (eNOTIFY_SETTING_24HHEARTRATE_MODE == index)
+    {
+        if (_cBleCmd_NotifySetting_24HHeartRateMode != ((eStete_t) state))
+        {
+            CC_HRM_Post24HrModeEvent(state);
+
+            _cBleCmd_NotifySetting_24HHeartRateMode = ((eStete_t) state);
+        }
+    }
+    else
+    {
+        //no command, index  =0 or other.
+        _NotifyShowFlag =0;
+        
+    }
+
+	//CC_DB_System_Save_Request(DB_SYS_NOTIFY);
+
+}
+
+void CC_BLE_Cmd_SetHrSetting(db_sys_hr_setting_t *ptHrSetting)
+{
+    _cBleCmd_NotifySetting_HeartRateStrapMode = ptHrSetting->eIsHrsEnabled;
+    _cBleCmd_NotifySetting_24HHeartRateMode   = ptHrSetting->eIs24HrEnabled;
+
+    CC_HRM_PostHeartRateStrapModeEvent(_cBleCmd_NotifySetting_HeartRateStrapMode);
+    CC_HRM_Post24HrModeEvent(_cBleCmd_NotifySetting_24HHeartRateMode);
+}
+
+void CC_BLE_Cmd_GetNotifySetting(db_sys_notify_enabled_t *notify_setting)
+{
+	notify_setting->incomming_call_en = _cBleCmd_NotifyCall;
+	notify_setting->incomming_sms_en = _cBleCmd_NotifySms;
+	notify_setting->longsit_en = _cBleCmd_NotifyLongsit;
+	notify_setting->lifearm_en = _cBleCmd_NotifyLiftarm;
+}
+
+void CC_BLE_Cmd_SetNotifySetting(uint8_t *pData)
+{
+	_cBleCmd_NotifyCall = (eCALL_state_t)*pData++;
+	_cBleCmd_NotifySms = (eSMS_state_t)*pData++;
+	_cBleCmd_NotifyLongsit = (eStete_t)*pData++;
+	_cBleCmd_NotifyLiftarm = (eStete_t)*pData;
+}
+
+
+uint8_t CC_BLE_Cmd_CheckGeneralInfo(void)
+{
+    return s_tVensuSyncData._cNotify_General_Info_Flag;
+}
+
+
+void CC_BLE_Cmd_SetGeneralInfo(const uint8_t *pData)
+{
+    s_tVensuSyncData._cNotify_General_Info_Flag = true;
+    s_tVensuSyncData._eGeneralInfo.cHeight = (uint8_t)*pData++;
+    s_tVensuSyncData._eGeneralInfo.cWeight= (uint8_t)*pData++;
+    s_tVensuSyncData._eGeneralInfo.cAge= (uint8_t)*pData++;
+    s_tVensuSyncData._eGeneralInfo.cGender= (CC_Gender_t)*pData++;
+    s_tVensuSyncData._eGeneralInfo.cStride_Lenght= (uint8_t)*pData++;
+    s_tVensuSyncData._eGeneralInfo.cSwim_Pool_Size= (eSWIM_LEN_SET_t)*pData++;
+    s_tVensuSyncData._eGeneralInfo.bBandLocation= (uint8_t)*pData;
+}
+void CC_BLE_Cmd_GetGeneralInfo(CC_Ble_General_Info_T *pData, uint8_t _Option)
+{
+    memcpy(pData,&s_tVensuSyncData._eGeneralInfo,sizeof(CC_Ble_General_Info_T));
+    // the option, true = get form one second polling, false get form DB,
+    // avoid DB get data before one second polling. 
+    if (_Option == true)
+    s_tVensuSyncData._cNotify_General_Info_Flag = false;
+}    
+
+
+uint8_t CC_BLE_Cmd_CheckUnitInfo(void)
+{
+    return s_tVensuSyncData._cNotify_Unit_Flag;
+}
+void CC_BLE_Cmd_SetUnitInfo(const uint8_t *pData)
+{
+    s_tVensuSyncData._cNotify_Unit_Flag = true;
+    s_tVensuSyncData._eUnitInfo.cUnitLength= (uint8_t)*pData++;
+    s_tVensuSyncData._eUnitInfo.cUnitWeight= (uint8_t)*pData++;
+
+}
+void CC_BLE_Cmd_GetUnitInfo(CC_Ble_Unit_Info_T *pData,uint8_t _Option)
+{
+    memcpy(pData,&s_tVensuSyncData._eUnitInfo,sizeof(CC_Ble_Unit_Info_T));
+    // the option, true = get form one second polling, false get form DB,
+    // avoid DB get data before one second polling. 
+    if (_Option == true)
+    s_tVensuSyncData._cNotify_Unit_Flag = false;
+}
+
+uint8_t CC_BLE_Cmd_CheckClockAlarm(void)
+{
+    return s_tVensuSyncData._cNotify_ClockAlarm_Flag;
+}
+
+void CC_BLE_Cmd_SetClockAlarm(const uint8_t *pData)
+{
+    s_tVensuSyncData._cNotify_ClockAlarm_Flag = true;
+    s_tVensuSyncData._eClockAlarmInfo.cTotalNum = *pData++;
+    for (int i =0; i< (s_tVensuSyncData._eClockAlarmInfo.cTotalNum);i++)
+    {
+        memcpy(&s_tVensuSyncData._eClockAlarmInfo.cAlarmTime[i],pData,sizeof(CC_Ble_Clock_Set_T));
+        pData+=4;
+    }
+
+}
+
+eStete_t CC_BLE_Cme_Get_HeartRateStrapMode(void)
+{
+    return _cBleCmd_NotifySetting_HeartRateStrapMode;
+}
+
+eStete_t CC_BLE_Cme_Get_24HourHeartRateMode(void)
+{
+    return _cBleCmd_NotifySetting_24HHeartRateMode;
+}
+
+void CC_BLE_Cmd_GetClockAlarm(CC_Ble_Clock_Alarm_T *pData,uint8_t _Option)
+{
+    memcpy(pData,&s_tVensuSyncData._eClockAlarmInfo,sizeof(CC_Ble_Clock_Alarm_T));
+    // the option, true = get form one second polling, false get form DB,
+    // avoid DB get data before one second polling. 
+    if (_Option == true)
+    s_tVensuSyncData._cNotify_ClockAlarm_Flag = false;
+}
+
+
+void CC_BLE_Cmd_GetCallState(uint8_t *_Notify,eCALL_state_t *_stCall,
+                                                            eSMS_state_t *_stSms,eStete_t *_stLongsit,
+                                                            eStete_t * _stLiftarm)
+{
+    *_Notify = _NotifyShowFlag;
+    *_stCall = _cBleCmd_NotifyCall;
+    *_stSms = _cBleCmd_NotifySms;
+    *_stLongsit = _cBleCmd_NotifyLongsit;
+    *_stLiftarm = _cBleCmd_NotifyLiftarm;
+
+   _NotifyShowFlag =0;
+    //return _cBleCmd_NotifyCall;
+    //return 0;
+}
+
+
+eStete_t CC_BLE_Cmd_GetLongSitStatus(void)
+{
+   return _cBleCmd_NotifyLongsit;
+}
+
+
+void CC_BLE_Cmd_GetSleepTimeSetting(db_sys_sleep_monitor_t *pData, uint8_t _bOption)
+{
+    memcpy(pData,&s_tVensuSyncData._stSleepMonitorTimeSetting,sizeof(db_sys_sleep_monitor_t));
+    // the option, true = get form one second polling, false get form DB,
+    // avoid DB get data before one second polling. 
+    if (_bOption == true) 
+    s_tVensuSyncData._cNotify_SleepMonitorTimeSetting_Flag = false;
+
+}
 
 /**
  ****************************************************************************************
@@ -90,6 +387,7 @@ static int htpt_enable_req_handler(ke_msg_id_t const msgid,
  * @return If the message was consumed or not.
  ****************************************************************************************
  */
+ /*
 static int htpt_temp_send_req_handler(ke_msg_id_t const msgid,
                                       struct htpt_temp_send_req const *param,
                                       ke_task_id_t const dest_id,
@@ -149,7 +447,126 @@ static int htpt_temp_send_req_handler(ke_msg_id_t const msgid,
 
     return (msg_status);
 }
+*/
 
+static int htpt_period_meas_send_req_handler(ke_msg_id_t const msgid,
+                                      struct htpt_period_meas_send_req const *param,
+                                      ke_task_id_t const dest_id,
+                                      ke_task_id_t const src_id)
+{
+    // Status
+    int msg_status = KE_MSG_SAVED;
+    uint8_t state = ke_state_get(dest_id);
+
+    // check state of the task
+    if(state == HTPT_IDLE)
+    {
+        // Get the address of the environment
+        struct htpt_env_tag *htpt_env = PRF_ENV_GET(HTPT, htpt);
+
+#if 0
+        // for intermediate measurement, feature must be enabled
+        if(!(param->stable_meas) && (!HTPT_IS_FEATURE_SUPPORTED(htpt_env->features, HTPT_INTERM_TEMP_CHAR_SUP)))
+        {
+            struct htpt_temp_send_rsp *rsp = KE_MSG_ALLOC(HTPT_TEMP_SEND_RSP, src_id, dest_id, htpt_temp_send_rsp);
+            rsp->status = PRF_ERR_FEATURE_NOT_SUPPORTED;
+            ke_msg_send(rsp);
+        }
+        else
+#endif			
+        {
+            // allocate operation to execute
+            htpt_env->operation    = (struct htpt_op *) ke_malloc(sizeof(struct htpt_op) + HTPT_TEMP_MEAS_MAX_LEN, KE_MEM_ATT_DB);
+
+            // Initialize operation parameters
+            htpt_env->operation->cursor  = 0;
+            htpt_env->operation->dest_id = src_id;
+            htpt_env->operation->conidx  = GAP_INVALID_CONIDX;
+
+            htpt_env->operation->op      = HTPT_CFG_INTERM_MEAS_NTF;
+            htpt_env->operation->handle  = HTPT_HANDLE(HTS_IDX_INTERM_TEMP_VAL);
+            
+/*
+            // Stable measurement indication or intermediate measurement notification
+            if(param->stable_meas)
+            {
+                htpt_env->operation->op      = HTPT_CFG_STABLE_MEAS_IND;
+                htpt_env->operation->handle  = HTPT_HANDLE(HTS_IDX_TEMP_MEAS_VAL);
+            }
+            else
+            {
+                htpt_env->operation->op      = HTPT_CFG_INTERM_MEAS_NTF;
+                htpt_env->operation->handle  = HTPT_HANDLE(HTS_IDX_INTERM_TEMP_VAL);
+            }
+*/
+			htpt_env->operation->length  = sizeof(struct htp_period_meas);
+
+			memcpy(htpt_env->operation->data, &param->period_meas, sizeof(struct htp_period_meas));
+
+            //Pack the temperature measurement value
+            //htpt_env->operation->length  = htpt_pack_temp_value(&(htpt_env->operation->data[0]), param->temp_meas);
+
+            // put task in a busy state
+            ke_state_set(dest_id, HTPT_BUSY);
+
+            // execute operation
+            htpt_exe_operation();
+        }
+
+        msg_status = KE_MSG_CONSUMED;
+    }
+
+    return (msg_status);
+}
+
+
+static int htpt_swim_meas_send_req_handler(ke_msg_id_t const msgid,
+                                      struct htpt_swim_meas_send_req const *param,
+                                      ke_task_id_t const dest_id,
+                                      ke_task_id_t const src_id)
+{
+    // Status
+    int msg_status = KE_MSG_SAVED;
+    uint8_t state = ke_state_get(dest_id);
+
+    // check state of the task
+    if(state == HTPT_IDLE)
+    {
+        // Get the address of the environment
+        struct htpt_env_tag *htpt_env = PRF_ENV_GET(HTPT, htpt);
+
+        if(1)	
+        {
+            // allocate operation to execute
+            htpt_env->operation    = (struct htpt_op *) ke_malloc(sizeof(struct htpt_op) + HTPT_TEMP_MEAS_MAX_LEN, KE_MEM_ATT_DB);
+
+            // Initialize operation parameters
+            htpt_env->operation->cursor  = 0;
+            htpt_env->operation->dest_id = src_id;
+            htpt_env->operation->conidx  = GAP_INVALID_CONIDX;
+
+            htpt_env->operation->op      = HTPT_CFG_INTERM_MEAS_NTF;
+            htpt_env->operation->handle  = HTPT_HANDLE(HTS_IDX_INTERM_TEMP_VAL);
+            
+			htpt_env->operation->length  = sizeof(struct htp_swim_meas);
+
+    	    memcpy(htpt_env->operation->data, &param->swim_meas, sizeof(struct htp_swim_meas));
+			    
+            //Pack the temperature measurement value
+            //htpt_env->operation->length  = htpt_pack_temp_value(&(htpt_env->operation->data[0]), param->temp_meas);
+
+            // put task in a busy state
+            ke_state_set(dest_id, HTPT_BUSY);
+
+            // execute operation
+            htpt_exe_operation();
+        }
+
+        msg_status = KE_MSG_CONSUMED;
+    }
+
+    return (msg_status);
+}
 
 /**
  ****************************************************************************************
@@ -310,7 +727,8 @@ static int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
     // retrieve handle information
     uint8_t att_idx = HTPT_IDX(param->handle);
 
-    if(param->length != HTPT_MEAS_INTV_MAX_LEN)
+    //if(param->length != HTPT_MEAS_INTV_MAX_LEN)
+    if(0) // modified by Samuel
     {
         status = PRF_ERR_UNEXPECTED_LEN;
     }
@@ -320,6 +738,189 @@ static int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
         {
             case HTS_IDX_MEAS_INTV_VAL:
             {
+
+            
+                // modified for Venus wristband:
+                if(0x55 == param->value[0])
+                {
+                
+                    switch (param->value[1])
+                    {
+                        case 0xF4:  //swimming command
+                            CC_BLE_Cmd_SetSwimmingEN(param->value[2]);
+                            CC_Swim_OLED_Update(param->value[2]);
+                            break;                
+                        case 0xF5:  // sync time
+                            app_UpdatTimeDate(&param->value[2]);
+                            break;
+                        case 0xF6://  Incoming call Enable:0x01 Disable:0x00
+                            if (eCALLDISABLE == param->value[2])                    
+                            {
+                                TracerInfo("Dis EN Incoming call = %d\r\n",param->value[2]);    
+                                CC_BLE_Cmd_SetNotificaitonState(eCALLDISABLE, eNOTIFYCALL);
+
+                                if(0 == CC_BLE_Cmd_GetSwimmingEN())
+                                {
+                                    CC_VENUS_AccelTimerStop();
+                                    CC_VENUS_AccelTimerReset();
+                                    CC_VENUS_AccelTimerFifoModeStart();
+                                }
+                            }
+                            else if (eCALLENABLE == param->value[2])  
+                            {
+                                TracerInfo("EN Incoming call = %d\r\n",param->value[2]);    
+                                CC_BLE_Cmd_SetNotificaitonState(eCALLENABLE, eNOTIFYCALL);
+                            }
+                            else if (eCALLINCOMMING == param->value[2])  
+                            {
+                                TracerInfo("Have Incoming call = %d\r\n",param->value[2]);    
+                                CC_BLE_Cmd_SetNotificaitonState(eCALLINCOMMING, eNOTIFYCALL);
+                            }
+                            else if (eCALLINCOMMINGOFF == param->value[2])  
+                            {
+                                TracerInfo("Close Incoming call = %d\r\n",param->value[2]);    
+                                CC_BLE_Cmd_SetNotificaitonState(eCALLINCOMMINGOFF, eNOTIFYCALL);
+                            }
+                            else
+                            {
+                                TracerInfo("Wrong Setting on Incomming call = %d\r\n",param->value[2]);    
+                                CC_BLE_Cmd_SetNotificaitonState(eCALLUNKNOWN, eNOTIFYIDLE);
+                            }
+                            
+                            //  Incoming SMS Enable:0x01 Disable:0x00
+                            if (eSMSDISABLE == param->value[3])                    
+                            {
+                                TracerInfo("Dis EN Incoming SMS = %d\r\n",param->value[3]);    
+                                CC_BLE_Cmd_SetNotificaitonState(eSMSDISABLE, eNOTIFYSMS);
+
+                            }
+                            else  if (eSMSENABLE == param->value[3]) 
+                            {
+                                TracerInfo("EN Incoming SMS = %d\r\n",param->value[3]);    
+                                CC_BLE_Cmd_SetNotificaitonState(eSMSENABLE, eNOTIFYSMS);
+                            }
+                            else  if (eSMSCOMMING == param->value[3]) 
+                            {
+                                TracerInfo("Have Incoming SMS = %d\r\n",param->value[3]);  
+                                CC_BLE_Cmd_SetNotificaitonState(eSMSCOMMING, eNOTIFYSMS);
+                            }
+                            else
+                            {
+                                TracerInfo("Wrong Setting on Incomming SMS = %d\r\n",param->value[3]);    
+                                CC_BLE_Cmd_SetNotificaitonState(eSMSUNKNOWN, eNOTIFYIDLE);
+                            }
+        
+                            
+                            //  LongSit Enable:0x01 Disable:0x00
+                            if (eLONGSITDISABLE == param->value[4])                    
+                            {
+                                TracerInfo("LongSit DisEN = %d\r\n",param->value[4]);    
+                                CC_BLE_Cmd_SetNotificaitonState(eLONGSITDISABLE, eNOTIFYLONGSIT);
+                            }
+                            else if (eLONGSITENABLE == param->value[4])                    
+                            {
+                                TracerInfo("LongSit call  EN = %d\r\n",param->value[4]);    
+                                CC_BLE_Cmd_SetNotificaitonState(eLONGSITENABLE, eNOTIFYLONGSIT);
+                            }
+                            else
+                            {
+                                TracerInfo("Wrong longsit setting = %d\r\n",param->value[4]);    
+                                CC_BLE_Cmd_SetNotificaitonState(eLONGSITUNKNOWN, eNOTIFYIDLE);
+
+                            }
+
+                            //  Liftarm Enable:0x01 Disable:0x00
+                            if (eLIFTARMDISABLE == param->value[5])                    
+                            {
+                                TracerInfo("Liftarm DisEN = %d\r\n",param->value[5]);    
+                                CC_BLE_Cmd_SetNotificaitonState(eLIFTARMDISABLE, eNOTIFYLIFTARM);
+                            }
+                            else if (eLIFTARMENABLE == param->value[5])                    
+                            {
+                                TracerInfo("Liftarm call  EN = %d\r\n",param->value[5]);    
+                                CC_BLE_Cmd_SetNotificaitonState(eLIFTARMENABLE, eNOTIFYLIFTARM);
+                            }
+                            else
+                            {
+                                TracerInfo("Wrong Liftarm setting = %d\r\n",param->value[5]);    
+                                CC_BLE_Cmd_SetNotificaitonState(eLIFTARMUNKNOWN, eNOTIFYIDLE);
+
+                            }
+
+                            // HeartRate Strap Mode Control:
+                            // 0: DISABLE / 1: ENABLE
+                            CC_BLE_Cmd_SetNotificaitonState(param->value[6], eNOTIFY_SETTING_HEARTRATESTRAP_MODE);
+
+                            // 24H HeartRate Mode Control:
+                            // 0: DISABLE / 1: ENABLE
+                            CC_BLE_Cmd_SetNotificaitonState(param->value[7], eNOTIFY_SETTING_24HHEARTRATE_MODE);
+                            // 24HR settings to Service (TBD: refine setting storage)
+                            {
+                                uint32_t    _dwPeriodicMeasurementTime_ms = 0;
+                                uint32_t    _dwOneMeasurementMaxTime_ms   = 0;
+
+                                _dwPeriodicMeasurementTime_ms = (  (param->value[8] * 3600)
+                                                                 + (param->value[9] *   60)
+                                                                 + (param->value[10]      ));
+                                
+                                _dwOneMeasurementMaxTime_ms   = (  (param->value[11] * 3600)
+                                                                 + (param->value[12] *   60)
+                                                                 + (param->value[13]       ));
+
+
+                                if (   ((0 != _dwPeriodicMeasurementTime_ms) && (0 != _dwOneMeasurementMaxTime_ms))
+                                    && (_dwOneMeasurementMaxTime_ms < _dwPeriodicMeasurementTime_ms                 ))
+                                {
+                                    CC_AppSrv_HR_Set24HrPeriod((_dwPeriodicMeasurementTime_ms * 1000), (_dwOneMeasurementMaxTime_ms * 1000));
+                                }
+                            }
+
+                            break;
+                        case 0xF7:
+                            CC_BLE_Cmd_SetGeneralInfo(&param->value[2]);
+                            //CC_DB_System_Save_Request(DB_SYS_GENERAL_INFO);
+                            break;                    
+                        case 0xF8:
+                            CC_BLE_Cmd_SetUnitInfo(&param->value[2]);
+                            //CC_DB_System_Save_Request(DB_SYS_UNIT);
+                            break;
+                        case 0xF9:
+                            CC_BLE_Cmd_SetClockAlarm(&param->value[2]);
+                            //CC_DB_System_Save_Request(DB_SYS_ALARM);
+                            break;
+                        case 0xFA: // Pedometer
+                        case 0xFB: // HRM
+                        case 0xFC: // Sleep
+                        case 0xFD: // Swimming
+                        case 0xF0: // System    
+                            if(0x01 == param->value[2]) // 0x01: enabled
+                            {
+                                  if(0x00 == CC_BLE_Cmd_GetHistoryType())
+                                  {
+                                         CC_VENUS_RscTimerStop();
+                            
+                                         CC_BLE_Cmd_SetHistoryType(param->value[1]);
+                            
+                                         CC_VENUS_RscTimerStart(HISTORY_NOTIFY_INTERVAL);
+
+                                  }
+                                  else
+                                  {
+                                        if(0x00 != CC_BLE_Cmd_GetHistoryType())
+                                        {
+                                              CC_BLE_Cmd_ClrHistoryType();
+                                              
+                                              CC_VENUS_RscTimerStop();
+                            
+                                              CC_VENUS_RscTimerStart(SPEED_AND_CADENCE_NOTIFY_INTERVAL);
+                                        }
+                                  }
+                            }
+                        
+                            break;
+                    }
+                }
+/*            
                 uint16_t meas_intv = co_read16p(param->value);
 
                 // check measurement length validity
@@ -362,12 +963,15 @@ static int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
                     {
                         msg_status = KE_MSG_SAVED;
                     }
+                  
                 }
                 else
                 {
                     // value not in expected range
                     status = HTP_OUT_OF_RANGE_ERR_CODE;
                 }
+
+                */  
             }break;
 
             case HTS_IDX_TEMP_MEAS_IND_CFG:
@@ -577,7 +1181,9 @@ const struct ke_msg_handler htpt_default_state[] =
     {GATTC_READ_REQ_IND,         (ke_msg_func_t) gattc_read_req_ind_handler},
     {GATTC_CMP_EVT,              (ke_msg_func_t) gattc_cmp_evt_handler},
 
-    {HTPT_TEMP_SEND_REQ,         (ke_msg_func_t) htpt_temp_send_req_handler},
+    //{HTPT_TEMP_SEND_REQ,         (ke_msg_func_t) htpt_temp_send_req_handler},
+    {HTPT_TEMP_SEND_REQ,         (ke_msg_func_t) htpt_period_meas_send_req_handler},
+    {HTPT_TEMP_SWIM_MEAS_REQ,    (ke_msg_func_t) htpt_swim_meas_send_req_handler},
     {HTPT_MEAS_INTV_UPD_REQ,     (ke_msg_func_t) htpt_meas_intv_upd_req_handler},
     {HTPT_MEAS_INTV_CHG_CFM,     (ke_msg_func_t) htpt_meas_intv_chg_cfm_handler},
 };

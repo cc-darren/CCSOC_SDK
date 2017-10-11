@@ -82,10 +82,11 @@ typedef enum
 #ifndef __LSM6DS3_SHARED__TYPES
 #define __LSM6DS3_SHARED__TYPES
 
-#define FIFO_DEPTH 32
+#define FIFO_DEPTH 100 // ori:32
 #define FIFO_DEPTH_T FIFO_DEPTH*3  //3 Axes
-#define FIFO_EN 0
+#define FIFO_EN 1
 #define LSM6DSL
+
 
 typedef union
 {
@@ -2928,6 +2929,51 @@ u8_t LSM6DS3_ACC_GYRO_ReadMulti( void *handle, u8_t Reg, u8_t *Bufp, u16_t len )
 
 status_t LSM6DS3_X_Init( void );
 status_t LSM6DS3_X_SLEEP( void );
+
+
+void CC_GYRO_Set_ODR(LSM6DS3_ACC_GYRO_ODR_G_t ODR);
+
+status_t CC_SETTING_ACCL_SINGLE_MODE(void);
+status_t CC_SETTING_ACCL_FIFO_MODE(void);
+status_t CC_LSM6DS3_ACC_GetFIFO_AccelAndGyro(i16_t *_Abuff ,i16_t *_Gbuff);
+status_t CC_SET_FIFO_RESET(void);
+status_t CC_SET_FIFI_GYRO(uint8_t _Enable);
+status_t CC_SET_ACC_ODR(uint8_t _Enable);
+
+typedef enum
+{
+	MEMS_FIFO_USER_PEDO	=  0, 
+	MEMS_FIFO_USER_HRM	=  1, 
+}cc_mems_fifo_user_type_t;
+
+void CC_Mems_Fifo_Register(cc_mems_fifo_user_type_t user_id, int16_t *pdata, uint16_t _max_size);
+void CC_Mems_Fifo_UnRegister(cc_mems_fifo_user_type_t user_id);
+void CC_Mems_Fifo_Reset(cc_mems_fifo_user_type_t user_id);
+uint16_t  CC_Mems_Fifo_Get_UnRead_Length(cc_mems_fifo_user_type_t user_id);
+void CC_Mems_Fifo_Update_Data(void);
+
+
+/////////////////////////// CC Gyro definition ver2 as below: /////////////////////////////
+typedef enum
+{
+    E_LSM6DSX_FIFO_CONTROL_ACCEL = 0x01,
+    E_LSM6DSX_FIFO_CONTROL_GYRO,
+    E_LSM6DSX_FIFO_CONTROL_ACCEL_GYRO
+}   E_LSM6DSX_FIFO_TARGET_DEVICE;
+
+u16_t CC_LSM6DSX_FifoGetUnReadData(void);
+status_t CC_LSM6DSX_GyroPowerDown(void);
+status_t CC_LSM6DSX_AccelPowerDown(void);
+void CC_LSM6DSX_FifoClean(void);
+status_t CC_LSM6DSX_GyroPowerON(LSM6DS3_ACC_GYRO_ODR_G_t eGyroODR);
+status_t CC_LSM6DSX_AccelPowerON(LSM6DS3_ACC_GYRO_ODR_XL_t eAccelODR);
+void CC_LSM6DSX_FifoEnable(E_LSM6DSX_FIFO_TARGET_DEVICE eTargetDevice);
+void CC_LSM6DSX_FifoDisable(E_LSM6DSX_FIFO_TARGET_DEVICE eTargetDevice);
+
+
+
+status_t LSM6DS3_ACC_GYRO_WriteReg(void *handle, u8_t RegAddr, u8_t Data); // for TEST!!!!!!
+
 
 #endif /*__LSM6DS3_SHARED__TYPES*/
 

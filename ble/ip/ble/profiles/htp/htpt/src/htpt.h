@@ -82,7 +82,10 @@
 
 #define HTPT_TEMP_MEAS_MAX_LEN            (13)
 #define HTPT_TEMP_TYPE_MAX_LEN            (1)
-#define HTPT_MEAS_INTV_MAX_LEN            (2)
+//#define HTPT_MEAS_INTV_MAX_LEN            (2)
+// modified by Samuel
+#define HTPT_MEAS_INTV_MAX_LEN            (20)
+
 #define HTPT_MEAS_INTV_RANGE_MAX_LEN      (4)
 #define HTPT_IND_NTF_CFG_MAX_LEN          (2)
 

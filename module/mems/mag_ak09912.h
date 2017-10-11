@@ -217,6 +217,8 @@ u8_t AK09912_MAG_WriteReg(u8_t Reg, u8_t Data);
 status_t AK09912_MAG_Init(void);
 status_t AK09912_MAG_SLEEP(void);
 
+status_t CC_AK09912_MAG_SET_ODR(AK09912_MAG_MODE_t _tODR);
+
 
 #endif /* _MAG_AK09912_H_ */
 

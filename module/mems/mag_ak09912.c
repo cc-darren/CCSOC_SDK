@@ -445,5 +445,14 @@ status_t AK09912_MAG_SLEEP(void)
 
 }
 
+status_t CC_AK09912_MAG_SET_ODR(AK09912_MAG_MODE_t _tODR)
+{
+    status_t response;
+    
+    response = AK09912_MAG_SetMode(_tODR);
+    if(response==MEMS_ERROR) return response; //manage here comunication error
+
+    return MEMS_SUCCESS;
+}
 
 #endif //#if (MODULE_MAG == MAG_AKM_AK09912C)

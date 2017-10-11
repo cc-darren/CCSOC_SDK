@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+void ssd1306_SetPosition(uint8_t x, uint8_t y);
+
 void ssd1306_DrawBlack(void);
 void ssd1306_DrawWhite(void);
 

@@ -49,7 +49,7 @@
 #include "em_buf.h"
 #include "llm_task.h"
 #include "rwip.h"
-#include "ea.h"
+//#include "ea.h"
 
 /*
  * DEFINES
@@ -584,6 +584,7 @@ enum
  ****************************************************************************************
  */
 extern struct llm_le_env_tag llm_le_env;
+extern volatile struct llm_le_env_tag *p_llm_le_env;
 
 /*
  * FUNCTION DECLARATIONS

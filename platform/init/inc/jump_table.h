@@ -3,7 +3,7 @@
 
 #include "global.h"
 
-#define JUMP_TABLE_SIZE    (88)
+#define JUMP_TABLE_SIZE    (256)
 
 extern const uint32_t * const jump_table_base[JUMP_TABLE_SIZE] __attribute__((section("jump_table_mem_area")));
 #define jump_table_struct (uint32_t)jump_table_base
@@ -57,6 +57,29 @@ extern const uint32_t * const jump_table_base[JUMP_TABLE_SIZE] __attribute__((se
 #define JT_POS_LLD_SLEEP_INIT					43
 #define JT_POS_LLD_SLEEP_US_2_LPCYCLES			44
 #define JT_POS_LLD_SLEEP_LPCYCLES_2_US			45
+#define JT_POS_LPCLK_DRIFT						46
+#define JT_POS_BLE_CA_CFG						47
+#define JT_POS_BLE_CA_TIMER_DUR					48
+#define JT_POS_BLE_CRA_TIMER_DUR				49
+#define JT_POS_BLE_CA_MIN_RSSI					50
+#define JT_POS_LLD_EVT_INIT						51
+#define JT_POS_LLD_INIT							52
+#define JT_POS_LLD_TEST_STOP					53
+#define JT_POS_LLD_TEST_MODE_TX					54
+#define JT_POS_LLD_TEST_MODE_RX					55
+#define JT_POS_LLM_ENCRYPTION_DONE				56
+#define JT_POS_KE_TASK_INIT						57
+#define JT_POS_KE_TIMER_INIT					58
+#define JT_POS_MAX_SLEEP_DURATION_PERIODIC_WAKEUP  59
+#define JT_POS_MAX_SLEEP_DURATION_EXNTERNAL_WAKEUP  60
+#define JT_POS_RWIP_HEAP_ENV  					61
+#define JT_POS_RWIP_HEAP_ENV_SIZE  				62
+#define JT_POS_RWIP_HEAP_DB  					63
+#define JT_POS_RWIP_HEAP_DB_SIZE  				64
+#define JT_POS_RWIP_HEAP_MSG  					65
+#define JT_POS_RWIP_HEAP_MSG_SIZE  				66
+#define JT_POS_RWIP_HEAP_NON_RET  				67
+#define JT_POS_RWIP_HEAP_NON_RET_SIZE  			68
 
 
 #endif

@@ -722,6 +722,7 @@ __STATIC rwip_time_t rwip_time_get(void)
  ****************************************************************************************
  */
 
+ 
 void rwip_init(uint32_t error)
 {
     #if (DEEP_SLEEP)
@@ -965,6 +966,8 @@ void rwip_schedule(void)
         ke_event_schedule();
     }
     #endif //KE_SUPPORT
+
+
 }
 
 

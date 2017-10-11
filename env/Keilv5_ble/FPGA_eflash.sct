@@ -38,9 +38,9 @@ SOC 0x10000000 0x40000  ; 256KB
     {
         *(VECTOR_IN_RET_RAM, +First)
         ;*(IN_RET_RAM)
-        ;jump_table.o (heap_env_area)
-        ;jump_table.o (heap_db_area)
-        ;jump_table.o (heap_msg_area)
+        jump_table.o (heap_env_area)
+        jump_table.o (heap_db_area)
+        jump_table.o (heap_msg_area)
     }
 
 }

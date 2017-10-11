@@ -184,7 +184,7 @@ void app_displayoled_start(void)
 
 
     if (f_displayoled()->id < 0) {
-
+/*
         //oled_DrawPixel8x16(30,0,"STEP: ");
         //oled_DrawPixel8x16(30,2,"HR: ");
         sprintf((char *)pDisplayStepCount,"%d",dwStepCount);
@@ -193,7 +193,7 @@ void app_displayoled_start(void)
         oled_DrawPixel8x16(70,0,pDisplayStepCount);
         //oled_DrawPixel8x16(30,2,"HR: ");
         //oled_DrawPixel8x16(55,2,pDisplayHeartRate);
-
+*/
 
         f_displayoled()->ePwr_nextstate=E_OLED_PWRSTATE_TURNON;
         f_displayoled()->remote_turnon = true;
@@ -202,7 +202,7 @@ void app_displayoled_start(void)
 
     }
 
-    TracerInfo("done.");
+    //TracerInfo("done.\r\n");
 }
 
 void app_displayoled_stop(void)
@@ -216,7 +216,7 @@ void app_displayoled_stop(void)
 
 
 
-    TracerInfo("done.");
+    TracerInfo("done.\r\n");
 }
 
 void app_displayoled_reset(void)
@@ -225,7 +225,7 @@ void app_displayoled_reset(void)
         return;
 
 
-    TracerInfo("done.");
+    TracerInfo("done.\r\n");
 }
 
 

@@ -67,12 +67,13 @@
 #endif // defined(CFG_APP_TIME)
 
 /// Battery Service Application
+/*
 #if (BLE_APP_HID)
 #define BLE_APP_BATT          1
 #else
 #define BLE_APP_BATT          0
 #endif // (BLE_APP_HID)
-
+*/
 /// Security Application
 #if (defined(CFG_APP_SEC) || BLE_APP_HID || defined(BLE_APP_AM0))
 #define BLE_APP_SEC          1

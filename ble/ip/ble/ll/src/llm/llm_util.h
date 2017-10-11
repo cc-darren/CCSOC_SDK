@@ -42,7 +42,7 @@
 #include "reg_ble_em_cs.h"
 #include "reg_blecore.h"
 #include "llm.h"
-#include "lld.h"
+//#include "lld.h"
 #if (HCI_PRESENT)
 #include "hci.h"
 #endif //(HCI_PRESENT)

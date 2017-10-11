@@ -332,7 +332,7 @@
             <v6Lto>0</v6Lto>
             <v6WtE>0</v6WtE>
             <VariousControls>
-              <MiscControls>--no_multifile -DMSC_CLOCK</MiscControls>
+              <MiscControls>--no_inline --no_multifile -DMSC_CLOCK</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
               <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\service\tracer;..\..\test;..\..\test\ext</IncludePath>
@@ -455,11 +455,6 @@
               <FileName>wktm.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\asic\6801\wktm.c</FilePath>
-            </File>
-            <File>
-              <FileName>lowpower.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801\lowpower.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -623,6 +618,11 @@
               <FileName>tracer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\service\tracer\tracer.c</FilePath>
+            </File>
+            <File>
+              <FileName>low_power.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\low_power\low_power.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1260,11 +1260,6 @@
               <FileType>1</FileType>
               <FilePath>..\..\platform\asic\6801\wktm.c</FilePath>
             </File>
-            <File>
-              <FileName>lowpower.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801\lowpower.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -1427,6 +1422,11 @@
               <FileName>tracer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\service\tracer\tracer.c</FilePath>
+            </File>
+            <File>
+              <FileName>low_power.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\low_power\low_power.c</FilePath>
             </File>
           </Files>
         </Group>

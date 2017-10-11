@@ -35,8 +35,8 @@
 #include "co_error.h"
 #include "llc_llcp.h"
 #include "llc_task.h"
-#include "llm.h"
-#include "lld_evt.h"
+//#include "llm.h"
+//#include "lld_evt.h"
 #include "ke_task.h"
 #if (BLE_CHNL_ASSESS)
 #include "llc_ch_asses.h"
@@ -56,100 +56,12 @@
 /*
  * TYPE DEFINITIONS
  ****************************************************************************************
+*/
+
+/*
+ * TYPE DEFINITIONS
+ ****************************************************************************************
  */
-/// LLC Flags (Status)
-///  [15-12]  11     10      9     8      7      6      5      4      3      2      1      0
-/// +......+------+------+------+------+------+------+------+------+------+------+------+------+
-/// |  RFU |IN_PRO|LLCP_E|DISC_R|S_FND | U_EVT| U_HST| U_PE | TO_PE|LLCP_D|W_T_PA| P_VER| F_EXC|
-/// +......+------+------+------+------+------+------+------+------+------+------+------+------+
-enum llc_status_flag
-{
-    /// - [11]:  Instant finished and proceed
-    LLC_STAT_INSTANT_PROCEED_MASK       = 0x800,
-    LLC_STAT_INSTANT_PROCEED_LSB        = 11,
-
-    /// - [10]:  LLCP PDU Instant process in defer context
-    LLC_STAT_LLCP_INSTANT_EXTRACTED_MASK= 0x400,
-    LLC_STAT_LLCP_INSTANT_EXTRACTED_LSB = 10,
-
-    /// - [9]:    Flag indicating if disconnection is requested by remote device
-    LLC_STAT_DISC_REM_REQ_MASK          = 0x200,
-    LLC_STAT_DISC_REM_REQ_LSB           = 9,
-
-    /// - [8]:    Flag indicating if synchronization found
-    LLC_STAT_SYNC_FOUND_MASK            = 0x100,
-    LLC_STAT_SYNC_FOUND_LSB             = 8,
-
-    /// - [7]:    Flag indicating if connection update event should be sent
-    LLC_STAT_UPDATE_EVT_SENT_MASK       = 0x80,
-    LLC_STAT_UPDATE_EVT_SENT_LSB        = 7,
-
-    /// - [6]:    Flag indicating if connection update requested by host
-    LLC_STAT_UPDATE_HOST_REQ_MASK       = 0x40,
-    LLC_STAT_UPDATE_HOST_REQ_LSB        = 6,
-
-    /// - [5]:    Flag indicating if connection update ongoing flag
-    LLC_STAT_UPDATE_PENDING_MASK        = 0x20,
-    LLC_STAT_UPDATE_PENDING_LSB         = 5,
-
-    /// - [4]:    Flag indicating if connection TO is pending
-    LLC_STAT_TO_PENDING_MASK            = 0x10,
-    LLC_STAT_TO_PENDING_LSB             = 4,
-
-    /// - [3]:    Flag indicating if LLC messages received have to be discarded
-    LLC_STAT_LLCP_DISCARD_MASK          = 0x08,
-    LLC_STAT_LLCP_DISCARD_LSB           = 3,
-
-    /// - [2]:    Flag indicating if traffic has to be paused
-    LLC_STAT_WAIT_TRAFFIC_PAUSED_MASK   = 0x04,
-    LLC_STAT_WAIT_TRAFFIC_PAUSED_LSB    = 2,
-
-    /// - [1]:    Flag indicating if the peer version is already known
-    LLC_STAT_PEER_VERS_KNOWN_MASK       = 0x02,
-    LLC_STAT_PEER_VERS_KNOWN_LSB        = 1,
-
-    /// - [0]:    Flag indicating whether features have been exchanged or not
-    LLC_STAT_FEAT_EXCH_MASK             = 0x01,
-    LLC_STAT_FEAT_EXCH_LSB              = 0
-};
-
-
-/// Data Length Extension info
-///   7  6  5  4  3  2  1   0
-/// +--+--+--+--+--+--+---+---+
-/// |      RFU        |EVT|REQ|
-/// +--+--+--+--+--+--+---+---+
-enum llc_dle_flag
-{
-    /// - [7:2]: RFU
-
-    /// - [1]:    SE Private Address Renewal timer started
-    LLC_DLE_EVT_SENT_MASK  = 0x02,
-    LLC_DLE_EVT_SENT_LSB   = 1,
-
-    /// - [0]:    RCVD/non RCVD LL_LENGTH_REQ
-    LLC_DLE_REQ_RCVD_MASK  = 0x01,
-    LLC_DLE_REQ_RCVD_LSB   = 0
-};
-
-
-#if (BLE_TESTER)
-/// Tester flags
-enum llc_tester_flag
-{
-    /// Ignore LLCP Feature request
-    LLC_TESTER_IGNORE_FEAT_REQ     = 0x01,
-    /// Force connection update parameters
-    LLC_TESTER_FORCE_UP_PARAM      = 0x02,
-    /// Surcharge LLCP connection parameter request
-    LLC_TESTER_SURCHARGE_PARAM_REQ = 0x04,
-};
-#endif // (BLE_TESTER)
-
-
-
-
-
 /// Remote version information structure
 struct rem_version
 {
@@ -168,8 +80,6 @@ struct encrypt
     struct sess_k_div   skd;
     /// Long term key
     struct ltk          ltk;
-    /// Random value
-    uint8_t             randn[KEY_LEN];
 };
 
 /// Data Length Extension structure
@@ -201,7 +111,6 @@ struct data_len_ext_tag
     ///Flag to check if the request has been already done and the event sent
     uint8_t data_len_ext_flag;
 };
-
 
 /// LLC environment structure
 struct llc_env_tag
@@ -386,7 +295,7 @@ void llc_le_con_cmp_evt_send(uint8_t status, uint16_t conhdl, struct llc_create_
  * @param[in] evt           Pointer to the event structure linked to the connection.
  ****************************************************************************************
  */
-void llc_con_update_complete_send(uint8_t status, uint16_t conhdl, struct lld_evt_tag *evt);
+//void llc_con_update_complete_send(uint8_t status, uint16_t conhdl, struct lld_evt_tag *evt);
 
 /**
  ****************************************************************************************

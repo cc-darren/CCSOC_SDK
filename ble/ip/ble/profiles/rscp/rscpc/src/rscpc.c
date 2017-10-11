@@ -207,6 +207,7 @@ void rscpc_enable_rsp_send(struct rscpc_env_tag *rscpc_env, uint8_t conidx, uint
     ke_msg_send(rsp);
 }
 
+
 void rscps_send_no_conn_cmp_evt(uint8_t src_id, uint8_t dest_id, uint8_t operation)
 {
     // Send the message
