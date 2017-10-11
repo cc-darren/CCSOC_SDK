@@ -1,0 +1,76 @@
+#<SYMDEFS># ARM Linker, 5060183: Last Updated: Wed Jun 07 19:25:22 2017
+
+
+
+0x00002dd9 T attm_att_set_permission
+0x000031df T attm_svc_create_db
+0x000069fd T gapc_get_conhdl
+0x00019c11 T rwble_hl_init
+0x00019c2d T rwble_hl_reset
+0x00019c49 T rwble_init
+0x00019c69 T rwble_isr
+0x00019d11 T rwble_reset
+0x00019d69 T rwble_sleep_check
+0x00019d7d T rwble_version
+0x00019dad T rwip_check_wakeup_boundary
+0x00019dd1 T rwip_ext_wakeup_enable
+0x00019ddd T rwip_init
+0x00019e85 T rwip_prevent_sleep_clear
+0x00019eb1 T rwip_prevent_sleep_set
+0x00019edd T rwip_reset
+0x00019f1d T rwip_schedule
+0x00019f31 T rwip_sleep
+0x0001a029 T rwip_sleep_enable
+0x0001a035 T rwip_sleep_lpcycles_2_us
+0x0001a089 T rwip_us_2_lpcycles
+0x0001a099 T rwip_version
+0x0001a0a1 T rwip_wakeup
+0x0001a0b5 T rwip_wakeup_delay_set
+0x0001a0dd T rwip_wakeup_end
+0x0001a0fd T rwip_wlcoex_set
+0x0000e665 T ke_check_malloc
+0x0000e6f1 T ke_event_callback_set
+0x0000e709 T ke_event_clear
+0x0000e73d T ke_event_flush
+0x0000e749 T ke_event_get
+0x0000e781 T ke_event_get_all
+0x0000e78d T ke_event_init
+0x0000e79d T ke_event_schedule
+0x0000e7c9 T ke_event_set
+0x0000e7fd T ke_flush
+0x0000e841 T ke_free
+0x0000e939 T ke_init
+0x0000e969 T ke_is_free
+0x0000e981 T ke_malloc
+0x0000ea45 T ke_mem_init
+0x0000eaa1 T ke_mem_is_empty
+0x0000eb0d T ke_msg_alloc
+0x0000eb3f T ke_msg_dest_id_get
+0x0000eb45 T ke_msg_discard
+0x0000eb49 T ke_msg_forward
+0x0000eb59 T ke_msg_forward_new_id
+0x0000eb6b T ke_msg_free
+0x0000eb73 T ke_msg_in_queue
+0x0000eb7f T ke_msg_save
+0x0000eb85 T ke_msg_send
+0x0000ebb9 T ke_msg_send_basic
+0x0000ebc7 T ke_msg_src_id_get
+0x0000ebcd T ke_queue_extract
+0x0000ec0b T ke_queue_insert
+0x0000ec3b T ke_sleep_check
+0x0000ec4d T ke_state_get
+0x0000ec71 T ke_state_set
+0x0000eca1 T ke_task_check
+0x0000ecc1 T ke_task_create
+0x0000ed05 T ke_task_delete
+0x0000ed81 T ke_task_init
+0x0000edb5 T ke_task_msg_flush
+0x0000ef1d T ke_timer_active
+0x0000ef49 T ke_timer_adjust_all
+0x0000ef61 T ke_timer_clear
+0x0000eff1 T ke_timer_init
+0x0000f071 T ke_timer_set
+0x0000f115 T ke_timer_target_get
+
+
+
