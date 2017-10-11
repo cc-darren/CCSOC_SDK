@@ -97,6 +97,66 @@ static void app_ht_temp_send(void)
     ke_msg_send(req);
 }
 
+void app_ht_period_meas_send(bool update_step, uint32_t step_data, bool update_hr, uint16_t hr_data, uint32_t calorie)
+{
+    // Allocate the HTPT_TEMP_SEND_REQ message
+    struct htpt_period_meas_send_req * req = KE_MSG_ALLOC(HTPT_TEMP_SEND_REQ,
+                                                    prf_get_task_from_id(TASK_ID_HTPT),
+                                                    TASK_APP,
+                                                    htpt_period_meas_send_req);
+                                                    
+    req->period_meas.vid = 0xCC;
+    req->period_meas.type = 0xF1;   // step 
+    req->period_meas.update_step_flag = update_step;
+    req->period_meas.step = step_data;
+    req->period_meas.type2 = 0xF2; // hr
+    req->period_meas.update_hr_flag = update_hr;
+    req->period_meas.hr = hr_data;
+    req->period_meas.calorie = calorie;
+                                              
+
+    ke_msg_send(req);
+}
+
+
+void app_ht_swim_meas_send(uint8_t swim_en, uint8_t style_type, uint32_t dwSwimCnt, uint32_t dwSwimLap, uint32_t dwTimestamp)
+{
+    // Allocate the HTPT_TEMP_SEND_REQ message
+    struct htpt_swim_meas_send_req * req = KE_MSG_ALLOC(HTPT_TEMP_SWIM_MEAS_REQ,
+                                                    prf_get_task_from_id(TASK_ID_HTPT),
+                                                    TASK_APP,
+                                                    htpt_swim_meas_send_req);
+
+    req->swim_meas.vid = 0xCC;
+    req->swim_meas.type = 0xF4;
+    req->swim_meas.is_Swim_En = swim_en;
+    req->swim_meas.style_type = style_type;
+    req->swim_meas.dwSwimCnt = dwSwimCnt;
+    req->swim_meas.dwSwimLap = dwSwimLap;
+    req->swim_meas.dwTimestamp = dwTimestamp;
+                                                     
+    ke_msg_send(req);
+}
+
+
+
+void app_ht_history_send(uint8_t id)
+{
+    // Allocate the HTPT_TEMP_SEND_REQ message
+    struct htpt_history_send_req * req = KE_MSG_ALLOC(HTPT_TEMP_SEND_REQ,
+                                                    prf_get_task_from_id(TASK_ID_HTPT),
+                                                    TASK_APP,
+                                                    htpt_history_send_req);
+
+    req->history_meas.vid = 0xCC;
+    req->history_meas.type = id;
+    req->history_meas.total = 0;
+    req->history_meas.rec_index = 0;    
+                                          
+
+    ke_msg_send(req);
+}
+
 #if (DISPLAY_SUPPORT)
 static void app_ht_update_type_string(uint8_t temp_type)
 {

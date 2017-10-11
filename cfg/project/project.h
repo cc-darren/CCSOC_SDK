@@ -46,9 +46,14 @@ Head Block of The File
 // Sec 2: Constant Definitions, Imported Symbols, miscellaneous
 
 #define FPGA        1
+#define VENUS_WRISTBAND		1
 
 #if defined(FPGA) && FPGA
-    #include "project_FPGA.h"
+	#ifdef VENUS_WRISTBAND
+		#include "project_FPGA_Venus.h"
+	#else
+    	#include "project_FPGA.h"
+	#endif
 #elif defined(ASIC) && ASIC
     #include "project_ASIC.h"
 #else

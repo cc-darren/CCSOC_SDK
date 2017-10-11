@@ -109,6 +109,37 @@
 #endif
 
 
+#if defined(MODULE_PPG)
+  /*
+    define PPG_IF_TYPE and MAG_IF_ID before including module driver header
+    or module driver won't be able to use the definitions
+  */
+  #if ((defined PPG_IF) && (PPG_IF))
+    #define PPG_IF_TYPE (PPG_IF&0xF0)
+    #define PPG_IF_ID   (PPG_IF&0x0F)
+  #else
+    #error "PPG interface not found"
+  #endif
+
+  #if ((MODULE_PPG & 0xF000) == 0x5000)
+    #if (MODULE_PPG == PPG_PXT_PAH8002)
+      #define PPG_HEADER ppg_pah8002
+      
+    #elif (MODULE_PPG == PPG_NULL)
+      #define PPG_HEADER mag_null
+      #undef PPG_IF
+      #define PPG_IF IF_NULL
+    #else
+      #error " no matched PPG driver found"
+    #endif
+  #else
+    #error "not a PPG driver"
+  #endif
+#else
+  #error "Please select PPG module from module_supported.h"
+#endif
+
+
 #if defined(MODULE_GYR)
   /*
     define GYR_IF_TYPE and GYR_IF_ID before including module driver header
@@ -209,10 +240,10 @@
 #if ((ACC_IF==Interface_SPI2) || (MAG_IF==Interface_SPI2) || (GYR_IF==Interface_SPI2) || (OLED_IF==Interface_SPI2))
   #define SPI2_INUSE  TRUE
 #endif
-#if ((ACC_IF==Interface_I2C0) || (MAG_IF==Interface_I2C0) || (GYR_IF==Interface_I2C0) || (OLED_IF==Interface_I2C0))
+#if ((ACC_IF==Interface_I2C0) || (MAG_IF==Interface_I2C0) || (GYR_IF==Interface_I2C0) || (OLED_IF==Interface_I2C0) || (PPG_IF==Interface_I2C0))
   #define I2C0_INUSE  TRUE
 #endif
-#if ((ACC_IF==Interface_I2C1) || (MAG_IF==Interface_I2C1) || (GYR_IF==Interface_I2C1) || (OLED_IF==Interface_I2C1))
+#if ((ACC_IF==Interface_I2C1) || (MAG_IF==Interface_I2C1) || (GYR_IF==Interface_I2C1) || (OLED_IF==Interface_I2C1) || (PPG_IF==Interface_I2C1))
   #define I2C1_INUSE  TRUE
 #endif
 #if ((TRACER_IF==Interface_UART0) || (HCI_IF==Interface_UART0))

@@ -695,7 +695,8 @@ enum
 #define KE_NB_LINK_IN_HEAP_ENV   4
 
 /// Size of Environment heap
-#define RWIP_HEAP_ENV_SIZE         ( BT_HEAP_ENV_SIZE_         + \
+
+#define RWIP_HEAP_ENV_SIZE       ( BT_HEAP_ENV_SIZE_         + \
                                      ( BLE_HEAP_ENV_SIZE_      + \
                                        BLEHL_HEAP_ENV_SIZE_ )    \
                                      * KE_NB_LINK_IN_HEAP_ENV )
@@ -712,6 +713,14 @@ enum
 
 /// Minimum sleep time to enter in deep sleep (in half slot).
 #define RWIP_MINIMUM_SLEEP_TIME                (1)
+
+
+ // Heap header size is 12 bytes
+#define RWIP_HEAP_HEADER                        (12 / sizeof(uint32_t)) //header size in uint32_t
+
+ // ceil(len/sizeof(uint32_t)) + RWIP_HEAP_HEADER
+#define RWIP_CALC_HEAP_LEN(len)                 ((((len) + (sizeof(uint32_t) - 1)) / sizeof(uint32_t)) + RWIP_HEAP_HEADER)
+
 
 /******************************************************************************************/
 /* -------------------------        BT-BLE COEX        -----------------------------------*/

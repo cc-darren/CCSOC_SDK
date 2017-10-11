@@ -23,6 +23,7 @@
  ****************************************************************************************
  */
 #include "rwip_config.h"
+#include "project.h"
 
 #if (BLE_HT_COLLECTOR)
 #include "gap.h"

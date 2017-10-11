@@ -37,14 +37,15 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "project.h"
+#include "string.h"
 
-#if (MODULE_ACC == ACC_ST_LSM6DSL)
+#if ((MODULE_GYR == GYR_ST_LSM6DSL) && (MODULE_ACC == ACC_NULL))
 /* Imported macro ------------------------------------------------------------*/
-#if (ACC_IF_TYPE == IF_SPI)
+#if (GYR_IF_TYPE == IF_SPI)
     #include "drvi_spi.h"
     #define LSM6DS3_IF_WriteThenRead(tbuf,tlen,rbuf,rlen)       drvi_SpiWriteThenRead(ACC_IF_ID,tbuf,tlen,rbuf,rlen)
     #define LSM6DS3_IF_Write(buf,len)                           drvi_SpiWrite(ACC_IF_ID,buf,len)
-#elif (ACC_IF_TYPE == IF_I2C)
+#elif (GYR_IF_TYPE == IF_I2C)
     #include "drvi_i2c.h"
     #define LSM6DS3_IF_WriteThenRead(tbuf,tlen,rbuf,rlen)       drvi_I2CWriteThenRead(ACC_IF_ID,tbuf,tlen,rbuf,rlen)
     #define LSM6DS3_IF_Write(buf,len)                           drvi_I2CWrite(ACC_IF_ID,buf,len)
@@ -54,19 +55,47 @@
 #endif
 
 
-#ifndef __LSM6DS3_SHARED__TYPES
-#define __LSM6DS3_SHARED__TYPES
+//#ifndef __LSM6DS3_C_SHARED__TYPES
+//#define __LSM6DS3_C_SHARED__TYPES
+
 
 /* Imported constants --------------------------------------------------------*/
-static uint8_t m_rx_buf[32];
+static uint8_t m_rx_buf[64];
 static uint8_t m_tx_buf[32];
+
+/* Imported variables --------------------------------------------------------*/
+
+extern uint8_t g_GyroEnable;
+
 /* Private typedef -----------------------------------------------------------*/
+typedef struct
+{
+    uint8_t    bSpiID;
+
+    //TBD...
+    LSM6DS3_ACC_GYRO_ODR_XL_t    eODR_Accel;
+
+}   S_CC_Lsm6dsxCB;
+
+typedef struct
+{
+	uint16_t data_end_index;
+	uint16_t max_size;
+	int16_t *mems_fifo_data;
+} cc_mems_fifo_user_t;
 
 /* Private define ------------------------------------------------------------*/
-
+#define MEMS_FIFO_MAX_USER		8
+#define GET_BIT8(bit)	((uint8_t)(0x01 << bit))
 /* Private macro -------------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
+//static S_CC_Lsm6dsxCB    s_tLsm6dsxCB = {
+//                                            .bSpiID = 0x01,
+//                                        };
+
+cc_mems_fifo_user_t mems_fifo_user[MEMS_FIFO_MAX_USER];
+uint8_t mems_fifo_register_flag;
 
 /* Imported function prototypes ----------------------------------------------*/
 //extern uint8_t Sensor_IO_Write(void *handle, uint8_t WriteAddr, uint8_t *pBuffer, uint16_t nBytesToWrite);
@@ -2096,6 +2125,9 @@ status_t  LSM6DS3_ACC_GYRO_W_IF_Addr_Incr(void *handle, LSM6DS3_ACC_GYRO_IF_INC_
 
   if( !LSM6DS3_ACC_GYRO_WriteReg(handle, LSM6DS3_ACC_GYRO_CTRL3_C, value) )
     return MEMS_ERROR;
+
+
+
 
   return MEMS_SUCCESS;
 }
@@ -6722,107 +6754,82 @@ status_t LSM6DS3_X_Init( void )
   //}
   
 #if 1
-  //ENABLE ACC
-  if ( LSM6DS3_ACC_GYRO_W_ODR_XL( (void *)handle, LSM6DS3_ACC_GYRO_ODR_XL_52Hz ) == MEMS_ERROR )
-  {
-    return MEMS_ERROR;
-  }
-  /* Full scale selection. */
-  if ( LSM6DS3_ACC_GYRO_W_FS_XL( (void *)handle, LSM6DS3_ACC_GYRO_FS_XL_8g) == MEMS_ERROR )
-  {
-    return MEMS_ERROR;
-  }
-  //end /*--------------------------------------------------------*/
-#endif
-
-#if 0
-  //ENABLE GYRO //ORD 12.5 Hz
-  if ( LSM6DS3_ACC_GYRO_W_ODR_G( (void *)handle, LSM6DS3_ACC_GYRO_ODR_G_104Hz) == MEMS_ERROR )
-  {
-    return MEMS_ERROR;
-  }
-
-  if ( LSM6DS3_ACC_GYRO_W_FS_G( (void *)handle, LSM6DS3_ACC_GYRO_FS_G_2000dps) == MEMS_ERROR )
-  {
-    return MEMS_ERROR;
-  }
-#endif
-  //end /*--------------------------------------------------------*/
+    //ENABLE ACC
+    
+    if ( LSM6DS3_ACC_GYRO_W_LowPower_XL( (void *)handle, LSM6DS3_ACC_GYRO_LP_XL_ENABLED) == MEMS_ERROR )
+    {
+      return MEMS_ERROR;
+    }
+    
+    if ( LSM6DS3_ACC_GYRO_W_ODR_XL( (void *)handle, LSM6DS3_ACC_GYRO_ODR_XL_52Hz) == MEMS_ERROR )
+    {
+     return MEMS_ERROR;
+    }  /* Full scale selection. */
   
+    if ( LSM6DS3_ACC_GYRO_W_FS_XL( (void *)handle, LSM6DS3_ACC_GYRO_FS_XL_8g) == MEMS_ERROR )
+    {
+      return MEMS_ERROR;
+    }
   
-
-//No FIFO & DATA READY INT
-#if 0
-#if (FIFO_EN == 0)
-  //=============================================================================================
-  //enable ACC data ready interrupt on INT1
-  //=============================================================================================
-  if ( LSM6DS3_ACC_GYRO_W_FIFO_MODE( (void *)handle, LSM6DS3_ACC_GYRO_FIFO_MODE_BYPASS ) == MEMS_ERROR )
-  {
-   return MEMS_ERROR;
-  }
+    //end /*--------------------------------------------------------*/
+#endif
+  
 #if 1
-  if( LSM6DS3_ACC_GYRO_W_DRDY_XL_on_INT1( (void *)handle, LSM6DS3_ACC_GYRO_INT1_DRDY_XL_ENABLED) == MEMS_ERROR )
-  {
-    return MEMS_ERROR;
-  }
-#endif  
-
-  #if 1
-  if( LSM6DS3_ACC_GYRO_W_DRDY_G_on_INT2( (void *)handle, LSM6DS3_ACC_GYRO_INT2_DRDY_G_ENABLED) == MEMS_ERROR )
-  {
-    return MEMS_ERROR;
-  }
-  #endif 
-
-#else
-  //=============================================================================================
-  //FIFO setting
-  //=============================================================================================
-  if(LSM6DS3_ACC_GYRO_W_FIFO_Watermark(handle, FIFO_DEPTH_T) == MEMS_ERROR) //32bytes for each axis
-  {
-    return MEMS_ERROR;	  
-  }
-
-  if(LSM6DS3_ACC_GYRO_W_FIFO_MODE(handle, LSM6DS3_ACC_GYRO_FIFO_MODE_DYN_STREAM_2) == MEMS_ERROR)
-  {
-    return MEMS_ERROR;	  
-  }
-
-  if(LSM6DS3_ACC_GYRO_W_ODR_FIFO(handle, LSM6DS3_ACC_GYRO_ODR_FIFO_100Hz) == MEMS_ERROR)
-  {
-    return MEMS_ERROR;	  
-  }
-
-  if(LSM6DS3_ACC_GYRO_W_FIFO_TSHLD_on_INT1(handle, LSM6DS3_ACC_GYRO_INT1_FTH_ENABLED) == MEMS_ERROR)
-  {
-    return MEMS_ERROR;	  
-  }
-
-  if(LSM6DS3_ACC_GYRO_W_DEC_FIFO_XL(handle, LSM6DS3_ACC_GYRO_DEC_FIFO_XL_NO_DECIMATION) == MEMS_ERROR)
-  {
-    return MEMS_ERROR;	  
-  }
-
-  if(LSM6DS3_ACC_GYRO_W_STOP_ON_FTH(handle, LSM6DS3_ACC_GYRO_STOP_ON_FTH_ENABLED) == MEMS_ERROR)
-  {
-    return MEMS_ERROR;	  
-  }
-#endif
-
-  //=============================================================================================
-  //INT1 and INT2 setting
-  //=============================================================================================
-  if ( LSM6DS3_ACC_GYRO_W_INT_ACT_LEVEL ((void *)handle, LSM6DS3_ACC_GYRO_INT_ACT_LEVEL_ACTIVE_HI) == MEMS_ERROR )
-  {
-    return MEMS_ERROR;	  
-  }
+    //ENABLE GYRO //ORD 12.5 Hz
+    if ( LSM6DS3_ACC_GYRO_W_ODR_G( (void *)handle, LSM6DS3_ACC_GYRO_ODR_G_52Hz) == MEMS_ERROR )
+    {
+      return MEMS_ERROR;
+    }
   
-  if (LSM6DS3_ACC_GYRO_W_PadSel((void *)handle, LSM6DS3_ACC_GYRO_PP_OD_PUSH_PULL) == MEMS_ERROR )
-  {
-	return MEMS_ERROR;	    
-  }
+    if ( LSM6DS3_ACC_GYRO_W_FS_G( (void *)handle, LSM6DS3_ACC_GYRO_FS_G_2000dps) == MEMS_ERROR )
+    {
+      return MEMS_ERROR;
+    }
+  #if 1
+    if ( LSM6DS3_ACC_GYRO_W_ODR_G( (void *)handle, LSM6DS3_ACC_GYRO_ODR_G_POWER_DOWN) == MEMS_ERROR )
+    {
+      return MEMS_ERROR;
+    }
+  #endif
 #endif
+    //end /*--------------------------------------------------------*/
+    
+    
+  
+  //No FIFO & DATA READY INT
+#if 1
+#if (FIFO_EN == 0)
+   #if 0
+     if (CC_SETTING_ACCL_SINGLE_MODE() == MEMS_ERROR)
+     {
+          return MEMS_ERROR;
+     }
+   #endif
+#else
+     
+     if (CC_SETTING_ACCL_FIFO_MODE() == MEMS_ERROR)
+     {
+          return MEMS_ERROR;
+     }
+     
+#endif
+  
+    //=============================================================================================
+    //INT1 and INT2 setting
+    //=============================================================================================
+  #if 0
+    if ( LSM6DS3_ACC_GYRO_W_INT_ACT_LEVEL ((void *)handle, LSM6DS3_ACC_GYRO_INT_ACT_LEVEL_ACTIVE_HI) == MEMS_ERROR )
+    {
+      return MEMS_ERROR;    
+    }
+    
+    if (LSM6DS3_ACC_GYRO_W_PadSel((void *)handle, LSM6DS3_ACC_GYRO_PP_OD_PUSH_PULL) == MEMS_ERROR )
+    {
+      return MEMS_ERROR;      
+    }
+  #endif
+#endif
+
 
   
   /* Enable axes. */
@@ -6845,6 +6852,7 @@ status_t LSM6DS3_X_Init( void )
   return MEMS_SUCCESS;
 }
 
+
 status_t LSM6DS3_X_SLEEP( void )
 {
 
@@ -6865,7 +6873,396 @@ status_t LSM6DS3_X_SLEEP( void )
 	return MEMS_SUCCESS;
 }
 
+void CC_GYRO_Set_ODR(LSM6DS3_ACC_GYRO_ODR_G_t ODR)
+{
+    void *handle = 0;
+    if((LSM6DS3_ACC_GYRO_ODR_G_POWER_DOWN == ODR) && (1 == g_GyroEnable) ||
+       (LSM6DS3_ACC_GYRO_ODR_G_POWER_DOWN != ODR) && (0 == g_GyroEnable))
+        LSM6DS3_ACC_GYRO_W_ODR_G((void *)handle, ODR);
+}
 
-#endif /*__LSM6DS3_SHARED__TYPES*/
+status_t CC_SETTING_ACCL_SINGLE_MODE(void)
+{
+  //=============================================================================================
+  //enable ACC data ready interrupt on INT1
+  //=============================================================================================
+    void *handle = 0;    
+  if ( LSM6DS3_ACC_GYRO_W_FIFO_MODE( (void *)handle, LSM6DS3_ACC_GYRO_FIFO_MODE_BYPASS ) == MEMS_ERROR )
+  {
+   return MEMS_ERROR;
+  }
+#if 1
+  if( LSM6DS3_ACC_GYRO_W_DRDY_XL_on_INT1( (void *)handle, LSM6DS3_ACC_GYRO_INT1_DRDY_XL_ENABLED) == MEMS_ERROR )
+  {
+    return MEMS_ERROR;
+  }
+#endif  
+
+  #if 1
+  if( LSM6DS3_ACC_GYRO_W_DRDY_G_on_INT2( (void *)handle, LSM6DS3_ACC_GYRO_INT2_DRDY_G_ENABLED) == MEMS_ERROR )
+  {
+    return MEMS_ERROR;
+  }
+  #endif 
+    return MEMS_SUCCESS;
+}
+
+status_t CC_SETTING_ACCL_FIFO_MODE(void)
+{
+    void *handle = 0;    
+  //=============================================================================================
+  //FIFO setting
+  //=============================================================================================
+  if(LSM6DS3_ACC_GYRO_W_FIFO_Watermark(handle, FIFO_DEPTH_T) == MEMS_ERROR) //32bytes for each axis
+  {
+    return MEMS_ERROR;	  
+  }
+
+    if(LSM6DS3_ACC_GYRO_W_FIFO_MODE(handle, LSM6DS3_ACC_GYRO_FIFO_MODE_BYPASS) == MEMS_ERROR)
+    {
+    return MEMS_ERROR;	  
+    }
+
+
+  if(LSM6DS3_ACC_GYRO_W_FIFO_MODE(handle, LSM6DS3_ACC_GYRO_FIFO_MODE_DYN_STREAM_2) == MEMS_ERROR)
+  {
+    return MEMS_ERROR;	  
+  }
+
+    if(LSM6DS3_ACC_GYRO_W_ODR_FIFO(handle, LSM6DS3_ACC_GYRO_ODR_FIFO_50Hz) == MEMS_ERROR)
+  {
+    return MEMS_ERROR;	  
+  }
+
+    #if 0
+  if(LSM6DS3_ACC_GYRO_W_FIFO_TSHLD_on_INT1(handle, LSM6DS3_ACC_GYRO_INT1_FTH_ENABLED) == MEMS_ERROR)
+  {
+    return MEMS_ERROR;	  
+  }
+    #endif
+
+    // ACCL
+  if(LSM6DS3_ACC_GYRO_W_DEC_FIFO_XL(handle, LSM6DS3_ACC_GYRO_DEC_FIFO_XL_NO_DECIMATION) == MEMS_ERROR)
+  {
+    return MEMS_ERROR;	  
+  }
+    //GYRO
+    #if 1
+    if(LSM6DS3_ACC_GYRO_W_DEC_FIFO_G(handle, LSM6DS3_ACC_GYRO_DEC_FIFO_G_DATA_NOT_IN_FIFO) == MEMS_ERROR)
+  {
+    return MEMS_ERROR;	  
+  }
+#endif
+
+  if(LSM6DS3_ACC_GYRO_W_STOP_ON_FTH(handle, LSM6DS3_ACC_GYRO_STOP_ON_FTH_ENABLED) == MEMS_ERROR)
+  {
+    return MEMS_ERROR;	  
+  }
+    return MEMS_SUCCESS;
+  }
+
+status_t CC_LSM6DS3_ACC_GetFIFO_AccelAndGyro(i16_t *_Abuff ,i16_t *_Gbuff)
+{
+  Type3Axis16bit_U raw_data_Gyro;  
+  Type3Axis16bit_U raw_data_Accl; 
+  
+  void *handle = 0;
+  
+  /* Read out raw accelerometer samples */
+    u8_t i;
+
+    /* read all 3 axis from FIFO */
+    for(i = 0; i < 3; i++)
+    {
+        LSM6DS3_ACC_GYRO_Get_GetFIFOData(handle, raw_data_Gyro.u8bit +2*i);     
+    }    
+    for(i = 0; i < 3; i++)
+    {
+        LSM6DS3_ACC_GYRO_Get_GetFIFOData(handle, raw_data_Accl.u8bit + 2*i); 
+    }    
+
+  _Gbuff[0] = raw_data_Gyro.i16bit[0];
+  _Gbuff[1] = raw_data_Gyro.i16bit[1];
+  _Gbuff[2] = raw_data_Gyro.i16bit[2];
+  
+  _Abuff[0] = raw_data_Accl.i16bit[0];
+  _Abuff[1] = raw_data_Accl.i16bit[1];
+  _Abuff[2] = raw_data_Accl.i16bit[2];
+  
+  return MEMS_SUCCESS;
+}
+
+status_t CC_SET_FIFO_RESET(void)
+{
+  void *handle = 0;
+
+    if(LSM6DS3_ACC_GYRO_W_FIFO_MODE(handle, LSM6DS3_ACC_GYRO_FIFO_MODE_BYPASS) == MEMS_ERROR)
+    {
+    return MEMS_ERROR;	  
+    }
+
+  
+    if(LSM6DS3_ACC_GYRO_W_FIFO_MODE(handle, LSM6DS3_ACC_GYRO_FIFO_MODE_FIFO) == MEMS_ERROR)
+  {
+    return MEMS_ERROR;
+  }
+    return MEMS_SUCCESS;
+
+}
+status_t CC_SET_FIFI_GYRO(uint8_t _Enable)
+{
+    void *handle = 0;
+  
+    if (_Enable)
+    {
+        if(LSM6DS3_ACC_GYRO_W_DEC_FIFO_G(handle, LSM6DS3_ACC_GYRO_DEC_FIFO_G_NO_DECIMATION) == MEMS_ERROR)
+        {
+            return MEMS_ERROR;	  
+        }
+    }
+    else
+    {
+        //GYRO
+        if(LSM6DS3_ACC_GYRO_W_DEC_FIFO_G(handle, LSM6DS3_ACC_GYRO_DEC_FIFO_G_DATA_NOT_IN_FIFO) == MEMS_ERROR)
+  {
+    return MEMS_ERROR;
+  }
+    }
+	return MEMS_SUCCESS;
+}
+
+status_t CC_SET_ACC_ODR(uint8_t _Enable)
+{
+    void *handle = 0;
+    if (_Enable)
+    {
+        if ( LSM6DS3_ACC_GYRO_W_ODR_XL( (void *)handle, LSM6DS3_ACC_GYRO_ODR_XL_52Hz) == MEMS_ERROR )
+        {
+            return MEMS_ERROR;
+        }
+    }
+    else
+    {
+        if ( LSM6DS3_ACC_GYRO_W_ODR_XL( (void *)handle, LSM6DS3_ACC_GYRO_ODR_XL_POWER_DOWN) == MEMS_ERROR )
+        {
+            return MEMS_ERROR;
+}
+
+    }
+    return MEMS_SUCCESS;
+}
+
+/////////////////////////// CC Gyro driver ver2 as below: /////////////////////////////
+
+static status_t _CC_LSM6DSX_RegRead(u8_t bReg, u8_t *baBuf, u8_t bByteLength)
+{
+
+    m_tx_buf[0] = bReg | 0x80;
+    
+    LSM6DS3_IF_WriteThenRead(m_tx_buf,1,m_rx_buf,bByteLength);
+        
+
+    for(uint8_t i = 0; i < bByteLength; i++)
+    {
+       *(baBuf+i) = m_rx_buf[i];
+    }
+    
+    return (MEMS_SUCCESS);
+}
+
+
+static status_t _CC_LSM6DSX_RegWrite(u8_t bReg, u8_t bData)
+{
+
+    m_tx_buf[0] = bReg & 0xFF;
+    m_tx_buf[1] = bData;    
+
+    LSM6DS3_IF_Write(m_tx_buf,2);
+
+    
+    return (MEMS_SUCCESS);
+}
+
+u16_t CC_LSM6DSX_FifoGetUnReadData(void)
+{
+    u16_t    _wUnReadData = 0;
+
+    LSM6DS3_ACC_GYRO_R_FIFONumOfEntries(0x00, &_wUnReadData);
+
+    return (_wUnReadData);
+}
+
+status_t CC_LSM6DSX_GyroPowerDown(void)
+{
+	
+    LSM6DS3_ACC_GYRO_W_ODR_G(0x00, LSM6DS3_ACC_GYRO_ODR_G_POWER_DOWN);
+
+    return (MEMS_SUCCESS);
+}
+
+status_t CC_LSM6DSX_AccelPowerDown(void)
+{
+    LSM6DS3_ACC_GYRO_W_ODR_XL(0x00, LSM6DS3_ACC_GYRO_ODR_XL_POWER_DOWN);
+
+    return (MEMS_SUCCESS);
+}
+
+void CC_LSM6DSX_FifoClean(void)
+{
+    LSM6DS3_ACC_GYRO_FIFO_EMPTY_t    _eIsEmpty = LSM6DS3_ACC_GYRO_FIFO_EMPTY_FIFO_NOT_EMPTY;
+    uint8_t                          _baBuf[2];
+
+    while (1)
+    {
+        LSM6DS3_ACC_GYRO_R_FIFOEmpty(0x00, &_eIsEmpty);
+
+        if (LSM6DS3_ACC_GYRO_FIFO_EMPTY_FIFO_EMPTY == _eIsEmpty)
+            return;
+
+        _CC_LSM6DSX_RegRead(LSM6DS3_ACC_GYRO_FIFO_DATA_OUT_L, _baBuf, 2);
+    }
+}
+
+status_t CC_LSM6DSX_GyroPowerON(LSM6DS3_ACC_GYRO_ODR_G_t eGyroODR)
+{
+    if ((LSM6DS3_ACC_GYRO_ODR_G_13Hz > eGyroODR) || (LSM6DS3_ACC_GYRO_ODR_G_1660Hz < eGyroODR))
+        return (MEMS_ERROR);
+
+    LSM6DS3_ACC_GYRO_W_ODR_G(0x00, eGyroODR);
+
+    return (MEMS_SUCCESS);
+}
+
+
+status_t CC_LSM6DSX_AccelPowerON(LSM6DS3_ACC_GYRO_ODR_XL_t eAccelODR)
+{
+    if ((LSM6DS3_ACC_GYRO_ODR_XL_13Hz > eAccelODR) || (LSM6DS3_ACC_GYRO_ODR_XL_13330Hz < eAccelODR))
+        return (MEMS_ERROR);
+
+    LSM6DS3_ACC_GYRO_W_ODR_XL(0x00, eAccelODR);
+
+    return (MEMS_SUCCESS);
+}
+
+void CC_LSM6DSX_FifoEnable(E_LSM6DSX_FIFO_TARGET_DEVICE eTargetDevice)
+{
+    CC_LSM6DSX_GyroPowerDown ();
+    CC_LSM6DSX_AccelPowerDown();
+
+    CC_LSM6DSX_FifoClean();
+
+    LSM6DS3_ACC_GYRO_W_FIFO_MODE(0x00, LSM6DS3_ACC_GYRO_FIFO_MODE_BYPASS);
+
+    CC_LSM6DSX_GyroPowerON (LSM6DS3_ACC_GYRO_ODR_G_52Hz);
+    CC_LSM6DSX_AccelPowerON(LSM6DS3_ACC_GYRO_ODR_XL_52Hz);
+
+    _CC_LSM6DSX_RegWrite(LSM6DS3_ACC_GYRO_FIFO_CTRL5, LSM6DS3_ACC_GYRO_ODR_FIFO_50Hz);
+
+    switch (eTargetDevice)
+    {
+	    case E_LSM6DSX_FIFO_CONTROL_ACCEL_GYRO:
+	         _CC_LSM6DSX_RegWrite(LSM6DS3_ACC_GYRO_FIFO_CTRL3,
+	                             (LSM6DS3_ACC_GYRO_DEC_FIFO_G_NO_DECIMATION | LSM6DS3_ACC_GYRO_DEC_FIFO_XL_NO_DECIMATION));
+	         break;
+
+	    case E_LSM6DSX_FIFO_CONTROL_ACCEL:
+	         LSM6DS3_ACC_GYRO_W_DEC_FIFO_XL(0x00, LSM6DS3_ACC_GYRO_DEC_FIFO_XL_NO_DECIMATION);
+	         break;
+
+	    case E_LSM6DSX_FIFO_CONTROL_GYRO:
+	         LSM6DS3_ACC_GYRO_W_DEC_FIFO_G(0x00, LSM6DS3_ACC_GYRO_DEC_FIFO_G_NO_DECIMATION);
+	         break;
+    }
+
+    _CC_LSM6DSX_RegWrite(LSM6DS3_ACC_GYRO_FIFO_CTRL5,
+                        (LSM6DS3_ACC_GYRO_ODR_FIFO_50Hz | LSM6DS3_ACC_GYRO_FIFO_MODE_DYN_STREAM_2));
+}
+
+
+void CC_LSM6DSX_FifoDisable(E_LSM6DSX_FIFO_TARGET_DEVICE eTargetDevice)
+{
+    switch (eTargetDevice)
+    {
+	    case E_LSM6DSX_FIFO_CONTROL_ACCEL_GYRO:
+	         _CC_LSM6DSX_RegWrite(LSM6DS3_ACC_GYRO_FIFO_CTRL3,
+	                             (LSM6DS3_ACC_GYRO_DEC_FIFO_G_DATA_NOT_IN_FIFO | LSM6DS3_ACC_GYRO_DEC_FIFO_XL_DATA_NOT_IN_FIFO));
+	         break;
+
+	    case E_LSM6DSX_FIFO_CONTROL_ACCEL:
+	         LSM6DS3_ACC_GYRO_W_DEC_FIFO_XL(0x00, LSM6DS3_ACC_GYRO_DEC_FIFO_XL_DATA_NOT_IN_FIFO);
+	         break;
+
+	    case E_LSM6DSX_FIFO_CONTROL_GYRO:
+	         LSM6DS3_ACC_GYRO_W_DEC_FIFO_G(0x00, LSM6DS3_ACC_GYRO_DEC_FIFO_G_DATA_NOT_IN_FIFO);
+	         break;
+    }
+
+    LSM6DS3_ACC_GYRO_W_FIFO_MODE(0x00, LSM6DS3_ACC_GYRO_FIFO_MODE_BYPASS);
+}
+
+
+
+void CC_Mems_Fifo_Register(cc_mems_fifo_user_type_t user_id, int16_t *pdata, uint16_t _max_size)
+{
+	mems_fifo_register_flag |= GET_BIT8(user_id);
+	mems_fifo_user[user_id].data_end_index = 0;
+	mems_fifo_user[user_id].max_size = _max_size;
+	mems_fifo_user[user_id].mems_fifo_data = pdata;
+}
+
+void CC_Mems_Fifo_UnRegister(cc_mems_fifo_user_type_t user_id)
+{
+	mems_fifo_register_flag &= ~ GET_BIT8(user_id);
+	mems_fifo_user[user_id].data_end_index = 0;
+	mems_fifo_user[user_id].mems_fifo_data = 0;
+
+}
+
+void CC_Mems_Fifo_Reset(cc_mems_fifo_user_type_t user_id)
+{
+	mems_fifo_user[user_id].data_end_index = 0;
+}
+
+uint16_t  CC_Mems_Fifo_Get_UnRead_Length(cc_mems_fifo_user_type_t user_id)
+{
+	return mems_fifo_user[user_id].data_end_index;
+}
+
+void CC_Mems_Fifo_Update_Data(void)
+{
+	uint16_t fifo_len = 0;
+	uint16_t data_index;
+	int16_t mems_data[3];
+		
+	LSM6DS3_ACC_GYRO_R_FIFONumOfEntries(0, &fifo_len);
+
+
+
+	fifo_len /= 3;
+
+	for(int i = 0; i < fifo_len; i++)
+	{
+		LSM6DS3_ACC_Get_Acceleration(mems_data, FIFO_EN);
+
+		for(uint8_t user_id = 0; user_id < MEMS_FIFO_MAX_USER; user_id++)
+		{
+			if(GET_BIT8(user_id) & mems_fifo_register_flag)
+			{
+				data_index = mems_fifo_user[user_id].data_end_index;
+
+				if(data_index < mems_fifo_user[user_id].max_size)
+				{
+					memcpy(&mems_fifo_user[user_id].mems_fifo_data[data_index], mems_data, 0x06);
+
+					mems_fifo_user[user_id].data_end_index += 3;
+				}
+			}
+		}
+	}
+
+}
+
+
+//#endif /*__LSM6DS3_SHARED__TYPES*/
 
 #endif //#if (MODULE_ACC == ACC_ST_LSM6DSL)

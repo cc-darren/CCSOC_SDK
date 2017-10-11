@@ -49,10 +49,11 @@
 #include <stddef.h>          // standard definition
 #include <stdint.h>          // standard integer
 #include <stdbool.h>         // standard boolean
+#include "co_list.h"         // list definition
 #include "arch.h"            // architectural definition
 #include "compiler.h"        // compiler definition
 #include "ke_config.h"       // kernel configuration
-#include "co_list.h"         // list definition
+
 
 /// Task Identifier. Composed by the task type and the task index.
 typedef uint16_t ke_task_id_t;
@@ -76,9 +77,17 @@ typedef uint8_t ke_state_t;
 typedef uint16_t ke_msg_id_t;
 
 /// Message structure.
+
+struct co_list_hdr_t
+{
+    /// Pointer to next co_list_hdr
+    struct co_list_hdr_t *next;
+};
+
 struct ke_msg
 {
-    struct co_list_hdr hdr;     ///< List header for chaining
+    //struct co_list_hdr hdr;     ///< List header for chaining
+    struct co_list_hdr_t hdr;   // modified by Samuel
 
     ke_msg_id_t     id;         ///< Message id.
     ke_task_id_t    dest_id;    ///< Destination kernel identifier.

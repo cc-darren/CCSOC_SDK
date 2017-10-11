@@ -31,6 +31,7 @@ extern void rwip_schedule(void);
 #endif
 
 extern void sys_InitMain(void);
+extern void venus_main(void);
 
 /*
  * MAIN FUNCTION
@@ -60,12 +61,15 @@ int main(void)
     GLOBAL_INT_START();
 
     drvi_initialize();
-    TracerInfo("== CC6801 Start ==\n");
+    TracerInfo("== CC6801 Start ==\r\n");
 
     /*******************************/
     /****** Application Start ******/
     /*******************************/
 
+#ifdef VENUS_WRISTBAND
+    venus_main();
+#endif
 
 
 

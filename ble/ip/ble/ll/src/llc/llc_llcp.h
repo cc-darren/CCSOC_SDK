@@ -31,9 +31,11 @@
  * INCLUDE FILES
  ****************************************************************************************
  */
+#include "co_list.h"
 #include "co_llcp.h"
 #include "ke_msg.h"
 #include "llc_task.h"
+
 
 #if (BLE_PERIPHERAL || BLE_CENTRAL)
 /// Maximum size of LMP unpacked parameters
@@ -45,10 +47,18 @@
  */
 
 /// LLCP pdu element structure
+
+struct co_list_hdr_st
+{
+    /// Pointer to next co_list_hdr
+    struct co_list_hdr_t2 *next;
+}; // added by Samuel
+
 struct llcp_pdu_tag
 {
     /// List element for chaining
-    struct co_list_hdr hdr;
+    //struct co_list_hdr hdr;
+    struct co_list_hdr_st hdr; // modified by Samuel
     /// Node index
     uint16_t idx;
     /// Pointer on the pdu to send
@@ -147,7 +157,7 @@ void llc_llcp_pause_enc_rsp_pdu_send(uint16_t conhdl);
  * @param[in] param         The parameters to be put in the encryption request
  ****************************************************************************************
  */
-void llc_llcp_enc_req_pdu_send(uint16_t conhdl, struct hci_le_start_enc_cmd *param);
+//void llc_llcp_enc_req_pdu_send(uint16_t conhdl, struct hci_le_start_enc_cmd *param);
 
 /**
  ****************************************************************************************

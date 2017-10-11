@@ -39,32 +39,32 @@
 
 static volatile int8_t cSpiXferDone;
 
-static void ssd1306_SetPwrCtlHigh(void)
+void ssd1306_SetPwrCtlHigh(void)
 {
     drvi_GpioWrite(OLED_SSD1306_PWR, 1);
 }
 
-static void ssd1306_SetPwrCtlLow(void)
+void ssd1306_SetPwrCtlLow(void)
 {
     drvi_GpioWrite(OLED_SSD1306_PWR, 0);
 }
 
-static void ssd1306_SetDataCmdHigh(void)
+void ssd1306_SetDataCmdHigh(void)
 {
     drvi_GpioWrite(OLED_SSD1306_DC, 1);
 }
 
-static void ssd1306_SetDataCmdLow(void)
+void ssd1306_SetDataCmdLow(void)
 {
     drvi_GpioWrite(OLED_SSD1306_DC, 0);
 }
 
-static void ssd1306_SetResetHigh(void)
+void ssd1306_SetResetHigh(void)
 {
     drvi_GpioWrite(OLED_SSD1306_RST, 1);
 }
 
-static void ssd1306_SetResetLow(void)
+void ssd1306_SetResetLow(void)
 {
     drvi_GpioWrite(OLED_SSD1306_RST, 0);
 }

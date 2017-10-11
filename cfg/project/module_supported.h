@@ -57,9 +57,13 @@
 #define GYR_NULL                0x3FFF //choose this if GYR is not in using
 
 
-
 //Supported OLED displays
 #define OLED_SOLOMON_SSD1306    0x4001
 #define OLED_NULL               0x4FFF //choose this if OLED is not in using
+
+//Supported PPG sensors
+#define PPG_PXT_PAH8002         0x5001
+#define PPG_NULL                0x5FFF //choose this if PPG is not in using
+
 
 #endif  //_MODULE_SUPPORTED_H_

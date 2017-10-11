@@ -447,6 +447,7 @@ extern const struct rwip_eif_api* rwip_eif_get(uint8_t type);
 void rwip_assert_err(const char * file, int line, int param0, int param1);
 #endif //RW_DEBUG
 
+void rwip_ignore_ll_conn_param_update_patch(void);
 
 ///@} ROOT
 

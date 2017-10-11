@@ -55,6 +55,8 @@ struct app_batt_env_tag app_batt_env;
  ****************************************************************************************
  */
 
+
+
 void app_batt_init(void)
 {
     // Reset the environment
@@ -145,7 +147,7 @@ static int batt_level_upd_handler(ke_msg_id_t const msgid,
     return (KE_MSG_CONSUMED);
 }
 
-
+/*
 static int bass_enable_rsp_handler(ke_msg_id_t const msgid,
                                     struct bass_enable_rsp const *param,
                                     ke_task_id_t const dest_id,
@@ -153,7 +155,7 @@ static int bass_enable_rsp_handler(ke_msg_id_t const msgid,
 {
     return (KE_MSG_CONSUMED);
 }
-
+*/
 /**
  ****************************************************************************************
  * @brief

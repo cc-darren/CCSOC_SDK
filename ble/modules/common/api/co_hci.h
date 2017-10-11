@@ -1283,7 +1283,7 @@ struct hci_set_con_slv_bcst_rec_cmd
     uint8_t lt_addr;
     /// Interval (in slots)
     uint16_t interval;
-    /// Clock_Offset (28 bits) - (CLKNslave – CLK) modulo 2^28
+    /// Clock_Offset (28 bits) - (CLKNslave ?CLK) modulo 2^28
     uint32_t clock_offset;
     /// Next_Connectionless_Slave_Broadcast_Clock (28 bits)
     uint32_t next_csb_clock;
@@ -4068,13 +4068,19 @@ struct hci_dbg_rd_ke_stats_cmd_cmp_evt
 };
 
 
+
 /// HCI Debug Read information about memory usage. - vendor specific
 struct hci_dbg_rd_mem_info_cmd_cmp_evt
 {
     ///Status
     uint8_t status;
     /// memory size currently used into each heaps.
-    uint16_t mem_used[KE_MEM_BLOCK_MAX];
+#if (BLE_HOST_PRESENT) // modified by Chiu
+	uint16_t mem_used[4];	
+#else
+	uint16_t mem_used[3];
+    //uint16_t mem_used[KE_MEM_BLOCK_MAX];
+#endif
     /// peak of memory usage measured
     uint32_t max_mem_used;
 };

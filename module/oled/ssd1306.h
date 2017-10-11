@@ -89,6 +89,13 @@
 #define SSD1306_PAGEADDRESS                           0x22
 #define SSD1306_PAGE_START_ADDRESS                    0xB0
 
+void ssd1306_SetPwrCtlHigh(void);
+void ssd1306_SetPwrCtlLow(void);
+void ssd1306_SetDataCmdHigh(void);
+void ssd1306_SetDataCmdLow(void);
+void ssd1306_SetResetHigh(void);
+void ssd1306_SetResetLow(void);
+
 void ssd1306_Init(void);
 void ssd1306_Reset(void);
 void ssd1306_HardReset(void);

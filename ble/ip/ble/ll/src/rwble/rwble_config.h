@@ -25,7 +25,7 @@
  */
 
 #include "rwip_config.h"
-
+#include "llc.h"
 
 /******************************************************************************************/
 /* -------------------------   COEXISTENCE SETUP      ------------------------------------*/
@@ -119,7 +119,7 @@ enum rwble_pti_config_idx
 #if (BLE_CENTRAL || BLE_PERIPHERAL)
     #define BLE_HEAP_MSG_SIZE               (256 * (BLE_CONNECTION_MAX+1) + 80 * (BLE_CONNECTION_MAX) + 96 * (2*BLE_CONNECTION_MAX+1))
     /// Size required to allocate environment variable for one link
-    #define BLE_HEAP_ENV_SIZE               (sizeof(struct llc_env_tag) + 4)
+    #define BLE_HEAP_ENV_SIZE              (sizeof(struct llc_env_tag) + 4)
 #else
     #define BLE_HEAP_MSG_SIZE               (256)
     /// Size required to allocate environment variable for one link

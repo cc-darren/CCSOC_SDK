@@ -34,6 +34,8 @@
 
 #include "rwip_task.h" // Task definitions
 #include "htp_common.h"
+#include "project.h"
+
 /*
  * DEFINES
  ****************************************************************************************
@@ -49,6 +51,10 @@ enum htpt_msg_id
 
     /// Send temperature value from APP
     HTPT_TEMP_SEND_REQ,
+    /// Send period measurement value from APP
+    HTPT_TEMP_PERIOD_MEAS_REQ,
+    /// Send swim measurement value from APP
+    HTPT_TEMP_SWIM_MEAS_REQ,    
     /// Send temperature response
     HTPT_TEMP_SEND_RSP,
 
@@ -153,6 +159,29 @@ struct htpt_temp_send_rsp
     uint8_t status;
 };
 
+/// Parameters of the @ref STEP_COUNT_SEND_REQ message
+struct htpt_period_meas_send_req
+{
+	struct htp_period_meas period_meas;
+	
+};
+
+/// Parameters of the @ref STEP_COUNT_SEND_REQ message
+struct htpt_swim_meas_send_req
+{
+	struct htp_swim_meas swim_meas;
+	
+};
+
+
+/// Parameters of the @ref STEP_COUNT_SEND_REQ message
+struct htpt_history_send_req
+{
+	struct htp_history_meas history_meas;
+	
+};
+
+
 /// Parameters of the @ref HTPT_MEAS_INTV_UPD_REQ message
 struct htpt_meas_intv_upd_req
 {
@@ -194,6 +223,45 @@ struct htpt_cfg_indntf_ind
     /// Notification Configuration (@see enum htpt_ntf_ind_cfg)
     uint8_t  ntf_ind_cfg;
 };
+
+
+typedef enum 
+{
+    eNOTIFYIDLE =0,
+    eNOTIFYCALL,
+    eNOTIFYSMS,
+    eNOTIFYLONGSIT,
+    eNOTIFYLIFTARM,
+    eNOTIFY_SETTING_HEARTRATESTRAP_MODE,
+    eNOTIFY_SETTING_24HHEARTRATE_MODE,
+    eNOTIFYNKNOWN
+}eNOTIFY_state_t;
+
+
+
+void CC_BLE_Cmd_SetHistoryType(uint8_t cVal);
+void CC_BLE_Cmd_ClrHistoryType(void);
+void CC_BLE_Cmd_ClrHistoryRecordIndex(void);
+uint8_t CC_BLE_Cmd_GetHistoryType(void);
+uint16_t CC_BLE_Cmd_GetHistoryRecordIndex(void);
+uint8_t CC_BLE_Cmd_GetHistoryDayIndex(void);
+void CC_BLE_Cmd_UpdateHistoryRecordIndex(void);
+void CC_BLE_Cmd_UpdateHistoryDayIndex(void);
+void CC_BLE_Cmd_GetCallState(uint8_t *_Notify,eCALL_state_t *_stCall,
+                                                            eSMS_state_t *_stSms,eStete_t *_stLongsit,
+                                                            eStete_t * _stLiftarm);
+eStete_t CC_BLE_Cmd_GetLongSitStatus(void);
+void CC_BLE_Cmd_GetSleepTimeSetting(db_sys_sleep_monitor_t *pData, uint8_t _bOption);
+eStete_t CC_BLE_Cme_Get_HeartRateStrapMode(void);
+eStete_t CC_BLE_Cme_Get_24HourHeartRateMode(void);
+uint8_t CC_BLE_Cmd_GetSwimmingEN(void);
+uint8_t CC_BLE_Cmd_CheckGeneralInfo(void);
+uint8_t CC_BLE_Cmd_CheckUnitInfo(void);
+uint8_t CC_BLE_Cmd_CheckClockAlarm(void);
+void CC_BLE_Cmd_GetGeneralInfo(CC_Ble_General_Info_T *pData, uint8_t _Option);
+void CC_BLE_Cmd_GetUnitInfo(CC_Ble_Unit_Info_T *pData,uint8_t _Option);
+void CC_BLE_Cmd_GetClockAlarm(CC_Ble_Clock_Alarm_T *pData,uint8_t _Option);
+void CC_BLE_Cmd_GetGeneralInfo(CC_Ble_General_Info_T *pData, uint8_t _Option);
 
 
 /// @} HTPTTASK

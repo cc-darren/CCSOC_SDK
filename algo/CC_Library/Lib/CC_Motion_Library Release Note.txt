@@ -1,0 +1,38 @@
+[SW 1.000.000]
+1. Refine arm liftimg algorithm to avoid false detection when typing and driving
+
+[SW 1.000.001]
+1. Refine sleep monitor algorithm to avoid deep and light sleep mode happen at the same time
+
+[SW 1.000.002]
+1. Phase in new 50HZ arm-lifting algorithm
+
+[SW 1.000.003]
+1. Fix arm-lifting issue for right hand configuration
+
+[SW 1.000.004]
+1. Fix false step issue for up/down stairs scenario
+
+[SW 1.000.005]
+1. Only trigger up/down stairs solution one time when steps is large than blocking step threshold 
+
+[SW 1.000.006]
+1. Align the compensation timing in PED algorithm
+
+[SW 1.000.007]
+1. Refine the parameters for arm-lifting for walking scenario
+
+[SW 1.000.008]
+1. Support calorie calculation for walking and running scenario
+
+[SW 1.000.009]
+1. Refine initial lock window timing for walking scenario for arm-lifting algorithm 
+
+[SW 1.000.010]
+1. 1st check in new sleep monitor algorithm and utility
+2. Refine arm lifting parameters 
+
+[SW 1.000.011]
+1. Refine idle check mechanism for sleep monitor
+2. Refine energy check mechanism for still scenario to avoid some false detection 
+
