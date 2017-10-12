@@ -250,7 +250,6 @@ void CC_BLE_Cmd_UpdateHistoryDayIndex(void);
 void CC_BLE_Cmd_GetCallState(uint8_t *_Notify,eCALL_state_t *_stCall,
                                                             eSMS_state_t *_stSms,eStete_t *_stLongsit,
                                                             eStete_t * _stLiftarm);
-eStete_t CC_BLE_Cmd_GetLongSitStatus(void);
 void CC_BLE_Cmd_GetSleepTimeSetting(db_sys_sleep_monitor_t *pData, uint8_t _bOption);
 eStete_t CC_BLE_Cme_Get_HeartRateStrapMode(void);
 eStete_t CC_BLE_Cme_Get_24HourHeartRateMode(void);
@@ -262,6 +261,9 @@ void CC_BLE_Cmd_GetGeneralInfo(CC_Ble_General_Info_T *pData, uint8_t _Option);
 void CC_BLE_Cmd_GetUnitInfo(CC_Ble_Unit_Info_T *pData,uint8_t _Option);
 void CC_BLE_Cmd_GetClockAlarm(CC_Ble_Clock_Alarm_T *pData,uint8_t _Option);
 void CC_BLE_Cmd_GetGeneralInfo(CC_Ble_General_Info_T *pData, uint8_t _Option);
+eStete_t CC_BLE_Cmd_GetLiftArmStatus(void);
+uint8_t  CC_BLE_Cmd_GetLiftArmBandSetting(void);
+eStete_t CC_BLE_Cmd_GetLongSitStatus(void);
 
 
 /// @} HTPTTASK

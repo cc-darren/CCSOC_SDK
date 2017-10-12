@@ -322,13 +322,6 @@ void CC_BLE_Cmd_GetCallState(uint8_t *_Notify,eCALL_state_t *_stCall,
     //return 0;
 }
 
-
-eStete_t CC_BLE_Cmd_GetLongSitStatus(void)
-{
-   return _cBleCmd_NotifyLongsit;
-}
-
-
 void CC_BLE_Cmd_GetSleepTimeSetting(db_sys_sleep_monitor_t *pData, uint8_t _bOption)
 {
     memcpy(pData,&s_tVensuSyncData._stSleepMonitorTimeSetting,sizeof(db_sys_sleep_monitor_t));
@@ -338,6 +331,22 @@ void CC_BLE_Cmd_GetSleepTimeSetting(db_sys_sleep_monitor_t *pData, uint8_t _bOpt
     s_tVensuSyncData._cNotify_SleepMonitorTimeSetting_Flag = false;
 
 }
+
+eStete_t CC_BLE_Cmd_GetLiftArmStatus(void)
+{
+   return _cBleCmd_NotifyLiftarm;
+}
+
+uint8_t  CC_BLE_Cmd_GetLiftArmBandSetting(void)
+{
+   return s_tVensuSyncData._eGeneralInfo.bBandLocation;
+}
+
+eStete_t CC_BLE_Cmd_GetLongSitStatus(void)
+{
+   return _cBleCmd_NotifyLongsit;
+}
+
 
 /**
  ****************************************************************************************

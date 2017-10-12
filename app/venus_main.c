@@ -1481,8 +1481,7 @@ static void _sensor_power_down_mag(void)
 static void _sensor_algorithm_liftarm_proc()
 {
     //TracerInfo("_sensor_algorithm_liftarm_proc \r\n");
-    //if (eEnable== s_tVenusCB.cLiftarmEn) // remarked by Samuel
-    if(1) 
+    if (eEnable== s_tVenusCB.cLiftarmEn)
     {
         //static uint8_t  _cTmp =0;	
         //if (_cTmp ==0)
@@ -2205,13 +2204,12 @@ void venus_algorithm_init()
     CC_CalorieBurn_Open();
     
     //#ifdef LIFTARM_EN
-    s_tVenusCB.cLiftarmEn = eEnable; //CC_BLE_Cmd_GetLiftArmStatus();  //// modified by Samuel
+    s_tVenusCB.cLiftarmEn = CC_BLE_Cmd_GetLiftArmStatus();  
     if ( eEnable==s_tVenusCB.cLiftarmEn )
     {
         liftarm_open();
-        s_tVenusCB.stGeneralInfo.bBandLocation = 0x01; // right hand //CC_BLE_Cmd_GetLiftArmBandSetting();
-        //liftarm_set_hangconfig(s_tVenusCB.stGeneralInfo.bBandLocation);
-        liftarm_set_hangconfig(0x01); // right hand for test!!!!!!!!
+        s_tVenusCB.stGeneralInfo.bBandLocation = CC_BLE_Cmd_GetLiftArmBandSetting();
+        liftarm_set_hangconfig(s_tVenusCB.stGeneralInfo.bBandLocation);
     }
     else 
     {        
