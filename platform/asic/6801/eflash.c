@@ -52,7 +52,7 @@ void cc6801_EflashInit(void)
     //not to use interrupt handler in Eflash.
     //NVIC_EnableIRQ(EFLASH_IRQn);
 }
-
+IN_RET_RAM_BEGIN
 void cc6801_EflashFlush(void) 
 {
     uint32_t tdata;
@@ -65,7 +65,7 @@ void cc6801_EflashFlush(void)
         rd(SCU_ICACHE_REG,tdata);
     } while((tdata&FLUSH_EN)!=0);
 }
-
+IN_RET_RAM_END
 BOOL cc6801_EflashEraseALL(void)
 {
 

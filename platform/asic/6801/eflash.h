@@ -66,7 +66,7 @@ BOOL cc6801_EflashEraseALL(void);
 BOOL cc6801_EflashErasePage(uint32_t adr);
 void cc6801_EflashProgram(uint32_t dwEflashAdr,unsigned char * pBufAdr,uint32_t dwBufSize);
 
-#define EFLASH_DMAMODE 1
+//#define EFLASH_DMAMODE 1
 
 
 #endif

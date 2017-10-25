@@ -46,11 +46,13 @@ Head Block of The File
 // Sec 2: Constant Definitions, Imported Symbols, miscellaneous
 
 #if defined(FPGA) && FPGA
-	#ifdef VENUS_WRISTBAND
-		#include "project_FPGA_Venus.h"
-	#else
-    	#include "project_FPGA.h"
-	#endif
+    #if defined(BOOTLOADER) && BOOTLOADER
+        #include "project_bootloader_FPGA.h"
+    #elif defined(VENUS_WRISTBAND) && VENUS_WRISTBAND
+        #include "project_FPGA_Venus.h"
+    #else
+        #include "project_FPGA.h"
+    #endif
 #elif defined(ASIC) && ASIC
     #include "project_ASIC.h"
 #else

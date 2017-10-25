@@ -13,6 +13,7 @@
 #include "drvi_spi.h"
 #include "tracer.h"
 
+#if defined SPI_INUSE && (SPI_INUSE)
 int drvi_SpiInit(void)
 {
     T_SpiDevice tSpiDev;
@@ -45,4 +46,4 @@ int drvi_SpiInit(void)
 
     return iResult;
 }
-
+#endif

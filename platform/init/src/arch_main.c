@@ -24,6 +24,9 @@
 #ifdef CFG_BLE_APP
 #include "rwble.h"  //avoid warning or rwble_isr()
 #endif
+#ifdef BOOTLOADER
+#include "bootloader.h"
+#endif
 
 uint8_t g_GyroEnable = 1;
 
@@ -68,12 +71,11 @@ int main(void)
     /*******************************/
     /****** Application Start ******/
     /*******************************/
-
-#ifdef VENUS_WRISTBAND
+#ifdef BOOTLOADER
+    bootloader_main();
+#elif VENUS_WRISTBAND
     venus_main();
 #endif
-
-
 
 
 
