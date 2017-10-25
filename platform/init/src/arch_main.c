@@ -25,6 +25,8 @@
 #include "rwble.h"  //avoid warning or rwble_isr()
 #endif
 
+uint8_t g_GyroEnable = 1;
+
 #ifdef CFG_BLE_APP
 extern void rwip_init(uint32_t);
 extern void rwip_schedule(void);

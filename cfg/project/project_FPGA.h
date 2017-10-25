@@ -146,6 +146,20 @@ Head Block of The File
 #define OLED_IF                 UseInterface(SPI,2)
 
 /**************************************************
+*   Choose PPG model and config PPG interface
+*   (pick one PPG sensor from module_supported.h)
+*   (please select PPG_NULL if OLED is not in use)
+*
+*   PPG_IF : the interface assigned to PPG
+*
+*   PPG_IF_TYPE / PPG_IF_ID will be generated automatically.
+*   PPG_IF_TYPE : the PPG interface type
+*   PPG_IF_ID   : the PPG interface id
+***************************************************/
+#define MODULE_PPG              PPG_PXT_PAH8002
+#define PPG_IF                  UseInterface(I2C,1)
+
+/**************************************************
 *   Config Tracer interface
 *
 *   TRACER_IF : the interface assigned to Tracer

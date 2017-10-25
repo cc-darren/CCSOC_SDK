@@ -225,7 +225,7 @@ volatile uint8_t  *p_llm_le_event_mask = (volatile uint8_t *) 0x20000680;
 
 char deviceName[10] = {'V','N','S','_'};
 S_VenusCB    s_tVenusCB;
-uint8_t g_GyroEnable = 1;
+extern uint8_t g_GyroEnable;
 static short _wGyroData[3]  = { 0 };
 static short _wAccelData[3]  = { 0 };
 float g_fSleepCalSeconds =0;

@@ -45,9 +45,6 @@ Head Block of The File
 
 // Sec 2: Constant Definitions, Imported Symbols, miscellaneous
 
-#define FPGA        1
-#define VENUS_WRISTBAND		1
-
 #if defined(FPGA) && FPGA
 	#ifdef VENUS_WRISTBAND
 		#include "project_FPGA_Venus.h"

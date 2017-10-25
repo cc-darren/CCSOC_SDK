@@ -333,9 +333,9 @@
             <v6WtE>0</v6WtE>
             <VariousControls>
               <MiscControls>--no_inline --no_multifile -DMSC_CLOCK</MiscControls>
-              <Define></Define>
+              <Define>FPGA</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\service\tracer;..\..\test;..\..\test\ext</IncludePath>
+              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app\Display;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\service\tracer;..\..\test;..\..\test\ext</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -377,6 +377,26 @@
       <Groups>
         <Group>
           <GroupName>algo</GroupName>
+        </Group>
+        <Group>
+          <GroupName>app</GroupName>
+          <Files>
+            <File>
+              <FileName>appDisplay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\Display\appDisplay.c</FilePath>
+            </File>
+            <File>
+              <FileName>font.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\Display\font.c</FilePath>
+            </File>
+            <File>
+              <FileName>icon.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\Display\icon.c</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>asic</GroupName>
@@ -425,6 +445,11 @@
               <FileName>i2s.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\asic\6801\i2s.c</FilePath>
+            </File>
+            <File>
+              <FileName>lowpower.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\lowpower.c</FilePath>
             </File>
             <File>
               <FileName>pwm.c</FileName>
@@ -522,26 +547,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>app</GroupName>
-          <Files>
-            <File>
-              <FileName>appDisplay.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\appDisplay.c</FilePath>
-            </File>
-            <File>
-              <FileName>font.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\font.c</FilePath>
-            </File>
-            <File>
-              <FileName>icon.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\icon.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>module</GroupName>
           <Files>
             <File>
@@ -618,11 +623,6 @@
               <FileName>tracer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\service\tracer\tracer.c</FilePath>
-            </File>
-            <File>
-              <FileName>low_power.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\low_power\low_power.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1137,9 +1137,9 @@
             <v6WtE>0</v6WtE>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define></Define>
+              <Define>FPGA</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app;..\..\platform\asic\6801;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\service\tracer;..\..\test;..\..\test\ext</IncludePath>
+              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app\Display;..\..\platform\asic\6801;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\service\tracer;..\..\test;..\..\test\ext</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1181,6 +1181,26 @@
       <Groups>
         <Group>
           <GroupName>algo</GroupName>
+        </Group>
+        <Group>
+          <GroupName>app</GroupName>
+          <Files>
+            <File>
+              <FileName>appDisplay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\Display\appDisplay.c</FilePath>
+            </File>
+            <File>
+              <FileName>font.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\Display\font.c</FilePath>
+            </File>
+            <File>
+              <FileName>icon.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\Display\icon.c</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>asic</GroupName>
@@ -1229,6 +1249,11 @@
               <FileName>i2s.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\asic\6801\i2s.c</FilePath>
+            </File>
+            <File>
+              <FileName>lowpower.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801\lowpower.c</FilePath>
             </File>
             <File>
               <FileName>pwm.c</FileName>
@@ -1326,26 +1351,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>app</GroupName>
-          <Files>
-            <File>
-              <FileName>appDisplay.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\appDisplay.c</FilePath>
-            </File>
-            <File>
-              <FileName>font.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\font.c</FilePath>
-            </File>
-            <File>
-              <FileName>icon.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\icon.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>module</GroupName>
           <Files>
             <File>
@@ -1422,11 +1427,6 @@
               <FileName>tracer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\service\tracer\tracer.c</FilePath>
-            </File>
-            <File>
-              <FileName>low_power.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\low_power\low_power.c</FilePath>
             </File>
           </Files>
         </Group>
