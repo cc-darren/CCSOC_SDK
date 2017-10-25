@@ -196,8 +196,11 @@ static int otat_notify_send_req_handler(ke_msg_id_t const msgid,
             otat_env->operation->conidx  = GAP_INVALID_CONIDX;
 
             otat_env->operation->op      = OTAT_CFG_OTA_NTF;
+#ifdef BLE_OTA_BL_MODE_EN
+            otat_env->operation->handle  = OTAT_HANDLE(OTAS_IDX_OTA_CTRL_PT_VAL);
+#else
             otat_env->operation->handle  = OTAT_HANDLE(OTAS_IDX_OTA_VAL);
-            
+#endif            
 
 			otat_env->operation->length  = sizeof(struct otat_notify_send_req);
 
@@ -505,16 +508,33 @@ static int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
     switch(att_idx)
     {
 
+#ifdef BLE_OTA_BL_MODE_EN
+         case OTAS_IDX_OTA_PKT_VAL:
+         {
+                status = ATT_ERR_NO_ERROR; // modified by Samuel
+         }break;
+
+         case OTAS_IDX_OTA_CTRL_PT_VAL:
+         {
+                status = ATT_ERR_NO_ERROR; // modified by Samuel
+         }break;
+
+         case OTAS_IDX_OTA_CTRL_PT_NTF_CFG:
+         {
+                status = otat_update_ntf_ind_cfg(conidx, OTAT_CFG_OTA_NTF, PRF_CLI_START_NTF, co_read16p(param->value));
+         }break;
+
+#else
          case OTAS_IDX_OTA_VAL:
          {
                 status = ATT_ERR_NO_ERROR; // modified by Samuel
          }break;
 
-         case OTAS_IDX_OTA_IND_CFG:
+         case OTAS_IDX_OTA_NTF_CFG:
          {
                 status = otat_update_ntf_ind_cfg(conidx, OTAT_CFG_OTA_NTF, PRF_CLI_START_NTF, co_read16p(param->value));
          }break;
-
+#endif
 
          default:
          {
@@ -560,12 +580,22 @@ static int gattc_read_req_ind_handler(ke_msg_id_t const msgid, struct gattc_writ
 
     switch(att_idx)
     {
-        case OTAS_IDX_OTA_IND_CFG:
+#ifdef BLE_OTA_BL_MODE_EN
+        case OTAS_IDX_OTA_CTRL_PT_NTF_CFG:
         {
             value_size = OTAT_IND_NTF_CFG_MAX_LEN;
             co_write16p(value, ((otat_env->ntf_ind_cfg[conidx] & OTAT_CFG_OTA_NTF) != 0) ? PRF_CLI_START_NTF : PRF_CLI_STOP_NTFIND);
 
         }break;
+
+#else
+        case OTAS_IDX_OTA_NTF_CFG:
+        {
+            value_size = OTAT_IND_NTF_CFG_MAX_LEN;
+            co_write16p(value, ((otat_env->ntf_ind_cfg[conidx] & OTAT_CFG_OTA_NTF) != 0) ? PRF_CLI_START_NTF : PRF_CLI_STOP_NTFIND);
+
+        }break;
+#endif        
 /*
         case HTS_IDX_MEAS_INTV_VAL:
         {

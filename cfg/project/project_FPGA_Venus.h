@@ -427,6 +427,7 @@ Declaration of static Global Variables & Functions
 #define PEDO_EN
 #define HRM_EN
 //#define SLEEP_EN
+#define BLE_OTA_BL_MODE_EN
 
 #define TOUCH_INT_PIN       1
 #define HRM_INT_PIN         22

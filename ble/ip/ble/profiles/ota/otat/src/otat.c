@@ -38,6 +38,7 @@
  * OTAT PROFILE ATTRIBUTES
  ****************************************************************************************
  */
+#if 0
 /// Full OTA Database Description - Used to add attributes into the database
 const struct attm_desc otat_att_db[OTAS_IDX_NB] =
 {
@@ -50,7 +51,7 @@ const struct attm_desc otat_att_db[OTAS_IDX_NB] =
     [OTAS_IDX_OTA_VAL]         =   {ATT_CHAR_TEMPERATURE_MEAS, PERM(NTF, ENABLE)|PERM(WRITE_REQ, ENABLE), PERM(RI, ENABLE), OTAT_OTA_MAX_LEN},
     //[OTAS_IDX_OTA_VAL]         =   {ATT_CHAR_TEMPERATURE_MEAS, PERM(NTF, ENABLE), PERM(RI, ENABLE), 0},
     // OTA Characteristic - Client Characteristic Configuration Descriptor
-    [OTAS_IDX_OTA_IND_CFG]     =   {ATT_DESC_CLIENT_CHAR_CFG, PERM(RD, ENABLE)|PERM(WRITE_REQ, ENABLE), 0, 0},
+    [OTAS_IDX_OTA_NTF_CFG]     =   {ATT_DESC_CLIENT_CHAR_CFG, PERM(RD, ENABLE)|PERM(WRITE_REQ, ENABLE), 0, 0},
 /*
     // Temperature Type Characteristic Declaration
     [HTS_IDX_TEMP_TYPE_CHAR]        =   {ATT_DECL_CHARACTERISTIC, PERM(RD, ENABLE), 0, 0},
@@ -74,17 +75,44 @@ const struct attm_desc otat_att_db[OTAS_IDX_NB] =
     [HTS_IDX_MEAS_INTV_VAL_RANGE]   =   {ATT_DESC_VALID_RANGE, PERM(RD, ENABLE), PERM(RI, ENABLE), 0},
 */    
 };
+#endif
 
-
-//#define BLE_DFU_BASE_UUID   {0x50, 0xEA, 0xDA, 0x30, 0x88, 0x83, 0xB8, 0x9F, 0x60, 0x4F, 0x15, 0xF3, 0x00, 0x00, 0x40, 0x8E} /**< Used vendor specific UUID. */
-const uint8_t BLE_DFU_BASE_UUID_128[ATT_UUID_128_LEN] = {0x50, 0xEA, 0xDA, 0x30, 0x88, 0x83, 0xB8, 0x9F, 0x60, 0x4F, 0x15, 0xF3, 0x01, 0x00, 0x40, 0x8E}; /**< Used vendor specific UUID. */
-//const uint8_t ATT_DECL_PRIMARY_SERVICE_128[ATT_UUID_128_LEN] =  {0x00, 0x28, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}; 
-#define ATT_DECL_PRIMARY_SERVICE_128  {0x00, 0x28, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+#ifdef BLE_OTA_BL_MODE_EN
+const uint8_t BLE_DFU_BASE_UUID_128[ATT_UUID_128_LEN] = {0x59, 0xFE, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}; // Nordic Secure DFU Service
+#define ATT_DECL_PRIMARY_SERVICE_128  {0x59, 0xFE, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
 #define ATT_DECL_CHARACTERISTIC_128   {0x03, 0x28, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00} 
-//#define ATT_CHAR_TEMPERATURE_MEAS_128 {0x1C, 0x2A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00} 
-#define ATT_CHAR_USER_DEFINED_DFU_128 {0x50, 0xEA, 0xDA, 0x30, 0x88, 0x83, 0xB8, 0x9F, 0x60, 0x4F, 0x15, 0xF3, 0x01, 0x00, 0x40, 0x8E} 
+#define ATT_CHAR_OTA_PACKET_128 {0x50, 0xEA, 0xDA, 0x30, 0x88, 0x83, 0xB8, 0x9F, 0x60, 0x4F, 0x15, 0xF3, 0x02, 0x00, 0xC9, 0x8E} 
+#define ATT_CHAR_OTA_CTRL_PT_128 {0x50, 0xEA, 0xDA, 0x30, 0x88, 0x83, 0xB8, 0x9F, 0x60, 0x4F, 0x15, 0xF3, 0x01, 0x00, 0xC9, 0x8E} 
 #define ATT_DESC_CLIENT_CHAR_CFG_128  {0x02, 0x29, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00} 
 
+ 
+const struct attm_desc_128 otat_att_db_128[OTAS_IDX_NB] =
+{
+    //  Service Declaration
+    [OTAS_IDX_SVC]                   =   {ATT_DECL_PRIMARY_SERVICE_128, PERM(RD, ENABLE), 0, 0},
+
+    // OTA DFU Packet Characteristic Declaration
+    [OTAS_IDX_OTA_PKT_CHAR]              =   {ATT_DECL_CHARACTERISTIC_128, PERM(RD, ENABLE), 0, 0},
+    // OTA Characteristic Value
+    [OTAS_IDX_OTA_PKT_VAL]               =   {ATT_CHAR_OTA_PACKET_128, PERM(WRITE_COMMAND, ENABLE), PERM(RI, ENABLE)| PERM(UUID_LEN, UUID_128), OTAT_NOTIFY_SEND_MAX_LEN},
+
+
+    // OTA Control Point Characteristic Declaration
+    [OTAS_IDX_OTA_CTRL_PT_CHAR]              =   {ATT_DECL_CHARACTERISTIC_128, PERM(RD, ENABLE), 0, 0},
+    // OTA Characteristic Value
+    [OTAS_IDX_OTA_CTRL_PT_VAL]               =   {ATT_CHAR_OTA_CTRL_PT_128, PERM(NTF, ENABLE)|PERM(WRITE_REQ, ENABLE), PERM(RI, ENABLE)| PERM(UUID_LEN, UUID_128), OTAT_NOTIFY_SEND_MAX_LEN},    
+    // OTA Characteristic - Client Characteristic Configuration Descriptor
+    [OTAS_IDX_OTA_CTRL_PT_NTF_CFG]           =   {ATT_DESC_CLIENT_CHAR_CFG_128, PERM(RD, ENABLE)|PERM(WRITE_REQ, ENABLE), 0, 0},
+};
+
+
+
+#else //for app 
+const uint8_t BLE_DFU_BASE_UUID_128[ATT_UUID_128_LEN] = {0x50, 0xEA, 0xDA, 0x30, 0x88, 0x83, 0xB8, 0x9F, 0x60, 0x4F, 0x15, 0xF3, 0x01, 0x00, 0x40, 0x8E}; /**< Used vendor specific UUID. */
+#define ATT_DECL_PRIMARY_SERVICE_128  {0x00, 0x28, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+#define ATT_DECL_CHARACTERISTIC_128   {0x03, 0x28, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00} 
+#define ATT_CHAR_USER_DEFINED_DFU_128 {0x50, 0xEA, 0xDA, 0x30, 0x88, 0x83, 0xB8, 0x9F, 0x60, 0x4F, 0x15, 0xF3, 0x01, 0x00, 0x40, 0x8E} 
+#define ATT_DESC_CLIENT_CHAR_CFG_128  {0x02, 0x29, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00} 
 
  
 const struct attm_desc_128 otat_att_db_128[OTAS_IDX_NB] =
@@ -97,9 +125,9 @@ const struct attm_desc_128 otat_att_db_128[OTAS_IDX_NB] =
     // OTA Characteristic Value
     [OTAS_IDX_OTA_VAL]               =   {ATT_CHAR_USER_DEFINED_DFU_128, PERM(NTF, ENABLE)|PERM(WRITE_REQ, ENABLE), PERM(RI, ENABLE)| PERM(UUID_LEN, UUID_128), OTAT_OTA_MAX_LEN},
     // OTA Characteristic - Client Characteristic Configuration Descriptor
-    [OTAS_IDX_OTA_IND_CFG]           =   {ATT_DESC_CLIENT_CHAR_CFG_128, PERM(RD, ENABLE)|PERM(WRITE_REQ, ENABLE), 0, 0},
+    [OTAS_IDX_OTA_NTF_CFG]           =   {ATT_DESC_CLIENT_CHAR_CFG_128, PERM(RD, ENABLE)|PERM(WRITE_REQ, ENABLE), 0, 0},
 };
-
+#endif
 
 static uint16_t otat_compute_att_table(uint16_t features);
 
@@ -131,7 +159,7 @@ static uint8_t otat_init(struct prf_task_env* env, uint16_t* start_hdl, uint16_t
 
         status = attm_svc_create_db_128(start_hdl, BLE_DFU_BASE_UUID_128, (uint8_t *)&cfg_flag, 
                    OTAS_IDX_NB, NULL, env->task,  &otat_att_db_128[0],
-                   (sec_lvl & (PERM_MASK_SVC_DIS)) | PERM(SVC_MI, DISABLE) | PERM(SVC_UUID_LEN, UUID_128));
+                   (sec_lvl & (PERM_MASK_SVC_DIS)) | PERM(SVC_MI, DISABLE));
     }
     
     if( status == ATT_ERR_NO_ERROR )
@@ -231,9 +259,16 @@ static void otat_cleanup(struct prf_task_env* env, uint8_t conidx, uint8_t reaso
  */
 static uint16_t otat_compute_att_table(uint16_t features)
 {
+
+#ifdef BLE_OTA_BL_MODE_EN
+    //OTA Characteristic is mandatory
+    uint16_t att_table = OTAT_OTA_PKT_MASK | OTAT_OTA_CTRL_PT_MASK;
+
+
+#else
     //OTA Characteristic is mandatory
     uint16_t att_table = OTAT_OTA_MASK;
-
+#endif
     /*
 
     //Temperature Measurement Characteristic is mandatory
@@ -450,7 +485,19 @@ uint16_t otat_att_hdl_get(struct otat_env_tag* otat_env, uint8_t att_idx)
     do
     {
         // Mandatory attribute handle
-        if(att_idx > OTAS_IDX_OTA_IND_CFG)
+#ifdef BLE_OTA_BL_MODE_EN
+        //if(att_idx > OTAS_IDX_OTA_PKT_VAL)
+        //{
+        //    handle += OTAT_OTA_ATT_NB;
+        //}
+        //else
+        //{
+            handle += att_idx;
+            break;
+        //}
+
+#else
+        if(att_idx > OTAS_IDX_OTA_NTF_CFG)
         {
             handle += OTAT_OTA_ATT_NB;
         }
@@ -459,6 +506,7 @@ uint16_t otat_att_hdl_get(struct otat_env_tag* otat_env, uint8_t att_idx)
             handle += att_idx;
             break;
         }
+#endif        
 /*
         // Temperature Type
         if((OTAT_IS_FEATURE_SUPPORTED(otat_env->features, OTAT_TEMP_TYPE_CHAR_SUP)) && (att_idx > HTS_IDX_TEMP_TYPE_VAL))
@@ -537,7 +585,7 @@ uint16_t otat_att_hdl_get(struct otat_env_tag* otat_env, uint8_t att_idx)
 
 uint8_t otat_att_idx_get(struct otat_env_tag* otat_env, uint16_t handle)
 {
-    uint16_t handle_ref = otat_env->shdl;
+    uint16_t handle_ref = otat_env->shdl; // hangle of start
     uint8_t att_idx = ATT_INVALID_IDX;
 
     do
@@ -548,16 +596,25 @@ uint8_t otat_att_idx_get(struct otat_env_tag* otat_env, uint16_t handle)
             break;
         }
 
-        // Mandatory attribute handle
-        handle_ref += OTAT_OTA_ATT_NB;
+        // Mandatory attribute handle, OTA packet:
+        handle_ref += OTAT_OTA_PKT_ATT_NB;
+
+        if(handle < handle_ref) 
+        {
+            att_idx = OTAS_IDX_OTA_CTRL_PT_CHAR - (handle_ref - handle);
+            break;
+        }
 
 
-
-        if(handle < handle_ref) //test by Samuel
+        // OTA control point:
+        handle_ref += OTAT_OTA_CTRL_PT_ATT_NB;
+        
+        if(handle < handle_ref)
         {
             att_idx = OTAS_IDX_NB - (handle_ref - handle);
             break;
         }
+
 /*
 
         if(handle < handle_ref)
