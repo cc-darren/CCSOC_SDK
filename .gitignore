@@ -3,3 +3,4 @@ Objects
 *.uvguix.*
 JLinkLog.txt
 JLinkSettings.ini
+/platform/init/src/backup
