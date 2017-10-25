@@ -147,6 +147,9 @@ enum TASK_API_ID
     TASK_ID_BCSS         = 63,   // Body Composition Server Task
     TASK_ID_BCSC         = 64,   // Body Composition Client Task
 
+    TASK_ID_OTAT         = 65,   // OTA Target Task
+    TASK_ID_OTAC         = 66,   // OTA Controller Task ==>????? need?
+    
     /* 240 -> 241 reserved for Audio Mode 0 */
     TASK_ID_AM0          = 240,  // BLE Audio Mode 0 Task
     TASK_ID_AM0_HAS      = 241,  // BLE Audio Mode 0 Hearing Aid Service Task

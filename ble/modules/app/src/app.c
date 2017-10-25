@@ -58,6 +58,10 @@
 #include "app_hid.h"                 // HID Application Definitions
 #endif //(BLE_APP_HID)
 
+#if (BLE_APP_OTA)
+#include "app_ota.h"                 // OTA Application Definitions
+#endif //(BLE_APP_OTA)
+
 #if (DISPLAY_SUPPORT)
 #include "app_display.h"             // Application Display Definition
 #endif //(DISPLAY_SUPPORT)
@@ -327,6 +331,11 @@ void appm_init()
     // Audio Mode 0 Module
     am0_app_init();
     #endif // defined(BLE_APP_AM0)
+
+    #if (BLE_APP_OTA)
+    // OTA
+    app_ota_init();
+    #endif //(BLE_APP_OTA)    
 }
 
 bool appm_add_svc(void)

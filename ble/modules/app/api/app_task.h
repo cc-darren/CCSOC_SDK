@@ -90,6 +90,11 @@ enum appm_msg
     /// Timer used to disconnect the moue if no activity is detecter
     APP_HID_MOUSE_TIMEOUT_TIMER,
     #endif //(BLE_APP_HID)
+
+    #if (BLE_APP_OTA)
+    /// Timer used to refresh the OTA measurement value
+    APP_OTA_MEAS_INTV_TIMER,
+    #endif //(BLE_APP_OTA)    
 };
 
 

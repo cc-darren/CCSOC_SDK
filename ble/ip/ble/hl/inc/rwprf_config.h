@@ -342,7 +342,12 @@
 #define BLE_UDS_CLIENT          0
 #endif // defined(CFG_PRF_UDSC)
 
-
+/// Nordic based OTA
+#if defined(CFG_PRF_OTA)
+#define BLE_OTA_TARGET          1
+#else
+#define BLE_OTA_TARGET          0
+#endif
 
 /// BLE_CLIENT_PRF indicates if at least one client profile is present
 #if (BLE_PROX_MONITOR || BLE_FINDME_LOCATOR || BLE_HT_COLLECTOR || BLE_BP_COLLECTOR \
@@ -362,7 +367,7 @@
         || BLE_BATT_SERVER || BLE_HID_DEVICE || BLE_GL_SENSOR || BLE_RSC_SENSOR  \
         || BLE_CSC_SENSOR || BLE_CP_SENSOR || BLE_LN_SENSOR || BLE_AN_SERVER \
         || BLE_PAS_SERVER || BLE_IPS_SERVER || BLE_ENV_SERVER || BLE_WSC_SERVER \
-        || BLE_UDS_SERVER || BLE_BCS_SERVER)
+        || BLE_UDS_SERVER || BLE_BCS_SERVER || BLE_OTA_TARGET)
 #define BLE_SERVER_PRF          1
 #else
 #define BLE_SERVER_PRF          0
@@ -479,6 +484,8 @@
 #define BLE_SERVER_PRF              0
 /// Profile Client
 #define BLE_CLIENT_PRF              0
+/// OTA Server
+#define BLE_OTA_TARGET              0
 #endif //(BLE_OBSERVER || BLE_BROADCASTER)
 
 

@@ -218,6 +218,10 @@ extern const struct prf_task_cbs* udss_prf_itf_get(void);
 extern const struct prf_task_cbs* udsc_prf_itf_get(void);
 #endif //(BLE_UDS_SERVER)
 
+#if (BLE_OTA_TARGET)
+extern const struct prf_task_cbs* otat_prf_itf_get(void);
+#endif //(BLE_UDS_SERVER)
+
 /*
  * TYPE DEFINITIONS
  ****************************************************************************************
@@ -259,7 +263,7 @@ static const struct prf_task_cbs * prf_itf_get(uint16_t task_id)
     {
         #if (BLE_HT_THERMOM)
         case TASK_ID_HTPT:
-            prf_cbs = htpt_prf_itf_get();
+           // prf_cbs = htpt_prf_itf_get();  // comment by Samuel
             break;
         #endif // (BLE_HT_THERMOM)
 
@@ -533,6 +537,11 @@ static const struct prf_task_cbs * prf_itf_get(uint16_t task_id)
             break;
         #endif //(BLE_UDS_CLIENT)
 
+        #if (BLE_OTA_TARGET)
+        case TASK_ID_OTAT:
+            prf_cbs = otat_prf_itf_get();
+            break;
+        #endif //(BLE_OTA_TARGET)
         default: /* Nothing to do */ break;
     }
 

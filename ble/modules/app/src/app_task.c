@@ -63,6 +63,11 @@
 #include "am0_app.h"             // Audio Mode 0 Application
 #endif //defined(BLE_APP_AM0)
 
+#if (BLE_APP_OTA)
+#include "app_ota.h"               // OTA Module Definition
+#include "otat_task.h"
+#endif //(BLE_APP_OTA)
+
 #if (DISPLAY_SUPPORT)
 #include "app_display.h"          // Application Display Definition
 #endif //(DISPLAY_SUPPORT)
@@ -537,6 +542,11 @@ static int gapc_disconnect_ind_handler(ke_msg_id_t const msgid,
     // Restart Advertising
     appm_start_advertising();
     #endif //(!BLE_APP_HID)
+
+    #if (BLE_APP_OTA)
+    // Stop interval timer
+    app_ota_stop_timer();
+    #endif //(BLE_APP_OTA)
 
     return (KE_MSG_CONSUMED);
 }
