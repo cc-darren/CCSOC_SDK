@@ -362,7 +362,7 @@ void htpt_exe_operation(void)
 }
 
 
-uint8_t htpt_update_ntf_ind_cfg(uint8_t conidx, uint8_t cfg, uint16_t valid_val, uint16_t value)
+uint8_t htpt_update_ntf_ind_cfg(uint8_t conidx, uint8_t cfg, uint16_t valid_val, uint16_t value) // called by gattc_write_req_ind_handler() @ htpt_task.c
 {
     struct htpt_env_tag* htpt_env = PRF_ENV_GET(HTPT, htpt);
     uint8_t status = GAP_ERR_NO_ERROR;

@@ -79,9 +79,7 @@
  ****************************************************************************************
  */
 
-/// Default Device Name if no value can be found in NVDS
-#define APP_DFLT_DEVICE_NAME            ("CC6801")
-#define APP_DFLT_DEVICE_NAME_LEN        (sizeof(APP_DFLT_DEVICE_NAME))
+
 
 
 #if (BLE_APP_HID)
@@ -192,6 +190,9 @@ enum appm_svc_list
     #ifdef BLE_APP_AM0
     APPM_SVC_AM0_HAS,
     #endif //defined(BLE_APP_AM0)
+#if (BLE_APP_OTA)
+    APPM_SVC_OTAT,
+#endif //(BLE_APP_HID)
 
     APPM_SVC_LIST_STOP,
 };
@@ -224,6 +225,9 @@ static const appm_add_svc_func_t appm_add_svc_func_list[APPM_SVC_LIST_STOP] =
     #ifdef BLE_APP_AM0
     (appm_add_svc_func_t)am0_app_add_has,
     #endif //defined(BLE_APP_AM0)
+    #if (BLE_APP_OTA)
+    (appm_add_svc_func_t)app_ota_add_otas,
+    #endif //(BLE_APP_HID)    
 };
 #endif
 
@@ -299,7 +303,7 @@ void appm_init()
     // load device information:
 
     #if (DISPLAY_SUPPORT)
-    app_display_init();
+    //app_display_init();
     #endif //(DISPLAY_SUPPORT)
 
     #if (BLE_APP_SEC)
@@ -309,7 +313,7 @@ void appm_init()
 
     #if (BLE_APP_HT)
     // Health Thermometer Module
-    app_ht_init();
+    app_ht_init(); // remarked by Samuel
     #endif //(BLE_APP_HT)
 
     #if (BLE_APP_DIS)

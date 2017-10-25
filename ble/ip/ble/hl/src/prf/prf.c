@@ -263,7 +263,7 @@ static const struct prf_task_cbs * prf_itf_get(uint16_t task_id)
     {
         #if (BLE_HT_THERMOM)
         case TASK_ID_HTPT:
-           // prf_cbs = htpt_prf_itf_get();  // comment by Samuel
+            prf_cbs = htpt_prf_itf_get(); 
             break;
         #endif // (BLE_HT_THERMOM)
 

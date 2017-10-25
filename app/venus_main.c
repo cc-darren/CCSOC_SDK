@@ -1991,6 +1991,13 @@ bool _app_scheduler(void)
 
     if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_DATETIMEFLUSH) )
     {
+#if 0 // for test   
+        static uint8_t tx_notify_data[20];
+        tx_notify_data[0] += 0x01;
+        tx_notify_data[19] += 0x02;
+        app_ota_notify_send(tx_notify_data); // test by Samuel
+#endif
+   
          s_tVenusCB.stSysCurTime = app_Time_Proc(1); //1 second
          VENUS_EVENT_OFF(E_VENUS_EVENT_DATETIMEFLUSH);
 
@@ -2279,7 +2286,6 @@ void rwip_ignore_ll_conn_param_update_patch(void)
 {
     *p_llm_le_event_mask &= ~LE_REM_CON_PARA_REQ_EVT_MSK; // test by Samuel
 }
-
 
 /*
  * VENUS MAIN FUNCTION

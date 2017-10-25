@@ -50,6 +50,10 @@
 /// Maximal length of the Device Name value
 #define APP_DEVICE_NAME_MAX_LEN      (18)
 
+/// Default Device Name if no value can be found in NVDS
+#define APP_DFLT_DEVICE_NAME            ("CC6801")
+#define APP_DFLT_DEVICE_NAME_LEN        (sizeof(APP_DFLT_DEVICE_NAME))
+
 /*
  * TYPE DEFINITIONS
  ****************************************************************************************

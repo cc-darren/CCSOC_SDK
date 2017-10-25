@@ -41,19 +41,19 @@
  */
 
 /// Manufacturer Name Value
-#define APP_DIS_MANUFACTURER_NAME       ("RivieraWaves SAS")
-#define APP_DIS_MANUFACTURER_NAME_LEN   (16)
+#define APP_DIS_MANUFACTURER_NAME       ("CloudChip")
+#define APP_DIS_MANUFACTURER_NAME_LEN   (9)
 
 /// Model Number String Value
-#define APP_DIS_MODEL_NB_STR            ("RW-BLE-1.0")
-#define APP_DIS_MODEL_NB_STR_LEN        (10)
+#define APP_DIS_MODEL_NB_STR            APP_DFLT_DEVICE_NAME
+#define APP_DIS_MODEL_NB_STR_LEN        (6)
 
 /// Serial Number
-#define APP_DIS_SERIAL_NB_STR           ("1.0.0.0-LE")
-#define APP_DIS_SERIAL_NB_STR_LEN       (10)
+#define APP_DIS_SERIAL_NB_STR           ("0.0.0")
+#define APP_DIS_SERIAL_NB_STR_LEN       (5)
 
 /// Firmware Revision
-#define APP_DIS_FIRM_REV_STR            ("6.1.2")
+#define APP_DIS_FIRM_REV_STR            ("0.0.0")
 #define APP_DIS_FIRM_REV_STR_LEN        (5)
 
 /// System ID Value - LSB -> MSB
@@ -61,11 +61,11 @@
 #define APP_DIS_SYSTEM_ID_LEN           (8)
 
 /// Hardware Revision String
-#define APP_DIS_HARD_REV_STR           ("1.0.0")
+#define APP_DIS_HARD_REV_STR           ("0.0.0")
 #define APP_DIS_HARD_REV_STR_LEN       (5)
 
 /// Software Revision String
-#define APP_DIS_SW_REV_STR              ("6.3.0")
+#define APP_DIS_SW_REV_STR              ("0.0.0")
 #define APP_DIS_SW_REV_STR_LEN          (5)
 
 /// IEEE
