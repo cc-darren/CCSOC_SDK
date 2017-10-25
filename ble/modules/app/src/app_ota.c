@@ -1,7 +1,7 @@
 /**
  ****************************************************************************************
  *
- * @file app_ht.c
+ * @file app_ota.c
  *
  * @brief Health Thermometer Application entry point
  *
@@ -20,17 +20,17 @@
 
 #include "rwip_config.h"     // SW configuration
 
-#if (BLE_APP_HT)
+#if (BLE_APP_OTA)
 
 /*
  * INCLUDE FILES
  ****************************************************************************************
  */
 
-#include "app_ht.h"                  // Health Thermometer Application Definitions
+#include "app_ota.h"                  // Health Thermometer Application Definitions
 #include "app.h"                     // Application Definitions
 #include "app_task.h"                // application task definitions
-#include "htpt_task.h"               // health thermometer functions
+#include "otat_task.h"               // health thermometer functions
 #include "co_bt.h"
 #include "prf_types.h"
 #include "prf_utils.h"
@@ -50,13 +50,13 @@
  */
 
 /// Initial Temperature Value : 37c
-#define APP_HT_TEMP_VALUE_INIT       (3700)
+#define APP_OTA_TEMP_VALUE_INIT       (3700)
 /// Temperature Step
-#define APP_HT_TEMP_STEP_INIT        (10)
+#define APP_OTA_TEMP_STEP_INIT        (10)
 /// Measurement Interval Value Min
-#define APP_HT_MEAS_INTV_MIN         (1)
+#define APP_OTA_MEAS_INTV_MIN         (1)
 /// Measurement Interval Value Max
-#define APP_HT_MEAS_INTV_MAX         (30)
+#define APP_OTA_MEAS_INTV_MAX         (30)
 
 /*
  * GLOBAL VARIABLE DEFINITIONS
@@ -64,26 +64,26 @@
  */
 
 /// health thermometer application environment structure
-struct app_ht_env_tag app_ht_env;
+struct app_ota_env_tag app_ota_env;
 
 /*
  * LOCAL FUNCTION DEFINITIONS
  ****************************************************************************************
  */
-
-static void app_ht_temp_send(void)
+/*
+static void app_ota_temp_send(void)
 {
     // Temperature Value
-    int32_t value = (int32_t)(app_ht_env.temp_value);
+    int32_t value = (int32_t)(app_ota_env.temp_value);
 
     // The value is a float value, set the exponent
     value |= 0xFE000000;
 
-    // Allocate the HTPT_TEMP_SEND_REQ message
-    struct htpt_temp_send_req * req = KE_MSG_ALLOC(HTPT_TEMP_SEND_REQ,
-                                                    prf_get_task_from_id(TASK_ID_HTPT),
+    // Allocate the OTAT_TEMP_SEND_REQ message
+    struct otat_temp_send_req * req = KE_MSG_ALLOC(OTAT_TEMP_SEND_REQ,
+                                                    prf_get_task_from_id(TASK_ID_OTAT),
                                                     TASK_APP,
-                                                    htpt_temp_send_req);
+                                                    otat_temp_send_req);
 
     // Stable => Temperature Measurement Char.
     req->stable_meas = 0x01;
@@ -92,18 +92,18 @@ static void app_ht_temp_send(void)
     req->temp_meas.temp         = value;
 //    req->temp_meas.time_stamp = 0;
     req->temp_meas.flags        = HTP_FLAG_CELSIUS | HTP_FLAG_TYPE;
-    req->temp_meas.type         = app_ht_env.temp_meas_type;
+    req->temp_meas.type         = app_ota_env.temp_meas_type;
 
     ke_msg_send(req);
 }
 
-void app_ht_period_meas_send(bool update_step, uint32_t step_data, bool update_hr, uint16_t hr_data, uint32_t calorie)
+void app_ota_period_meas_send(bool update_step, uint32_t step_data, bool update_hr, uint16_t hr_data, uint32_t calorie)
 {
-    // Allocate the HTPT_TEMP_SEND_REQ message
-    struct htpt_period_meas_send_req * req = KE_MSG_ALLOC(HTPT_TEMP_SEND_REQ,
-                                                    prf_get_task_from_id(TASK_ID_HTPT),
+    // Allocate the OTAT_TEMP_SEND_REQ message
+    struct otat_period_meas_send_req * req = KE_MSG_ALLOC(OTAT_TEMP_SEND_REQ,
+                                                    prf_get_task_from_id(TASK_ID_OTAT),
                                                     TASK_APP,
-                                                    htpt_period_meas_send_req);
+                                                    otat_period_meas_send_req);
                                                     
     req->period_meas.vid = 0xCC;
     req->period_meas.type = 0xF1;   // step 
@@ -119,13 +119,13 @@ void app_ht_period_meas_send(bool update_step, uint32_t step_data, bool update_h
 }
 
 
-void app_ht_swim_meas_send(uint8_t swim_en, uint8_t style_type, uint32_t dwSwimCnt, uint32_t dwSwimLap, uint32_t dwTimestamp)
+void app_ota_swim_meas_send(uint8_t swim_en, uint8_t style_type, uint32_t dwSwimCnt, uint32_t dwSwimLap, uint32_t dwTimestamp)
 {
-    // Allocate the HTPT_TEMP_SEND_REQ message
-    struct htpt_swim_meas_send_req * req = KE_MSG_ALLOC(HTPT_TEMP_SWIM_MEAS_REQ,
-                                                    prf_get_task_from_id(TASK_ID_HTPT),
+    // Allocate the OTAT_TEMP_SEND_REQ message
+    struct otat_swim_meas_send_req * req = KE_MSG_ALLOC(OTAT_TEMP_SWIM_MEAS_REQ,
+                                                    prf_get_task_from_id(TASK_ID_OTAT),
                                                     TASK_APP,
-                                                    htpt_swim_meas_send_req);
+                                                    otat_swim_meas_send_req);
 
     req->swim_meas.vid = 0xCC;
     req->swim_meas.type = 0xF4;
@@ -140,13 +140,13 @@ void app_ht_swim_meas_send(uint8_t swim_en, uint8_t style_type, uint32_t dwSwimC
 
 
 
-void app_ht_history_send(uint8_t id)
+void app_ota_history_send(uint8_t id)
 {
-    // Allocate the HTPT_TEMP_SEND_REQ message
-    struct htpt_history_send_req * req = KE_MSG_ALLOC(HTPT_TEMP_SEND_REQ,
-                                                    prf_get_task_from_id(TASK_ID_HTPT),
+    // Allocate the OTAT_TEMP_SEND_REQ message
+    struct otat_history_send_req * req = KE_MSG_ALLOC(OTAT_TEMP_SEND_REQ,
+                                                    prf_get_task_from_id(TASK_ID_OTAT),
                                                     TASK_APP,
-                                                    htpt_history_send_req);
+                                                    otat_history_send_req);
 
     req->history_meas.vid = 0xCC;
     req->history_meas.type = id;
@@ -156,44 +156,60 @@ void app_ht_history_send(uint8_t id)
 
     ke_msg_send(req);
 }
+*/
+
+void app_ota_notify_send(uint8_t *tx_data)
+{
+    // Allocate the OTAT_TEMP_SEND_REQ message
+    struct otat_notify_send_req * req = KE_MSG_ALLOC(OTAT_NOTIFY_SEND_REQ,
+                                                    prf_get_task_from_id(TASK_ID_OTAT),
+                                                    TASK_APP,
+                                                    otat_notify_send_req);
+
+
+    memcpy(req->eArray, tx_data, sizeof(struct otat_notify_send_req));
+                                             
+
+    ke_msg_send(req);
+}
 
 #if (DISPLAY_SUPPORT)
-static void app_ht_update_type_string(uint8_t temp_type)
+static void app_ota_update_type_string(uint8_t temp_type)
 {
     switch (temp_type)
     {
         case 0:
-            strcpy(app_ht_env.temp_type_string, "NONE");
+            strcpy(app_ota_env.temp_type_string, "NONE");
             break;
         case 1:
-            strcpy(app_ht_env.temp_type_string, "ARMPIT");
+            strcpy(app_ota_env.temp_type_string, "ARMPIT");
             break;
         case 2:
-            strcpy(app_ht_env.temp_type_string, "BODY");
+            strcpy(app_ota_env.temp_type_string, "BODY");
             break;
         case 3:
-            strcpy(app_ht_env.temp_type_string, "EAR");
+            strcpy(app_ota_env.temp_type_string, "EAR");
             break;
         case 4:
-            strcpy(app_ht_env.temp_type_string, "FINGER");
+            strcpy(app_ota_env.temp_type_string, "FINGER");
             break;
         case 5:
-            strcpy(app_ht_env.temp_type_string, "GASTRO-INT");
+            strcpy(app_ota_env.temp_type_string, "GASTRO-INT");
             break;
         case 6:
-            strcpy(app_ht_env.temp_type_string, "MOUTH");
+            strcpy(app_ota_env.temp_type_string, "MOUTH");
             break;
         case 7:
-            strcpy(app_ht_env.temp_type_string, "RECTUM");
+            strcpy(app_ota_env.temp_type_string, "RECTUM");
             break;
         case 8:
-            strcpy(app_ht_env.temp_type_string, "TOE");
+            strcpy(app_ota_env.temp_type_string, "TOE");
             break;
         case 9:
-            strcpy(app_ht_env.temp_type_string, "TYMPANUM");
+            strcpy(app_ota_env.temp_type_string, "TYMPANUM");
             break;
         default:
-            strcpy(app_ht_env.temp_type_string, "UNKNOWN");
+            strcpy(app_ota_env.temp_type_string, "UNKNOWN");
             break;
     }
 }
@@ -204,71 +220,63 @@ static void app_ht_update_type_string(uint8_t temp_type)
  ****************************************************************************************
  */
 
-void app_ht_init(void)
+void app_ota_init(void)
 {
     // Reset the environment
-    memset(&app_ht_env, 0, sizeof(app_ht_env));
-
+    memset(&app_ota_env, 0, sizeof(app_ota_env));
+/*
     // Initial measurement interval : 0s
-    app_ht_env.htpt_meas_intv   = 0;
+    app_ota_env.otat_meas_intv   = 0;
     // Initial temperature value : 37.00 C
-    app_ht_env.temp_value       = APP_HT_TEMP_VALUE_INIT;
+    app_ota_env.temp_value       = APP_OTA_TEMP_VALUE_INIT;
     // Initial temperature step : 0.20 C
-    app_ht_env.temp_step        = APP_HT_TEMP_STEP_INIT;
+    app_ota_env.temp_step        = APP_OTA_TEMP_STEP_INIT;
     // Initial temperature type : ARMPIT
-    app_ht_env.temp_meas_type   = 1;
-
+    app_ota_env.temp_meas_type   = 1;
+*/
     //TODO: Add a state for the module
 }
 
-void app_stop_timer (void)
+void app_ota_stop_timer (void)
 {
     // Stop the timer used for the measurement interval if enabled
-    if (app_ht_env.timer_enable)
+    if (app_ota_env.timer_enable)
     {
-        ke_timer_clear(APP_HT_MEAS_INTV_TIMER, TASK_APP);
-        app_ht_env.timer_enable = false;
+        ke_timer_clear(APP_OTA_MEAS_INTV_TIMER, TASK_APP);
+        app_ota_env.timer_enable = false;
     }
 }
 
-void app_ht_add_hts(void)
+void app_ota_add_otas(void)
 {
-    struct htpt_db_cfg* db_cfg;
-    // Allocate the HTPT_CREATE_DB_REQ
+    struct otat_db_cfg* db_cfg;
+    // Allocate the OTAT_CREATE_DB_REQ
     struct gapm_profile_task_add_cmd *req = KE_MSG_ALLOC_DYN(GAPM_PROFILE_TASK_ADD_CMD,
                                                   TASK_GAPM, TASK_APP,
-                                                  gapm_profile_task_add_cmd, sizeof(struct htpt_db_cfg));
+                                                  gapm_profile_task_add_cmd, sizeof(struct otat_db_cfg));
     // Fill message
     req->operation = GAPM_PROFILE_TASK_ADD;
     req->sec_lvl = PERM(SVC_AUTH, ENABLE);
-    req->prf_task_id = TASK_ID_HTPT;
+    req->prf_task_id = TASK_ID_OTAT;
     req->app_task = TASK_APP;
     req->start_hdl = 0;
 
     // Set parameters
-    db_cfg = (struct htpt_db_cfg* ) req->param;
+    db_cfg = (struct otat_db_cfg* ) req->param;
     // All features are supported
-    db_cfg->features = HTPT_ALL_FEAT_SUP;
-
-    // Measurement Interval range
-    db_cfg->valid_range_min = APP_HT_MEAS_INTV_MIN;
-    db_cfg->valid_range_max = APP_HT_MEAS_INTV_MAX;
-
-    // Measurement
-    db_cfg->temp_type = app_ht_env.temp_meas_type;
-    db_cfg->meas_intv = app_ht_env.htpt_meas_intv;
+    db_cfg->features = OTAT_ALL_FEAT_SUP;
 
     // Send the message
     ke_msg_send(req);
 }
 
-void app_ht_enable_prf(uint8_t conidx)
+void app_ota_enable_prf(uint8_t conidx)
 {
     // Allocate the message
-    struct htpt_enable_req * req = KE_MSG_ALLOC(HTPT_ENABLE_REQ,
-                                                prf_get_task_from_id(TASK_ID_HTPT),
+    struct otat_enable_req * req = KE_MSG_ALLOC(OTAT_ENABLE_REQ,
+                                                prf_get_task_from_id(TASK_ID_OTAT),
                                                 TASK_APP,
-                                                htpt_enable_req);
+                                                otat_enable_req);
 
     // Fill in the parameter structure
     req->conidx        = conidx;
@@ -281,59 +289,59 @@ void app_ht_enable_prf(uint8_t conidx)
 
 /**
  ****************************************************************************************
- * Health Thermometer Application Functions
+ * OTA Application Functions
  ****************************************************************************************
  */
-
-void app_ht_temp_inc(void)
+/*
+void app_ota_temp_inc(void)
 {
-    app_ht_env.temp_value += app_ht_env.temp_step;
+    app_ota_env.temp_value += app_ota_env.temp_step;
 
     #if (DISPLAY_SUPPORT)
-    app_display_update_temp_val_screen(app_ht_env.temp_value);
+    app_display_update_temp_val_screen(app_ota_env.temp_value);
     #endif //DISPLAY_SUPPORT
 
-    app_ht_temp_send();
+    app_ota_temp_send();
 }
 
-void app_ht_temp_dec(void)
+void app_ota_temp_dec(void)
 {
-    app_ht_env.temp_value -= app_ht_env.temp_step;
+    app_ota_env.temp_value -= app_ota_env.temp_step;
 
     #if (DISPLAY_SUPPORT)
-    app_display_update_temp_val_screen(app_ht_env.temp_value);
+    app_display_update_temp_val_screen(app_ota_env.temp_value);
     #endif //DISPLAY_SUPPORT
 
-    app_ht_temp_send();
+    app_ota_temp_send();
 }
 
-void app_ht_temp_type_inc(void)
+void app_ota_temp_type_inc(void)
 {
-    app_ht_env.temp_meas_type = (uint8_t)(((int)app_ht_env.temp_meas_type + 1)%10);
+    app_ota_env.temp_meas_type = (uint8_t)(((int)app_ota_env.temp_meas_type + 1)%10);
 
     #if (DISPLAY_SUPPORT)
-    app_ht_update_type_string(app_ht_env.temp_meas_type);
-    app_display_update_temp_type_screen(app_ht_env.temp_type_string);
+    app_ota_update_type_string(app_ota_env.temp_meas_type);
+    app_display_update_temp_type_screen(app_ota_env.temp_type_string);
     #endif //DISPLAY_SUPPORT
 }
 
-void app_ht_temp_type_dec(void)
+void app_ota_temp_type_dec(void)
 {
-    if (((int)app_ht_env.temp_meas_type-1) < 0)
+    if (((int)app_ota_env.temp_meas_type-1) < 0)
     {
-        app_ht_env.temp_meas_type = 0x09;
+        app_ota_env.temp_meas_type = 0x09;
     }
     else
     {
-        app_ht_env.temp_meas_type = app_ht_env.temp_meas_type - 1;
+        app_ota_env.temp_meas_type = app_ota_env.temp_meas_type - 1;
     }
 
     #if DISPLAY_SUPPORT
-    app_ht_update_type_string(app_ht_env.temp_meas_type);
-    app_display_update_temp_type_screen(app_ht_env.temp_type_string);
+    app_ota_update_type_string(app_ota_env.temp_meas_type);
+    app_display_update_temp_type_screen(app_ota_env.temp_type_string);
     #endif //DISPLAY_SUPPORT
 }
-
+*/
 /****************************************************************************************
  * MESSAGE HANDLERS
  ****************************************************************************************/
@@ -352,48 +360,49 @@ void app_ht_temp_type_dec(void)
  * @return If the message was consumed or not.
  ****************************************************************************************
  */
-static int htpt_meas_intv_chg_req_ind_handler(ke_msg_id_t const msgid,
-                                          struct htpt_meas_intv_chg_req_ind const *param,
+ /*
+static int otat_meas_intv_chg_req_ind_handler(ke_msg_id_t const msgid,
+                                          struct otat_meas_intv_chg_req_ind const *param,
                                           ke_task_id_t const dest_id,
                                           ke_task_id_t const src_id)
 {
     // Store the received Measurement Interval value
-    app_ht_env.htpt_meas_intv = param->intv;
+    app_ota_env.otat_meas_intv = param->intv;
 
     // Check the new Measurement Interval Value
-    if (app_ht_env.htpt_meas_intv != 0)
+    if (app_ota_env.otat_meas_intv != 0)
     {
         // Check if a Timer already exists
-        if (!app_ht_env.timer_enable)
+        if (!app_ota_env.timer_enable)
         {
             // Set a Timer
-            ke_timer_set(APP_HT_MEAS_INTV_TIMER, TASK_APP, app_ht_env.htpt_meas_intv*100);
-            app_ht_env.timer_enable = true;
+            ke_timer_set(APP_OTA_MEAS_INTV_TIMER, TASK_APP, app_ota_env.otat_meas_intv*100);
+            app_ota_env.timer_enable = true;
         }
         else
         {
             // Clear the previous timer
-            ke_timer_clear(APP_HT_MEAS_INTV_TIMER, TASK_APP);
+            ke_timer_clear(APP_OTA_MEAS_INTV_TIMER, TASK_APP);
             // Create a new timer with the received measurement interval
-            ke_timer_set(APP_HT_MEAS_INTV_TIMER, TASK_APP, app_ht_env.htpt_meas_intv*100);
+            ke_timer_set(APP_OTA_MEAS_INTV_TIMER, TASK_APP, app_ota_env.otat_meas_intv*100);
         }
     }
     else
     {
         // Check if a Timer exists
-        if (app_ht_env.timer_enable)
+        if (app_ota_env.timer_enable)
         {
             // Measurement Interval is 0, clear the timer
-            ke_timer_clear(APP_HT_MEAS_INTV_TIMER, TASK_APP);
-            app_ht_env.timer_enable = false;
+            ke_timer_clear(APP_OTA_MEAS_INTV_TIMER, TASK_APP);
+            app_ota_env.timer_enable = false;
         }
     }
 
     // Allocate the message
-    struct htpt_meas_intv_chg_cfm * cfm = KE_MSG_ALLOC(HTPT_MEAS_INTV_CHG_CFM,
-                                                prf_get_task_from_id(TASK_ID_HTPT),
+    struct otat_meas_intv_chg_cfm * cfm = KE_MSG_ALLOC(OTAT_MEAS_INTV_CHG_CFM,
+                                                prf_get_task_from_id(TASK_ID_OTAT),
                                                 TASK_APP,
-                                                htpt_meas_intv_chg_cfm);
+                                                otat_meas_intv_chg_cfm);
 
     // Set data
     cfm->conidx = KE_IDX_GET(dest_id);
@@ -405,18 +414,19 @@ static int htpt_meas_intv_chg_req_ind_handler(ke_msg_id_t const msgid,
 
     return (KE_MSG_CONSUMED);
 }
-
-static int htpt_temp_send_rsp_handler(ke_msg_id_t const msgid,
-                                        struct htpt_temp_send_rsp const *param,
+*/
+/*
+static int otat_temp_send_rsp_handler(ke_msg_id_t const msgid,
+                                        struct otat_temp_send_rsp const *param,
                                         ke_task_id_t const dest_id,
                                         ke_task_id_t const src_id)
 {
     // Do nothing
     return (KE_MSG_CONSUMED);
 }
-
-static int htpt_cfg_indntf_ind_handler(ke_msg_id_t const msgid,
-                                        struct htpt_cfg_indntf_ind const *param,
+*/
+static int otat_cfg_indntf_ind_handler(ke_msg_id_t const msgid,
+                                        struct otat_cfg_indntf_ind const *param,
                                         ke_task_id_t const dest_id,
                                         ke_task_id_t const src_id)
 {
@@ -437,7 +447,7 @@ static int htpt_cfg_indntf_ind_handler(ke_msg_id_t const msgid,
  * @return If the message was consumed or not.
  ****************************************************************************************
  */
-static int app_ht_meas_intv_timer_handler(ke_msg_id_t const msgid,
+static int app_ota_meas_intv_timer_handler(ke_msg_id_t const msgid,
                                           void const *param,
                                           ke_task_id_t const dest_id,
                                           ke_task_id_t const src_id)
@@ -457,17 +467,17 @@ static int app_ht_meas_intv_timer_handler(ke_msg_id_t const msgid,
         sign = -1;
     }
 
-    app_ht_env.temp_value += sign*rand_temp_step;
+    app_ota_env.temp_value += sign*rand_temp_step;
 
     // Send the new temperature
-    app_ht_temp_send();
+    //app_ota_temp_send();
 
     #if (DISPLAY_SUPPORT)
-    app_display_update_temp_val_screen(app_ht_env.temp_value);
+    app_display_update_temp_val_screen(app_ota_env.temp_value);
     #endif //DISPLAY_SUPPORT
 
     // Reset the Timer (Measurement Interval is not 0 if we are here)
-    ke_timer_set(APP_HT_MEAS_INTV_TIMER, TASK_APP, app_ht_env.htpt_meas_intv*100);
+    ke_timer_set(APP_OTA_MEAS_INTV_TIMER, TASK_APP, app_ota_env.otat_meas_intv*100);
 
     return (KE_MSG_CONSUMED);
 }
@@ -484,7 +494,7 @@ static int app_ht_meas_intv_timer_handler(ke_msg_id_t const msgid,
  * @return If the message was consumed or not.
  ****************************************************************************************
  */
-static int app_ht_msg_handler(ke_msg_id_t const msgid,
+static int app_ota_msg_handler(ke_msg_id_t const msgid,
                               void const *param,
                               ke_task_id_t const dest_id,
                               ke_task_id_t const src_id)
@@ -500,22 +510,22 @@ static int app_ht_msg_handler(ke_msg_id_t const msgid,
  */
 
 /// Default State handlers definition
-const struct ke_msg_handler app_ht_msg_handler_list[] =
+const struct ke_msg_handler app_ota_msg_handler_list[] =
 {
     // Note: first message is latest message checked by kernel so default is put on top.
-    {KE_MSG_DEFAULT_HANDLER,        (ke_msg_func_t)app_ht_msg_handler},
+    {KE_MSG_DEFAULT_HANDLER,        (ke_msg_func_t)app_ota_msg_handler},
 
-//  {HTPT_ENABLE_RSP,               (ke_msg_func_t)htpt_enable_rsp_handler},
-    {HTPT_TEMP_SEND_RSP,            (ke_msg_func_t)htpt_temp_send_rsp_handler},         // sent from local
-    {HTPT_MEAS_INTV_CHG_REQ_IND,    (ke_msg_func_t)htpt_meas_intv_chg_req_ind_handler}, // rx from remote, and callback from gattc_write_req_ind_handler() @ htpt_task.c
-    {HTPT_CFG_INDNTF_IND,           (ke_msg_func_t)htpt_cfg_indntf_ind_handler},        // rx from remote, and callback from htpt_update_ntf_ind_cfg() @ htpt.c
+//  {OTAT_ENABLE_RSP,               (ke_msg_func_t)otat_enable_rsp_handler},
+//    {OTAT_TEMP_SEND_RSP,            (ke_msg_func_t)otat_temp_send_rsp_handler},
+//    {OTAT_MEAS_INTV_CHG_REQ_IND,    (ke_msg_func_t)otat_meas_intv_chg_req_ind_handler},
+    {OTAT_CFG_INDNTF_IND,           (ke_msg_func_t)otat_cfg_indntf_ind_handler},
 
-    {APP_HT_MEAS_INTV_TIMER,        (ke_msg_func_t)app_ht_meas_intv_timer_handler},     // for timer callback
+    {APP_OTA_MEAS_INTV_TIMER,        (ke_msg_func_t)app_ota_meas_intv_timer_handler},
 };
 
-const struct ke_state_handler app_ht_table_handler =
-    {&app_ht_msg_handler_list[0], (sizeof(app_ht_msg_handler_list)/sizeof(struct ke_msg_handler))};
+const struct ke_state_handler app_ota_table_handler =
+    {&app_ota_msg_handler_list[0], (sizeof(app_ota_msg_handler_list)/sizeof(struct ke_msg_handler))};
 
-#endif //BLE_APP_HT
+#endif //BLE_APP_OTA
 
 /// @} APP

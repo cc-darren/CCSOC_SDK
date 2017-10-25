@@ -748,7 +748,7 @@ static int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
             case HTS_IDX_MEAS_INTV_VAL:
             {
 
-            
+ #if 1           
                 // modified for Venus wristband:
                 if(0x55 == param->value[0])
                 {
@@ -929,14 +929,16 @@ static int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
                             break;
                     }
                 }
-/*            
-                uint16_t meas_intv = co_read16p(param->value);
+#endif                
+
+#if 0            
+                //uint16_t meas_intv = co_read16p(param->value);
 
                 // check measurement length validity
-                if(((meas_intv >= htpt_env->meas_intv_min) && (meas_intv <= htpt_env->meas_intv_max))
+                //if(((meas_intv >= htpt_env->meas_intv_min) && (meas_intv <= htpt_env->meas_intv_max))
                     // notification can be disabled anyway
-                    || (meas_intv == 0))
-                {
+                //    || (meas_intv == 0))
+                //{
                     uint8_t state = ke_state_get(dest_id);
                     send_cfm = false;
 
@@ -973,14 +975,14 @@ static int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
                         msg_status = KE_MSG_SAVED;
                     }
                   
-                }
-                else
-                {
+                //}
+                //else
+               // {
                     // value not in expected range
-                    status = HTP_OUT_OF_RANGE_ERR_CODE;
-                }
+                //    status = HTP_OUT_OF_RANGE_ERR_CODE;
+                //}
 
-                */  
+#endif                  
             }break;
 
             case HTS_IDX_TEMP_MEAS_IND_CFG:
@@ -1185,16 +1187,16 @@ const struct ke_msg_handler htpt_default_state[] =
 {
     {HTPT_ENABLE_REQ,            (ke_msg_func_t) htpt_enable_req_handler},
 
-    {GATTC_ATT_INFO_REQ_IND,     (ke_msg_func_t) gattc_att_info_req_ind_handler},
-    {GATTC_WRITE_REQ_IND,        (ke_msg_func_t) gattc_write_req_ind_handler},
-    {GATTC_READ_REQ_IND,         (ke_msg_func_t) gattc_read_req_ind_handler},
-    {GATTC_CMP_EVT,              (ke_msg_func_t) gattc_cmp_evt_handler},
+    {GATTC_ATT_INFO_REQ_IND,     (ke_msg_func_t) gattc_att_info_req_ind_handler},   
+    {GATTC_WRITE_REQ_IND,        (ke_msg_func_t) gattc_write_req_ind_handler},       // sent from remote
+    {GATTC_READ_REQ_IND,         (ke_msg_func_t) gattc_read_req_ind_handler},        // sent from remote
+    {GATTC_CMP_EVT,              (ke_msg_func_t) gattc_cmp_evt_handler},    
 
     //{HTPT_TEMP_SEND_REQ,         (ke_msg_func_t) htpt_temp_send_req_handler},
-    {HTPT_TEMP_SEND_REQ,         (ke_msg_func_t) htpt_period_meas_send_req_handler},
-    {HTPT_TEMP_SWIM_MEAS_REQ,    (ke_msg_func_t) htpt_swim_meas_send_req_handler},
-    {HTPT_MEAS_INTV_UPD_REQ,     (ke_msg_func_t) htpt_meas_intv_upd_req_handler},
-    {HTPT_MEAS_INTV_CHG_CFM,     (ke_msg_func_t) htpt_meas_intv_chg_cfm_handler},
+    {HTPT_TEMP_SEND_REQ,         (ke_msg_func_t) htpt_period_meas_send_req_handler}, // sent from local
+    {HTPT_TEMP_SWIM_MEAS_REQ,    (ke_msg_func_t) htpt_swim_meas_send_req_handler},   // sent from local
+    {HTPT_MEAS_INTV_UPD_REQ,     (ke_msg_func_t) htpt_meas_intv_upd_req_handler},    // Not used now?
+    {HTPT_MEAS_INTV_CHG_CFM,     (ke_msg_func_t) htpt_meas_intv_chg_cfm_handler},    // sent from remote, called by htpt_meas_intv_chg_req_ind_handler()@ app_ht.c
 };
 
 

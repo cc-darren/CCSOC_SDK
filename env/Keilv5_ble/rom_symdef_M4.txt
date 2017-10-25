@@ -2,6 +2,7 @@
 
 0x00002df5 T attm_att_set_permission
 0x000031bb T attm_svc_create_db
+0x000032bb T attm_svc_create_db_128
 0x000069d5 T gapc_get_conhdl
 0x00019a69 T rwble_hl_init
 0x00019a87 T rwble_hl_reset

@@ -1,7 +1,7 @@
 /**
  ****************************************************************************************
  *
- * @file htpt.h
+ * @file otat.h
  *
  * @brief Header file - Health Thermometer Profile Thermometer.
  *
@@ -11,12 +11,12 @@
  ****************************************************************************************
  */
 
-#ifndef HTPT_H_
-#define HTPT_H_
+#ifndef OTAT_H_
+#define OTAT_H_
 
 /**
  ****************************************************************************************
- * @addtogroup HTPT Health Thermometer Profile Thermometer
+ * @addtogroup OTAT Health Thermometer Profile Thermometer
  * @ingroup HTP
  * @brief Health Thermometer Profile Thermometer
  *
@@ -48,7 +48,7 @@
  ****************************************************************************************
  */
 #include "rwip_config.h"
-#if (BLE_HT_THERMOM)
+#if (BLE_OTA_TARGET)
 #include <stdint.h>
 #include <stdbool.h>
 #include "htp_common.h"
@@ -61,87 +61,95 @@
  * MACROS
  ****************************************************************************************
  */
-#define HTPT_IS_FEATURE_SUPPORTED(feat, bit_mask) (((feat & bit_mask) == bit_mask))
+#define OTAT_IS_FEATURE_SUPPORTED(feat, bit_mask) (((feat & bit_mask) == bit_mask))
 
-#define HTPT_HANDLE(idx) (htpt_att_hdl_get(htpt_env, (idx)))
+#define OTAT_HANDLE(idx) (otat_att_hdl_get(otat_env, (idx)))
 
-#define HTPT_IDX(hdl)    (htpt_att_idx_get(htpt_env, (hdl)))
-
-
+#define OTAT_IDX(hdl)    (otat_att_idx_get(otat_env, (hdl)))
 /*
  * DEFINES
  ****************************************************************************************
  */
 ///Maximum number of Health thermometer task instances
-#define HTPT_IDX_MAX    (1)
+#define OTAT_IDX_MAX    (1)
 
 
 ///Valid range for measurement interval values (s)
-#define HTPT_MEAS_INTV_DFLT_MIN           (0x0001)
-#define HTPT_MEAS_INTV_DFLT_MAX           (0x000A)
+//#define OTAT_MEAS_INTV_DFLT_MIN           (0x0001)
+//#define OTAT_MEAS_INTV_DFLT_MAX           (0x000A)
 
-#define HTPT_TEMP_MEAS_MAX_LEN            (13)
-#define HTPT_TEMP_TYPE_MAX_LEN            (1)
-//#define HTPT_MEAS_INTV_MAX_LEN            (2)
+//#define OTAT_TEMP_MEAS_MAX_LEN            (13)
+//#define OTAT_TEMP_TYPE_MAX_LEN            (1)
+//#define OTAT_MEAS_INTV_MAX_LEN            (2)
 // modified by Samuel
-#define HTPT_MEAS_INTV_MAX_LEN            (20)
+//#define OTAT_MEAS_INTV_MAX_LEN            (20)
 
-#define HTPT_MEAS_INTV_RANGE_MAX_LEN      (4)
-#define HTPT_IND_NTF_CFG_MAX_LEN          (2)
-
-#define HTPT_TEMP_MEAS_MASK               (0x000F)
-#define HTPT_TEMP_TYPE_MASK               (0x0030)
-#define HTPT_INTM_TEMP_MASK               (0x01C0)
-#define HTPT_MEAS_INTV_MASK               (0x0600)
-#define HTPT_MEAS_INTV_CCC_MASK           (0x0800)
-#define HTPT_MEAS_INTV_VALID_RGE_MASK     (0x1000)
-
-#define HTPT_TEMP_MEAS_ATT_NB             (4)
-#define HTPT_TEMP_TYPE_ATT_NB             (2)
-#define HTPT_INTERM_MEAS_ATT_NB           (3)
-#define HTPT_MEAS_INTV_ATT_NB             (2)
-#define HTPT_MEAS_INTV_CCC_ATT_NB         (1)
-#define HTPT_MEAS_INTV_RNG_ATT_NB         (1)
+//#define OTAT_MEAS_INTV_RANGE_MAX_LEN      (4)
+#define OTAT_NOTIFY_SEND_MAX_LEN              (20)
+#define OTAT_OTA_MAX_LEN                   (1)
+#define OTAT_IND_NTF_CFG_MAX_LEN          (2)
 
 
-/// Possible states of the HTPT task
-enum htpt_state
+
+#define OTAT_OTA_MASK               (0x000F) //???
+
+#define OTAT_OTA_ATT_NB             (4)     // ???
+
+/*
+#define OTAT_TEMP_MEAS_MASK               (0x000F)
+#define OTAT_TEMP_TYPE_MASK               (0x0030)
+#define OTAT_INTM_TEMP_MASK               (0x01C0)
+#define OTAT_MEAS_INTV_MASK               (0x0600)
+#define OTAT_MEAS_INTV_CCC_MASK           (0x0800)
+#define OTAT_MEAS_INTV_VALID_RGE_MASK     (0x1000)
+
+#define OTAT_TEMP_MEAS_ATT_NB             (4)
+#define OTAT_TEMP_TYPE_ATT_NB             (2)
+#define OTAT_INTERM_MEAS_ATT_NB           (3)
+#define OTAT_MEAS_INTV_ATT_NB             (2)
+#define OTAT_MEAS_INTV_CCC_ATT_NB         (1)
+#define OTAT_MEAS_INTV_RNG_ATT_NB         (1)
+*/
+
+/// Possible states of the OTAT task
+enum otat_state
 {
     /// Idle state
-    HTPT_IDLE,
+    OTAT_IDLE,
     /// Busy state
-    HTPT_BUSY,
+    OTAT_BUSY,
 
     /// Number of defined states.
-    HTPT_STATE_MAX
+    OTAT_STATE_MAX
 };
 
 ///Attributes database elements
-enum hts_att_db_list
+
+enum otas_att_db_list
 {
-    HTS_IDX_SVC,
+    OTAS_IDX_SVC,
 
-    HTS_IDX_TEMP_MEAS_CHAR,
-    HTS_IDX_TEMP_MEAS_VAL,
-    HTS_IDX_TEMP_MEAS_IND_CFG,
+    OTAS_IDX_OTA_CHAR,
+    OTAS_IDX_OTA_VAL,
+    OTAS_IDX_OTA_IND_CFG,
+/*
+    OTAS_IDX_TEMP_TYPE_CHAR,
+    OTAS_IDX_TEMP_TYPE_VAL,
 
-    HTS_IDX_TEMP_TYPE_CHAR,
-    HTS_IDX_TEMP_TYPE_VAL,
+    OTAS_IDX_INTERM_TEMP_CHAR,
+    OTAS_IDX_INTERM_TEMP_VAL,
+    OTAS_IDX_INTERM_TEMP_CFG,
 
-    HTS_IDX_INTERM_TEMP_CHAR,
-    HTS_IDX_INTERM_TEMP_VAL,
-    HTS_IDX_INTERM_TEMP_CFG,
-
-    HTS_IDX_MEAS_INTV_CHAR,
-    HTS_IDX_MEAS_INTV_VAL,
-    HTS_IDX_MEAS_INTV_CFG,
-    HTS_IDX_MEAS_INTV_VAL_RANGE,
-
-    HTS_IDX_NB,
+    OTAS_IDX_MEAS_INTV_CHAR,
+    OTAS_IDX_MEAS_INTV_VAL,
+    OTAS_IDX_MEAS_INTV_CFG,
+    OTAS_IDX_MEAS_INTV_VAL_RANGE,
+*/
+    OTAS_IDX_NB,
 };
 
 /// ongoing operation information
-struct htpt_op
+struct otat_op
 {
      /// Operation
      uint8_t op;
@@ -162,17 +170,17 @@ struct htpt_op
 
 
 ///Health Thermometer Profile Thermometer Environment Variable
-struct htpt_env_tag
+struct otat_env_tag
 {
     /// profile environment
     prf_env_t prf_env;
     /// On-going operation
-    struct htpt_op * operation;
+    struct otat_op * operation;
     /// Service Start Handle
     uint16_t shdl;
     /// Database configuration
     uint16_t features;
-
+/*
     /// Current Measure interval
     uint16_t meas_intv;
     /// measurement interval range min
@@ -181,11 +189,11 @@ struct htpt_env_tag
     uint16_t meas_intv_max;
     /// Temperature Type Value
     uint8_t temp_type;
-
+*/
     /// Notification and indication configuration of peer devices.
     uint8_t ntf_ind_cfg[BLE_CONNECTION_MAX];
     /// State of different task instances
-    ke_state_t state[HTPT_IDX_MAX];
+    ke_state_t state[OTAT_IDX_MAX];
 };
 
 /*
@@ -209,7 +217,7 @@ struct htpt_env_tag
  *             2 otherwise
  ****************************************************************************************
  */
-uint8_t htpt_get_valid_rge_offset(uint16_t features);
+uint8_t otat_get_valid_rge_offset(uint16_t features);
 
 /**
  ****************************************************************************************
@@ -218,7 +226,7 @@ uint8_t htpt_get_valid_rge_offset(uint16_t features);
  * @return OTAS service profile interface
  ****************************************************************************************
  */
-const struct prf_task_cbs* htpt_prf_itf_get(void);
+const struct prf_task_cbs* otat_prf_itf_get(void);
 
 
 /**
@@ -228,7 +236,7 @@ const struct prf_task_cbs* htpt_prf_itf_get(void);
  * @return size of packed value
  ****************************************************************************************
  */
-uint8_t htpt_pack_temp_value(uint8_t *packed_temp, struct htp_temp_meas temp_meas);
+uint8_t otat_pack_temp_value(uint8_t *packed_temp, struct htp_temp_meas temp_meas);
 
 
 /**
@@ -240,7 +248,7 @@ uint8_t htpt_pack_temp_value(uint8_t *packed_temp, struct htp_temp_meas temp_mea
  *            - Indicate to a known device that Measure Interval has change
  ****************************************************************************************
  */
-void htpt_exe_operation(void);
+void otat_exe_operation(void);
 
 
 
@@ -256,43 +264,43 @@ void htpt_exe_operation(void);
  * @return status of configuration update
  ****************************************************************************************
  */
-uint8_t htpt_update_ntf_ind_cfg(uint8_t conidx, uint8_t cfg, uint16_t valid_val, uint16_t value);
+uint8_t otat_update_ntf_ind_cfg(uint8_t conidx, uint8_t cfg, uint16_t valid_val, uint16_t value);
 
 
 /**
  ****************************************************************************************
  * @brief Retrieve attribute handle from attribute index
  *
- * @param[in] htpt_env   Environment variable
+ * @param[in] otat_env   Environment variable
  * @param[in] att_idx    Attribute Index
  *
  * @return attribute Handle
  ****************************************************************************************
  */
-uint16_t htpt_att_hdl_get(struct htpt_env_tag* htpt_env, uint8_t att_idx);
+uint16_t otat_att_hdl_get(struct otat_env_tag* otat_env, uint8_t att_idx);
 
 /**
  ****************************************************************************************
  * @brief Retrieve attribute index from attribute handle
  *
- * @param[in] htpt_env   Environment variable
+ * @param[in] otat_env   Environment variable
  * @param[in] handle     Attribute Handle
  *
  * @return attribute Index
  ****************************************************************************************
  */
-uint8_t htpt_att_idx_get(struct htpt_env_tag* htpt_env, uint16_t handle);
+uint8_t otat_att_idx_get(struct otat_env_tag* otat_env, uint16_t handle);
 
 /*
  * TASK DESCRIPTOR DECLARATIONS
  ****************************************************************************************
  */
-extern const struct ke_state_handler htpt_default_handler;
+extern const struct ke_state_handler otat_default_handler;
 
 
 
 #endif //BLE_HT_THERMOM
 
-/// @} HTPT
+/// @} OTAT
 
-#endif // HTPT_H_
+#endif // OTAT_H_

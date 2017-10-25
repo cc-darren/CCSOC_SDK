@@ -81,6 +81,15 @@
 #define BLE_APP_SEC          0
 #endif // defined(CFG_APP_SEC)
 
+
+/// OTA
+#if defined(CFG_APP_OTA)
+#define BLE_APP_OTA           1
+#else // defined(CFG_APP_HT)
+#define BLE_APP_OTA           0
+#endif // defined(CFG_APP_HT)
+
+
 /// @} rwapp_config
 
 #endif /* _RWAPP_CONFIG_H_ */

@@ -131,6 +131,28 @@ void prf_unregister_atthdl2gatt(prf_env_t *prf_env, uint8_t conidx, struct prf_s
 void prf_disc_svc_send(prf_env_t *prf_env, uint8_t conidx, uint16_t uuid)
 {
     //send GATT discover primary services by UUID request
+
+    // for UUID 128 bits, modified by Samuel
+    struct gattc_sdp_svc_disc_cmd * svc_req = KE_MSG_ALLOC_DYN(GATTC_SDP_SVC_DISC_CMD,
+            KE_BUILD_ID(TASK_GATTC, conidx), prf_src_task_get(prf_env, conidx),
+            gattc_sdp_svc_disc_cmd, ATT_UUID_128_LEN);
+
+    //gatt request type: by UUID
+    svc_req->operation         = GATTC_SDP_DISC_SVC;
+    //start handle;
+    svc_req->start_hdl        = ATT_1ST_REQ_START_HDL;
+    //end handle
+    svc_req->end_hdl          = ATT_1ST_REQ_END_HDL;
+
+    // UUID search
+    svc_req->uuid_len = ATT_UUID_128_LEN; 
+    
+    //set the first two bytes to the value array, LSB to MSB:Health Thermometer Service UUID first
+    co_write16p(&(svc_req->uuid[0]), uuid);
+
+    
+    /*
+    // for UUID 16 bits
     struct gattc_sdp_svc_disc_cmd * svc_req = KE_MSG_ALLOC_DYN(GATTC_SDP_SVC_DISC_CMD,
             KE_BUILD_ID(TASK_GATTC, conidx), prf_src_task_get(prf_env, conidx),
             gattc_sdp_svc_disc_cmd, ATT_UUID_16_LEN);
@@ -143,10 +165,11 @@ void prf_disc_svc_send(prf_env_t *prf_env, uint8_t conidx, uint16_t uuid)
     svc_req->end_hdl          = ATT_1ST_REQ_END_HDL;
 
     // UUID search
-    svc_req->uuid_len = ATT_UUID_16_LEN;
+    //svc_req->uuid_len = ATT_UUID_16_LEN;
 
     //set the first two bytes to the value array, LSB to MSB:Health Thermometer Service UUID first
     co_write16p(&(svc_req->uuid[0]), uuid);
+    */
 
     //send the message to GATT, which will send back the response when it gets it
     ke_msg_send(svc_req);

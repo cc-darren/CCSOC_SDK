@@ -63,6 +63,11 @@
 #include "am0_app.h"             // Audio Mode 0 Application
 #endif //defined(BLE_APP_AM0)
 
+#if (BLE_APP_OTA)
+#include "app_ota.h"               // OTA Module Definition
+#include "otat_task.h"
+#endif //(BLE_APP_OTA)
+
 #if (DISPLAY_SUPPORT)
 #include "app_display.h"          // Application Display Definition
 #endif //(DISPLAY_SUPPORT)
@@ -314,6 +319,8 @@ static int gapc_get_dev_info_req_ind_handler(ke_msg_id_t const msgid,
                                                              gapc_get_dev_info_cfm);
             cfm->req = param->req;
             // Set the device appearance
+            cfm->info.appearance = 192; //Generic Watch
+            /*
             #if (BLE_APP_HT)
             // Generic Thermometer - TODO: Use a flag
             cfm->info.appearance = 728;
@@ -324,7 +331,7 @@ static int gapc_get_dev_info_req_ind_handler(ke_msg_id_t const msgid,
             // No appearance
             cfm->info.appearance = 0;
             #endif
-
+            */
             // Send message
             ke_msg_send(cfm);
         } break;
@@ -538,6 +545,11 @@ static int gapc_disconnect_ind_handler(ke_msg_id_t const msgid,
     appm_start_advertising();
     #endif //(!BLE_APP_HID)
 
+    #if (BLE_APP_OTA)
+    // Stop interval timer
+    app_ota_stop_timer();
+    #endif //(BLE_APP_OTA)
+
     return (KE_MSG_CONSUMED);
 }
 
@@ -658,6 +670,14 @@ static int appm_msg_handler(ke_msg_id_t const msgid,
             msg_pol = appm_get_handler(&am0_app_has_table_handler, msgid, param, src_id);
         } break;
         #endif // defined(BLE_APP_AM0)
+
+#if (BLE_APP_HT)
+        case (TASK_ID_OTAT):
+        {
+            // Call the OTA Module
+            msg_pol = appm_get_handler(&app_ota_table_handler, msgid, param, src_id);
+        } break;
+#endif //(BLE_APP_HT)
 
         default:
         {
