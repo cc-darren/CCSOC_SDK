@@ -345,7 +345,7 @@ uint8_t otat_get_valid_rge_offset(uint16_t features)
 */
     return offset;
 }
-
+#if 0
 uint8_t otat_pack_temp_value(uint8_t *packed_temp, struct htp_temp_meas temp_meas)
 {
     uint8_t cursor = 0;
@@ -377,7 +377,7 @@ uint8_t otat_pack_temp_value(uint8_t *packed_temp, struct htp_temp_meas temp_mea
 */
     return cursor;
 }
-
+#endif
 void otat_exe_operation(void)
 {
     struct otat_env_tag* otat_env = PRF_ENV_GET(OTAT, otat);

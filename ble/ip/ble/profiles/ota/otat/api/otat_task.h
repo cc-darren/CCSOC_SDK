@@ -33,7 +33,7 @@
  */
 
 #include "rwip_task.h" // Task definitions
-#include "htp_common.h"
+//#include "htp_common.h"
 #include "project.h"
 
 /*
@@ -155,6 +155,7 @@ struct otat_enable_rsp
 };
 
 /// Parameters of the @ref OTAT_TEMP_SEND_REQ message
+/*
 struct otat_temp_send_req
 {
     /// Temperature Measurement
@@ -162,7 +163,7 @@ struct otat_temp_send_req
     /// Stable or intermediary type of temperature (True stable meas, else false)
     bool stable_meas;
 };
-
+*/
 /// Parameters of the @ref OTAT_TEMP_SEND_RSP message
 struct otat_temp_send_rsp
 {
@@ -171,12 +172,13 @@ struct otat_temp_send_rsp
 };
 
 /// Parameters of the @ref STEP_COUNT_SEND_REQ message
+/*
 struct otat_period_meas_send_req
 {
 	struct htp_period_meas period_meas;
 	
 };
-
+*/
 struct otat_notify_send_req
 {
 	uint8_t     eArray[21];
@@ -184,20 +186,22 @@ struct otat_notify_send_req
 
 
 /// Parameters of the @ref STEP_COUNT_SEND_REQ message
+/*
 struct otat_swim_meas_send_req
 {
 	struct htp_swim_meas swim_meas;
 	
 };
-
+*/
 
 /// Parameters of the @ref STEP_COUNT_SEND_REQ message
+/*
 struct otat_history_send_req
 {
 	struct htp_history_meas history_meas;
 	
 };
-
+*/
 
 /// Parameters of the @ref OTAT_MEAS_INTV_UPD_REQ message
 struct otat_meas_intv_upd_req

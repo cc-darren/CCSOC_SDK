@@ -42,7 +42,7 @@
  * GLOBAL FUNCTIONS DEFINITIONS
  ****************************************************************************************
  */
-extern uint8_t cc_get_battery_level(void);
+//extern uint8_t cc_get_battery_level(void);
 
 
 /**
@@ -325,7 +325,7 @@ static int gattc_read_req_ind_handler(ke_msg_id_t const msgid, struct gattc_read
         // read notification information
         if (att_idx == BAS_IDX_BATT_LVL_VAL)
         {
-            cfm->value[0] = cc_get_battery_level();// bass_env->batt_lvl[svc_idx];
+            cfm->value[0] = 100; //test by Samuel //cc_get_battery_level();// bass_env->batt_lvl[svc_idx];
         }
         // retrieve notification config
         else if (att_idx == BAS_IDX_BATT_LVL_NTF_CFG)

@@ -52,7 +52,7 @@
 #if (BLE_OTA_TARGET)
 #include <stdint.h>
 #include <stdbool.h>
-#include "htp_common.h"
+//#include "htp_common.h"
 #include "prf_types.h"
 #include "prf_utils.h"
 
@@ -254,7 +254,7 @@ const struct prf_task_cbs* otat_prf_itf_get(void);
  * @return size of packed value
  ****************************************************************************************
  */
-uint8_t otat_pack_temp_value(uint8_t *packed_temp, struct htp_temp_meas temp_meas);
+//uint8_t otat_pack_temp_value(uint8_t *packed_temp, struct htp_temp_meas temp_meas);
 
 
 /**

@@ -46,14 +46,14 @@
 
 #define CFG_PRF
 #define CFG_NB_PRF    5
-#define CFG_PRF_HTPT
+//#define CFG_PRF_HTPT
 #define CFG_PRF_BASS
 #define CFG_PRF_DISS
 //#define CFG_PRF_CSCPS
 #define CFG_PRF_OTA
 
 #define CFG_APP
-#define CFG_APP_HT
+//#define CFG_APP_HT
 #define BLE_APP_BATT  1
 #define CFG_APP_DIS    1
 //#define CFG_APP_CSCS    1
