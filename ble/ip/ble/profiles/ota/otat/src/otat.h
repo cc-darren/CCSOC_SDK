@@ -48,6 +48,7 @@
  ****************************************************************************************
  */
 #include "rwip_config.h"
+#include "project.h"
 #if (BLE_OTA_TARGET)
 #include <stdint.h>
 #include <stdbool.h>
@@ -91,10 +92,19 @@
 
 
 
-#define OTAT_OTA_MASK               (0x000F) //???
 
-#define OTAT_OTA_ATT_NB             (4)     // ???
 
+#ifdef BLE_OTA_BL_MODE_EN
+#define OTAT_OTA_PKT_MASK                   (0x000F) 
+#define OTAT_OTA_CTRL_PT_MASK               (0x0070) 
+
+#define OTAT_OTA_PKT_ATT_NB                 (3)    
+#define OTAT_OTA_CTRL_PT_ATT_NB             (3) 
+#else
+#define OTAT_OTA_MASK               (0x000F) 
+
+#define OTAT_OTA_ATT_NB             (4)     
+#endif
 /*
 #define OTAT_TEMP_MEAS_MASK               (0x000F)
 #define OTAT_TEMP_TYPE_MASK               (0x0030)
@@ -128,10 +138,18 @@ enum otat_state
 enum otas_att_db_list
 {
     OTAS_IDX_SVC,
+#ifdef BLE_OTA_BL_MODE_EN
+    OTAS_IDX_OTA_PKT_CHAR,
+    OTAS_IDX_OTA_PKT_VAL,
 
+    OTAS_IDX_OTA_CTRL_PT_CHAR,    
+    OTAS_IDX_OTA_CTRL_PT_VAL,
+    OTAS_IDX_OTA_CTRL_PT_NTF_CFG,
+#else
     OTAS_IDX_OTA_CHAR,
     OTAS_IDX_OTA_VAL,
-    OTAS_IDX_OTA_IND_CFG,
+    OTAS_IDX_OTA_NTF_CFG,
+#endif    
 /*
     OTAS_IDX_TEMP_TYPE_CHAR,
     OTAS_IDX_TEMP_TYPE_VAL,
