@@ -12,8 +12,9 @@
 #ifndef _DRVI_EFLASH_H_
 #define _DRVI_EFLASH_H_
 
-#include "eflash.h"
 
+#include "project.h"
+#include "eflash.h"
 
 __forceinline void drvi_EflashInit(void)
 {
@@ -36,6 +37,17 @@ __forceinline void drvi_EflashProgram(uint32_t dwEflashAdr,unsigned char * pBufA
 {
     cc6801_EflashProgram(dwEflashAdr,pBufAdr,dwBufSize);
 }
+__forceinline void drvi_EflashRegisterCallback(fpEflash_Callback fpCB)
+{
+    cc6801_EflashRegisterCallback(fpCB);
+}
 
 
+/**@brief SoC Events. */
+enum NRF_SOC_EVTS
+{
+  NRF_EVT_FLASH_OPERATION_SUCCESS,              /**< Event indicating that the ongoing flash operation has completed successfully. */
+  NRF_EVT_FLASH_OPERATION_ERROR,                /**< Event indicating that the ongoing flash operation has timed out with an error. */
+  NRF_EVT_NUMBER_OF_EVTS
+};
 #endif

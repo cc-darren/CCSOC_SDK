@@ -633,6 +633,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\service\tracer\tracer.c</FilePath>
             </File>
+            <File>
+              <FileName>fstorage.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\fstorage\fstorage.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1490,6 +1495,11 @@
               <FileName>tracer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\service\tracer\tracer.c</FilePath>
+            </File>
+            <File>
+              <FileName>fstorage.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\fstorage\fstorage.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -15,6 +15,7 @@
 #include "global.h"
 #include "cc6801_reg.h"
 
+typedef void (*fpEflash_Callback)(uint32_t sys_evt);
 
 //#define SCU_ICACHE_REG              (SCU_ADDR_BASE + 0x00000034)
     #define FLUSH_EN    0x00000001
@@ -58,15 +59,16 @@
 //#define EF_DMA_WADDR_REG            (EF_ADDR_BASE + 0x00000064) //RAM addr to write flash
 //#define EF_DMA_RADDR_REG            (EF_ADDR_BASE + 0x00000068) //RAM addr to read flash
 
-extern volatile uint32_t EFLASH_INTR;
 
 void cc6801_EflashInit(void);
 void cc6801_EflashFlush(void);
 BOOL cc6801_EflashEraseALL(void);
 BOOL cc6801_EflashErasePage(uint32_t adr);
 void cc6801_EflashProgram(uint32_t dwEflashAdr,unsigned char * pBufAdr,uint32_t dwBufSize);
+void cc6801_EflashRegisterCallback(fpEflash_Callback fpCB);
 
-//#define EFLASH_DMAMODE 1
+#define EFLASH_DMAMODE 1
+
 
 
 #endif

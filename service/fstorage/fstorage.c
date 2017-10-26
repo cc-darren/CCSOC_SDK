@@ -9,25 +9,19 @@
  * the file.
  *
  */
-//#include "sdk_common.h"
-//#if NRF_MODULE_ENABLED(FSTORAGE)
+#include "project.h"
+
+#if (defined FSTORAGE_ENABLED) && (FSTORAGE_ENABLED)
 #include "fstorage.h"
 #include "fstorage_internal_defs.h"
+#include "global.h"
+#include "drvi_eflash.h"
 
 #include <stdint.h>
 #include <string.h>
 #include <stdbool.h>
 #include "error.h"
 //#include "nrf_soc.h"
-
-//Blake
-/**@brief SoC Events. */
-enum NRF_SOC_EVTS
-{
-  NRF_EVT_FLASH_OPERATION_SUCCESS,              /**< Event indicating that the ongoing flash operation has completed successfully. */
-  NRF_EVT_FLASH_OPERATION_ERROR,                /**< Event indicating that the ongoing flash operation has timed out with an error. */
-  NRF_EVT_NUMBER_OF_EVTS
-};
 
 static uint8_t       m_flags;       // fstorage status flags.
 static fs_op_queue_t m_queue;       // Queue of requested operations.
@@ -95,16 +89,25 @@ static uint32_t store_execute(fs_op_t const * const p_op)
         chunk_len = FS_MAX_WRITE_SIZE_WORDS;
     }
 
-    //return sd_flash_write((uint32_t*)p_op->store.p_dest + p_op->store.offset,
-    //                      (uint32_t*)p_op->store.p_src  + p_op->store.offset,
-    //                      chunk_len);
+//    return sd_flash_write((uint32_t*)p_op->store.p_dest + p_op->store.offset,
+//                          (uint32_t*)p_op->store.p_src  + p_op->store.offset,
+//                          chunk_len);
+
+    drvi_EflashProgram( (uint32_t)((uint32_t*)p_op->store.p_dest + p_op->store.offset),
+                        (unsigned char *) ((uint32_t*)p_op->store.p_src  + p_op->store.offset),
+                        chunk_len);
+    return CC_SUCCESS;
 }
 
 
 // Executes an erase operation.
 static uint32_t erase_execute(fs_op_t const * const p_op)
 {
-    //return sd_flash_page_erase(p_op->erase.page);
+//    return sd_flash_page_erase(p_op->erase.page);
+    uint32_t dwEraseAdr;
+    dwEraseAdr = p_op->erase.page*FS_PAGE_SIZE;
+    drvi_EflashErasePage(dwEraseAdr);
+    return CC_SUCCESS;
 }
 
 
@@ -275,7 +278,7 @@ fs_ret_t fs_init(void)
 {
     uint32_t const   total_users     = FS_SECTION_VARS_COUNT;
     uint32_t         configs_to_init = FS_SECTION_VARS_COUNT;
-    uint32_t const * p_current_end   = FS_PAGE_END_ADDR;
+    uint32_t const * p_current_end   = (uint32_t *)FS_PAGE_END_ADDR;
 
     if (m_flags & FS_FLAG_INITIALIZED)
     {
@@ -349,6 +352,8 @@ fs_ret_t fs_init(void)
     }
 
     m_flags |= FS_FLAG_INITIALIZED;
+
+    drvi_EflashRegisterCallback(fs_sys_event_handler);
 
     return FS_SUCCESS;
 }
@@ -538,4 +543,4 @@ bool fs_queue_is_empty(void)
     return (m_queue.count == 0);
 }
 
-//#endif //NRF_MODULE_ENABLED(FSTORAGE)
+#endif //#if (defined FSTORAGE_ENABLED) && (FSTORAGE_ENABLED)
