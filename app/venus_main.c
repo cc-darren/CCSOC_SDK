@@ -51,6 +51,7 @@
 #include "CC_DisplayService.h"
 #include "CC_AppSrvc_HeartRate.h"
 #include "llm.h"
+#include "app.h"
 
 
 
@@ -221,7 +222,7 @@ typedef struct
 }   S_VenusCB;
 
 
-volatile uint8_t  *p_llm_le_event_mask = (volatile uint8_t *) 0x20000680;
+//volatile uint8_t  *p_llm_le_event_mask = (volatile uint8_t *) 0x20000680;
 
 char deviceName[10] = {'V','N','S','_'};
 S_VenusCB    s_tVenusCB;
@@ -2281,12 +2282,12 @@ void venus_app_init(void)
 
 
 
-
+/*
 void rwip_ignore_ll_conn_param_update_patch(void)
 {
     *p_llm_le_event_mask &= ~LE_REM_CON_PARA_REQ_EVT_MSK; // test by Samuel
 }
-
+*/
 /*
  * VENUS MAIN FUNCTION
  ****************************************************************************************

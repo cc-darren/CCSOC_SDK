@@ -38,6 +38,7 @@
 #include "co_utils.h"
 #include "project.h"
 #include "tracer.h"
+#include "app_ota.h"
 /*
  * FUNCTION DEFINITIONS
  ****************************************************************************************
@@ -202,7 +203,7 @@ static int otat_notify_send_req_handler(ke_msg_id_t const msgid,
             otat_env->operation->handle  = OTAT_HANDLE(OTAS_IDX_OTA_VAL);
 #endif            
 
-			otat_env->operation->length  = sizeof(struct otat_notify_send_req);
+			otat_env->operation->length  = param->lenth;//sizeof(struct otat_notify_send_req);
 
 			memcpy(otat_env->operation->data, param->eArray, sizeof(struct otat_notify_send_req));
 
@@ -511,12 +512,13 @@ static int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
 #ifdef BLE_OTA_BL_MODE_EN
          case OTAS_IDX_OTA_PKT_VAL:
          {
-                status = ATT_ERR_NO_ERROR; // modified by Samuel
+                app_ota_pkt_write_cmd(param);
          }break;
 
          case OTAS_IDX_OTA_CTRL_PT_VAL:
          {
-                status = ATT_ERR_NO_ERROR; // modified by Samuel
+                app_ota_ctrl_pt_write(param);
+
          }break;
 
          case OTAS_IDX_OTA_CTRL_PT_NTF_CFG:
@@ -749,7 +751,7 @@ const struct ke_msg_handler otat_default_state[] =
     {GATTC_CMP_EVT,              (ke_msg_func_t) gattc_cmp_evt_handler},
 
     //{OTAT_TEMP_SEND_REQ,         (ke_msg_func_t) otat_temp_send_req_handler},
-    {OTAT_NOTIFY_SEND_REQ,         (ke_msg_func_t) otat_notify_send_req_handler}, // sent from cc6801
+    {OTAT_NOTIFY_SEND_REQ,         (ke_msg_func_t) otat_notify_send_req_handler}, // sent from local
     //{OTAT_TEMP_SWIM_MEAS_REQ,    (ke_msg_func_t) otat_swim_meas_send_req_handler},
     //{OTAT_MEAS_INTV_UPD_REQ,     (ke_msg_func_t) otat_meas_intv_upd_req_handler},
     //{OTAT_MEAS_INTV_CHG_CFM,     (ke_msg_func_t) otat_meas_intv_chg_cfm_handler},

@@ -239,10 +239,19 @@ static const appm_add_svc_func_t appm_add_svc_func_list[APPM_SVC_LIST_STOP] =
 /// Application Environment Structure
 struct app_env_tag app_env;
 
+volatile uint8_t  *p_llm_le_event_mask = (volatile uint8_t *) 0x20000680;
+
 /*
  * FUNCTION DEFINITIONS
  ****************************************************************************************
  */
+
+void rwip_ignore_ll_conn_param_update_patch(void)
+{
+    *p_llm_le_event_mask &= ~LE_REM_CON_PARA_REQ_EVT_MSK; // test by Samuel
+}
+
+
 
 void appm_init()
 {

@@ -153,6 +153,7 @@ extern struct app_env_tag app_env;
  ****************************************************************************************
  */
 
+
 /**
  ****************************************************************************************
  * @brief Initialize the BLE demo application.
@@ -213,6 +214,7 @@ uint8_t appm_get_dev_name(uint8_t* name);
  ****************************************************************************************
  */
 bool app_sec_get_bond_status(void);
+void rwip_ignore_ll_conn_param_update_patch(void);;
 
 /// @} APP
 

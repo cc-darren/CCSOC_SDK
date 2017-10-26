@@ -181,7 +181,8 @@ struct otat_period_meas_send_req
 */
 struct otat_notify_send_req
 {
-	uint8_t     eArray[21];
+    uint8_t     lenth;
+	uint8_t     eArray[20];
 };
 
 

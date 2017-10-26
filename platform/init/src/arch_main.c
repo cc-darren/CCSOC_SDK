@@ -23,6 +23,7 @@
 #include "project.h"
 #ifdef CFG_BLE_APP
 #include "rwble.h"  //avoid warning or rwble_isr()
+#include "app.h"
 #endif
 #ifdef BOOTLOADER
 #include "bootloader.h"
@@ -87,6 +88,7 @@ int main(void)
     {
 #ifdef CFG_BLE_APP
         rwip_schedule();
+        rwip_ignore_ll_conn_param_update_patch();
 #endif
     }
     //return(0);

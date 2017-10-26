@@ -4,3 +4,4 @@ Objects
 JLinkLog.txt
 JLinkSettings.ini
 /platform/init/src/backup
+/cfg/cfg_ble_ip.h
