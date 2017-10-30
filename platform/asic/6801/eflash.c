@@ -131,6 +131,7 @@ void cc6801_EflashInit(void)
     NVIC_EnableIRQ(EFLASH_IRQn);
 }
 
+IN_RET_RAM_BEGIN
 void cc6801_EflashFlush(void) 
 {
     uint32_t tdata;
@@ -143,6 +144,7 @@ void cc6801_EflashFlush(void)
         rd(SCU_ICACHE_REG,tdata);
     } while((tdata&FLUSH_EN)!=0);
 }
+IN_RET_RAM_END
 
 BOOL cc6801_EflashEraseALL(void)
 {
@@ -236,46 +238,8 @@ void cc6801_EflashProgram(uint32_t dwEflashAdr,unsigned char * pBufAdr,uint32_t 
     pSrcData = pBufAdr;
     dwTargetAdr = dwEflashAdr;
 
-    
+    IndirectWrite();
 
 
-
-
-
-    uint32_t tdata;
-    uint32_t tlen;
-    while (dwBufSize) {
-        //set eflash address
-        wr(EF_ACCESS_REG,dwEflashAdr<<8);
-    
-        if (dwBufSize>16) {
-            tlen = 4;
-            dwBufSize -= 16;
-            dwEflashAdr += 16;
-        } else {
-            tlen = ((dwBufSize+3)>>2);
-            dwBufSize=0;
-        }
-        //set eflash length in DW-1
-        wr(EF_CONFIG_REG,((tlen-1)<<16));
-        
-        tdata = EF_WR_DATA0_REG;
-        while (tlen) {
-            //set eflash data
-            wr(tdata,*(uint32_t*)pBufAdr);
-            tlen--;
-            tdata+=4;
-            pBufAdr+=4;
-        }
-        //set eflash mode to program
-        wr(EF_FLASHMODE_REG, EF_FLASHMODE_REG_AHBEnable|EF_FLASHMODE_REG_ModeMain);//wait eflash status
-
-//        //wait eflash status
-//        do {
-//            rd(EF_INTERRUPT_REG,tdata);
-//        } while( (tdata&(EF_INTERRUPT_REG_EraPrgModeStatus|EF_INTERRUPT_REG_DataModeStatus))==0 );
-//        //clear eflash status
-//        wr(EF_INTERRUPT_REG, tdata);  // clear int status
-    }
 #endif
 }
