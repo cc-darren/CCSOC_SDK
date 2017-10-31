@@ -104,7 +104,7 @@ typedef struct
 
 // Size of a flash page in bytes.
 //#if    defined (NRF51)
-    #define FS_PAGE_SIZE    (1024)
+    #define FS_PAGE_SIZE    (2048)
 //#elif (defined (NRF52) || defined(NRF52840_XXAA))
 //    #define FS_PAGE_SIZE    (4096)
 //#endif
@@ -114,21 +114,21 @@ typedef struct
 #define FS_PAGE_SIZE_WORDS  (FS_PAGE_SIZE / sizeof(uint32_t))
 
 
-// Function to obtain the end of the flash space available to fstorage.
-static uint32_t const * fs_flash_page_end_addr()
-{
+//// Function to obtain the end of the flash space available to fstorage.
+//static uint32_t const * fs_flash_page_end_addr()
+//{
 //    uint32_t const bootloader_addr = NRF_UICR->NRFFW[0];
-
+//
 //    return  (uint32_t*)((bootloader_addr != FS_ERASED_WORD) ? bootloader_addr :
 //                                                              NRF_FICR->CODESIZE * FS_PAGE_SIZE);
-}
+//}
 
 
 // Macro to obtain the address of the last page.
 // If there is a bootloader present the bootloader address read from UICR
 // will act as the page beyond the end of the available flash storage.
-#define FS_PAGE_END_ADDR    (fs_flash_page_end_addr())
-
+//#define FS_PAGE_END_ADDR    (fs_flash_page_end_addr())
+#define FS_PAGE_END_ADDR    0x1003F800
 
 
 #ifdef __cplusplus

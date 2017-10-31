@@ -596,6 +596,10 @@ uint8_t otat_att_idx_get(struct otat_env_tag* otat_env, uint16_t handle)
             break;
         }
 
+
+        
+#ifdef BLE_OTA_BL_MODE_EN
+
         // Mandatory attribute handle, OTA packet:
         handle_ref += OTAT_OTA_PKT_ATT_NB;
 
@@ -614,7 +618,19 @@ uint8_t otat_att_idx_get(struct otat_env_tag* otat_env, uint16_t handle)
             att_idx = OTAS_IDX_NB - (handle_ref - handle);
             break;
         }
+#else
+        
+        // Mandatory attribute handle, OTA packet:
+        handle_ref += OTAT_OTA_ATT_NB;
 
+        if(handle < handle_ref) 
+        {
+            att_idx = OTAS_IDX_NB - (handle_ref - handle);
+            break;
+        }
+
+        
+#endif
 /*
 
         if(handle < handle_ref)

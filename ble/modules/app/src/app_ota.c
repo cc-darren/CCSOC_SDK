@@ -38,6 +38,9 @@
 
 #include "co_math.h"
 #include "ke_timer.h"
+#ifdef BLE_OTA_BL_MODE_EN
+#include "fota_ble_handler.h"
+#endif
 
 #if (DISPLAY_SUPPORT)
 #include "app_display.h"
@@ -158,7 +161,8 @@ void app_ota_history_send(uint8_t id)
 }
 */
 
-void app_ota_notify_send(uint8_t *tx_data)
+//void app_ota_notify_send(uint8_t *tx_data)
+void app_ota_notify_send(uint8_t *tx_data, uint8_t length)
 {
     // Allocate the OTAT_TEMP_SEND_REQ message
     struct otat_notify_send_req * req = KE_MSG_ALLOC(OTAT_NOTIFY_SEND_REQ,
@@ -167,6 +171,7 @@ void app_ota_notify_send(uint8_t *tx_data)
                                                     otat_notify_send_req);
 
 
+    req->lenth = length;
     memcpy(req->eArray, tx_data, sizeof(struct otat_notify_send_req));
                                              
 
@@ -286,6 +291,21 @@ void app_ota_enable_prf(uint8_t conidx)
     // Send the message
     ke_msg_send(req);
 }
+
+void app_ota_ctrl_pt_write(struct gattc_write_req_ind const * param)
+{
+#ifdef BLE_OTA_BL_MODE_EN    
+    fota_on_ctrl_pt_write(param);
+#endif    
+}
+
+void app_ota_pkt_write_cmd(struct gattc_write_req_ind const * param)
+{
+#ifdef BLE_OTA_BL_MODE_EN    
+    fota_on_write(param);
+#endif    
+}
+
 
 /**
  ****************************************************************************************

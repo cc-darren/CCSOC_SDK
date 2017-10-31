@@ -24,6 +24,10 @@
 //#include "boards.h"
 #include "bootloader_info.h"
 #include "fota_req_handler.h"
+#ifdef CFG_BLE_APP
+#include "app.h"
+#include "rwip.h"
+#endif
 
 /** Leaves the minimum of the two 32-bit arguments */
 /*lint -emacro(506, MIN) */ /* Suppress "Constant value Boolean */
@@ -38,6 +42,7 @@
 
 #define APP_TIMER_PRESCALER             0                                                       /**< Value of the RTC1 PRESCALER register. */
 #define APP_TIMER_OP_QUEUE_SIZE         4                                                       /**< Size of timer operation queues. */
+
 
 // Weak function implementation
 
@@ -91,6 +96,10 @@ static void wait_for_event()
     {
         // Can't be emptied like this because of lack of static variables
         app_sched_execute();
+#ifdef CFG_BLE_APP
+        rwip_schedule();
+        rwip_ignore_ll_conn_param_update_patch();        
+#endif        
     }
 }
 
@@ -222,6 +231,7 @@ uint32_t nrf_dfu_init()
     }
 
     if(enter_bootloader_mode != 0 || !nrf_dfu_app_is_valid())
+    //if(1) // test by Samuel
     {
         timers_init();
         scheduler_init();

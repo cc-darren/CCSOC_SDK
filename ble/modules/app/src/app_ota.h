@@ -36,6 +36,7 @@
 
 #include <stdint.h>          // Standard Integer Definition
 #include "ke_task.h"
+#include "gattc_task.h"
 
 /*
  * TYPE DEFINITIONS
@@ -141,7 +142,12 @@ void app_ota_temp_type_dec(void);
  * @brief Increase temp_type by 1
  ****************************************************************************************
  */
-void app_ota_notify_send(uint8_t *tx_data);
+//void app_ota_notify_send(uint8_t *tx_data);
+void app_ota_notify_send(uint8_t *tx_data, uint8_t length);
+void app_ota_ctrl_pt_write(struct gattc_write_req_ind const * param);
+void app_ota_pkt_write_cmd(struct gattc_write_req_ind const * param);
+
+
 
 
 #endif //(BLE_APP_OTA)
