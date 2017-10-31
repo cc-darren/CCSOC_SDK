@@ -572,7 +572,26 @@ static int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
 #else
          case OTAS_IDX_OTA_VAL:
          {
-                status = ATT_ERR_NO_ERROR; // modified by Samuel
+             uint8_t state = ke_state_get(dest_id);
+             send_cfm = true;
+             //TracerInfo("OTAS_IDX_OTA_PKT_VAL\r\n");
+             
+             // check state of the task to know if it can be proceed immediately
+             if(state == OTAT_IDLE)
+             {
+                 // inform application that update of measurement interval is requested by peer device.
+                 struct otat_packet_send_cmd * req_ind = KE_MSG_ALLOC(OTAT_PACKET_SEND_CMD,
+                         prf_dst_task_get(&otat_env->prf_env, conidx), dest_id, otat_packet_send_cmd);
+                 req_ind->length =  param->length;
+                 memcpy(req_ind->value, param->value, param->length);
+                 ke_msg_send(req_ind);
+                 
+             }
+             else
+             {
+                 msg_status = KE_MSG_SAVED;
+             }  
+
          }break;
 
          case OTAS_IDX_OTA_NTF_CFG:

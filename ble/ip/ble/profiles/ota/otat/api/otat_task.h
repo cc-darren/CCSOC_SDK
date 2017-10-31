@@ -49,6 +49,8 @@ enum otat_msg_id
     /// Enable confirmation
     OTAT_ENABLE_RSP,
 
+#ifdef BLE_OTA_BL_MODE_EN
+
     /// Send packet cmd
     OTAT_PACKET_SEND_CMD,
 
@@ -56,27 +58,10 @@ enum otat_msg_id
     OTAT_CTRL_PT_SEND_REQ,
     OTAT_CTRL_PT_SEND_RSP,
     OTAT_CTRL_PT_SEND_NOTIFY,
-/*
-    /// Send temperature value from APP
-    OTAT_TEMP_SEND_REQ,
-    /// Send period measurement value from APP
-    OTAT_TEMP_PERIOD_MEAS_REQ,
-    /// Send swim measurement value from APP
-    OTAT_TEMP_SWIM_MEAS_REQ,    
-    /// Send temperature response
-    OTAT_TEMP_SEND_RSP,
-
-    /// Indicate Measurement Interval
-    OTAT_MEAS_INTV_UPD_REQ,
-    /// Send Measurement Interval response
-    OTAT_MEAS_INTV_UPD_RSP,
-
-    /// Inform APP of new measurement interval value requested by a peer device
-    OTAT_MEAS_INTV_CHG_REQ_IND,
-    /// APP Confirm message of new measurement interval value requested by a peer device
-    /// If accepted, it triggers indication on measurement interval attribute
-    OTAT_MEAS_INTV_CHG_CFM,
-*/
+#else
+    /// Send
+    OTAT_PACKET_SEND_CMD,
+#endif
     /// Inform APP that Indication Configuration has been changed - use to update bond data
     OTAT_CFG_INDNTF_IND,
 };
