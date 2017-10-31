@@ -39,6 +39,8 @@
 #include "project.h"
 #include "tracer.h"
 #include "app_ota.h"
+
+#include "tracer.h"
 /*
  * FUNCTION DEFINITIONS
  ****************************************************************************************
@@ -205,7 +207,7 @@ static int otat_notify_send_req_handler(ke_msg_id_t const msgid,
 
 			otat_env->operation->length  = param->lenth;//sizeof(struct otat_notify_send_req);
 
-			memcpy(otat_env->operation->data, param->eArray, sizeof(struct otat_notify_send_req));
+			memcpy(otat_env->operation->data, param->eArray, param->lenth);
 
             //Pack the temperature measurement value
             //otat_env->operation->length  = otat_pack_temp_value(&(otat_env->operation->data[0]), param->temp_meas);
@@ -488,6 +490,7 @@ static int gattc_att_info_req_ind_handler(ke_msg_id_t const msgid,
  ****************************************************************************************
  */
  // write notification enabled handler 
+ extern uint8_t test_flag;
 static int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
                                       struct gattc_write_req_ind const *param,
                                       ke_task_id_t const dest_id,
@@ -512,12 +515,52 @@ static int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
 #ifdef BLE_OTA_BL_MODE_EN
          case OTAS_IDX_OTA_PKT_VAL:
          {
-                app_ota_pkt_write_cmd(param);
+                //app_ota_pkt_write_cmd(param);
+
+                uint8_t state = ke_state_get(dest_id);
+                send_cfm = true;
+                //TracerInfo("OTAS_IDX_OTA_PKT_VAL\r\n");
+
+                // check state of the task to know if it can be proceed immediately
+                if(state == OTAT_IDLE)
+                {
+                    // inform application that update of measurement interval is requested by peer device.
+                    struct otat_packet_send_cmd * req_ind = KE_MSG_ALLOC(OTAT_PACKET_SEND_CMD,
+                            prf_dst_task_get(&otat_env->prf_env, conidx), dest_id, otat_packet_send_cmd);
+                    req_ind->length =  param->length;
+                    memcpy(req_ind->value, param->value, param->length);
+                    ke_msg_send(req_ind);
+                    
+                }
+                else
+                {
+                    msg_status = KE_MSG_SAVED;
+                }               
+               
          }break;
 
          case OTAS_IDX_OTA_CTRL_PT_VAL:
          {
-                app_ota_ctrl_pt_write(param);
+                uint8_t state = ke_state_get(dest_id);
+                //send_cfm = false;
+
+                //app_ota_ctrl_pt_write(param); 
+                // check state of the task to know if it can be proceed immediately
+                if(state == OTAT_IDLE)
+                {
+                    // inform application that update of measurement interval is requested by peer device.
+                    struct otat_packet_send_cmd * req_ind = KE_MSG_ALLOC(OTAT_CTRL_PT_SEND_REQ,
+                            prf_dst_task_get(&otat_env->prf_env, conidx), dest_id, otat_packet_send_cmd);
+                    req_ind->length =  param->length;
+                    memcpy(req_ind->value, param->value, param->length);
+                    ke_msg_send(req_ind);
+                }
+                else
+                {
+                    msg_status = KE_MSG_SAVED;
+                }
+
+                
 
          }break;
 
@@ -553,6 +596,7 @@ static int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
         cfm->status = status;
         ke_msg_send(cfm);
     }
+
 
     return (msg_status);
 }
@@ -751,7 +795,7 @@ const struct ke_msg_handler otat_default_state[] =
     {GATTC_CMP_EVT,              (ke_msg_func_t) gattc_cmp_evt_handler},
 
     //{OTAT_TEMP_SEND_REQ,         (ke_msg_func_t) otat_temp_send_req_handler},
-    {OTAT_NOTIFY_SEND_REQ,         (ke_msg_func_t) otat_notify_send_req_handler}, // sent from local
+    {OTAT_CTRL_PT_SEND_NOTIFY,         (ke_msg_func_t) otat_notify_send_req_handler}, // sent from local
     //{OTAT_TEMP_SWIM_MEAS_REQ,    (ke_msg_func_t) otat_swim_meas_send_req_handler},
     //{OTAT_MEAS_INTV_UPD_REQ,     (ke_msg_func_t) otat_meas_intv_upd_req_handler},
     //{OTAT_MEAS_INTV_CHG_CFM,     (ke_msg_func_t) otat_meas_intv_chg_cfm_handler},

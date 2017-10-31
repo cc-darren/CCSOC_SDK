@@ -24,6 +24,7 @@
 #ifdef CFG_BLE_APP
 #include "rwble.h"  //avoid warning or rwble_isr()
 #include "app.h"
+//#include "cc6801_reg.h"
 #endif
 #ifdef BOOTLOADER
 #include "bootloader.h"
@@ -48,16 +49,18 @@ extern void venus_main(void);
 int main(void)
 {
 #ifdef CFG_BLE_APP
-    uint32_t error = 0;
+//    uint32_t error = 0;
 #endif
     //Must be first in main()
     sys_InitMain();
 
-#ifdef CFG_BLE_APP
+#if 0//def CFG_BLE_APP
     memset (((void *) 0x40006000), 0, 8192);
 
-    *((uint32_t *) 0x40000010) = 0x00000B40;
+ //   *((uint32_t *) 0x40000010) = 0x00000B40;
     *((uint32_t *) 0x4000011C) = 0x00000008;
+    *((uint32_t *) 0x40000104) = (*((uint32_t *) 0x40000104) & 0xFFFFFE0) | 0x04;
+    //regCKGEN->bf.bleClkDiv = 0x04;
 
     // Initialize RW SW stack
     rwip_init(error);

@@ -49,8 +49,13 @@ enum otat_msg_id
     /// Enable confirmation
     OTAT_ENABLE_RSP,
 
-    /// Send OTA data
-    OTAT_NOTIFY_SEND_REQ,
+    /// Send packet cmd
+    OTAT_PACKET_SEND_CMD,
+
+    /// Send control point 
+    OTAT_CTRL_PT_SEND_REQ,
+    OTAT_CTRL_PT_SEND_RSP,
+    OTAT_CTRL_PT_SEND_NOTIFY,
 /*
     /// Send temperature value from APP
     OTAT_TEMP_SEND_REQ,
@@ -186,6 +191,7 @@ struct otat_notify_send_req
 };
 
 
+
 /// Parameters of the @ref STEP_COUNT_SEND_REQ message
 /*
 struct otat_swim_meas_send_req
@@ -203,7 +209,7 @@ struct otat_history_send_req
 	
 };
 */
-
+/*
 /// Parameters of the @ref OTAT_MEAS_INTV_UPD_REQ message
 struct otat_meas_intv_upd_req
 {
@@ -235,6 +241,14 @@ struct otat_meas_intv_chg_cfm
     uint8_t conidx;
     /// status of the request
     uint8_t status;
+};
+*/
+
+struct otat_packet_send_cmd
+{
+    //uint8_t     conidx;
+    uint16_t    length;
+	uint8_t  value[20];
 };
 
 /// Parameters of the @ref OTAT_CFG_INDNTF_IND message

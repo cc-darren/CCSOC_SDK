@@ -16,7 +16,6 @@
 #include "fota_req_handler.h"
 #include "tracer.h"
 #include "app_ota.h"
-#include "gattc_task.h"
 #include "string.h"
 
 
@@ -78,7 +77,8 @@ static __INLINE uint16_t uint16_decode(const uint8_t * p_encoded_data)
 
 
 //static uint32_t send_hvx(uint16_t conn_handle, uint16_t value_handle, uint16_t len)
-static void send_hvx(uint16_t len)
+//static void send_hvx(uint16_t len)
+void send_hvx(uint16_t len)
 {
     /*
     ble_gatts_hvx_params_t hvx_params   = {0};
@@ -125,8 +125,8 @@ static void response_send(      uint8_t op_code, nrf_dfu_res_code_t   resp_val)
 
 
 
-//static uint32_t response_crc_cmd_send(ble_dfu_t         * p_dfu,
-static void response_crc_cmd_send(         uint32_t offset, uint32_t crc)
+
+static void response_crc_cmd_send(uint32_t offset, uint32_t crc)
 {
     uint16_t               index = 0;
 
@@ -153,13 +153,13 @@ static void response_crc_cmd_send(         uint32_t offset, uint32_t crc)
     index += uint32_encode(crc, &m_notif_buffer[index]);
 
     send_hvx(index);
-    //return send_hvx(m_conn_handle, p_dfu->dfu_ctrl_pt_handles.value_handle, index);
+
 }
 
 
 
 
-//static uint32_t response_select_object_cmd_send(ble_dfu_t         * p_dfu,
+
 static void response_select_object_cmd_send(uint32_t max_size, uint32_t  offset, uint32_t crc)
 {
     uint16_t               index = 0;
@@ -202,8 +202,8 @@ static void response_select_object_cmd_send(uint32_t max_size, uint32_t  offset,
  *
  * @return    NRF_SUCCESS on successful processing of control point write. Otherwise an error code.
  */
-//static uint32_t on_ctrl_pt_write(ble_dfu_t * p_dfu, ble_gatts_evt_write_t * p_ble_write_evt)
-void fota_on_ctrl_pt_write(struct gattc_write_req_ind const *param)
+
+void fota_on_ctrl_pt_write(struct otat_packet_send_cmd const *param)
 {
     nrf_dfu_res_code_t  res_code;
     nrf_dfu_req_t       dfu_req;
@@ -390,7 +390,9 @@ static bool on_rw_authorize_req(ble_dfu_t * p_dfu, ble_evt_t * p_ble_evt)
  */
  // charactertic ota packets over ble cmd? 
 //static void fota_on_write(ble_dfu_t * p_dfu, ble_evt_t * p_ble_evt)
-void fota_on_write(struct gattc_write_req_ind const *param)
+
+
+void fota_on_write(struct otat_packet_send_cmd const *param)
 {
     //if (p_ble_evt->evt.gatts_evt.params.write.handle == p_dfu->dfu_pkt_handles.value_handle)
     if(1)
@@ -408,7 +410,7 @@ void fota_on_write(struct gattc_write_req_ind const *param)
         dfu_req.p_req    =  (uint8_t*)param->value;//p_ble_evt->evt.gatts_evt.params.write.data;
         dfu_req.req_len  =  param->length;//p_ble_evt->evt.gatts_evt.params.write.len;
 
-        res_code = nrf_dfu_req_handler_on_req(NULL, &dfu_req, &dfu_res);
+        res_code = nrf_dfu_req_handler_on_req(NULL, &dfu_req, &dfu_res); 
         if(res_code != NRF_DFU_RES_CODE_SUCCESS)
         {
             TracerInfo("Failure to run packet write\r\n");
@@ -417,7 +419,8 @@ void fota_on_write(struct gattc_write_req_ind const *param)
         // Check if a packet receipt notification is needed to be sent.
         if (m_pkt_notif_target != 0 && --m_pkt_notif_target_cnt == 0)
         {
-            (void)response_crc_cmd_send(dfu_res.offset, dfu_res.crc);
+
+            response_crc_cmd_send(dfu_res.offset, dfu_res.crc);
 
             // Reset the counter for the number of firmware packets.
             m_pkt_notif_target_cnt = m_pkt_notif_target;
