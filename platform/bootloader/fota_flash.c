@@ -112,6 +112,8 @@ fs_ret_t nrf_dfu_flash_store(uint32_t const * p_dest, uint32_t const * const p_s
     fs_ret_t ret_val = FS_SUCCESS;
     //TracerInfo("Storing: from 0x%08x to 0x%08x, num: %d\r\n", (uint32_t)p_src, (uint32_t)p_dest, len_words);
 
+
+
 #ifdef BLE_STACK_SUPPORT_REQD
     if ((m_flags & FLASH_FLAG_SD_ENABLED) != 0)
     {

@@ -30,7 +30,7 @@
 #define FOTA_BLE_HANDLER_H__
 
 #include <stdint.h>
-#include "gattc_task.h"
+#include "otat_task.h"
 
 
 #ifdef __cplusplus
@@ -54,8 +54,8 @@ typedef enum
 } ble_dfu_op_code_t;
 
 
-void fota_on_ctrl_pt_write(struct gattc_write_req_ind const *param);
-void fota_on_write(struct gattc_write_req_ind const *param);
+void fota_on_ctrl_pt_write(struct otat_packet_send_cmd const *param);
+void fota_on_write(struct otat_packet_send_cmd const *param);
 
 
 

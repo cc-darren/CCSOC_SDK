@@ -107,7 +107,7 @@ static pb_istream_t stream;
 static void on_dfu_complete(fs_evt_t const * const evt, fs_ret_t result)
 {
     TracerInfo("Resetting device. \r\n");
-    //(void)nrf_dfu_transports_close();
+    //(void)fota_transports_close();
     //NVIC_SystemReset();
     return;
 }
@@ -1049,6 +1049,7 @@ static nrf_dfu_res_code_t nrf_dfu_command_req(void * p_context, nrf_dfu_req_t * 
 }
 
 
+
 static nrf_dfu_res_code_t nrf_dfu_data_req(void * p_context, nrf_dfu_req_t * p_req, nrf_dfu_res_t * p_res)
 {
     uint32_t            const * p_write_addr;
@@ -1127,7 +1128,7 @@ static nrf_dfu_res_code_t nrf_dfu_data_req(void * p_context, nrf_dfu_req_t * p_r
             // Setting to ensure we are not sending faulty information in case of an early return.
             p_res->offset = s_dfu_settings.progress.firmware_image_offset;
             p_res->crc = s_dfu_settings.progress.firmware_image_crc;
-
+            
             if (m_valid_init_packet_present == false)
             {
                 // Can't accept data because DFU isn't initialized by init command.
@@ -1155,7 +1156,7 @@ static nrf_dfu_res_code_t nrf_dfu_data_req(void * p_context, nrf_dfu_req_t * p_r
 
             if (m_data_buf_pos + p_req->req_len < FLASH_BUFFER_CHUNK_LENGTH)
             {
-                //If there is enough space in the current buffer, store the received data.
+                //If there is enough space in the current buffer, store the received data.               
                 memcpy(&m_data_buf[m_current_data_buffer][m_data_buf_pos],
                        p_req->p_req, p_req->req_len);
                 m_data_buf_pos += p_req->req_len;
@@ -1202,7 +1203,7 @@ static nrf_dfu_res_code_t nrf_dfu_data_req(void * p_context, nrf_dfu_req_t * p_r
 
                 //Copy the remaining segment of the request into the next buffer.
                 if (p_req->req_len)
-                {
+                {                
                     memcpy(&m_data_buf[m_current_data_buffer][m_data_buf_pos],
                            p_req->p_req, p_req->req_len);
                     m_data_buf_pos += p_req->req_len;
@@ -1274,7 +1275,8 @@ static nrf_dfu_res_code_t nrf_dfu_data_req(void * p_context, nrf_dfu_req_t * p_r
             if (s_dfu_settings.progress.firmware_image_offset == m_firmware_size_req)
             {
                 TracerInfo("Waiting for %d pending flash operations before doing postvalidate.\r\n", m_flash_operations_pending);
-                while(m_flash_operations_pending)
+                while(m_flash_operations_pending) 
+                //if(1) // test by Samuel
                 {
                     nrf_dfu_wait();
                 }

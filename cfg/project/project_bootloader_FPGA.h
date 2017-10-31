@@ -397,7 +397,7 @@ Declaration of static Global Variables & Functions
 ******************************************************************************/
 #include "stdint.h"
     
-//#define BLE_OTA_BL_MODE_EN
+#define BLE_OTA_BL_MODE_EN
 
 //BLE is always supported
 #define CFG_BLE    1

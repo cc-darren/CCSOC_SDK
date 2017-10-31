@@ -2298,6 +2298,24 @@ int venus_main(void)
     
     TracerInfo("== Venus Main Start ==\r\n");
 
+#ifdef CFG_BLE_APP
+    uint32_t error = 0;
+
+    GLOBAL_INT_STOP();
+
+    memset (((void *) 0x40006000), 0, 8192);
+       
+    *((uint32_t *) 0x4000011C) = 0x00000008;
+    *((uint32_t *) 0x40000104) = (*((uint32_t *) 0x40000104) & 0xFFFFFE0) | 0x04;
+     //regCKGEN->bf.bleClkDiv = 0x04;
+    
+    // Initialize RW SW stack
+    rwip_init(error);
+
+    GLOBAL_INT_START();
+#endif
+
+
     venus_platform_init();
 
     venus_app_init();

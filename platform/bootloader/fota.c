@@ -24,6 +24,7 @@
 //#include "boards.h"
 #include "bootloader_info.h"
 #include "fota_req_handler.h"
+#include "fota_transport.h"
 #ifdef CFG_BLE_APP
 #include "app.h"
 #include "rwip.h"
@@ -98,7 +99,7 @@ static void wait_for_event()
         app_sched_execute();
 #ifdef CFG_BLE_APP
         rwip_schedule();
-        rwip_ignore_ll_conn_param_update_patch();        
+        rwip_ignore_ll_conn_param_update_patch();   
 #endif        
     }
 }
@@ -237,12 +238,12 @@ uint32_t nrf_dfu_init()
         scheduler_init();
 
         // Initializing transports
-        //ret_val = nrf_dfu_transports_init();
-        //if (ret_val != CC_SUCCESS)
-        //{
-        //    TracerInfo("Could not initalize DFU transport: 0x%08x\r\n");
-        //    return ret_val;
-        //}
+        ret_val = fota_transports_init();
+        if (ret_val != CC_SUCCESS)
+        {
+            TracerInfo("Could not initalize DFU transport: 0x%08x\r\n");
+            return ret_val;
+        }
 
         (void)nrf_dfu_req_handler_init();
 

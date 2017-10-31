@@ -11,26 +11,34 @@
  */
 
 #include "fota_transport.h"
+#include "app_scheduler.h"
 #include <string.h>
 #include "tracer.h"
-
+#include "rwip.h"
 
  uint32_t fota_transports_init(void)
  {
      uint32_t ret_val = SUCCESS;
  
      TracerInfo("In nrf_dfu_transports_init\r\n");
-#if 0 
+
 #ifdef CFG_BLE_APP
-         memset (((void *) 0x40006000), 0, 8192);
+     uint32_t error;
+	 
+     GLOBAL_INT_STOP()
      
-         *((uint32_t *) 0x40000010) = 0x00000B40;
-         *((uint32_t *) 0x4000011C) = 0x00000008;
-     
-         // Initialize RW SW stack
-         rwip_init(error);
+     memset (((void *) 0x40006000), 0, 8192);
+   
+     *((uint32_t *) 0x4000011C) = 0x00000008;
+     *((uint32_t *) 0x40000104) = (*((uint32_t *) 0x40000104) & 0xFFFFFE0) | 0x04;
+     //regCKGEN->bf.bleClkDiv = 0x04;
+
+     // Initialize RW SW stack
+     rwip_init(error);
+
+     GLOBAL_INT_START();
 #endif
-#endif
+
  
      TracerInfo("After nrf_dfu_transports_init\r\n");
  
@@ -43,9 +51,19 @@
      uint32_t ret_val = SUCCESS;
  
      TracerInfo("In nrf_dfu_transports_close\r\n");
- 
-
- 
+#if 0
+#ifdef CFG_BLE_APP 
+/*
+     for(uint32_t i = 0; i < 10000; i++)
+     {
+          app_sched_execute();
+          rwip_schedule();
+          rwip_ignore_ll_conn_param_update_patch();   
+     }
+*/     
+     appm_disconnect();
+#endif
+#endif 
      TracerInfo("After nrf_dfu_transports_close\r\n");
  
      return ret_val;

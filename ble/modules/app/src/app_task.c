@@ -671,7 +671,7 @@ static int appm_msg_handler(ke_msg_id_t const msgid,
         } break;
         #endif // defined(BLE_APP_AM0)
 
-#if (BLE_APP_HT)
+#if (BLE_APP_OTA)
         case (TASK_ID_OTAT):
         {
             // Call the OTA Module

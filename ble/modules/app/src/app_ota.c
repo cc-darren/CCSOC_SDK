@@ -165,14 +165,14 @@ void app_ota_history_send(uint8_t id)
 void app_ota_notify_send(uint8_t *tx_data, uint8_t length)
 {
     // Allocate the OTAT_TEMP_SEND_REQ message
-    struct otat_notify_send_req * req = KE_MSG_ALLOC(OTAT_NOTIFY_SEND_REQ,
+    struct otat_notify_send_req * req = KE_MSG_ALLOC(OTAT_CTRL_PT_SEND_NOTIFY,
                                                     prf_get_task_from_id(TASK_ID_OTAT),
                                                     TASK_APP,
                                                     otat_notify_send_req);
 
 
     req->lenth = length;
-    memcpy(req->eArray, tx_data, sizeof(struct otat_notify_send_req));
+    memcpy(req->eArray, tx_data, length);
                                              
 
     ke_msg_send(req);
@@ -291,6 +291,7 @@ void app_ota_enable_prf(uint8_t conidx)
     // Send the message
     ke_msg_send(req);
 }
+/*
 
 void app_ota_ctrl_pt_write(struct gattc_write_req_ind const * param)
 {
@@ -305,7 +306,7 @@ void app_ota_pkt_write_cmd(struct gattc_write_req_ind const * param)
     fota_on_write(param);
 #endif    
 }
-
+*/
 
 /**
  ****************************************************************************************
@@ -445,6 +446,35 @@ static int otat_temp_send_rsp_handler(ke_msg_id_t const msgid,
     return (KE_MSG_CONSUMED);
 }
 */
+
+static int otat_packet_send_cmd_handler(ke_msg_id_t const msgid,
+                                        struct otat_packet_send_cmd const *param,
+                                        ke_task_id_t const dest_id,
+                                        ke_task_id_t const src_id)
+{
+#ifdef BLE_OTA_BL_MODE_EN    
+    fota_on_write(param);
+/*
+    uint8_t test_buff[15] = {0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0a,0x0b,0x0c,0x0d,0x0e,0x0f};
+    app_ota_notify_send(test_buff, 16);
+    app_ota_notify_send((uint8_t*)param->value, param->length);
+*/    
+#endif 
+    return (KE_MSG_CONSUMED);
+}
+
+
+static int otat_ctrl_pt_send_req_handler(ke_msg_id_t const msgid,
+                                        struct otat_packet_send_cmd const *param,
+                                        ke_task_id_t const dest_id,
+                                        ke_task_id_t const src_id)
+{
+#ifdef BLE_OTA_BL_MODE_EN    
+    fota_on_ctrl_pt_write(param);
+#endif  
+    return (KE_MSG_CONSUMED);
+}
+
 static int otat_cfg_indntf_ind_handler(ke_msg_id_t const msgid,
                                         struct otat_cfg_indntf_ind const *param,
                                         ke_task_id_t const dest_id,
@@ -538,6 +568,8 @@ const struct ke_msg_handler app_ota_msg_handler_list[] =
 //  {OTAT_ENABLE_RSP,               (ke_msg_func_t)otat_enable_rsp_handler},
 //    {OTAT_TEMP_SEND_RSP,            (ke_msg_func_t)otat_temp_send_rsp_handler},
 //    {OTAT_MEAS_INTV_CHG_REQ_IND,    (ke_msg_func_t)otat_meas_intv_chg_req_ind_handler},
+    {OTAT_PACKET_SEND_CMD,          (ke_msg_func_t)otat_packet_send_cmd_handler},
+    {OTAT_CTRL_PT_SEND_REQ,          (ke_msg_func_t)otat_ctrl_pt_send_req_handler},
     {OTAT_CFG_INDNTF_IND,           (ke_msg_func_t)otat_cfg_indntf_ind_handler},
 
     {APP_OTA_MEAS_INTV_TIMER,        (ke_msg_func_t)app_ota_meas_intv_timer_handler},
