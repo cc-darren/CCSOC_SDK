@@ -38,6 +38,7 @@ Head Block of The File
 // Sec 0: Comment block of the file
 
 // Sec 1: Include File
+#include <string.h>
 #include "ARMCM.h"
 #include "cc6801_reg.h"
 #include "clock.h"
@@ -159,6 +160,7 @@ Declaration of static Global Variables & Functions
 // Sec 10: C Functions
 ******************************************************************************/
 
+IN_SYS_RAM_BEGIN
 /******************************************************************************
 FUNCTION
   cc6801_ClockSysClkSet
@@ -177,25 +179,20 @@ PARAMETERS
 RETURNS
     none
 ******************************************************************************/
-static void cc6801_ClockSysClkSet(E_ClockSupported clk)
+static void cc6801_ClockSysClkSet(T_ClockConfig *pClk)
 {
     uint32_t dwNewPLL;
     uint32_t i = 0xFFFFF;
 
-    if(clk >= CLOCK_TOTAL_SUPPORTED)
-    {
-        return;
-    }
-
     //dwCurPLL = ((regSCU->dw.clkConfig0 & SELECT_PLL_MASK) && (regSCU->dw.clkConfig1 & FREQ_HIGH_MASK))?1:0;
-    dwNewPLL = (g_aClockTable[clk].dwClkCfg0 & SELECT_PLL_MASK)?1:0;
+    dwNewPLL = (pClk->dwClkCfg0 & SELECT_PLL_MASK)?1:0;
 
     if(dwNewPLL)    // -> with PLL
     {
         //make sure CPU run at XTAL(48MHz)
         regSCU->dw.clkConfig0 = (PLL_DISABLE_MASK|SELECT_XTAL_MASK|SYS_DIV_0_MASK);
         //Power up PLL(but bypass)
-        regSCU->dw.pllConfig = (g_aClockTable[clk].dwPllCfg | PLL_BYPASS_MASK);
+        regSCU->dw.pllConfig = (pClk->dwPllCfg | PLL_BYPASS_MASK);
         //Release PLL reset
         regSCU->dw.pllReset = 1;
         __NOP();
@@ -203,19 +200,18 @@ static void cc6801_ClockSysClkSet(E_ClockSupported clk)
         //wait for PLL lock
         while((i--) && !(regSCU->dw.pllConfig & PLL_LOCKED_MASK));
         //bypass = 0
-        regSCU->dw.pllConfig = g_aClockTable[clk].dwPllCfg;
+        regSCU->dw.pllConfig = pClk->dwPllCfg;
 
-        regSCU->dw.clkConfig0 = g_aClockTable[clk].dwClkCfg0;
+        regSCU->dw.clkConfig0 = pClk->dwClkCfg0;
     }
     else    // -> no PLL
     {
         //must write clkConfig0 first because we must switch to XTAL then turn OFF PLL
-        regSCU->dw.clkConfig0 = g_aClockTable[clk].dwClkCfg0;
-        regSCU->dw.pllConfig  = g_aClockTable[clk].dwPllCfg;
+        regSCU->dw.clkConfig0 = pClk->dwClkCfg0;
+        regSCU->dw.pllConfig  = pClk->dwPllCfg;
     }
 
     regSCU->dw.clkConfig1 = SCU_CLK_CFG1;
-    g_dwCurrentClock = clk;
 }
 
 
@@ -232,21 +228,16 @@ PARAMETERS
 RETURNS
     none
 ******************************************************************************/
-//static void cc6801_ClockEflashCfg(E_ClockSupported clk)
-//{
-//    if(clk >= CLOCK_TOTAL_SUPPORTED)
-//    {
-//        return;
-//    }
-//
-//    regEFLASH->dwTcpsTadhTah = g_aEflashTable[clk].dwTcpsTadhTah;
-//    regEFLASH->dwTwkTpgs     = g_aEflashTable[clk].dwTwkTpgs;
-//    regEFLASH->dwTrcvTnvh    = g_aEflashTable[clk].dwTrcvTnvh;
-//    regEFLASH->dwTprog       = g_aEflashTable[clk].dwTprog;
-//    regEFLASH->dwTerase      = g_aEflashTable[clk].dwTerase;
-//    regEFLASH->dwTme         = g_aEflashTable[clk].dwTme;
-//    regEFLASH->dwTnvsTnvh1   = g_aEflashTable[clk].dwTnvsTnvh1;
-//}
+static void cc6801_ClockEflashCfg(T_EflashConfig *pFlash)
+{
+    //regEFLASH->dwTcpsTadhTah = pFlash->dwTcpsTadhTah;
+    //regEFLASH->dwTwkTpgs     = pFlash->dwTwkTpgs;
+    //regEFLASH->dwTrcvTnvh    = pFlash->dwTrcvTnvh;
+    //regEFLASH->dwTprog       = pFlash->dwTprog;
+    //regEFLASH->dwTerase      = pFlash->dwTerase;
+    //regEFLASH->dwTme         = pFlash->dwTme;
+    //regEFLASH->dwTnvsTnvh1   = pFlash->dwTnvsTnvh1;
+}
 
 /******************************************************************************
 FUNCTION
@@ -265,12 +256,38 @@ RETURNS
 ******************************************************************************/
 void cc6801_ClockSysClkAdjust(E_ClockSupported clk)
 {
+    T_ClockConfig   sClk;
+    T_EflashConfig  sFlash;
+
+    if(clk >= CLOCK_TOTAL_SUPPORTED)
+    {
+        return;
+    }
+
+    //We are going to change clock now.
+    //All data/code resided in eFlash will failed to read.
+    //Both g_aClockTable & g_aEflashTable are const table which are in eFlash
+    //Before we read them, we must move them to RAM.
+    //Also, here, we know the required clock.
+    //So, we have sClk and sFlash delcared in Stack and store the required parameters
+    memcpy(&sClk, &g_aClockTable[clk], sizeof(T_ClockConfig));
+    memcpy(&sFlash, &g_aEflashTable[clk], sizeof(T_EflashConfig));
+
+    //Critical section start
+    GLOBAL_INT_DISABLE();
+
     //first change system clock
-    cc6801_ClockSysClkSet(clk);   //current clock will be updated
+    cc6801_ClockSysClkSet(&sClk);   //current clock will be updated
 
     //before go back to eFlash, must update eFlash parameters for current clock
-    //cc6801_ClockEflashCfg(clk);
+    cc6801_ClockEflashCfg(&sFlash);
+
+    g_dwCurrentClock = clk;
+
+    GLOBAL_INT_RESTORE();
+    //Critical section end
 }
+IN_SYS_RAM_END
 
 /******************************************************************************
 FUNCTION
