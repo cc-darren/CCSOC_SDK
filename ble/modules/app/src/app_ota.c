@@ -459,21 +459,37 @@ static int otat_packet_send_cmd_handler(ke_msg_id_t const msgid,
     app_ota_notify_send(test_buff, 16);
     app_ota_notify_send((uint8_t*)param->value, param->length);
 */    
+#else
+        uint8_t  buffer[3]; 
+        uint8_t  index = 0;
+    
+        buffer[index++] = 0x20;//DFU_OP_RESPONSE_CODE;
+        
+        // Encode the Request Op code
+        buffer[index++] = 0x01;//BLE_DFU_OP_CODE_CREATE_OBJECT;
+        
+        // Encode the Response Value.
+        buffer[index++] = 0x01;//NRF_DFU_RES_CODE_SUCCESS;
+    
+        app_ota_notify_send(buffer, index);
+
 #endif 
     return (KE_MSG_CONSUMED);
 }
 
-
+#ifdef BLE_OTA_BL_MODE_EN  
 static int otat_ctrl_pt_send_req_handler(ke_msg_id_t const msgid,
                                         struct otat_packet_send_cmd const *param,
                                         ke_task_id_t const dest_id,
                                         ke_task_id_t const src_id)
 {
-#ifdef BLE_OTA_BL_MODE_EN    
+
     fota_on_ctrl_pt_write(param);
-#endif  
+
+
     return (KE_MSG_CONSUMED);
 }
+#endif
 
 static int otat_cfg_indntf_ind_handler(ke_msg_id_t const msgid,
                                         struct otat_cfg_indntf_ind const *param,
@@ -569,7 +585,9 @@ const struct ke_msg_handler app_ota_msg_handler_list[] =
 //    {OTAT_TEMP_SEND_RSP,            (ke_msg_func_t)otat_temp_send_rsp_handler},
 //    {OTAT_MEAS_INTV_CHG_REQ_IND,    (ke_msg_func_t)otat_meas_intv_chg_req_ind_handler},
     {OTAT_PACKET_SEND_CMD,          (ke_msg_func_t)otat_packet_send_cmd_handler},
+#ifdef BLE_OTA_BL_MODE_EN        
     {OTAT_CTRL_PT_SEND_REQ,          (ke_msg_func_t)otat_ctrl_pt_send_req_handler},
+#endif        
     {OTAT_CFG_INDNTF_IND,           (ke_msg_func_t)otat_cfg_indntf_ind_handler},
 
     {APP_OTA_MEAS_INTV_TIMER,        (ke_msg_func_t)app_ota_meas_intv_timer_handler},

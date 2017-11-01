@@ -61,6 +61,7 @@ enum otat_msg_id
 #else
     /// Send
     OTAT_PACKET_SEND_CMD,
+    OTAT_CTRL_PT_SEND_NOTIFY,    
 #endif
     /// Inform APP that Indication Configuration has been changed - use to update bond data
     OTAT_CFG_INDNTF_IND,
