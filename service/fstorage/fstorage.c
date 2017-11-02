@@ -93,8 +93,8 @@ static uint32_t store_execute(fs_op_t const * const p_op)
 //                          (uint32_t*)p_op->store.p_src  + p_op->store.offset,
 //                          chunk_len);
 
-    drvi_EflashProgram( (uint32_t)((uint32_t*)p_op->store.p_dest + p_op->store.offset),
-                        (unsigned char *) ((uint32_t*)p_op->store.p_src  + p_op->store.offset),
+    drvi_EflashProgram( (uint32_t)((uint32_t)p_op->store.p_dest + (uint32_t)p_op->store.offset),
+                        (unsigned char *) ((uint32_t)p_op->store.p_src  + (uint32_t)p_op->store.offset),
                         chunk_len);
     return CC_SUCCESS;
 }
@@ -353,6 +353,7 @@ fs_ret_t fs_init(void)
 
     m_flags |= FS_FLAG_INITIALIZED;
 
+    drvi_EflashInit();
     drvi_EflashRegisterCallback(fs_sys_event_handler);
 
     return FS_SUCCESS;
