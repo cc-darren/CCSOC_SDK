@@ -251,7 +251,7 @@ uint32_t nrf_dfu_init()
         TracerInfo("Waiting for events\r\n");
 
         // Blake, Add for testing DFU request handle to simulation BLE
-        fota_test();
+        //fota_test();
 
         wait_for_event();
         TracerInfo("After waiting for events\r\n");

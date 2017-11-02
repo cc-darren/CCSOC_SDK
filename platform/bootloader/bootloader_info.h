@@ -96,7 +96,7 @@ extern "C" {
  */
 //#define MAIN_APPLICATION_START_ADDR             (MBR_SIZE)
 //Blake, Modify for CC6801
-#define MAIN_APPLICATION_START_ADDR             (0x10008000)
+#define MAIN_APPLICATION_START_ADDR             (0x1000B000)
 
 #endif
 
