@@ -15,10 +15,11 @@
 #include <string.h>
 #include "tracer.h"
 #include "rwip.h"
+#include "error.h"
 
  uint32_t fota_transports_init(void)
  {
-     uint32_t ret_val = SUCCESS;
+     uint32_t ret_val = CC_SUCCESS;
  
      TracerInfo("In nrf_dfu_transports_init\r\n");
 
@@ -48,7 +49,7 @@
  
  uint32_t fota_transports_close(void)
  {
-     uint32_t ret_val = SUCCESS;
+     uint32_t ret_val = CC_SUCCESS;
  
      TracerInfo("In nrf_dfu_transports_close\r\n");
 #if 0
