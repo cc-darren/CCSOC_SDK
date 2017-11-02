@@ -212,6 +212,18 @@ uint32_t nrf_dfu_init()
 
     TracerInfo("In real nrf_dfu_init\r\n");
 
+#if defined(FSTORAGE_ENABLED) && FSTORAGE_ENABLED
+    ret_val = nrf_dfu_flash_init(true);
+#else
+    ret_val = nrf_dfu_flash_init(false);
+#endif
+
+    if (ret_val)
+    {
+        TracerInfo("Could not initalize flash\n");
+        return ret_val;
+    }
+
     nrf_dfu_settings_init();
 
     // Continue ongoing DFU operations
@@ -232,7 +244,6 @@ uint32_t nrf_dfu_init()
     }
 
     if(enter_bootloader_mode != 0 || !nrf_dfu_app_is_valid())
-    //if(1) // test by Samuel
     {
         timers_init();
         scheduler_init();

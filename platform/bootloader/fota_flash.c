@@ -12,23 +12,17 @@
 
 #include "fota_flash.h"
 #include "fota_types.h"
-//#include "softdevice_handler.h"
 #include "drvi_eflash.h"
 #include "tracer.h"
-
-#ifdef SOFTDEVICE_PRESENT
-// Only include fstorage if SD interaction is required
 #include "fstorage.h"
-#endif
 
 #define FLASH_FLAG_NONE                 (0)
 #define FLASH_FLAG_OPER                 (1<<0)
 #define FLASH_FLAG_FAILURE_SINCE_LAST   (1<<1)
-#define FLASH_FLAG_SD_ENABLED           (1<<2)
+#define FLASH_FLAG_FSTORAGE_ENABLED     (1<<2)
 
 static uint32_t m_flags;
 
-#ifdef BLE_STACK_SUPPORT_REQD
 
 // Function prototypes
 static void fs_evt_handler(fs_evt_t const * const evt, fs_ret_t result);
@@ -36,7 +30,7 @@ static void fs_evt_handler(fs_evt_t const * const evt, fs_ret_t result);
 FS_REGISTER_CFG(fs_config_t fs_dfu_config) =
 {
     .callback       = fs_evt_handler,            // Function for event callbacks.
-    .p_start_addr   = (uint32_t*)MBR_SIZE,
+    .p_start_addr   = (uint32_t*)0x10000000,
     .p_end_addr     = (uint32_t*)BOOTLOADER_SETTINGS_ADDRESS + CODE_PAGE_SIZE
 };
 
@@ -64,45 +58,31 @@ static void fs_evt_handler(fs_evt_t const * const evt, fs_ret_t result)
     }
 }
 
-#endif
 
 
-uint32_t nrf_dfu_flash_init(bool sd_enabled)
+uint32_t nrf_dfu_flash_init(bool fstorage_enable)
 {
     uint32_t err_code = CC_SUCCESS;
 
-#ifdef BLE_STACK_SUPPORT_REQD
-    // Only run this initialization if SD is enabled
-    if(sd_enabled)
+    if(fstorage_enable)
     {
-        NRF_LOG_INFO("------- nrf_dfu_flash_init-------\r\n");
-        if (fs_fake_init() != FS_SUCCESS)
+        TracerInfo("------- nrf_dfu_flash_init-------\r\n");
+        if (fs_init() != FS_SUCCESS)
         {
             TracerInfo("Not initializing the thing\r\n");
-            return NRF_ERROR_INVALID_STATE;
-        }
-
-        // Enable access to the whole range
-
-
-        err_code = softdevice_sys_evt_handler_set(fs_sys_event_handler);
-        if (err_code != NRF_SUCCESS)
-        {
-            TracerInfo("Not initializing the thing 2\r\n");
-            return NRF_ERROR_INVALID_STATE;
+            return CC_ERROR_INVALID_STATE;
         }
 
         // Setting flag to indicate that SD is enabled to ensure fstorage is use in calls
         // to do flash operations.
-        m_flags = FLASH_FLAG_SD_ENABLED;
+        m_flags = FLASH_FLAG_FSTORAGE_ENABLED;
     }
     else
-#endif
     {
         m_flags = FLASH_FLAG_NONE;
+        drvi_EflashInit();
     }
 
-    drvi_EflashInit();
     return err_code;
 }
 
@@ -112,10 +92,7 @@ fs_ret_t nrf_dfu_flash_store(uint32_t const * p_dest, uint32_t const * const p_s
     fs_ret_t ret_val = FS_SUCCESS;
     //TracerInfo("Storing: from 0x%08x to 0x%08x, num: %d\r\n", (uint32_t)p_src, (uint32_t)p_dest, len_words);
 
-
-
-#ifdef BLE_STACK_SUPPORT_REQD
-    if ((m_flags & FLASH_FLAG_SD_ENABLED) != 0)
+    if ((m_flags & FLASH_FLAG_FSTORAGE_ENABLED) != 0)
     {
         // Check if there is a pending error
         if ((m_flags & FLASH_FLAG_FAILURE_SINCE_LAST) != 0)
@@ -127,7 +104,7 @@ fs_ret_t nrf_dfu_flash_store(uint32_t const * p_dest, uint32_t const * const p_s
         // Set the flag to indicate ongoing operation
         m_flags |= FLASH_FLAG_OPER;
         //lint -e611
-        ret_val = fs_store(&fs_dfu_config, p_dest, p_src, len_words, (void*)callback);
+        ret_val = fs_store(&fs_dfu_config, p_dest, p_src, len_words*sizeof(uint32_t), (void*)callback);
 
         if (ret_val != FS_SUCCESS)
         {
@@ -139,10 +116,8 @@ fs_ret_t nrf_dfu_flash_store(uint32_t const * p_dest, uint32_t const * const p_s
         m_flags |= FLASH_FLAG_OPER;
     }
     else
-#endif
     {
 
-#ifndef NRF51
         if ((p_src == NULL) || (p_dest == NULL))
         {
             return FS_ERR_NULL_ARG;
@@ -160,9 +135,7 @@ fs_ret_t nrf_dfu_flash_store(uint32_t const * p_dest, uint32_t const * const p_s
             TracerInfo("Flash: Invallid length (NVMC)\r\n");
             return FS_ERR_INVALID_ARG;
         }
-#endif
 
-        //nrf_nvmc_write_words((uint32_t)p_dest, p_src, len_words);
         drvi_EflashProgram((uint32_t)p_dest, (unsigned char *)p_src, len_words*sizeof(uint32_t));
 
         #if (__LINT__ != 1)
@@ -194,9 +167,8 @@ fs_ret_t nrf_dfu_flash_erase(uint32_t const * p_dest, uint32_t num_pages, dfu_fl
     fs_ret_t ret_val = FS_SUCCESS;
     TracerInfo("Erasing: 0x%08x, num: %d\r\n", (uint32_t)p_dest, num_pages);
 
-#ifdef BLE_STACK_SUPPORT_REQD
 
-    if ((m_flags & FLASH_FLAG_SD_ENABLED) != 0)
+    if ((m_flags & FLASH_FLAG_FSTORAGE_ENABLED) != 0)
     {
         // Check if there is a pending error
         if ((m_flags & FLASH_FLAG_FAILURE_SINCE_LAST) != 0)
@@ -219,16 +191,13 @@ fs_ret_t nrf_dfu_flash_erase(uint32_t const * p_dest, uint32_t num_pages, dfu_fl
         m_flags |= FLASH_FLAG_OPER;
     }
     else
-#endif
     {
-#ifndef NRF51
         // Softdevice is not present or activated. Run the NVMC instead
         if (((uint32_t)p_dest & (CODE_PAGE_SIZE-1)) != 0)
         {
             TracerInfo("Invalid address\r\n");
             return FS_ERR_UNALIGNED_ADDR;
         }
-#endif
 
         uint16_t first_page = ((uint32_t)p_dest / CODE_PAGE_SIZE);
         do
@@ -274,12 +243,11 @@ fs_ret_t nrf_dfu_flash_wait(void)
 {
     TracerInfo("Waiting for finished...\r\n");
 
-#ifdef BLE_STACK_SUPPORT_REQD
-    if ((m_flags & FLASH_FLAG_SD_ENABLED) != 0)
+    if ((m_flags & FLASH_FLAG_FSTORAGE_ENABLED) != 0)
     {
         while ((m_flags & FLASH_FLAG_OPER) != 0)
         {
-            (void)sd_app_evt_wait();
+            //(void)sd_app_evt_wait();
         }
 
         if ((m_flags & FLASH_FLAG_FAILURE_SINCE_LAST) != 0)
@@ -288,7 +256,6 @@ fs_ret_t nrf_dfu_flash_wait(void)
             return FS_ERR_FAILURE_SINCE_LAST;
         }
     }
-#endif
     drvi_EflashFlush();
 
     TracerInfo("After wait!\r\n");

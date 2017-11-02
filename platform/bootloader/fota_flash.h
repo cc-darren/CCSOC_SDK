@@ -54,7 +54,7 @@ typedef fs_cb_t dfu_flash_callback_t;
  * @retval NRF_SUCCESS             If the operation was successful.
  * @retval NRF_ERROR_INVALID_STATE If the fstorage module could not be initiated or the SoftDevice could not set the event handler.
  */
-uint32_t nrf_dfu_flash_init(bool sd_enabled);
+uint32_t nrf_dfu_flash_init(bool fstorage_enable);
 
 
 /**@brief Function for storing data to flash (with or without the SoftDevice enabled).

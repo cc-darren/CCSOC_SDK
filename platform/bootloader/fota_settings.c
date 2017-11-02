@@ -62,14 +62,14 @@ static void wait_for_pending(void)
     }
 }
 
-//static void wait_for_queue(void)
-//{
-//    while (fs_queue_is_full())
-//    {
-//        TracerInfo("Waiting for available space on flash queue.\r\n");
-//        delay_operation();
-//    }
-//}
+static void wait_for_queue(void)
+{
+    while (fs_queue_is_full())
+    {
+        TracerInfo("Waiting for available space on flash queue.\r\n");
+        delay_operation();
+    }
+}
 
 
 uint32_t nrf_dfu_settings_calculate_crc(void)
@@ -123,7 +123,7 @@ int nrf_dfu_settings_write(dfu_flash_callback_t callback)
 
     do
     {
-//        wait_for_queue();
+        wait_for_queue();
 
         // Not setting the callback function because ERASE is required before STORE
         // Only report completion on successful STORE.
@@ -148,7 +148,7 @@ int nrf_dfu_settings_write(dfu_flash_callback_t callback)
 
     do
     {
-//        wait_for_queue();
+        wait_for_queue();
 
         err_code = nrf_dfu_flash_store((uint32_t*)&m_dfu_settings_buffer[0],
                                        (uint32_t*)&temp_dfu_settings,

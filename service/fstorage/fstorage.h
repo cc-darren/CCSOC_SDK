@@ -27,7 +27,7 @@
 
 //Blake
 #ifndef FS_QUEUE_SIZE
-#define FS_QUEUE_SIZE 4
+#define FS_QUEUE_SIZE 8
 #endif
 
 // <o> FS_OP_MAX_RETRIES - Number attempts to execute an operation if the SoftDevice fails. 
