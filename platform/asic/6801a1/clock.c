@@ -393,7 +393,7 @@ loop24
         NOP
 #if defined (ARMCM4_FP)
         NOP
-#endif
+#endif        
     bne     loop24
     bx      lr
 }
