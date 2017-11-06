@@ -93,9 +93,9 @@ static uint32_t store_execute(fs_op_t const * const p_op)
 //                          (uint32_t*)p_op->store.p_src  + p_op->store.offset,
 //                          chunk_len);
 
-    drvi_EflashProgram( (uint32_t)((uint32_t)p_op->store.p_dest + (uint32_t)p_op->store.offset),
-                        (unsigned char *) ((uint32_t)p_op->store.p_src  + (uint32_t)p_op->store.offset),
-                        chunk_len);
+    drvi_EflashProgram( (uint32_t)(p_op->store.p_dest + p_op->store.offset),
+                        (unsigned char *) (p_op->store.p_src + p_op->store.offset),
+                        chunk_len*sizeof(uint32_t));
     return CC_SUCCESS;
 }
 
@@ -105,7 +105,7 @@ static uint32_t erase_execute(fs_op_t const * const p_op)
 {
 //    return sd_flash_page_erase(p_op->erase.page);
     uint32_t dwEraseAdr;
-    dwEraseAdr = p_op->erase.page*FS_PAGE_SIZE;
+    dwEraseAdr = (uint32_t)(p_op->p_config->p_start_addr + p_op->erase.page*FS_PAGE_SIZE_WORDS);
     drvi_EflashErasePage(dwEraseAdr);
     return CC_SUCCESS;
 }
@@ -477,7 +477,7 @@ fs_ret_t fs_erase(fs_config_t const * const p_config,
     p_op->p_context            = p_context;
     p_op->p_config             = p_config;
     p_op->op_code              = FS_OP_ERASE;
-    p_op->erase.page           = ((uint32_t)p_page_addr / FS_PAGE_SIZE);
+    p_op->erase.page           = ((uint32_t)(p_page_addr - p_config->p_start_addr) / FS_PAGE_SIZE);
     p_op->erase.pages_to_erase = num_pages;
 
     queue_start();

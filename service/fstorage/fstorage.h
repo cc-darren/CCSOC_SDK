@@ -45,7 +45,7 @@
 // <i> @ref sd_flash_write, which is 256 words for nRF51 ICs and 1024 words for nRF52 ICs.
 
 #ifndef FS_MAX_WRITE_SIZE_WORDS
-#define FS_MAX_WRITE_SIZE_WORDS 2048
+#define FS_MAX_WRITE_SIZE_WORDS 512
 #endif
 
 #ifdef __cplusplus
