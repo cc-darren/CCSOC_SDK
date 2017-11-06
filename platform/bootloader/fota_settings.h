@@ -51,6 +51,9 @@ int nrf_dfu_settings_write(dfu_flash_callback_t callback);
  */
 void nrf_dfu_settings_init(void);
 
+#if defined(APPLICATION) && APPLICATION
+void enter_bootloader(dfu_flash_callback_t callback);
+#endif
 
 #ifdef __cplusplus
 }

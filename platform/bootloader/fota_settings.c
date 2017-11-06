@@ -14,7 +14,9 @@
 #include "fota_flash.h"
 #include "crc32.h"
 #include <string.h>
+#if defined (BOOTLOADER) && BOOTLOADER
 #include "app_scheduler.h"
+#endif
 #include "drvi_clock.h"
 #include "error.h"
 #include "tracer.h"
@@ -50,7 +52,9 @@ static void dfu_settings_write_callback(fs_evt_t const * const evt, fs_ret_t res
 static void delay_operation(void)
 {
    drvi_ClockDelayMs(100);
+#if defined (BOOTLOADER) && BOOTLOADER
    app_sched_execute();
+#endif
 }
 
 static void wait_for_pending(void)
@@ -168,3 +172,18 @@ int nrf_dfu_settings_write(dfu_flash_callback_t callback)
     return CC_SUCCESS;
 }
 
+#if defined(APPLICATION) && APPLICATION
+void enter_bootloader(dfu_flash_callback_t callback)
+{
+    TracerInfo("Device is entering bootloader mode!\r\n");
+
+    s_dfu_settings.enter_buttonless_dfu = true;
+
+    (void)nrf_dfu_settings_write(callback);
+
+    /*
+    TODO:
+     - Save bond data
+    */
+}
+#endif
