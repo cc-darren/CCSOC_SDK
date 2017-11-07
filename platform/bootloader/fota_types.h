@@ -138,7 +138,7 @@ extern "C" {
 
 #ifndef CODE_REGION_1_START
 //#define CODE_REGION_1_START                 SD_SIZE_GET(MBR_SIZE)
-#define CODE_REGION_1_START                 0x1000B000
+#define CODE_REGION_1_START                 0x10010000
 #endif
 
 #define NRF_DFU_CURRENT_BANK_0 0x00

@@ -54,9 +54,9 @@
  */
 __WEAK bool nrf_dfu_enter_check(void)
 {
-    drvi_GpioDirectInput(GPIO_PIN_0);
+    drvi_GpioDirectInput(GPIO_PIN_1);
 
-    if (drvi_GpioRead(GPIO_PIN_0) == 1)
+    if (drvi_GpioRead(GPIO_PIN_1) == 0)
     {
         return true;
     }
@@ -104,6 +104,7 @@ static void wait_for_event()
     }
 }
 
+#ifdef FOTA_TEST_NO_BLE
 static void fota_test(void)
 {
     nrf_dfu_res_code_t  res_code;
@@ -197,7 +198,7 @@ static void fota_test(void)
     res_code = nrf_dfu_req_handler_on_req(NULL, &dfu_req, &dfu_res);
     TracerInfo("Sending Response: [0x%01x, 0x%01x]\r\n", dfu_req.req_type, res_code);
 }
-
+#endif
 
 void nrf_dfu_wait()
 {
@@ -261,8 +262,10 @@ uint32_t nrf_dfu_init()
         // This function will never return
         TracerInfo("Waiting for events\r\n");
 
+#ifdef FOTA_TEST_NO_BLE
         // Blake, Add for testing DFU request handle to simulation BLE
-        //fota_test();
+        fota_test();
+#endif
 
         wait_for_event();
         TracerInfo("After waiting for events\r\n");

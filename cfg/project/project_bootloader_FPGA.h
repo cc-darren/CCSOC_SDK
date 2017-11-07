@@ -273,11 +273,11 @@ Head Block of The File
 *    Ex : GPIO0_CONFIG         ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
 *******************************************************************************************************************/
 // GPIO Pin Group0
-#define GPIO_MODE_PINGROUP0                  GPIO_MODE_SPI_4WIRE
-#define GPIO0_CONFIG                         ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
-#define GPIO1_CONFIG                         ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
-#define GPIO2_CONFIG                         ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
-#define GPIO3_CONFIG                         ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#define GPIO_MODE_PINGROUP0                  GPIO_MODE_GPIO
+#define GPIO0_CONFIG                         ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
+#define GPIO1_CONFIG                         ((GPIO_PULL_UP) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT) | (GPIO_INPUT_NOPULL))
+#define GPIO2_CONFIG                         ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT) | (GPIO_INPUT_NOPULL))
+#define GPIO3_CONFIG                         ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT)  | (GPIO_OUTPUT_HIGH))
 
 // GPIO Pin Group1
 #define GPIO_MODE_PINGROUP1                  GPIO_MODE_SPI_4WIRE

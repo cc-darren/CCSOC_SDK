@@ -104,7 +104,7 @@ fs_ret_t nrf_dfu_flash_store(uint32_t const * p_dest, uint32_t const * const p_s
         // Set the flag to indicate ongoing operation
         m_flags |= FLASH_FLAG_OPER;
         //lint -e611
-        ret_val = fs_store(&fs_dfu_config, p_dest, p_src, len_words*sizeof(uint32_t), (void*)callback);
+        ret_val = fs_store(&fs_dfu_config, p_dest, p_src, len_words, (void*)callback);
 
         if (ret_val != FS_SUCCESS)
         {
@@ -136,7 +136,7 @@ fs_ret_t nrf_dfu_flash_store(uint32_t const * p_dest, uint32_t const * const p_s
             return FS_ERR_INVALID_ARG;
         }
 
-        drvi_EflashProgram((uint32_t)p_dest, (unsigned char *)p_src, len_words*sizeof(uint32_t));
+        drvi_EflashProgram((uint32_t)p_dest, (unsigned char *)p_src, len_words);
 
         #if (__LINT__ != 1)
         if (callback)
