@@ -145,22 +145,18 @@ static uint8_t otat_init(struct prf_task_env* env, uint16_t* start_hdl, uint16_t
     uint8_t status = ATT_ERR_NO_ERROR;
 
     cfg_flag = otat_compute_att_table(params->features);
+    
 
+#ifdef BLE_OTA_BL_MODE_EN
+    status = attm_svc_create_db_128(start_hdl, BLE_DFU_BASE_UUID_128, (uint8_t *)&cfg_flag, 
+               OTAS_IDX_NB, NULL, env->task,  &otat_att_db_128[0],
+               (sec_lvl & (PERM_MASK_SVC_DIS)) | PERM(SVC_MI, DISABLE) | PERM(SVC_MI, DISABLE));
+#else
+    status = attm_svc_create_db_128(start_hdl, BLE_DFU_BASE_UUID_128, (uint8_t *)&cfg_flag, 
+               OTAS_IDX_NB, NULL, env->task,  &otat_att_db_128[0],
+               (sec_lvl & (PERM_MASK_SVC_DIS)) | PERM(SVC_MI, DISABLE) | PERM(SVC_MI, DISABLE)| PERM(SVC_UUID_LEN, UUID_128));
+#endif
 
-    // modified by Samuel
-    /*
-    status = attm_svc_create_db(start_hdl, ATT_SVC_HEALTH_THERMOM, (uint8_t *)&cfg_flag,
-               OTAS_IDX_NB, NULL, env->task, &otat_att_db[0],
-              (sec_lvl & (PERM_MASK_SVC_DIS)) | PERM(SVC_MI, DISABLE) );
-    */
-
-    if(1)//test
-    {
-
-        status = attm_svc_create_db_128(start_hdl, BLE_DFU_BASE_UUID_128, (uint8_t *)&cfg_flag, 
-                   OTAS_IDX_NB, NULL, env->task,  &otat_att_db_128[0],
-                   (sec_lvl & (PERM_MASK_SVC_DIS)) | PERM(SVC_MI, DISABLE));
-    }
     
     if( status == ATT_ERR_NO_ERROR )
     {

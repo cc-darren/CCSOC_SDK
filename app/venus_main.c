@@ -2279,7 +2279,13 @@ void venus_app_init(void)
 
 }
 
+void venus_ready_to_bootloader(void)
+{
+    TracerInfo("venus_ready_to_bootloader!\r\n");
 
+    appm_disconnect();
+   
+}
 
 
 /*

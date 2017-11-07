@@ -21,6 +21,7 @@
 #include "error.h"
 #include "tracer.h"
 
+
 /** @brief  This variable reserves a codepage for bootloader specific settings,
  *          to ensure the compiler doesn't locate any code or variables at his location.
  */

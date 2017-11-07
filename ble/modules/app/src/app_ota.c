@@ -41,6 +41,8 @@
 #ifdef BLE_OTA_BL_MODE_EN
 #include "fota_ble_handler.h"
 #endif
+#include "fota_flash.h"
+#include "fota_settings.h"
 
 #if (DISPLAY_SUPPORT)
 #include "app_display.h"
@@ -65,6 +67,7 @@
  * GLOBAL VARIABLE DEFINITIONS
  ****************************************************************************************
  */
+extern void venus_ready_to_bootloader(void);
 
 /// health thermometer application environment structure
 struct app_ota_env_tag app_ota_env;
@@ -474,13 +477,13 @@ static int otat_packet_send_cmd_handler(ke_msg_id_t const msgid,
         app_ota_notify_send(buffer, index);
 
         // Ready to enter bootloader mode:
-        nrf_dfu_flash_init();
+#if FSTORAGE_ENABLED == 1
+        nrf_dfu_flash_init(true);
+#else
+        nrf_dfu_flash_init(false);
+#endif        
         nrf_dfu_settings_init();
-        enter_bootloader();
-        
-        appm_disconnect();
-        
-        NVIC_SystemReset();
+        enter_bootloader((dfu_flash_callback_t)venus_ready_to_bootloader);      
 #endif 
     return (KE_MSG_CONSUMED);
 }

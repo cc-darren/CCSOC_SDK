@@ -34,6 +34,7 @@
 #include "arch.h"                 // Platform Definitions
 #include <string.h>
 #include "ke_timer.h"             // Kernel timer
+#include "fota_settings.h"
 
 #if (BLE_APP_SEC)
 #include "app_sec.h"              // Security Module Definition
@@ -549,6 +550,9 @@ static int gapc_disconnect_ind_handler(ke_msg_id_t const msgid,
     // Stop interval timer
     app_ota_stop_timer();
     #endif //(BLE_APP_OTA)
+
+    if(true == s_dfu_settings.enter_buttonless_dfu)
+         NVIC_SystemReset();
 
     return (KE_MSG_CONSUMED);
 }
