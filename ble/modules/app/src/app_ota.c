@@ -473,6 +473,14 @@ static int otat_packet_send_cmd_handler(ke_msg_id_t const msgid,
     
         app_ota_notify_send(buffer, index);
 
+        // Ready to enter bootloader mode:
+        nrf_dfu_flash_init();
+        nrf_dfu_settings_init();
+        enter_bootloader();
+        
+        appm_disconnect();
+        
+        NVIC_SystemReset();
 #endif 
     return (KE_MSG_CONSUMED);
 }
