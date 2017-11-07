@@ -14,7 +14,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-//#include "dfu_req_handling.h"
+#include "fota_req_handling.h"
 #include "fota.h"
 #include "fota_types.h"
 #include "fota_settings.h"
@@ -33,7 +33,7 @@
 //#include "app_util.h"
 //#include "nrf_sdm.h"
 //#include "sdk_macros.h"
-//#include "nrf_crypto.h"
+#include "nrf_crypto.h"
 
 
 //STATIC_ASSERT(DFU_SIGNED_COMMAND_SIZE <= INIT_COMMAND_MAX_SIZE);
@@ -85,7 +85,7 @@ static bool m_valid_init_packet_present;                /**< Global variable hol
 
 
 
-#if 0
+
 static const nrf_crypto_key_t crypto_key_pk =
 {
     .p_le_data = (uint8_t *) pk,
@@ -93,13 +93,13 @@ static const nrf_crypto_key_t crypto_key_pk =
 };
 
 static nrf_crypto_key_t crypto_sig;
-__ALIGN(4) static uint8_t hash[32];
+__align(4) static uint8_t hash[32];
 static nrf_crypto_key_t hash_data;
 
-__ALIGN(4) static uint8_t sig[64];
+__align(4) static uint8_t sig[64];
 
 dfu_hash_type_t m_image_hash_type;
-#endif
+
 static dfu_packet_t packet = DFU_PACKET_INIT_DEFAULT;
 
 static pb_istream_t stream;
@@ -135,26 +135,86 @@ static void pb_decoding_callback(pb_istream_t *str, uint32_t tag, pb_wire_type_t
         size--;
 
         // store the info in hash_data
-//        hash_data.p_le_data = ptr;
-//        hash_data.len = size;
+        hash_data.p_le_data = ptr;
+        hash_data.len = size;
 
-//        TracerInfo("PB: Init data len: %d\r\n", hash_data.len);
+        TracerInfo("PB: Init data len: %d\r\n", hash_data.len);
     }
 }
 
-#if 0
-static nrf_dfu_res_code_t dfu_handle_prevalidate(dfu_signed_command_t const * p_command, pb_istream_t * p_stream, uint8_t * p_init_cmd, uint32_t init_cmd_len)
+
+static nrf_dfu_res_code_t dfu_signature_check(dfu_signed_command_t const * p_command, uint8_t * p_init_cmd, uint32_t init_cmd_len)
 {
     dfu_init_command_t const *  p_init = &p_command->command.init;
     uint32_t                    err_code;
-    uint32_t                    hw_version = NRF_DFU_HW_VERSION;
-    uint32_t                    fw_version = 0;
 
     // check for init command found during decoding
     if(!p_init_cmd || !init_cmd_len)
     {
         return NRF_DFU_RES_CODE_OPERATION_FAILED;
     }
+
+    // Check the signature
+    switch (p_command->signature_type)
+    {
+        case DFU_SIGNATURE_TYPE_ECDSA_P256_SHA256:
+            {
+                // prepare the actual hash destination.
+                hash_data.p_le_data = &hash[0];
+                hash_data.len = sizeof(hash);
+
+                TracerInfo("Init command:\r\n");
+                NRF_LOG_HEXDUMP_INFO(&s_dfu_settings.init_command[0], s_dfu_settings.progress.command_size);
+                TracerInfo("\r\n");
+
+                TracerInfo("p_Init command:\r\n");
+                NRF_LOG_HEXDUMP_INFO(&p_init_cmd[0], init_cmd_len);
+                TracerInfo("\r\n");
+
+                err_code = nrf_crypto_hash_compute(NRF_CRYPTO_HASH_ALG_SHA256, p_init_cmd, init_cmd_len, &hash_data);
+                if (err_code != CC_SUCCESS)
+                {
+                    return NRF_DFU_RES_CODE_OPERATION_FAILED;
+                }
+
+                // prepare the signature received over the air.
+                memcpy(&sig[0], p_command->signature.bytes, p_command->signature.size);
+
+                TracerInfo("Signature\r\n");
+                NRF_LOG_HEXDUMP_INFO((uint8_t *)&p_command->signature.bytes[0], p_command->signature.size);
+                TracerInfo("\r\n");
+
+                crypto_sig.p_le_data = sig;
+                crypto_sig.len = p_command->signature.size;
+
+                TracerInfo("signature len: %d\r\n", p_command->signature.size);
+
+                // calculate the signature
+                err_code = nrf_crypto_verify(NRF_CRYPTO_CURVE_SECP256R1, &crypto_key_pk, &hash_data, &crypto_sig);
+                if (err_code != CC_SUCCESS)
+                {
+                    return NRF_DFU_RES_CODE_INVALID_OBJECT;
+                }
+
+                TracerInfo("Image verified\r\n");
+            }
+            break;
+
+        default:
+            return NRF_DFU_RES_CODE_OPERATION_FAILED;
+    }
+
+    // SHA256 is the only supported hash
+    memcpy(&hash[0], &p_init->hash.hash.bytes[0], 32);
+
+    return NRF_DFU_RES_CODE_SUCCESS;
+}
+
+static nrf_dfu_res_code_t dfu_handle_prevalidate(dfu_init_command_t const * p_init, pb_istream_t * p_stream)
+{
+    uint32_t                    err_code;
+    uint32_t                    hw_version = NRF_DFU_HW_VERSION;
+    uint32_t                    fw_version = 0;
 
 #ifndef NRF_DFU_DEBUG_VERSION
     if(p_init->has_is_debug && p_init->is_debug == true)
@@ -179,19 +239,19 @@ static nrf_dfu_res_code_t dfu_handle_prevalidate(dfu_signed_command_t const * p_
         }
 
         // Precheck the SoftDevice version
-        bool found_sd_ver = false;
-        for(int i = 0; i < p_init->sd_req_count; i++)
-        {
-            if (p_init->sd_req[i] == SD_FWID_GET(MBR_SIZE))
-            {
-                found_sd_ver = true;
-                break;
-            }
-        }
-        if (!found_sd_ver)
-        {
-            return NRF_DFU_RES_CODE_OPERATION_FAILED;
-        }
+//        bool found_sd_ver = false;
+//        for(int i = 0; i < p_init->sd_req_count; i++)
+//        {
+//            if (p_init->sd_req[i] == SD_FWID_GET(MBR_SIZE))
+//            {
+//                found_sd_ver = true;
+//                break;
+//            }
+//        }
+//        if (!found_sd_ver)
+//        {
+//            return NRF_DFU_RES_CODE_OPERATION_FAILED;
+//        }
 
         // Get the fw version
         switch (p_init->type)
@@ -253,56 +313,6 @@ static nrf_dfu_res_code_t dfu_handle_prevalidate(dfu_signed_command_t const * p_
     }
 #endif
 
-    // Check the signature
-    switch (p_command->signature_type)
-    {
-        case DFU_SIGNATURE_TYPE_ECDSA_P256_SHA256:
-            {
-                // prepare the actual hash destination.
-                hash_data.p_le_data = &hash[0];
-                hash_data.len = sizeof(hash);
-
-                TracerInfo("Init command:\r\n");
-                NRF_LOG_HEXDUMP_INFO(&s_dfu_settings.init_command[0], s_dfu_settings.progress.command_size);
-                TracerInfo("\r\n");
-
-                TracerInfo("p_Init command:\r\n");
-                NRF_LOG_HEXDUMP_INFO(&p_init_cmd[0], init_cmd_len);
-                TracerInfo("\r\n");
-
-                err_code = nrf_crypto_hash_compute(NRF_CRYPTO_HASH_ALG_SHA256, p_init_cmd, init_cmd_len, &hash_data);
-                if (err_code != CC_SUCCESS)
-                {
-                    return NRF_DFU_RES_CODE_OPERATION_FAILED;
-                }
-
-                // prepare the signature received over the air.
-                memcpy(&sig[0], p_command->signature.bytes, p_command->signature.size);
-
-                TracerInfo("Signature\r\n");
-                NRF_LOG_HEXDUMP_INFO(&p_command->signature.bytes[0], p_command->signature.size);
-                TracerInfo("\r\n");
-
-                crypto_sig.p_le_data = sig;
-                crypto_sig.len = p_command->signature.size;
-
-                TracerInfo("signature len: %d\r\n", p_command->signature.size);
-
-                // calculate the signature
-                err_code = nrf_crypto_verify(NRF_CRYPTO_CURVE_SECP256R1, &crypto_key_pk, &hash_data, &crypto_sig);
-                if (err_code != CC_SUCCESS)
-                {
-                    return NRF_DFU_RES_CODE_INVALID_OBJECT;
-                }
-
-                TracerInfo("Image verified\r\n");
-            }
-            break;
-
-        default:
-            return NRF_DFU_RES_CODE_OPERATION_FAILED;
-    }
-
     // Get the update size
     m_firmware_size_req = 0;
 
@@ -317,59 +327,56 @@ static nrf_dfu_res_code_t dfu_handle_prevalidate(dfu_signed_command_t const * p_
             break;
 
         case DFU_FW_TYPE_BOOTLOADER:
-            if (p_init->has_bl_size == false)
-            {
-                return NRF_DFU_RES_CODE_OPERATION_FAILED;
-            }
-            m_firmware_size_req += p_init->bl_size;
-            // check that the size of the bootloader is not larger than the present one.
-#if defined ( NRF51 )
-            if (p_init->bl_size > BOOTLOADER_SETTINGS_ADDRESS - BOOTLOADER_START_ADDR)
-#elif defined ( NRF52 )
-            if (p_init->bl_size > NRF_MBR_PARAMS_PAGE_ADDRESS - BOOTLOADER_START_ADDR)
-#endif
-            {
-                return NRF_DFU_RES_CODE_INSUFFICIENT_RESOURCES;
-            }
+//            if (p_init->has_bl_size == false)
+//            {
+//                return NRF_DFU_RES_CODE_OPERATION_FAILED;
+//            }
+//            m_firmware_size_req += p_init->bl_size;
+//            // check that the size of the bootloader is not larger than the present one.
+//#if defined ( NRF51 )
+//            if (p_init->bl_size > BOOTLOADER_SETTINGS_ADDRESS - BOOTLOADER_START_ADDR)
+//#elif defined ( NRF52 )
+//            if (p_init->bl_size > NRF_MBR_PARAMS_PAGE_ADDRESS - BOOTLOADER_START_ADDR)
+//#endif
+//            {
+//                return NRF_DFU_RES_CODE_INSUFFICIENT_RESOURCES;
+//            }
             break;
 
         case DFU_FW_TYPE_SOFTDEVICE:
-            if (p_init->has_sd_size == false)
-            {
-                return NRF_DFU_RES_CODE_OPERATION_FAILED;
-            }
-            m_firmware_size_req += p_init->sd_size;
+//            if (p_init->has_sd_size == false)
+//            {
+//                return NRF_DFU_RES_CODE_OPERATION_FAILED;
+//            }
+//            m_firmware_size_req += p_init->sd_size;
             break;
 
         case DFU_FW_TYPE_SOFTDEVICE_BOOTLOADER:
-            if (p_init->has_bl_size == false || p_init->has_sd_size == false)
-            {
-                return NRF_DFU_RES_CODE_OPERATION_FAILED;
-            }
-            m_firmware_size_req += p_init->sd_size + p_init->bl_size;
-            if (p_init->sd_size == 0 || p_init->bl_size == 0)
-            {
-                return NRF_DFU_RES_CODE_INVALID_PARAMETER;
-            }
+//            if (p_init->has_bl_size == false || p_init->has_sd_size == false)
+//            {
+//                return NRF_DFU_RES_CODE_OPERATION_FAILED;
+//            }
+//            m_firmware_size_req += p_init->sd_size + p_init->bl_size;
+//            if (p_init->sd_size == 0 || p_init->bl_size == 0)
+//            {
+//                return NRF_DFU_RES_CODE_INVALID_PARAMETER;
+//            }
 
-            // check that the size of the bootloader is not larger than the present one.
-#if defined ( NRF51 )
-            if (p_init->bl_size > BOOTLOADER_SETTINGS_ADDRESS - BOOTLOADER_START_ADDR)
-#elif defined ( NRF52 )
-            if (p_init->bl_size > NRF_MBR_PARAMS_PAGE_ADDRESS - BOOTLOADER_START_ADDR)
-#endif
-            {
-                return NRF_DFU_RES_CODE_INSUFFICIENT_RESOURCES;
-            }
+//            // check that the size of the bootloader is not larger than the present one.
+//#if defined ( NRF51 )
+//            if (p_init->bl_size > BOOTLOADER_SETTINGS_ADDRESS - BOOTLOADER_START_ADDR)
+//#elif defined ( NRF52 )
+//            if (p_init->bl_size > NRF_MBR_PARAMS_PAGE_ADDRESS - BOOTLOADER_START_ADDR)
+//#endif
+//            {
+//                return NRF_DFU_RES_CODE_INSUFFICIENT_RESOURCES;
+//            }
             break;
 
         default:
             TracerInfo("Unknown FW update type\r\n");
             return NRF_DFU_RES_CODE_OPERATION_FAILED;
     }
-
-    // SHA256 is the only supported hash
-    memcpy(&hash[0], &p_init->hash.hash.bytes[0], 32);
 
     // Instead of checking each type with has-check, check the result of the size_req to
     // Validate its content.
@@ -515,322 +522,8 @@ static nrf_dfu_res_code_t nrf_dfu_postvalidate(dfu_init_command_t * p_init)
 
     return res_code;
 }
-#endif
 
-static nrf_dfu_res_code_t dfu_handle_prevalidate_nosign(dfu_command_t const * p_command, pb_istream_t * p_stream)
-{
-    dfu_init_command_t const *  p_init = &p_command->init;
-    uint32_t                    err_code;
-    uint32_t                    hw_version = NRF_DFU_HW_VERSION;
-    uint32_t                    fw_version = 0;
 
-#ifndef NRF_DFU_DEBUG_VERSION
-    if(p_init->has_is_debug && p_init->is_debug == true)
-    {
-        return NRF_DFU_RES_CODE_OPERATION_FAILED;
-    }
-#endif
-
-#ifdef NRF_DFU_DEBUG_VERSION
-    if (p_init->has_is_debug == false || p_init->is_debug == false)
-    {
-#endif
-        if (p_init->has_hw_version == false)
-        {
-            return NRF_DFU_RES_CODE_OPERATION_FAILED;
-        }
-
-        // Check of init command HW version
-        if(p_init->hw_version != hw_version)
-        {
-            return NRF_DFU_RES_CODE_OPERATION_FAILED;
-        }
-
-        // Precheck the SoftDevice version
-//        bool found_sd_ver = false;
-//        for(int i = 0; i < p_init->sd_req_count; i++)
-//        {
-//            if (p_init->sd_req[i] == SD_FWID_GET(MBR_SIZE))
-//            {
-//                found_sd_ver = true;
-//                break;
-//            }
-//        }
-//        if (!found_sd_ver)
-//        {
-//            return NRF_DFU_RES_CODE_OPERATION_FAILED;
-//        }
-
-        // Get the fw version
-        switch (p_init->type)
-        {
-            case DFU_FW_TYPE_APPLICATION:
-                if (p_init->has_fw_version == false)
-                {
-                    return NRF_DFU_RES_CODE_OPERATION_FAILED;
-                }
-                // Get the application FW version
-                fw_version = s_dfu_settings.app_version;
-                break;
-
-            case DFU_FW_TYPE_SOFTDEVICE:
-                // not loaded
-                break;
-
-            case DFU_FW_TYPE_BOOTLOADER: // fall through
-            case DFU_FW_TYPE_SOFTDEVICE_BOOTLOADER:
-                if (p_init->has_fw_version == false)
-                {
-                    return NRF_DFU_RES_CODE_OPERATION_FAILED;
-                }
-                fw_version = s_dfu_settings.bootloader_version;
-                break;
-
-            default:
-                TracerInfo("Unknown FW update type\r\n");
-                return NRF_DFU_RES_CODE_OPERATION_FAILED;
-        }
-
-        TracerInfo("Req version: %d, Present: %d\r\n", p_init->fw_version, fw_version);
-
-        // Check of init command FW version
-        switch (p_init->type)
-        {
-            case DFU_FW_TYPE_APPLICATION:
-                if (p_init->fw_version < fw_version)
-                {
-                    return NRF_DFU_RES_CODE_OPERATION_FAILED;
-                }
-                break;
-
-            case DFU_FW_TYPE_BOOTLOADER:            // fall through
-            case DFU_FW_TYPE_SOFTDEVICE_BOOTLOADER:
-                // updating the bootloader is stricter. There must be an increase in version number
-                if (p_init->fw_version <= fw_version)
-                {
-                    return NRF_DFU_RES_CODE_OPERATION_FAILED;
-                }
-                break;
-
-            default:
-                // do not care about fw_version in the case of a softdevice transfer
-                break;
-        }
-
-#ifdef NRF_DFU_DEBUG_VERSION
-    }
-#endif
-
-    // Get the update size
-    m_firmware_size_req = 0;
-
-    switch (p_init->type)
-    {
-        case DFU_FW_TYPE_APPLICATION:
-            if (p_init->has_app_size == false)
-            {
-                return NRF_DFU_RES_CODE_OPERATION_FAILED;
-            }
-            m_firmware_size_req += p_init->app_size;
-            break;
-
-        case DFU_FW_TYPE_BOOTLOADER:
-//            if (p_init->has_bl_size == false)
-//            {
-//                return NRF_DFU_RES_CODE_OPERATION_FAILED;
-//            }
-//            m_firmware_size_req += p_init->bl_size;
-//            // check that the size of the bootloader is not larger than the present one.
-//#if defined ( NRF51 )
-//            if (p_init->bl_size > BOOTLOADER_SETTINGS_ADDRESS - BOOTLOADER_START_ADDR)
-//#elif defined ( NRF52 )
-//            if (p_init->bl_size > NRF_MBR_PARAMS_PAGE_ADDRESS - BOOTLOADER_START_ADDR)
-//#endif
-//            {
-//                return NRF_DFU_RES_CODE_INSUFFICIENT_RESOURCES;
-//            }
-//            break;
-
-        case DFU_FW_TYPE_SOFTDEVICE:
-//            if (p_init->has_sd_size == false)
-//            {
-//                return NRF_DFU_RES_CODE_OPERATION_FAILED;
-//            }
-//            m_firmware_size_req += p_init->sd_size;
-//            break;
-
-        case DFU_FW_TYPE_SOFTDEVICE_BOOTLOADER:
-//            if (p_init->has_bl_size == false || p_init->has_sd_size == false)
-//            {
-//                return NRF_DFU_RES_CODE_OPERATION_FAILED;
-//            }
-//            m_firmware_size_req += p_init->sd_size + p_init->bl_size;
-//            if (p_init->sd_size == 0 || p_init->bl_size == 0)
-//            {
-//                return NRF_DFU_RES_CODE_INVALID_PARAMETER;
-//            }
-
-//            // check that the size of the bootloader is not larger than the present one.
-//#if defined ( NRF51 )
-//            if (p_init->bl_size > BOOTLOADER_SETTINGS_ADDRESS - BOOTLOADER_START_ADDR)
-//#elif defined ( NRF52 )
-//            if (p_init->bl_size > NRF_MBR_PARAMS_PAGE_ADDRESS - BOOTLOADER_START_ADDR)
-//#endif
-//            {
-//                return NRF_DFU_RES_CODE_INSUFFICIENT_RESOURCES;
-//            }
-//            break;
-
-        default:
-            TracerInfo("Unknown FW update type\r\n");
-            return NRF_DFU_RES_CODE_OPERATION_FAILED;
-    }
-
-    // Instead of checking each type with has-check, check the result of the size_req to
-    // Validate its content.
-    if (m_firmware_size_req == 0)
-    {
-        return NRF_DFU_RES_CODE_INVALID_PARAMETER;
-    }
-
-    // Find the location to place the DFU updates
-    err_code = nrf_dfu_find_cache(m_firmware_size_req, false, &m_firmware_start_addr);
-    if (err_code != CC_SUCCESS)
-    {
-        return NRF_DFU_RES_CODE_INSUFFICIENT_RESOURCES;
-    }
-
-    TracerInfo("Write address set to 0x%08x\r\n", m_firmware_start_addr);
-
-    TracerInfo("DFU prevalidate SUCCESSFUL!\r\n");
-
-    return NRF_DFU_RES_CODE_SUCCESS;
-}
-
-/** @brief Function for validating the received image after all objects have been received and executed.
- *
- */
-static nrf_dfu_res_code_t nrf_dfu_postvalidate(dfu_init_command_t * p_init)
-{
-//    uint32_t                   err_code;
-    nrf_dfu_res_code_t         res_code = NRF_DFU_RES_CODE_SUCCESS;
-    nrf_dfu_bank_t           * p_bank;
-
-//    switch (p_init->hash.hash_type)
-//    {
-//        case DFU_HASH_TYPE_SHA256:
-//            hash_data.p_le_data = &hash[0];
-//            hash_data.len = sizeof(hash);
-//            err_code = nrf_crypto_hash_compute(NRF_CRYPTO_HASH_ALG_SHA256, (uint8_t*)m_firmware_start_addr, m_firmware_size_req, &hash_data);
-//            if (err_code != CC_SUCCESS)
-//            {
-//                res_code = NRF_DFU_RES_CODE_OPERATION_FAILED;
-//            }
-
-//            if (memcmp(&hash_data.p_le_data[0], &p_init->hash.hash.bytes[0], 32) != 0)
-//            {
-//                TracerInfo("Hash failure\r\n");
-
-//                res_code = NRF_DFU_RES_CODE_INVALID_OBJECT;
-//            }
-//            break;
-
-//        default:
-//            res_code = NRF_DFU_RES_CODE_OPERATION_FAILED;
-//            break;
-//    }
-
-    if (s_dfu_settings.bank_current == NRF_DFU_CURRENT_BANK_0)
-    {
-        TracerInfo("Current bank is bank 0\r\n");
-        p_bank = &s_dfu_settings.bank_0;
-    }
-    else if (s_dfu_settings.bank_current == NRF_DFU_CURRENT_BANK_1)
-    {
-        TracerInfo("Current bank is bank 1\r\n");
-        p_bank = &s_dfu_settings.bank_1;
-    }
-    else
-    {
-        TracerInfo("Internal error, invalid current bank\r\n");
-        return NRF_DFU_RES_CODE_OPERATION_FAILED;
-    }
-
-    if (res_code == NRF_DFU_RES_CODE_SUCCESS)
-    {
-        TracerInfo("Successfully run the postvalidation check!\r\n");
-
-        switch (p_init->type)
-        {
-            case DFU_FW_TYPE_APPLICATION:
-                p_bank->bank_code = NRF_DFU_BANK_VALID_APP;
-                break;
-            case DFU_FW_TYPE_SOFTDEVICE:
-                p_bank->bank_code = NRF_DFU_BANK_VALID_SD;
-                s_dfu_settings.sd_size = p_init->sd_size;
-                break;
-            case DFU_FW_TYPE_BOOTLOADER:
-                p_bank->bank_code = NRF_DFU_BANK_VALID_BL;
-                break;
-            case DFU_FW_TYPE_SOFTDEVICE_BOOTLOADER:
-                p_bank->bank_code = NRF_DFU_BANK_VALID_SD_BL;
-                s_dfu_settings.sd_size = p_init->sd_size;
-                break;
-            default:
-                res_code = NRF_DFU_RES_CODE_OPERATION_FAILED;
-                break;
-        }
-
-#ifdef NRF_DFU_DEBUG_VERSION
-        if (p_init->has_is_debug == false || p_init->is_debug == false)
-        {
-#endif
-
-            switch (p_init->type)
-            {
-                case DFU_FW_TYPE_APPLICATION:
-                    s_dfu_settings.app_version = p_init->fw_version;
-                    break;
-                case DFU_FW_TYPE_BOOTLOADER:
-                case DFU_FW_TYPE_SOFTDEVICE_BOOTLOADER:
-                    s_dfu_settings.bootloader_version = p_init->fw_version;
-                    break;
-                default:
-                    // no implementation
-                    break;
-            }
-
-#ifdef NRF_DFU_DEBUG_VERSION
-        }
-#endif
-        // Calculate CRC32 for image
-        p_bank->image_crc = s_dfu_settings.progress.firmware_image_crc;
-        p_bank->image_size = m_firmware_size_req;
-    }
-    else
-    {
-        p_bank->bank_code = NRF_DFU_BANK_INVALID;
-
-        // Calculate CRC32 for image
-        p_bank->image_crc = 0;
-        p_bank->image_size = 0;
-    }
-
-    // Set the progress to zero and remove the last command
-    memset(&s_dfu_settings.progress, 0, sizeof(dfu_progress_t));
-    memset(s_dfu_settings.init_command, 0xFF, DFU_SIGNED_COMMAND_SIZE);
-    s_dfu_settings.write_offset = 0;
-
-    // Store the settings to flash and reset after that
-    if( nrf_dfu_settings_write(on_dfu_complete) != CC_SUCCESS)
-    {
-        res_code = NRF_DFU_RES_CODE_OPERATION_FAILED;
-    }
-
-    return res_code;
-}
-
-#if 0
 /** @brief Function to handle signed command
  *
  * @param[in]   p_command   Signed
@@ -845,7 +538,13 @@ static nrf_dfu_res_code_t dfu_handle_signed_command(dfu_signed_command_t const *
         return NRF_DFU_RES_CODE_INVALID_OBJECT;
     }
 
-    ret_val = dfu_handle_prevalidate(p_command, p_stream, hash_data.p_le_data, hash_data.len);
+    ret_val = dfu_signature_check(p_command, hash_data.p_le_data, hash_data.len);
+    if(ret_val != NRF_DFU_RES_CODE_SUCCESS)
+    {
+        return ret_val;
+    }
+
+    ret_val = dfu_handle_prevalidate(&p_command->command.init, p_stream);
     if(ret_val == NRF_DFU_RES_CODE_SUCCESS)
     {
         TracerInfo("Prevalidate OK.\r\n");
@@ -864,12 +563,12 @@ static nrf_dfu_res_code_t dfu_handle_signed_command(dfu_signed_command_t const *
     return ret_val;
 }
 
-#endif
+
 static nrf_dfu_res_code_t dfu_handle_command(dfu_command_t const * p_command, pb_istream_t * p_stream)
 {
     nrf_dfu_res_code_t ret_val = NRF_DFU_RES_CODE_SUCCESS;
 
-    ret_val = dfu_handle_prevalidate_nosign(p_command, p_stream);
+    ret_val = dfu_handle_prevalidate(&p_command->init, p_stream);
     if(ret_val == NRF_DFU_RES_CODE_SUCCESS)
     {
         TracerInfo("Prevalidate OK.\r\n");
@@ -896,8 +595,8 @@ static uint32_t dfu_decode_commmand(void)
     // Attach our callback to follow the field decoding
     stream.decoding_callback = pb_decoding_callback;
     // reset the variable where the init pointer and length will be stored.
-//    hash_data.p_le_data = NULL;
-//    hash_data.len = 0;
+    hash_data.p_le_data = NULL;
+    hash_data.len = 0;
 
     if (!pb_decode(&stream, dfu_packet_fields, &packet))
     {
@@ -1011,7 +710,7 @@ static nrf_dfu_res_code_t nrf_dfu_command_req(void * p_context, nrf_dfu_req_t * 
             if (packet.has_signed_command)
             {
                 TracerInfo("Handling signed command\r\n");
-                //ret_val = dfu_handle_signed_command(&packet.signed_command, &stream);
+                ret_val = dfu_handle_signed_command(&packet.signed_command, &stream);
             }
             else if (packet.has_command)
             {
@@ -1285,7 +984,10 @@ static nrf_dfu_res_code_t nrf_dfu_data_req(void * p_context, nrf_dfu_req_t * p_r
                 }
                 // Received the whole image. Doing postvalidate.
                 TracerInfo("Doing postvalidate\r\n");
-                ret_val = nrf_dfu_postvalidate(&packet.signed_command.command.init);
+                if (packet.has_signed_command)
+                    ret_val = nrf_dfu_postvalidate(&packet.signed_command.command.init);
+                else if (packet.has_command)
+                    ret_val = nrf_dfu_postvalidate(&packet.command.init);
             }
 
             break;
