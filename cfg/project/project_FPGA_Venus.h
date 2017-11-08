@@ -421,6 +421,12 @@ Declaration of static Global Variables & Functions
 #define VENUS_HW_VERSION "v0.000.001"
 #define VENUS_FW_VERSION "v0.000.001" 
 
+//#define CFG_APP_CODE_ONLY
+
+#ifndef CFG_APP_CODE_ONLY 
+#define CFG_JUMP_TABLE_2
+#endif
+
 //#define SLEEP_EN
 //#define LONGSIT_EN
 #define MEMS_ZERO  // not ready for MEMS

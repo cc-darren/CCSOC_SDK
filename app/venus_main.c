@@ -2281,7 +2281,7 @@ void venus_app_init(void)
 
 void venus_ready_to_bootloader(void)
 {
-    TracerInfo("venus_ready_to_bootloader!\r\n");
+    //TracerInfo("venus_ready_to_bootloader!\r\n");
 
     appm_disconnect();
    
@@ -2302,7 +2302,7 @@ void rwip_ignore_ll_conn_param_update_patch(void)
 int venus_main(void)
 {
     
-    TracerInfo("== Venus Main Start ==\r\n");
+    TracerInfo("== Venus Main Start==\r\n");
 
 #ifdef CFG_BLE_APP
     uint32_t error = 0;
@@ -2313,8 +2313,9 @@ int venus_main(void)
        
     *((uint32_t *) 0x4000011C) = 0x00000008;
     *((uint32_t *) 0x40000104) = (*((uint32_t *) 0x40000104) & 0xFFFFFE0) | 0x04;
+    *((uint32_t *) 0x20000648) = 0x00;
      //regCKGEN->bf.bleClkDiv = 0x04;
-    
+
     // Initialize RW SW stack
     rwip_init(error);
 

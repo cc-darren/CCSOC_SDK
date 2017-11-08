@@ -3,10 +3,29 @@
 
 #include "global.h"
 
+
+
+#ifdef CFG_JUMP_TABLE_2
+#define JUMP_TABLE_BASE_ADDR			0x10000200
+#define JUMP_TABLE2_SIZE  (75)
+
+extern const uint32_t volatile *const jump_table_base;
+extern uint32_t * jump_table2_base[JUMP_TABLE2_SIZE] __attribute__((section("jump_table2_mem_area")));
+
+#else
+
 #define JUMP_TABLE_SIZE    (256)
+#define JUMP_TABLE_2_BASE_ADDR			0x20017C00
 
 extern const uint32_t * const jump_table_base[JUMP_TABLE_SIZE] __attribute__((section("jump_table_mem_area")));
+extern uint32_t volatile *const jump_table2_base;
+#endif
+
+
 #define jump_table_struct (uint32_t)jump_table_base
+#define jump_table2_struct (uint32_t)jump_table2_base
+
+
 
 /// @} BT Stack Configuration
 /// @} ROOT
@@ -80,6 +99,8 @@ extern const uint32_t * const jump_table_base[JUMP_TABLE_SIZE] __attribute__((se
 #define JT_POS_RWIP_HEAP_MSG_SIZE  				66
 #define JT_POS_RWIP_HEAP_NON_RET  				67
 #define JT_POS_RWIP_HEAP_NON_RET_SIZE  			68
+
+
 
 
 #endif

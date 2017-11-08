@@ -36,6 +36,7 @@
 
 #include "co_bt.h"                   // Common BT Definition
 #include "co_math.h"                 // Common Maths Definition
+#include "jump_table.h"
 
 #if (BLE_APP_SEC)
 #include "app_sec.h"                 // Application security Definition
@@ -252,12 +253,27 @@ void rwip_ignore_ll_conn_param_update_patch(void)
 }
 
 
-
 void appm_init()
 {
+
     #if (NVDS_SUPPORT)
     uint8_t key_len = KEY_LEN;
     #endif //(NVDS_SUPPORT)
+    
+#ifndef CFG_JUMP_TABLE_2
+    //TracerInfo("appm_init1\r\n");
+
+    if(jump_table2_struct[JT_POS_FUNC_APPM_INIT] != 0)
+    {
+        //TracerInfo("appm_init1:%x\r\n",jump_table2_struct[JT_POS_FUNC_APPM_INIT]);
+        typedef void (*my_function)(void);
+        //TracerInfo("appm_init1\r\n");
+        ((my_function) (jump_table2_struct[JT_POS_FUNC_APPM_INIT]))(); 
+
+        return;
+    }
+    
+#endif
 
     // Reset the application manager environment
     memset(&app_env, 0, sizeof(app_env));

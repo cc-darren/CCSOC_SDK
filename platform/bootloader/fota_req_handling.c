@@ -29,6 +29,7 @@
 #include "dfu-cc.pb.h"
 #include "crc32.h"
 #include "tracer.h"
+#include "fota_transport.h"
 //#include "app_util.h"
 //#include "nrf_sdm.h"
 //#include "sdk_macros.h"
@@ -107,7 +108,7 @@ static pb_istream_t stream;
 static void on_dfu_complete(fs_evt_t const * const evt, fs_ret_t result)
 {
     TracerInfo("Resetting device. \r\n");
-    //(void)fota_transports_close();
+    (void)fota_transports_close();
     //NVIC_SystemReset();
     return;
 }
@@ -1073,11 +1074,14 @@ static nrf_dfu_res_code_t nrf_dfu_data_req(void * p_context, nrf_dfu_req_t * p_r
                 //TracerInfo("Trying to create data object of size 0\r\n");
                 return NRF_DFU_RES_CODE_INVALID_PARAMETER;
             }
+            //TracerErr("object_size: %d, offset_last: %d, siez_req:%d\r\n",p_req->object_size,s_dfu_settings.progress.firmware_image_offset_last,m_firmware_size_req);
 
             if ( (p_req->object_size & (CODE_PAGE_SIZE - 1)) != 0 &&
                 (s_dfu_settings.progress.firmware_image_offset_last + p_req->object_size != m_firmware_size_req) )
             {
                 TracerErr("Trying to create an object with a size that is not page aligned\r\n");
+
+                
                 return NRF_DFU_RES_CODE_INVALID_PARAMETER;
             }
 
