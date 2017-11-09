@@ -368,7 +368,7 @@
             <ScatterFile>.\FPGA_eflash.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
-            <Misc>.\rom_symdef_M0.txt  --keep=jump_table.o(jump_table_mem_area)</Misc>
+            <Misc>.\rom_symdef_M0.txt  --keep=jump_table.o(jump_table2_mem_area)</Misc>
             <LinkerInputFile></LinkerInputFile>
             <DisabledWarnings></DisabledWarnings>
           </LDads>

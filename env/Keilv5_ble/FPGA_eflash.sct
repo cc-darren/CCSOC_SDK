@@ -10,10 +10,10 @@ SOC 0x10010000 0x30000  ; 192KB
         *(InRoot$$Sections)	
     }
 
-    BLE_JUMP_TABLE 0x10010200 FIXED 0x400
-    {
-        .ANY (jump_table_mem_area)     
-    }
+;    BLE_JUMP_TABLE 0x10010200 FIXED 0x400
+;    {
+;        .ANY (jump_table_mem_area)     
+;    }
 
     IMAGE_RO + 0
     {
@@ -34,6 +34,11 @@ SOC 0x10010000 0x30000  ; 192KB
         .ANY (+ZI)
     }
 
+    BLE_JUMP_TABLE_2 0x20017C00 
+    {
+        .ANY (jump_table2_mem_area)
+    }
+    
     RET_RAM 0x20020000 ; Retention memory
     {
         *(VECTOR_IN_RET_RAM, +First)

@@ -40,6 +40,7 @@
 #include "reg_ble_em_cs.h" // control structure definitions
 
 #include "plf.h"           // Platform register
+#include "jump_table.h"
 
 // Atlas register definitions and access functions
 static uint32_t rf_atl_reg_rd (uint16_t addr);
@@ -766,6 +767,20 @@ static int8_t rf_rssi_convert (uint8_t rssi_reg)
 
 void rf_init(struct rwip_rf_api *api)
 {
+#ifndef CFG_JUMP_TABLE_2
+    
+        if(jump_table2_struct[JT_POS_FUNC_RF_INIT] != 0)
+        {
+             typedef void (*my_function)(struct rwip_rf_api*);
+        
+             ((my_function) (jump_table2_struct[JT_POS_FUNC_RF_INIT]))(api);
+            
+             return;
+        }
+    
+#endif
+
+
    	volatile uint32_t icy_version = 0; // Default version is Atlas
 	uint8_t idx = 0;
 

@@ -236,6 +236,7 @@ void fota_on_ctrl_pt_write(struct otat_packet_send_cmd const *param)
             // Get length value
             //lint -save -e416
             dfu_req.object_size = uint32_decode(&(param->value[2]));
+            //TracerInfo("object_size:%d, param[2]:%x, param[3]:%x\r\n",dfu_req.object_size,param->value[2],param->value[3]);
             //lint -restore
 
             // Set req type

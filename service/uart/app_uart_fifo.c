@@ -13,6 +13,7 @@
 #include "app_uart.h"
 #include "app_fifo.h"
 #include "drvi_uart.h"
+#include "jump_table.h"
 
 static __INLINE uint32_t fifo_length(app_fifo_t * const fifo)
 {
@@ -210,6 +211,17 @@ const struct rwip_eif_api app_ble_uart_api =
 const struct rwip_eif_api* rwip_eif_get(uint8_t type)
 {
     const struct rwip_eif_api* ret = NULL;
+
+#ifndef CFG_JUMP_TABLE_2
+
+    if(jump_table2_struct[JT_POS_FUNC_EIF_GET] != 0)
+    {
+        typedef struct rwip_eif_api* (*my_function)(uint8_t type);
+
+		return ((my_function) (jump_table2_struct[JT_POS_FUNC_EIF_GET]))(type);
+    }
+    //TracerInfo("test2\r\n");
+#endif
 
     switch(type)
     {

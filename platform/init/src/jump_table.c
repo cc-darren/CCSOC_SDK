@@ -26,6 +26,114 @@
 #include "gattc.h"
 #include "l2cc.h"
 
+
+uint32_t rwip_heap_non_ret[RWIP_CALC_HEAP_LEN(RWIP_HEAP_NON_RET_SIZE)];//  __attribute__((section("heap_mem_area_not_ret"), zero_init));
+uint32_t rwip_heap_env[RWIP_CALC_HEAP_LEN(RWIP_HEAP_ENV_SIZE)]   __attribute__((section("heap_env_area"), zero_init));
+uint32_t rwip_heap_msg[RWIP_CALC_HEAP_LEN(RWIP_HEAP_MSG_SIZE)]   __attribute__((section("heap_msg_area"), zero_init));
+uint32_t rwip_heap_db[RWIP_CALC_HEAP_LEN(RWIP_HEAP_DB_SIZE)]     __attribute__((section("heap_db_area"), zero_init));
+
+
+#ifdef CFG_JUMP_TABLE_2
+
+const uint32_t volatile * const jump_table_base = ((uint32_t*)JUMP_TABLE_BASE_ADDR);
+
+
+// jump table from RAM
+uint32_t* jump_table2_base[] __attribute__((section("jump_table2_mem_area"))) =
+{    
+        /* 000 */ (uint32_t *) 0,
+        /* 001 */ (uint32_t *) 0,
+#if BLE_APP_PRESENT
+        /* 002 */ (uint32_t *) appm_init,
+#else
+        /* 002 */ (uint32_t *) 0,
+#endif
+        /* 003 */ (uint32_t *) rf_init,
+        /* 004 */ (uint32_t *) 0,
+        /* 005 */ (uint32_t *) 0,
+        /* 006 */ (uint32_t *) rwip_eif_get,
+    #if (BLE_PROFILES)
+        /* 007 */ (uint32_t *) prf_init,
+        /* 008 */ (uint32_t *) prf_create,
+        /* 009 */ (uint32_t *) prf_add_profile,
+        /* 010 */ (uint32_t *) prf_cleanup,
+        /* 011 */ (uint32_t *) prf_get_id_from_task,
+        /* 012 */ (uint32_t *) prf_get_task_from_id,
+    #else
+        /* 007 */ (uint32_t *) 0,
+        /* 008 */ (uint32_t *) 0,
+        /* 009 */ (uint32_t *) 0,
+        /* 010 */ (uint32_t *) 0,
+        /* 011 */ (uint32_t *) 0,
+        /* 012 */ (uint32_t *) 0,
+    #endif
+        /* 013 */ (uint32_t *) 0,
+        /* 014 */ (uint32_t *) 0,
+        /* 015 */ (uint32_t *) 0,
+        /* 016 */ (uint32_t *) 0,
+        /* 017 */ (uint32_t *) 0,
+    	/* 018 */ (uint32_t *) 0,
+		/* 019 */ (uint32_t *) 0,
+		/* 020 */ (uint32_t *) 0,
+		/* 021 */ (uint32_t *) 0,
+		/* 022 */ (uint32_t *) 0,
+		/* 023 */ (uint32_t *) 0,
+		/* 024 */ (uint32_t *) 0,
+		/* 025 */ (uint32_t *) 0,
+		/* 026 */ (uint32_t *) 0,
+		/* 027 */ (uint32_t *) 0,
+		/* 028 */ (uint32_t *) 0,
+		/* 029 */ (uint32_t *) 0,
+		/* 030 */ (uint32_t *) 0,
+		/* 031 */ (uint32_t *) 0,
+		/* 032 */ (uint32_t *) 0,
+		/* 033 */ (uint32_t *) 0,
+		/* 034 */ (uint32_t *) 0,
+		/* 035 */ (uint32_t *) 0,
+		/* 036 */ (uint32_t *) 0,
+		/* 037 */ (uint32_t *) 0,
+		/* 038 */ (uint32_t *) 0,
+		/* 039 */ (uint32_t *) 0,
+		/* 040 */ (uint32_t *) 0,
+		/* 041 */ (uint32_t *) 0,
+		/* 042 */ (uint32_t *) 0,
+		/* 043 */ (uint32_t *) 0,
+		/* 044 */ (uint32_t *) 0,
+		/* 045 */ (uint32_t *) 0,
+		/* 046 */ (uint32_t *) 0,
+		/* 047 */ (uint32_t *) 0,
+		/* 048 */ (uint32_t *) 0,
+		/* 049 */ (uint32_t *) 0,
+		/* 050 */ (uint32_t *) 0,
+		/* 051 */ (uint32_t *) 0, 
+		/* 052 */ (uint32_t *) 0, 
+		/* 053 */ (uint32_t *) 0, 
+		/* 054 */ (uint32_t *) 0, 
+		/* 055 */ (uint32_t *) 0, 
+		/* 056 */ (uint32_t *) 0, 
+		/* 057 */ (uint32_t *) 0, 
+		/* 058 */ (uint32_t *) 0, 
+		/* 059 */ (uint32_t *) 0,
+		/* 060 */ (uint32_t *) 0,	
+		/* 061 */ (uint32_t *) &rwip_heap_env[0],
+		/* 062 */ (uint32_t *) RWIP_HEAP_ENV_SIZE,
+		/* 063 */ (uint32_t *) &rwip_heap_db[0],
+		/* 064 */ (uint32_t *) RWIP_HEAP_DB_SIZE,
+		/* 065 */ (uint32_t *) &rwip_heap_msg[0],
+		/* 066 */ (uint32_t *) RWIP_HEAP_MSG_SIZE,
+		/* 067 */ (uint32_t *) &rwip_heap_non_ret[0],
+		/* 068 */ (uint32_t *) RWIP_HEAP_NON_RET_SIZE,
+
+
+
+};
+
+#else // Disable Jump table 1 from flash 
+
+
+
+
+
 #if (BLE_CENTRAL && BLE_CHNL_ASSESS)
 /// Default Channel Assessment Timer duration (1s - Multiple of 10ms)
 #define LLM_UTIL_CH_ASSES_DFLT_TIMER_DUR     (100)
@@ -77,10 +185,7 @@
 #endif
 #endif
 
-uint32_t rwip_heap_non_ret[RWIP_CALC_HEAP_LEN(RWIP_HEAP_NON_RET_SIZE)];//  __attribute__((section("heap_mem_area_not_ret"), zero_init));
-uint32_t rwip_heap_env[RWIP_CALC_HEAP_LEN(RWIP_HEAP_ENV_SIZE)]   __attribute__((section("heap_env_area"), zero_init));
-uint32_t rwip_heap_msg[RWIP_CALC_HEAP_LEN(RWIP_HEAP_MSG_SIZE)]   __attribute__((section("heap_msg_area"), zero_init));
-uint32_t rwip_heap_db[RWIP_CALC_HEAP_LEN(RWIP_HEAP_DB_SIZE)]     __attribute__((section("heap_db_area"), zero_init));
+uint32_t volatile *const jump_table2_base = ((uint32_t*)JUMP_TABLE_2_BASE_ADDR);
 
 
 void _func_dummy(void)
@@ -138,28 +243,28 @@ const uint32_t* const jump_table_base[] __attribute__((section("jump_table_mem_a
         /* 015 */ (const uint32_t *) app_nvds_get,
         /* 016 */ (const uint32_t *) app_nvds_put,
         /* 017 */ (const uint32_t *) app_nvds_del,
-    	/* 018 */ (const uint32_t *) 0,//0x00016350,
-		/* 019 */ (const uint32_t *) 0,//0x00016408,
-		/* 020 */ (const uint32_t *) 0,//0x00016528,
-		/* 021 */ (const uint32_t *) 0,//0x00016580,
+    	/* 018 */ (const uint32_t *) 0,
+		/* 019 */ (const uint32_t *) 0,
+		/* 020 */ (const uint32_t *) 0,
+		/* 021 */ (const uint32_t *) 0,
 		/* 022 */ (const uint32_t *) 0,
-		/* 023 */ (const uint32_t *) 0,//0x00016680,
-		/* 024 */ (const uint32_t *) 0,//0x00016360,
-		/* 025 */ (const uint32_t *) 0,//0x00016398,
-		/* 026 */ (const uint32_t *) 0,//0x00016680,
-		/* 027 */ (const uint32_t *) 0,//0x000163b8,
-		/* 028 */ (const uint32_t *) 0,//0x0001677c,
-		/* 029 */ (const uint32_t *) 0,//0x000167b8,
-		/* 030 */ (const uint32_t *) 0,//0x000168f8,
-		/* 031 */ (const uint32_t *) 0,//0x000169f4,
-		/* 032 */ (const uint32_t *) 0,//0x000167f4,
-		/* 033 */ (const uint32_t *) 0,//0x00016888,
-		/* 034 */ (const uint32_t *) 0,//0x00016b58,
-		/* 035 */ (const uint32_t *) 0,//0x00016a34,
-		/* 036 */ (const uint32_t *) 0,//0x00016f90,
-		/* 037 */ (const uint32_t *) 0,//0x00016c08,
-		/* 038 */ (const uint32_t *) 0,//0x00016db0,
-		/* 039 */ (const uint32_t *) 0,//0x00016f30,
+		/* 023 */ (const uint32_t *) 0,
+		/* 024 */ (const uint32_t *) 0,
+		/* 025 */ (const uint32_t *) 0,
+		/* 026 */ (const uint32_t *) 0,
+		/* 027 */ (const uint32_t *) 0,
+		/* 028 */ (const uint32_t *) 0,
+		/* 029 */ (const uint32_t *) 0,
+		/* 030 */ (const uint32_t *) 0,
+		/* 031 */ (const uint32_t *) 0,
+		/* 032 */ (const uint32_t *) 0,
+		/* 033 */ (const uint32_t *) 0,
+		/* 034 */ (const uint32_t *) 0,
+		/* 035 */ (const uint32_t *) 0,
+		/* 036 */ (const uint32_t *) 0,
+		/* 037 */ (const uint32_t *) 0,
+		/* 038 */ (const uint32_t *) 0,
+		/* 039 */ (const uint32_t *) 0,
 		/* 040 */ (const uint32_t *) 0,
 		/* 041 */ (const uint32_t *) 0,
 		/* 042 */ (const uint32_t *) 0,
@@ -202,6 +307,6 @@ const uint32_t* const jump_table_base[] __attribute__((section("jump_table_mem_a
 		/* 068 */ (const uint32_t *) RWIP_HEAP_NON_RET_SIZE,
 };
 
-
+#endif
 
 
