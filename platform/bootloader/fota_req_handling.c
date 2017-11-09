@@ -1287,6 +1287,7 @@ static nrf_dfu_res_code_t nrf_dfu_data_req(void * p_context, nrf_dfu_req_t * p_r
                 TracerInfo("Doing postvalidate\r\n");
                 ret_val = nrf_dfu_postvalidate(&packet.signed_command.command.init);
             }
+
             break;
 
         case NRF_DFU_OBJECT_OP_SELECT:

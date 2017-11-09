@@ -100,6 +100,8 @@ static void wait_for_event()
 #ifdef CFG_BLE_APP
         rwip_schedule();
         rwip_ignore_ll_conn_param_update_patch();   
+        app_wait_for_reset_ble();
+
 #endif        
     }
 }

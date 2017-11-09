@@ -102,7 +102,7 @@ static void response_send(      uint8_t op_code, nrf_dfu_res_code_t   resp_val)
 {
     uint16_t index = 0;
 
-    TracerInfo("Sending Response: [0x%01x, 0x%01x]\r\n", op_code, resp_val);
+    //TracerInfo("Sending Response: [0x%01x, 0x%01x]\r\n", op_code, resp_val); // can't use in interrupt state.
 
 /*
     if ((m_conn_handle == BLE_CONN_HANDLE_INVALID) || (m_flags & DFU_BLE_FLAG_SERVICE_INITIALIZED) == 0)
@@ -130,7 +130,7 @@ static void response_crc_cmd_send(uint32_t offset, uint32_t crc)
 {
     uint16_t               index = 0;
 
-    TracerInfo("Sending CRC: [0x60, 0x03, 0x01, 0:x%08x, CRC:0x%08x]\r\n", offset, crc);
+    //TracerInfo("Sending CRC: [0x60, 0x03, 0x01, 0:x%08x, CRC:0x%08x]\r\n", offset, crc);
 
 /*
     if ((m_conn_handle == BLE_CONN_HANDLE_INVALID) || (m_flags & DFU_BLE_FLAG_SERVICE_INITIALIZED) == 0)
@@ -164,7 +164,7 @@ static void response_select_object_cmd_send(uint32_t max_size, uint32_t  offset,
 {
     uint16_t               index = 0;
 
-    TracerInfo("Sending Object Info: [0x60, 0x06, 0x01 max: 0:x%08x 0:x%08x, CRC:0x%08x]\r\n", max_size, offset, crc);
+    //TracerInfo("Sending Object Info: [0x60, 0x06, 0x01 max: 0:x%08x 0:x%08x, CRC:0x%08x]\r\n", max_size, offset, crc);
 /*
     if ((m_conn_handle == BLE_CONN_HANDLE_INVALID) || (m_flags & DFU_BLE_FLAG_SERVICE_INITIALIZED) == 0)
     {
@@ -202,7 +202,6 @@ static void response_select_object_cmd_send(uint32_t max_size, uint32_t  offset,
  *
  * @return    NRF_SUCCESS on successful processing of control point write. Otherwise an error code.
  */
-
 void fota_on_ctrl_pt_write(struct otat_packet_send_cmd const *param)
 {
     nrf_dfu_res_code_t  res_code;
@@ -252,7 +251,9 @@ void fota_on_ctrl_pt_write(struct otat_packet_send_cmd const *param)
             dfu_req.req_type     =  NRF_DFU_OBJECT_OP_EXECUTE;
 
             res_code = nrf_dfu_req_handler_on_req(NULL, &dfu_req, &dfu_res);
+
             response_send(BLE_DFU_OP_CODE_EXECUTE_OBJECT, res_code);
+
             return;
         case BLE_DFU_OP_CODE_SET_RECEIPT_NOTIF:
             TracerInfo("Set receipt notif\r\n");

@@ -52,34 +52,38 @@
  
      return ret_val;
  }
- 
- 
+
+
  uint32_t fota_transports_close(void)
  {
      uint32_t ret_val = CC_SUCCESS;
  
-     TracerInfo("In nrf_dfu_transports_close\r\n");
-#if 1
+     //TracerInfo("In nrf_dfu_transports_close\r\n");
+     app_start_reset_ble();
+
+#if 0
 #ifdef CFG_BLE_APP 
 
-     for(uint32_t i = 0; i < 10000; i++)
+     for(uint32_t i = 0; i < 500000; i++)
      {
           app_sched_execute();
           rwip_schedule();
           rwip_ignore_ll_conn_param_update_patch();   
      }
     
-     appm_disconnect();
-
+     //appm_disconnect();
+     appm_reset_ble();
+/*
      for(uint32_t i = 0; i < 100; i++)
      {
           app_sched_execute();
           rwip_schedule();
           rwip_ignore_ll_conn_param_update_patch();   
-     }     
+     }  
+*/     
 #endif
 #endif 
-     TracerInfo("After nrf_dfu_transports_close\r\n");
+    // TracerInfo("After nrf_dfu_transports_close\r\n");
  
      return ret_val;
  }

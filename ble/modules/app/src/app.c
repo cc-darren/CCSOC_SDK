@@ -243,6 +243,14 @@ struct app_env_tag app_env;
 volatile uint8_t  *p_llm_le_event_mask = (volatile uint8_t *) 0x20000680;
 
 /*
+ * Local VARIABLE DEFINITIONS
+ ****************************************************************************************
+ */
+
+static bool is_reset_ble = false;
+static uint32_t reset_ble_cnt = 0;
+
+/*
  * FUNCTION DEFINITIONS
  ****************************************************************************************
  */
@@ -404,6 +412,43 @@ void appm_disconnect(void)
     // Send the message
     ke_msg_send(cmd);
 }
+
+void appm_reset_ble(void) // added by Samuel
+{
+
+    // Reset the stack
+    struct gapm_reset_cmd* cmd = KE_MSG_ALLOC(GAPM_RESET_CMD,
+                                              TASK_GAPM, TASK_APP,
+                                              gapm_reset_cmd);
+
+    cmd->operation = GAPM_RESET;
+
+    ke_msg_send(cmd);
+   
+}
+
+
+void app_start_reset_ble(void)
+{
+    is_reset_ble = true;
+
+}
+
+void app_wait_for_reset_ble(void)
+{
+    if(true == is_reset_ble)
+    {
+        reset_ble_cnt++;
+
+        if(reset_ble_cnt > 10000)
+        {
+            is_reset_ble = false;
+            reset_ble_cnt = 0;
+            appm_reset_ble();
+        }
+    }
+}
+
 
 /**
  ****************************************************************************************
