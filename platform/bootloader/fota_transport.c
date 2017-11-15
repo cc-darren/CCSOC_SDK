@@ -15,7 +15,8 @@
 #include <string.h>
 #include "tracer.h"
 #include "rwip.h"
-#include "error.h"
+#include "error.h"
+
 #include "jump_table.h"
 #include "app.h"
 
@@ -34,10 +35,11 @@
      memset(((void *) JUMP_TABLE_2_BASE_ADDR), 0, 1024);
 #endif
      memset (((void *) 0x40006000), 0, 8192);
-   
+     memset (((void *) 0x20000048), 0, 0x820);
      *((uint32_t *) 0x4000011C) = 0x00000008;
      *((uint32_t *) 0x40000104) = (*((uint32_t *) 0x40000104) & 0xFFFFFE0) | 0x04;
-     *((uint32_t *) 0x20000648) = 0x00;
+     
+     //*((uint32_t *) 0x20000648) = 0x00;
       
      //regCKGEN->bf.bleClkDiv = 0x04;
 
