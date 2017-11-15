@@ -83,6 +83,8 @@ uint32_t nrf_dfu_flash_init(bool fstorage_enable)
         drvi_EflashInit();
     }
 
+    drvi_EflashFlush();
+
     return err_code;
 }
 
