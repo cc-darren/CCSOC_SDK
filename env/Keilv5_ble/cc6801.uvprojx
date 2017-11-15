@@ -83,7 +83,7 @@
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>1</RunUserProg2>
             <UserProg1Name>fromelf.exe --bincombined --output .\Objects\@L.bin !L</UserProg1Name>
-            <UserProg2Name>Zeus_Build.bat</UserProg2Name>
+            <UserProg2Name>Zeus_Build_M0.bat</UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
             <nStopA1X>0</nStopA1X>
@@ -1426,9 +1426,9 @@
           </BeforeMake>
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
-            <RunUserProg2>0</RunUserProg2>
+            <RunUserProg2>1</RunUserProg2>
             <UserProg1Name>fromelf.exe --bincombined --output .\Objects\@L.bin !L</UserProg1Name>
-            <UserProg2Name></UserProg2Name>
+            <UserProg2Name>Zeus_Build_M4.bat</UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
             <nStopA1X>0</nStopA1X>
@@ -1713,7 +1713,7 @@
             <ScatterFile>.\FPGA_eflash.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
-            <Misc>.\rom_symdef_M4.txt  --keep=jump_table.o(jump_table_mem_area)</Misc>
+            <Misc>.\rom_symdef_M4.txt  --keep=jump_table.o(jump_table2_mem_area)</Misc>
             <LinkerInputFile></LinkerInputFile>
             <DisabledWarnings></DisabledWarnings>
           </LDads>
