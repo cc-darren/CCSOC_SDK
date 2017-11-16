@@ -104,6 +104,43 @@ static dfu_packet_t packet = DFU_PACKET_INIT_DEFAULT;
 
 static pb_istream_t stream;
 
+#define ENC_MAX_SIZE             20
+static uint8_t enc_key[ENC_MAX_SIZE] = {0x86, 0x16, 0x9d, 0xda, 0x59, 0x48, 0x99, 0x2b, 0xcc, 0x4b, 0x23, 0x82, 0x37, 0xb7, 0xb6, 0xc2, 0xbb, 0x71, 0xf6, 0x1c};
+static uint8_t enc_index = 0;
+uint32_t deEnc_image_crc;
+uint16_t deEnc_image_checksum;
+
+static void decrypt_data(uint8_t *buf, uint32_t size)
+{
+    for(uint8_t i = 0; i < size; i++)
+    {
+        if (enc_index >= ENC_MAX_SIZE)
+            enc_index = 0;
+
+        buf[i] ^= enc_key[enc_index];
+        buf[i] -= enc_index;
+        deEnc_image_checksum += buf[i];
+        enc_index++;
+    }
+
+    deEnc_image_crc = crc32_compute(buf, size, &deEnc_image_crc);
+}
+
+static nrf_dfu_res_code_t image_checksum_validate(uint32_t fw_addr, uint32_t fw_size)
+{
+    nrf_dfu_res_code_t         res_code = NRF_DFU_RES_CODE_SUCCESS;
+    uint16_t                   fw_flash_checksum = 0;
+    uint32_t                   i;
+
+    // fw checksum verfication
+    for(i = 0; i < fw_size; i++)
+        fw_flash_checksum += *((volatile uint8_t *)fw_addr + i);
+
+    if(deEnc_image_checksum != fw_flash_checksum)
+        res_code = NRF_DFU_RES_CODE_INVALID_OBJECT;
+
+    return res_code;
+}
 
 static void on_dfu_complete(fs_evt_t const * const evt, fs_ret_t result)
 {
@@ -409,28 +446,38 @@ static nrf_dfu_res_code_t nrf_dfu_postvalidate(dfu_init_command_t * p_init)
     nrf_dfu_res_code_t         res_code = NRF_DFU_RES_CODE_SUCCESS;
     nrf_dfu_bank_t           * p_bank;
 
-    switch (p_init->hash.hash_type)
+    if ((packet.command.init.has_encrypt && packet.command.init.encrypt == true) ||
+        (packet.signed_command.command.init.has_encrypt && packet.signed_command.command.init.encrypt == true))
     {
-        case DFU_HASH_TYPE_SHA256:
-            hash_data.p_le_data = &hash[0];
-            hash_data.len = sizeof(hash);
-            err_code = nrf_crypto_hash_compute(NRF_CRYPTO_HASH_ALG_SHA256, (uint8_t*)m_firmware_start_addr, m_firmware_size_req, &hash_data);
-            if (err_code != CC_SUCCESS)
-            {
+        res_code = image_checksum_validate(m_firmware_start_addr, m_firmware_size_req);
+        if (res_code != NRF_DFU_RES_CODE_SUCCESS)
+            return res_code;
+    }
+    else
+    {
+        switch (p_init->hash.hash_type)
+        {
+            case DFU_HASH_TYPE_SHA256:
+                hash_data.p_le_data = &hash[0];
+                hash_data.len = sizeof(hash);
+                err_code = nrf_crypto_hash_compute(NRF_CRYPTO_HASH_ALG_SHA256, (uint8_t*)m_firmware_start_addr, m_firmware_size_req, &hash_data);
+                if (err_code != CC_SUCCESS)
+                {
+                    res_code = NRF_DFU_RES_CODE_OPERATION_FAILED;
+                }
+
+                if (memcmp(&hash_data.p_le_data[0], &p_init->hash.hash.bytes[0], 32) != 0)
+                {
+                    TracerInfo("Hash failure\r\n");
+
+                    res_code = NRF_DFU_RES_CODE_INVALID_OBJECT;
+                }
+                break;
+
+            default:
                 res_code = NRF_DFU_RES_CODE_OPERATION_FAILED;
-            }
-
-            if (memcmp(&hash_data.p_le_data[0], &p_init->hash.hash.bytes[0], 32) != 0)
-            {
-                TracerInfo("Hash failure\r\n");
-
-                res_code = NRF_DFU_RES_CODE_INVALID_OBJECT;
-            }
-            break;
-
-        default:
-            res_code = NRF_DFU_RES_CODE_OPERATION_FAILED;
-            break;
+                break;
+        }
     }
 
     if (s_dfu_settings.bank_current == NRF_DFU_CURRENT_BANK_0)
@@ -497,7 +544,13 @@ static nrf_dfu_res_code_t nrf_dfu_postvalidate(dfu_init_command_t * p_init)
         }
 #endif
         // Calculate CRC32 for image
-        p_bank->image_crc = s_dfu_settings.progress.firmware_image_crc;
+        if ((packet.command.init.has_encrypt && packet.command.init.encrypt == true) ||
+            (packet.signed_command.command.init.has_encrypt && packet.signed_command.command.init.encrypt == true))
+            p_bank->image_crc = deEnc_image_crc;
+        else
+
+            p_bank->image_crc = s_dfu_settings.progress.firmware_image_crc;
+
         p_bank->image_size = m_firmware_size_req;
     }
     else
@@ -706,6 +759,12 @@ static nrf_dfu_res_code_t nrf_dfu_command_req(void * p_context, nrf_dfu_req_t * 
                 return NRF_DFU_RES_CODE_INVALID_OBJECT;
             }
 
+            if ((packet.command.init.has_encrypt && packet.command.init.encrypt == true) ||
+                (packet.signed_command.command.init.has_encrypt && packet.signed_command.command.init.encrypt == true))
+            {
+                TracerInfo("Execute application encryption\r\n");
+            }
+
             // We have a valid DFU packet
             if (packet.has_signed_command)
             {
@@ -773,14 +832,11 @@ static nrf_dfu_res_code_t nrf_dfu_data_req(void * p_context, nrf_dfu_req_t * p_r
                 //TracerInfo("Trying to create data object of size 0\r\n");
                 return NRF_DFU_RES_CODE_INVALID_PARAMETER;
             }
-            //TracerErr("object_size: %d, offset_last: %d, siez_req:%d\r\n",p_req->object_size,s_dfu_settings.progress.firmware_image_offset_last,m_firmware_size_req);
 
             if ( (p_req->object_size & (CODE_PAGE_SIZE - 1)) != 0 &&
                 (s_dfu_settings.progress.firmware_image_offset_last + p_req->object_size != m_firmware_size_req) )
             {
                 TracerErr("Trying to create an object with a size that is not page aligned\r\n");
-
-                
                 return NRF_DFU_RES_CODE_INVALID_PARAMETER;
             }
 
@@ -849,13 +905,17 @@ static nrf_dfu_res_code_t nrf_dfu_data_req(void * p_context, nrf_dfu_req_t * p_r
                 return NRF_DFU_RES_CODE_INVALID_PARAMETER;
             }
 
+            // Update the return values
+            p_res->offset = s_dfu_settings.progress.firmware_image_offset;
+            p_res->crc = s_dfu_settings.progress.firmware_image_crc;
+
             // Update the CRC of the firmware image.
             s_dfu_settings.progress.firmware_image_crc = crc32_compute(p_req->p_req, p_req->req_len, &s_dfu_settings.progress.firmware_image_crc);
             s_dfu_settings.progress.firmware_image_offset += p_req->req_len;
 
-            // Update the return values
-            p_res->offset = s_dfu_settings.progress.firmware_image_offset;
-            p_res->crc = s_dfu_settings.progress.firmware_image_crc;
+            if ((packet.command.init.has_encrypt && packet.command.init.encrypt == true) ||
+                (packet.signed_command.command.init.has_encrypt && packet.signed_command.command.init.encrypt == true))
+                decrypt_data(p_req->p_req, p_req->req_len);
 
             if (m_data_buf_pos + p_req->req_len < FLASH_BUFFER_CHUNK_LENGTH)
             {
@@ -989,7 +1049,6 @@ static nrf_dfu_res_code_t nrf_dfu_data_req(void * p_context, nrf_dfu_req_t * p_r
                 else if (packet.has_command)
                     ret_val = nrf_dfu_postvalidate(&packet.command.init);
             }
-
             break;
 
         case NRF_DFU_OBJECT_OP_SELECT:
