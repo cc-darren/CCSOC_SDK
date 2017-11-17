@@ -440,11 +440,17 @@ void app_wait_for_reset_ble(void)
     {
         reset_ble_cnt++;
 
-        if(reset_ble_cnt > 10000)
+        if(reset_ble_cnt == 10000)
+        {
+            appm_reset_ble();
+        }
+        
+        if(reset_ble_cnt == 20000)
         {
             is_reset_ble = false;
             reset_ble_cnt = 0;
-            appm_reset_ble();
+
+            NVIC_SystemReset();
         }
     }
 }

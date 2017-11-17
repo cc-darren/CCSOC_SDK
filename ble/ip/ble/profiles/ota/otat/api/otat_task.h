@@ -234,7 +234,7 @@ struct otat_packet_send_cmd
 {
     //uint8_t     conidx;
     uint16_t    length;
-	uint8_t  value[20];
+	uint8_t  value[50];
 };
 
 /// Parameters of the @ref OTAT_CFG_INDNTF_IND message

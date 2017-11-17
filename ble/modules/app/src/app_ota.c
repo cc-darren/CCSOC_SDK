@@ -43,6 +43,7 @@
 #endif
 #include "fota_flash.h"
 #include "fota_settings.h"
+#include "drvi_clock.h"
 
 #if (DISPLAY_SUPPORT)
 #include "app_display.h"
@@ -457,6 +458,8 @@ static int otat_packet_send_cmd_handler(ke_msg_id_t const msgid,
 {
 #ifdef BLE_OTA_BL_MODE_EN    
     fota_on_write(param);
+    cc6801_ClockDelayUs(400);
+    
 /*
     uint8_t test_buff[15] = {0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0a,0x0b,0x0c,0x0d,0x0e,0x0f};
     app_ota_notify_send(test_buff, 16);
