@@ -335,7 +335,7 @@
               <MiscControls>--no_inline --no_multifile -DMSC_CLOCK</MiscControls>
               <Define>FPGA</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app\Display;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\service\tracer;..\..\test;..\..\test\ext</IncludePath>
+              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app\Display;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\service\tracer;..\..\service\fds;..\..\service\fstorage;..\..\service\experimental_section_vars;..\..\test;..\..\test\ext</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -623,6 +623,16 @@
               <FileName>tracer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\service\tracer\tracer.c</FilePath>
+            </File>
+            <File>
+              <FileName>fstorage.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\fstorage\fstorage.c</FilePath>
+            </File>
+            <File>
+              <FileName>fds.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\fds\fds.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1427,6 +1437,16 @@
               <FileName>tracer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\service\tracer\tracer.c</FilePath>
+            </File>
+            <File>
+              <FileName>fstorage.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\fstorage\fstorage.c</FilePath>
+            </File>
+            <File>
+              <FileName>fds.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\fds\fds.c</FilePath>
             </File>
           </Files>
         </Group>

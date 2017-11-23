@@ -393,6 +393,9 @@ Declaration of Global Variables & Functions
 Declaration of static Global Variables & Functions
 ******************************************************************************/
 // Sec 8: declaration of static global variable
+#define FSTORAGE_ENABLED     1
+#define FDS_ENABLED          1
+
 
 // Sec 9: declaration of static function prototype
 

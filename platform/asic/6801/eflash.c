@@ -127,7 +127,7 @@ void cc6801_EflashInit(void)
                           EF_INTERRUPT_REG_DataModeStatus   |   \
                           EF_INTERRUPT_REG_EraPrgModeEn     |   \
                           EF_INTERRUPT_REG_DataModeEn));
-
+    NVIC_ClearPendingIRQ(EFLASH_IRQn);
     NVIC_EnableIRQ(EFLASH_IRQn);
 }
 
@@ -149,6 +149,13 @@ IN_RET_RAM_END
 BOOL cc6801_EflashEraseALL(void)
 {
 
+#if defined(FPGA) && FPGA
+    for(uint32_t ii=0x10000000;ii<0x10040000;ii+=0x800)
+    {
+        cc6801_EflashErasePage(ii);
+    }
+    return (0);                                  // Finished without Errors
+#else
     /* Add your Code */
     uint32_t tdata;  //32bit
 
@@ -167,9 +174,46 @@ BOOL cc6801_EflashEraseALL(void)
 //    // clear eflash status
 //    wr(EF_INTERRUPT_REG, tdata);  
     return (0);                                  // Finished without Errors
+#endif
 }
 BOOL cc6801_EflashErasePage(uint32_t dwEflashAdr)
 {
+#if defined(FPGA) && FPGA
+    uint32_t tdata;
+    dwEflashAdr &=(0xFFFFF800);
+
+    wr(EF_INTERRUPT_REG, (EF_INTERRUPT_REG_DMAModeStatus    |   \
+                          EF_INTERRUPT_REG_EraPrgModeStatus |   \
+                          EF_INTERRUPT_REG_DataModeStatus   ));
+    for ( uint32_t ii=0;ii<2048;ii+=16)
+    {
+        wr(EF_ACCESS_REG,(dwEflashAdr)<<8);
+        dwEflashAdr+=16;
+        wr(EF_WR_DATA0_REG,0xFFFFFFFF);
+        wr(EF_WR_DATA1_REG,0xFFFFFFFF);
+        wr(EF_WR_DATA2_REG,0xFFFFFFFF);
+        wr(EF_WR_DATA3_REG,0xFFFFFFFF);
+   
+        wr(EF_CONFIG_REG,(3<<16));
+        wr(EF_FLASHMODE_REG, EF_FLASHMODE_REG_AHBEnable|EF_FLASHMODE_REG_ModeMain);//wait eflash status
+        
+        //wait eflash status
+        do {
+            rd(EF_INTERRUPT_REG,tdata);
+        } while( (tdata&(EF_INTERRUPT_REG_EraPrgModeStatus|EF_INTERRUPT_REG_DataModeStatus))==0 );
+    
+        // clear eflash status
+        wr(EF_INTERRUPT_REG, tdata);  
+    }
+    
+    wr(EF_INTERRUPT_REG, (EF_INTERRUPT_REG_DMAModeStatus    |   \
+                          EF_INTERRUPT_REG_EraPrgModeStatus |   \
+                          EF_INTERRUPT_REG_DataModeStatus   |   \
+                          EF_INTERRUPT_REG_EraPrgModeEn     |   \
+                          EF_INTERRUPT_REG_DataModeEn));
+    
+    return (TRUE);                                  // Finished without Errors
+#else
     if (dwEflashAdr & 0x07FF) {
         return FALSE;
     } else {
@@ -191,6 +235,7 @@ BOOL cc6801_EflashErasePage(uint32_t dwEflashAdr)
 //        wr(EF_INTERRUPT_REG, tdata);  
         return (TRUE);                                  // Finished without Errors
     }
+#endif
 }
 
 void cc6801_EflashRegisterCallback(fpEflash_Callback fpCB)

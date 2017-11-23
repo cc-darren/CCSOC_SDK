@@ -353,8 +353,8 @@ fs_ret_t fs_init(void)
 
     m_flags |= FS_FLAG_INITIALIZED;
 
-    drvi_EflashInit();
     drvi_EflashRegisterCallback(fs_sys_event_handler);
+    drvi_EflashInit();
 
     return FS_SUCCESS;
 }

@@ -386,6 +386,9 @@ Declaration of static Global Variables & Functions
 ******************************************************************************/
 // Sec 8: declaration of static global variable
 
+#define FSTORAGE_ENABLED     1
+#define FDS_ENABLED          1
+
 // Sec 9: declaration of static function prototype
 
 /******************************************************************************
@@ -457,8 +460,6 @@ Declaration of static Global Variables & Functions
 
 #define CFG_EXT_DB
 //#define CFG_DBG
-
-#define FSTORAGE_ENABLED 1
 
 
 #define flash_read(a,b,c,d,e)
