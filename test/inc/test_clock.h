@@ -12,26 +12,26 @@
 /******************************************************************************
 *  Filename:
 *  ---------
-*  project.h
+*
 *
 *  Project:
 *  --------
-*  all project
+*  CC6801
 *
 *  Description:
 *  ------------
-*  include defined project header file
+*  the description
 *
 *  Author:
 *  -------
-*  PPP   (CC-pattaya)
+*  Blake   (cc-blake)
 *
 *===========================================================================
 *
 ******************************************************************************/
 
-#ifndef _PROJECT_H_
-#define _PROJECT_H_
+#ifndef _TEST_CLOCK_H_
+#define _TEST_CLOCK_H_
 
 /******************************************************************************
 Head Block of The File
@@ -39,32 +39,8 @@ Head Block of The File
 // Sec 0: Comment block of the file
 
 // Sec 1: Include File
-#include "global.h"
-#include "asic_supported.h"
-#include "module_supported.h"
 
 // Sec 2: Constant Definitions, Imported Symbols, miscellaneous
-
-#if defined(FPGA) && FPGA
-    #if defined(BOOTLOADER) && BOOTLOADER
-        #include "project_bootloader_FPGA.h"
-    #elif defined(VENUS_WRISTBAND) && VENUS_WRISTBAND
-        #include "project_FPGA_Venus.h"
-    #elif defined(TESTCASE) && TESTCASE
-        #include "project_test_FPGA.h"
-    #else
-        #include "project_FPGA.h"
-    #endif
-#elif defined(ASIC) && ASIC
-    #include "project_ASIC.h"
-#else
-    #error "There is no defined project. Please select one project!!"
-#endif
-
-
-
-#include "option_check.h"
-
 
 /******************************************************************************
 Declaration of External Variables & Functions
@@ -72,6 +48,7 @@ Declaration of External Variables & Functions
 // Sec 3: declaration of external variable
 
 // Sec 4: declaration of external function prototype
+int TEST_DynamicClock(uint32_t dwCount);
 
 /******************************************************************************
 Declaration of data structure
@@ -96,4 +73,4 @@ Declaration of static Global Variables & Functions
 // Sec 10: C Functions
 ******************************************************************************/
 
-#endif // _PROJECT_H_
+#endif // _TEST_CLOCK_H_

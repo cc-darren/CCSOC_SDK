@@ -33,9 +33,9 @@
 /******************************************************************************
 Head Block of The File
 ******************************************************************************/
-#include "test_config.h"
+#include "test.h"
 
-#if (TEST_UART0_TXDMA) || (TEST_UART0_RXDMA)
+#if (TEST_UART_LOOPBACK)
 
 #include <stdio.h>
 #include <string.h>
@@ -57,62 +57,47 @@ Declaration of data structure
 /******************************************************************************
 Declaration of Global Variables & Functions
 ******************************************************************************/
-//static void test_Uart0EventHandler(T_UartEvent * p_event);
-static void test_Uart1EventHandler(T_UartEvent * p_event);
-static void test_Uart2EventHandler(T_UartEvent * p_event);
 
 /******************************************************************************
 Declaration of static Global Variables & Functions
 ******************************************************************************/
-//static T_UartPort TestUart0 =
-//{
-//    .bPortNum = 0,
-//    .dwConfig = UART_BAUDRATE_1152000 | DRVI_UART_S8,
-//    .fpComplete = test_Uart0EventHandler,
-//};
+#ifdef TEST_UART0_BUS
+static uint16_t g_iuart0Done = 0;
+static uint16_t g_iUart0Error = 0;
+static uint32_t g_iUart0Count = 0;
+
+__align(4) static INT8 g_caUart0TxBuffer[UART_BUFFER_SIZE] = {0};
+__align(4) static INT8 g_caUart0RxBuffer[UART_BUFFER_SIZE] = {0};
+
+static T_UartPort TestUart0 =
+{
+    .bPortNum = TEST_UART0_BUS,
+    .dwConfig = UART_BAUDRATE_115200 | UART_DATA_BITS_8,
+};
+
+static void test_Uart0EventHandler(T_UartEvent * p_event)
+{
+    if (strcmp(g_caUart0TxBuffer, g_caUart0RxBuffer))
+        g_iUart0Error++;
+
+    g_iuart0Done = 1;
+}
+#endif
+
+#ifdef TEST_UART1_BUS
+static uint16_t g_iuart1Done = 0;
+static uint16_t g_iUart1Error = 0;
+static uint32_t g_iUart1Count = 0;
+
+__align(4) static INT8 g_caUart1TxBuffer[UART_BUFFER_SIZE] = {0};
+__align(4) static INT8 g_caUart1RxBuffer[UART_BUFFER_SIZE] = {0};
 
 static T_UartPort TestUart1 =
 {
-    .bPortNum = 1,
-    .dwConfig = UART_BAUDRATE_1152000 | UART_DATA_BITS_8,
-    .fpComplete = test_Uart1EventHandler,
+    .bPortNum = TEST_UART1_BUS,
+    .dwConfig = UART_BAUDRATE_115200 | UART_DATA_BITS_8,
 };
 
-static T_UartPort TestUart2 =
-{
-    .bPortNum = 2,
-    .dwConfig = UART_BAUDRATE_1152000 | UART_DATA_BITS_8,
-    .fpComplete = test_Uart2EventHandler,
-};
-
-//__align(4) static INT8 g_caUart0TxBuffer[UART_BUFFER_SIZE] = {0};
-//__align(4) static INT8 g_caUart0RxBuffer[UART_BUFFER_SIZE] = {0};
-__align(4) static INT8 g_caUart1TxBuffer[UART_BUFFER_SIZE] = {0};
-__align(4) static INT8 g_caUart1RxBuffer[UART_BUFFER_SIZE] = {0};
-__align(4) static INT8 g_caUart2TxBuffer[UART_BUFFER_SIZE] = {0};
-__align(4) static INT8 g_caUart2RxBuffer[UART_BUFFER_SIZE] = {0};
-
-//static INT16 g_iuart0Done = 0;
-static INT16 g_iuart1Done = 0;
-static INT16 g_iuart2Done = 0;
-
-//static INT16 g_iUart0Error = 0;
-static INT16 g_iUart1Error = 0;
-static INT16 g_iUart2Error = 0;
-
-//static UINT32 g_iUart0Count = 0;
-static UINT32 g_iUart1Count = 0;
-static UINT32 g_iUart2Count = 0;
-
-uint32_t g_dwaUartConfig[512];
-
-//static void test_Uart0EventHandler(T_UartEvent * p_event)
-//{
-//    if (strcmp(g_caUart0TxBuffer, g_caUart0RxBuffer))
-//        g_iUart0Error++;
-
-//    g_iuart0Done = 1;
-//}
 static void test_Uart1EventHandler(T_UartEvent * p_event)
 {
     if (strcmp(g_caUart1TxBuffer, g_caUart1RxBuffer))
@@ -120,6 +105,22 @@ static void test_Uart1EventHandler(T_UartEvent * p_event)
 
     g_iuart1Done = 1;
 }
+#endif
+
+#ifdef TEST_UART2_BUS
+static uint16_t g_iuart2Done = 0;
+static uint16_t g_iUart2Error = 0;
+static uint32_t g_iUart2Count = 0;
+
+__align(4) static INT8 g_caUart2TxBuffer[UART_BUFFER_SIZE] = {0};
+__align(4) static INT8 g_caUart2RxBuffer[UART_BUFFER_SIZE] = {0};
+
+static T_UartPort TestUart2 =
+{
+    .bPortNum = TEST_UART2_BUS,
+    .dwConfig = UART_BAUDRATE_115200 | UART_DATA_BITS_8,
+};
+
 static void test_Uart2EventHandler(T_UartEvent * p_event)
 {
     if (strcmp(g_caUart2TxBuffer, g_caUart2RxBuffer))
@@ -127,10 +128,13 @@ static void test_Uart2EventHandler(T_UartEvent * p_event)
 
     g_iuart2Done = 1;
 }
+#endif
 
-static INT16 test_UartConigInit(void)
+uint32_t g_dwaUartConfig[512];
+
+static uint16_t test_UartConigInit(void)
 {
-    INT16 iIndex = 0;
+    uint16_t iIndex = 0;
 
     uint32_t dwaTestBaud[] =
     {
@@ -194,100 +198,92 @@ static INT16 test_UartConigInit(void)
     return iIndex;
 }
 
-INT16 TEST_UartInit(void)
+void TEST_UartInit(void)
 {
-    INT16 iError = CC_SUCCESS;
-
-    //iError = drvi_UartConfigSet(&TestUart0);
-    //if (iError)
-    //    return iError;
-
-    iError = drvi_UartInit(&TestUart1);
-    if (iError)
-    {
-        printf("UART1 Config[0x%x] Not Support\r\n", TestUart2.dwConfig);
-        return iError;
-    }
-
-    iError = drvi_UartInit(&TestUart2);
-    if (iError)
-    {
-        printf("UART2 Config[0x%x] Not Support\r\n", TestUart2.dwConfig);
-        return iError;
-    }
-
-    //g_iuart0Done = 1;
+#ifdef TEST_UART0_BUS
+    drvi_UartRxDoneRegister(TEST_UART0_BUS, test_Uart0EventHandler);
+    g_iuart0Done = 1;
+#endif
+#ifdef TEST_UART1_BUS
+    drvi_UartRxDoneRegister(TEST_UART1_BUS, test_Uart1EventHandler);
     g_iuart1Done = 1;
+#endif
+#ifdef TEST_UART2_BUS
+    drvi_UartRxDoneRegister(TEST_UART2_BUS, test_Uart2EventHandler);
     g_iuart2Done = 1;
-
-    return CC_SUCCESS;
+#endif
 }
 
-void TEST_UartLoopBackSingleConfig(UINT32 iCount)
+void TEST_UartLoopBackSingleConfig(uint32_t iCount)
 {
-    INT16 iError = CC_SUCCESS;
-    UINT32 iIndex = 0;
-    UINT32 dwTemp = 0;
+    uint32_t iIndex = 0;
+    uint32_t dwTemp = 0;
 
-    iError = TEST_UartInit();
-    if (iError)
-        return;
+    TEST_UartInit();
 
     while(iIndex<iCount)
     {
         //Generate a complicated number
         dwTemp = iIndex*iIndex*3957;
-//        if (g_iuart0Done)
-//        {
-//            g_iuart0Done = 0;
-//            memset(g_caUart0TxBuffer, 0, UART_BUFFER_SIZE);
-//            memset(g_caUart0RxBuffer, 0, UART_BUFFER_SIZE);
-//            sprintf(g_caUart0TxBuffer, "%lu%c", dwTemp, '\0');
-//            drvi_UartTx(&uart0, (const UINT8 *)g_caUart0TxBuffer, UART_BUFFER_SIZE);
-//        }
-
+#ifdef TEST_UART0_BUS
+        if (g_iuart0Done)
+        {
+            g_iuart0Done = 0;
+            memset(g_caUart0TxBuffer, 0, UART_BUFFER_SIZE);
+            memset(g_caUart0RxBuffer, 0, UART_BUFFER_SIZE);
+            sprintf(g_caUart0TxBuffer, "%lu%c", dwTemp, '\0');
+            drvi_UartRx(TEST_UART0_BUS, (UINT8 *)g_caUart0RxBuffer, UART_BUFFER_SIZE);
+            drvi_UartTx(TEST_UART0_BUS, (const UINT8 *)g_caUart0TxBuffer, UART_BUFFER_SIZE);
+            iIndex++;
+            g_iUart0Count++;
+        }
+#endif
+#ifdef TEST_UART1_BUS
         if (g_iuart1Done)
         {
             g_iuart1Done = 0;
             memset(g_caUart1TxBuffer, 0, UART_BUFFER_SIZE);
             memset(g_caUart1RxBuffer, 0, UART_BUFFER_SIZE);
             sprintf(g_caUart1TxBuffer, "%lu%c", dwTemp, '\0');
-            drvi_UartRx(&TestUart1, (UINT8 *)g_caUart1RxBuffer, UART_BUFFER_SIZE);
-            drvi_UartTx(&TestUart1, (const UINT8 *)g_caUart1TxBuffer, UART_BUFFER_SIZE);
+            drvi_UartRx(TEST_UART1_BUS, (UINT8 *)g_caUart1RxBuffer, UART_BUFFER_SIZE);
+            drvi_UartTx(TEST_UART1_BUS, (const UINT8 *)g_caUart1TxBuffer, UART_BUFFER_SIZE);
             //while(!g_iuart1Done);
             //g_iuart1Done = 0;
             iIndex++;
             g_iUart1Count++;
         }
-
+#endif
+#ifdef TEST_UART2_BUS
         if (g_iuart2Done)
         {
             g_iuart2Done = 0;
             memset(g_caUart2TxBuffer, 0, UART_BUFFER_SIZE);
             memset(g_caUart2RxBuffer, 0, UART_BUFFER_SIZE);
             sprintf(g_caUart2TxBuffer, "%lu%c", dwTemp, '\0');
-            drvi_UartRx(&TestUart2, (UINT8 *)g_caUart2RxBuffer, UART_BUFFER_SIZE);
-            drvi_UartTx(&TestUart2, (const UINT8 *)g_caUart2TxBuffer, UART_BUFFER_SIZE);
+            drvi_UartRx(TEST_UART2_BUS, (UINT8 *)g_caUart2RxBuffer, UART_BUFFER_SIZE);
+            drvi_UartTx(TEST_UART2_BUS, (const UINT8 *)g_caUart2TxBuffer, UART_BUFFER_SIZE);
             //while(!g_iuart2Done);
             //g_iuart2Done = 0;
             iIndex++;
             g_iUart2Count++;
         }
+#endif
     }
 
-    printf("UART Loopback Single Config Done!\r\n");
+    TracerInfo("UART Loopback Single Config Done!\r\n");
 }
 
-void TEST_UartLoopBack(UINT32 iCount)
+void TEST_UartLoopBack(uint32_t iCount)
 {
-    INT16 iConfigIdx = 0, iConfigNum = 0;
-    INT16 iError = CC_SUCCESS;
-    INT16 iRetry = 0;
-    UINT32 iIndex = 0;
-    UINT32 dwTemp = 0;
+    uint16_t iConfigIdx = 0, iConfigNum = 0;
+    uint16_t iRetry = 0;
+    uint32_t iIndex = 0;
+    uint32_t dwTemp = 0;
 
-    iError = TEST_UartInit();
+    TEST_UartInit();
     iConfigNum = test_UartConigInit();
+
+    TracerInfo("UART loopback test...\n");
 
     for (iConfigIdx=0; iConfigIdx<iConfigNum; iConfigIdx++)
     {
@@ -296,87 +292,125 @@ void TEST_UartLoopBack(UINT32 iCount)
 
         do
         {
+#ifdef TEST_UART0_BUS
+            if(g_iuart0Done)
+            {
+                TestUart0.dwConfig = g_dwaUartConfig[iConfigIdx];
+                drvi_UartConfigSet(&TestUart0);
+            }
+            else
+                TracerInfo("UART Initial Waiting for UART0 Done!\r\n");
+#endif
+#ifdef TEST_UART1_BUS
             if(g_iuart1Done)
             {
                 TestUart1.dwConfig = g_dwaUartConfig[iConfigIdx];
-                iError = drvi_UartInit(&TestUart1);
+                drvi_UartConfigSet(&TestUart1);
             }
             else
-                printf("UART Initial Waiting for UART1 Done!\r\n");
-
+                TracerInfo("UART Initial Waiting for UART1 Done!\r\n");
+#endif
+#ifdef TEST_UART2_BUS
             if(g_iuart2Done)
             {
                 TestUart2.dwConfig = g_dwaUartConfig[iConfigIdx];
-                iError = drvi_UartInit(&TestUart2);
+                drvi_UartConfigSet(&TestUart2);
             }
             else
-                printf("UART Initial Waiting for UART2 Done!\r\n");
-        }while(--iRetry);
+                TracerInfo("UART Initial Waiting for UART2 Done!\r\n");
+#endif
+        } while(--iRetry);
 
+#ifdef TEST_UART0_BUS
+        if ((!iRetry) && (!g_iuart0Done))
+        {
+            TracerInfo("UART0 Died, Re-init and Re-active!\r\n");
+            TestUart0.dwConfig = g_dwaUartConfig[iConfigIdx];
+            drvi_UartConfigSet(&TestUart0);
+            g_iuart0Done = 1;
+        }
+#endif
+#ifdef TEST_UART1_BUS
         if ((!iRetry) && (!g_iuart1Done))
         {
-            printf("UART1 Died, Re-init and Re-active!\r\n");
+            TracerInfo("UART1 Died, Re-init and Re-active!\r\n");
             TestUart1.dwConfig = g_dwaUartConfig[iConfigIdx];
-            iError = drvi_UartInit(&TestUart1);
+            drvi_UartConfigSet(&TestUart1);
             g_iuart1Done = 1;
         }
-        else if ((!iRetry) && (!g_iuart2Done))
+#endif
+#ifdef TEST_UART2_BUS
+        if ((!iRetry) && (!g_iuart2Done))
         {
-            printf("UART2 Died, Re-init and Re-active!\r\n");
-            iError = drvi_UartInit(&TestUart2);
+            TracerInfo("UART2 Died, Re-init and Re-active!\r\n");
+            TestUart2.dwConfig = g_dwaUartConfig[iConfigIdx];
+            drvi_UartConfigSet(&TestUart2);
             g_iuart2Done = 1;
         }
-
-        if (iError)
-        {
-            printf("UART Config[0x%x] Not Support\r\n", g_dwaUartConfig[iConfigIdx]);
-            continue;
-        }
+#endif
 
         while(iIndex<iCount)
         {
             //Generate a complicated number
             dwTemp = iIndex*iIndex*3957;
 
-//            if (g_iuart0Done)
-//            {
-//                g_iuart0Done = 0;
-//                memset(g_caUart0TxBuffer, 0, UART_BUFFER_SIZE);
-//                memset(g_caUart0RxBuffer, 0, UART_BUFFER_SIZE);
-//                sprintf(g_caUart0TxBuffer, "%lu%c", dwTemp, '\0');
-//                drvi_UartTx(&uart0, (const UINT8 *)g_caUart0TxBuffer, UART_BUFFER_SIZE);
-//            }
-
+#ifdef TEST_UART0_BUS
+            if (g_iuart0Done)
+            {
+                g_iuart0Done = 0;
+                memset(g_caUart0TxBuffer, 0, UART_BUFFER_SIZE);
+                memset(g_caUart0RxBuffer, 0, UART_BUFFER_SIZE);
+                sprintf(g_caUart0TxBuffer, "%lu%c", dwTemp, '\0');
+                drvi_UartRx(TEST_UART0_BUS, (UINT8 *)g_caUart0RxBuffer, UART_BUFFER_SIZE);
+                drvi_UartTx(TEST_UART0_BUS, (const UINT8 *)g_caUart0TxBuffer, UART_BUFFER_SIZE);
+                iIndex++;
+                g_iUart0Count++;
+            }
+#endif
+#ifdef TEST_UART1_BUS
             if (g_iuart1Done)
             {
                 g_iuart1Done = 0;
                 memset(g_caUart1TxBuffer, 0, UART_BUFFER_SIZE);
                 memset(g_caUart1RxBuffer, 0, UART_BUFFER_SIZE);
                 sprintf(g_caUart1TxBuffer, "%lu%c", dwTemp, '\0');
-                drvi_UartRx(&TestUart1, (UINT8 *)g_caUart1RxBuffer, UART_BUFFER_SIZE);
-                drvi_UartTx(&TestUart1, (const UINT8 *)g_caUart1TxBuffer, UART_BUFFER_SIZE);
+                drvi_UartRx(TEST_UART1_BUS, (UINT8 *)g_caUart1RxBuffer, UART_BUFFER_SIZE);
+                drvi_UartTx(TEST_UART1_BUS, (const UINT8 *)g_caUart1TxBuffer, UART_BUFFER_SIZE);
                 iIndex++;
                 g_iUart1Count++;
             }
-
+#endif
+#ifdef TEST_UART2_BUS
             if (g_iuart2Done)
             {
                 g_iuart2Done = 0;
                 memset(g_caUart2TxBuffer, 0, UART_BUFFER_SIZE);
                 memset(g_caUart2RxBuffer, 0, UART_BUFFER_SIZE);
                 sprintf(g_caUart2TxBuffer, "%lu%c", dwTemp, '\0');
-                drvi_UartRx(&TestUart2, (UINT8 *)g_caUart2RxBuffer, UART_BUFFER_SIZE);
-                drvi_UartTx(&TestUart2, (const UINT8 *)g_caUart2TxBuffer, UART_BUFFER_SIZE);
+                drvi_UartRx(TEST_UART2_BUS, (UINT8 *)g_caUart2RxBuffer, UART_BUFFER_SIZE);
+                drvi_UartTx(TEST_UART2_BUS, (const UINT8 *)g_caUart2TxBuffer, UART_BUFFER_SIZE);
                 iIndex++;
                 g_iUart2Count++;
             }
+#endif
         }
-        printf("UART Config[0x%x] Error[u1:%d,u2:%d] Count[u1:%lu,u2:%lu]\r\n", \
-                                                   g_dwaUartConfig[iConfigIdx], \
-                                                   g_iUart1Error, g_iUart2Error, \
-                                                   g_iUart1Count, g_iUart2Count);
+#ifdef TEST_UART0_BUS
+        TracerInfo("UART Config[0x%x] Error[u0:%d] Count[u0:%lu]\n", \
+                                          g_dwaUartConfig[iConfigIdx], \
+                                          g_iUart0Error, g_iUart0Count);
+#endif
+#ifdef TEST_UART1_BUS
+        TracerInfo("UART Config[0x%x] Error[u1:%d] Count[u1:%lu]\n", \
+                                          g_dwaUartConfig[iConfigIdx], \
+                                          g_iUart1Error, g_iUart1Count);
+#endif
+#ifdef TEST_UART2_BUS
+        TracerInfo("UART Config[0x%x] Error[u2:%d] Count[u2:%lu]\n", \
+                                          g_dwaUartConfig[iConfigIdx], \
+                                          g_iUart2Error, g_iUart2Count);
+#endif
     }
 
-    printf("UART Loopback Done!\r\n");
+    TracerInfo("UART loopback test Done...\n");
 }
 #endif //TEST_AES

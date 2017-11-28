@@ -33,7 +33,7 @@
 /******************************************************************************
 Head Block of The File
 ******************************************************************************/
-#include "test_config.h"
+#include "test.h"
 
 #if (TEST_SPI)
 
@@ -41,6 +41,7 @@ Head Block of The File
 #include <string.h>
 
 #include "drvi_spi.h"
+#include "tracer.h"
 
 #define SPI_BUFFER_SIZE 64
 #define WINBOND_BLOCK_NUM 16
@@ -83,7 +84,7 @@ static void winbond_WriteEnable(void)
     uint8_t bCmd = 0;
 
     bCmd = 0x06;
-    drvi_SpiWrite(TEST_SPIM, &bCmd, 1);
+    drvi_SpiWrite(TEST_SPIM_BUS, &bCmd, 1);
 }
 
 static uint8_t winbond_ReadStatusReg1(void)
@@ -92,7 +93,7 @@ static uint8_t winbond_ReadStatusReg1(void)
     uint8_t bVal = 0;
 
     bCmd = 0x05;
-    drvi_SpiWriteThenRead(TEST_SPIM, &bCmd, 1, &bVal, 1);
+    drvi_SpiWriteThenRead(TEST_SPIM_BUS, &bCmd, 1, &bVal, 1);
 
     return bVal;
 }
@@ -102,7 +103,7 @@ static void winbond_ChipErase(void)
     uint8_t bCmd = 0;
 
     bCmd = 0xC7;
-    drvi_SpiWrite(TEST_SPIM, &bCmd, 1);
+    drvi_SpiWrite(TEST_SPIM_BUS, &bCmd, 1);
 }
 
 static void winbond_BlockErase64(uint32_t dwAddr)
@@ -111,7 +112,7 @@ static void winbond_BlockErase64(uint32_t dwAddr)
 
     dwCmdAddr = (((dwAddr & 0xFF) << 24) | (((dwAddr >> 8) & 0xFF) << 16) | (((dwAddr >> 16) & 0x0F) << 8) | 0xD8);
 
-    drvi_SpiWrite(TEST_SPIM, (uint8_t *)&dwCmdAddr, sizeof(dwCmdAddr));
+    drvi_SpiWrite(TEST_SPIM_BUS, (uint8_t *)&dwCmdAddr, sizeof(dwCmdAddr));
 }
 
 static int winbond_PageProgram(uint32_t dwAddr, uint8_t *pbBuf, int iSize)
@@ -132,7 +133,7 @@ static int winbond_PageProgram(uint32_t dwAddr, uint8_t *pbBuf, int iSize)
 
     memcpy(&g_tSpi0TxBuffer.baBuffer, pbBuf, iSize);
 
-    drvi_SpiWrite(TEST_SPIM, (uint8_t const *)&g_tSpi0TxBuffer, iTxSize);
+    drvi_SpiWrite(TEST_SPIM_BUS, (uint8_t const *)&g_tSpi0TxBuffer, iTxSize);
 
     return CC_SUCCESS;
 }
@@ -150,7 +151,7 @@ static void winbond_ReadData(uint32_t dwAddr, uint8_t *pbBuf, int iSize)
     g_tSpi0TxBuffer.baAddr[1] = (dwAddr >> 8) & 0xFF;
     g_tSpi0TxBuffer.baAddr[2] = dwAddr & 0xFF;
 
-    drvi_SpiWriteThenRead(TEST_SPIM, (uint8_t const *)&g_tSpi0TxBuffer, iTxSize, pbBuf, iSize);
+    drvi_SpiWriteThenRead(TEST_SPIM_BUS, (uint8_t const *)&g_tSpi0TxBuffer, iTxSize, pbBuf, iSize);
 }
 
 int TEST_SpiInit(void)
@@ -170,7 +171,7 @@ void TEST_SpiRW(uint32_t dwCount)
     if (iError)
         return;
 
-    printf("SPI RW test Start!\r\n");
+    TracerInfo("SPI RW test...\n");
 
     winbond_WriteEnable();
     winbond_ChipErase();
@@ -203,7 +204,7 @@ void TEST_SpiRW(uint32_t dwCount)
         dwIndex++;
     }
 
-    printf("SPI RW test Done!\r\n");
+    TracerInfo("SPI RW test Done...\n");
 }
 
 #endif //TEST_SPI

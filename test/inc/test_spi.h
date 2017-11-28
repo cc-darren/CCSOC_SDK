@@ -30,8 +30,8 @@
 *
 ******************************************************************************/
 
-#ifndef _TEST_CONFIG_H_
-#define _TEST_CONFIG_H_
+#ifndef _TEST_SPI_H_
+#define _TEST_SPI_H_
 
 /******************************************************************************
 Head Block of The File
@@ -41,28 +41,6 @@ Head Block of The File
 // Sec 1: Include File
 
 // Sec 2: Constant Definitions, Imported Symbols, miscellaneous
-#define TEST_MEM                    0
-#define TEST_SPI                    1
-#define TEST_I2C                    1
-#define TEST_UART0_TXDMA            0
-#define TEST_UART0_RXDMA            0
-#define TEST_AES                    1
-#define TEST_WDT                    1
-#define TEST_EFLASH                 0
-#define TEST_WKTM0                  1
-#define TEST_PWM0                   1
-#define TEST_GPI                    1
-#define TEST_RTC                    1
-
-#if (TEST_SPI)
-#define TEST_SPIM ACC_IF_ID
-#endif
-
-#if defined(TEST_I2C) && TEST_I2C
-#define TEST_I2C_BUS        MAG_IF_ID
-#define TEST_I2C_ADDRESS    0x50
-#define TEST_I2C_CLKRATE    CC_I2C_FREQ_100K
-#endif
 
 /******************************************************************************
 Declaration of External Variables & Functions
@@ -70,6 +48,8 @@ Declaration of External Variables & Functions
 // Sec 3: declaration of external variable
 
 // Sec 4: declaration of external function prototype
+int TEST_SpiInit(void);
+void TEST_SpiRW(uint32_t dwCount);
 
 /******************************************************************************
 Declaration of data structure
@@ -94,4 +74,4 @@ Declaration of static Global Variables & Functions
 // Sec 10: C Functions
 ******************************************************************************/
 
-#endif // _TEST_CONFIG_H_
+#endif // _TEST_SPI_H_

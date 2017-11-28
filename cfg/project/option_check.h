@@ -262,29 +262,64 @@
   #define VIBRATOR_IF IF_NULL
 #endif
 
+#if defined(MODULE_TEST)
+  #if ((defined TEST_SPI0_IF) && (TEST_SPI0_IF))
+    #define TEST_SPI0_IF_TYPE (TEST_SPI0_IF&0xF0)
+    #define TEST_SPI0_IF_ID   (TEST_SPI0_IF&0x0F)
+  #endif
+  #if ((defined TEST_SPI1_IF) && (TEST_SPI1_IF))
+    #define TEST_SPI1_IF_TYPE (TEST_SPI1_IF&0xF0)
+    #define TEST_SPI1_IF_ID   (TEST_SPI1_IF&0x0F)
+  #endif
+  #if ((defined TEST_SPI2_IF) && (TEST_SPI2_IF))
+    #define TEST_SPI2_IF_TYPE (TEST_SPI2_IF&0xF0)
+    #define TEST_SPI2_IF_ID   (TEST_SPI2_IF&0x0F)
+  #endif
+  #if ((defined TEST_I2C0_IF) && (TEST_I2C0_IF))
+    #define TEST_I2C0_IF_TYPE (TEST_I2C0_IF&0xF0)
+    #define TEST_I2C0_IF_ID   (TEST_I2C0_IF&0x0F)
+  #endif
+  #if ((defined TEST_I2C1_IF) && (TEST_I2C1_IF))
+    #define TEST_I2C1_IF_TYPE (TEST_I2C1_IF&0xF0)
+    #define TEST_I2C1_IF_ID   (TEST_I2C1_IF&0x0F)
+  #endif
+  #if ((defined TEST_UART0_IF) && (TEST_UART0_IF))
+    #define TEST_UART0_IF_TYPE (TEST_UART0_IF&0xF0)
+    #define TEST_UART0_IF_ID   (TEST_UART0_IF&0x0F)
+  #endif
+  #if ((defined TEST_UART1_IF) && (TEST_UART1_IF))
+    #define TEST_UART1_IF_TYPE (TEST_UART1_IF&0xF0)
+    #define TEST_UART1_IF_ID   (TEST_UART1_IF&0x0F)
+  #endif
+  #if ((defined TEST_UART2_IF) && (TEST_UART2_IF))
+    #define TEST_UART2_IF_TYPE (TEST_UART2_IF&0xF0)
+    #define TEST_UART2_IF_ID   (TEST_UART2_IF&0x0F)
+  #endif
+#endif
+
 //check which interface is used
-#if   ((ACC_IF==Interface_SPI0) || (MAG_IF==Interface_SPI0) || (GYR_IF==Interface_SPI0) || (OLED_IF==Interface_SPI0))
+#if   ((ACC_IF==Interface_SPI0) || (MAG_IF==Interface_SPI0) || (GYR_IF==Interface_SPI0) || (OLED_IF==Interface_SPI0) || (TEST_SPI0_IF==Interface_SPI0))
   #define SPI0_INUSE  TRUE
 #endif
-#if ((ACC_IF==Interface_SPI1) || (MAG_IF==Interface_SPI1) || (GYR_IF==Interface_SPI1) || (OLED_IF==Interface_SPI1))
+#if ((ACC_IF==Interface_SPI1) || (MAG_IF==Interface_SPI1) || (GYR_IF==Interface_SPI1) || (OLED_IF==Interface_SPI1) || (TEST_SPI1_IF==Interface_SPI1))
   #define SPI1_INUSE  TRUE
 #endif
-#if ((ACC_IF==Interface_SPI2) || (MAG_IF==Interface_SPI2) || (GYR_IF==Interface_SPI2) || (OLED_IF==Interface_SPI2))
+#if ((ACC_IF==Interface_SPI2) || (MAG_IF==Interface_SPI2) || (GYR_IF==Interface_SPI2) || (OLED_IF==Interface_SPI2) || (TEST_SPI2_IF==Interface_SPI2))
   #define SPI2_INUSE  TRUE
 #endif
-#if ((ACC_IF==Interface_I2C0) || (MAG_IF==Interface_I2C0) || (GYR_IF==Interface_I2C0) || (OLED_IF==Interface_I2C0) || (PPG_IF==Interface_I2C0))
+#if ((ACC_IF==Interface_I2C0) || (MAG_IF==Interface_I2C0) || (GYR_IF==Interface_I2C0) || (OLED_IF==Interface_I2C0) || (PPG_IF==Interface_I2C0) || (TEST_I2C0_IF==Interface_I2C0))
   #define I2C0_INUSE  TRUE
 #endif
-#if ((ACC_IF==Interface_I2C1) || (MAG_IF==Interface_I2C1) || (GYR_IF==Interface_I2C1) || (OLED_IF==Interface_I2C1) || (PPG_IF==Interface_I2C1))
+#if ((ACC_IF==Interface_I2C1) || (MAG_IF==Interface_I2C1) || (GYR_IF==Interface_I2C1) || (OLED_IF==Interface_I2C1) || (PPG_IF==Interface_I2C1) || (TEST_I2C1_IF==Interface_I2C1))
   #define I2C1_INUSE  TRUE
 #endif
-#if ((TRACER_IF==Interface_UART0) || (HCI_IF==Interface_UART0))
+#if ((TRACER_IF==Interface_UART0) || (HCI_IF==Interface_UART0) || (TEST_UART0_IF==Interface_UART0))
   #define UART0_INUSE TRUE
 #endif
-#if ((TRACER_IF==Interface_UART1) || (HCI_IF==Interface_UART1))
+#if ((TRACER_IF==Interface_UART1) || (HCI_IF==Interface_UART1) || (TEST_UART1_IF==Interface_UART1))
   #define UART1_INUSE TRUE
 #endif
-#if ((TRACER_IF==Interface_UART2) || (HCI_IF==Interface_UART2))
+#if ((TRACER_IF==Interface_UART2) || (HCI_IF==Interface_UART2) || (TEST_UART2_IF==Interface_UART2))
   #define UART2_INUSE TRUE
 #endif
 

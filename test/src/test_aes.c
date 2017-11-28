@@ -33,7 +33,7 @@
 /******************************************************************************
 Head Block of The File
 ******************************************************************************/
-#include "test_config.h"
+#include "test.h"
 
 #if (TEST_AES)
 
@@ -54,9 +54,9 @@ Declaration of External Variables & Functions
 /******************************************************************************
 Declaration of data structure
 ******************************************************************************/
-static UINT32 dwEncryptData[AES_DATA_SIZE] = {0};
-static UINT32 dwDecryptData[AES_DATA_SIZE] = {0};
-static UINT32 dwAesResult[AES_DATA_SIZE] = {0};
+static uint32_t dwEncryptData[AES_DATA_SIZE] = {0};
+static uint32_t dwDecryptData[AES_DATA_SIZE] = {0};
+static uint32_t dwAesResult[AES_DATA_SIZE] = {0};
 
 /******************************************************************************
 Declaration of Global Variables & Functions
@@ -65,9 +65,9 @@ Declaration of Global Variables & Functions
 /******************************************************************************
 Declaration of static Global Variables & Functions
 ******************************************************************************/
-static INT16 g_iIndex = 0;
+static int g_iIndex = 0;
 static enum drvi_aes_mode g_EMode;
-//extern UINT32 AES_TEST_START;
+//extern uint32_t AES_TEST_START;
 
 
 
@@ -82,7 +82,7 @@ void TEST_AesInit(void)
 
 void TEST_AesSingleMode(void)
 {
-    INT16 iResult = 0;
+    int iResult = 0;
 
     g_iIndex *= 2;
     g_EMode++;
@@ -103,13 +103,13 @@ void TEST_AesSingleMode(void)
             //AES_TEST_START = 1;
             break;
         }
-        drvi_aes_encrypt((UINT32)dwDecryptData, (UINT32)dwEncryptData, g_iIndex);
+        drvi_aes_encrypt((uint32_t)dwDecryptData, (uint32_t)dwEncryptData, g_iIndex);
         if (drvi_aes_init(g_EMode))
         {
             //AES_TEST_START = 1;
             break;
         }
-        drvi_aes_decrypt((UINT32)dwEncryptData, (UINT32)dwAesResult, g_iIndex);
+        drvi_aes_decrypt((uint32_t)dwEncryptData, (uint32_t)dwAesResult, g_iIndex);
 
         iResult = memcmp((const void *)dwDecryptData, (const void *)dwAesResult, g_iIndex);
 
@@ -125,10 +125,10 @@ void TEST_AesSingleMode(void)
 
 }
 
-void TEST_AesLoop(INT16 iCount)
+void TEST_AesLoop(int iCount)
 {
-    INT16 iIndex = 0;
-    INT16 iResult = 0;
+    int iIndex = 0;
+    int iResult = 0;
     enum drvi_aes_mode E_Mode;
 
     for (iIndex=0; iIndex<AES_DATA_SIZE; iIndex++)
@@ -147,10 +147,10 @@ void TEST_AesLoop(INT16 iCount)
 
                     if (drvi_aes_init(E_Mode))
                         break;
-                    drvi_aes_encrypt((UINT32)dwDecryptData, (UINT32)dwEncryptData, iIndex);
+                    drvi_aes_encrypt((uint32_t)dwDecryptData, (uint32_t)dwEncryptData, iIndex);
                     if (drvi_aes_init(E_Mode))
                         break;
-                    drvi_aes_decrypt((UINT32)dwEncryptData, (UINT32)dwAesResult, iIndex);
+                    drvi_aes_decrypt((uint32_t)dwEncryptData, (uint32_t)dwAesResult, iIndex);
 
                     iResult = memcmp((const void *)dwDecryptData, (const void *)dwAesResult, iIndex);
 

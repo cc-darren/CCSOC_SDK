@@ -51,7 +51,7 @@ Declaration of External Variables & Functions
 // Sec 4: declaration of external function prototype
 void TEST_AesInit(void);
 void TEST_AesSingleMode(void);
-void TEST_AesLoop(INT16 iCount);
+void TEST_AesLoop(int iCount);
 
 /******************************************************************************
 Declaration of data structure

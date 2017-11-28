@@ -29,6 +29,9 @@
 #ifdef BOOTLOADER
 #include "bootloader.h"
 #endif
+#if defined(TESTCASE) && TESTCASE
+#include "test.h"
+#endif
 
 uint8_t g_GyroEnable = 1;
 
@@ -76,13 +79,17 @@ int main(void)
     /*******************************/
     /****** Application Start ******/
     /*******************************/
+
+
+#if defined(TESTCASE) && TESTCASE
+    TEST_Main();
+#endif
+
 #ifdef BOOTLOADER
     bootloader_main();
 #elif VENUS_WRISTBAND
     venus_main();
 #endif
-
-
 
 
 

@@ -333,9 +333,9 @@
             <v6WtE>0</v6WtE>
             <VariousControls>
               <MiscControls>--no_inline --no_multifile -DMSC_CLOCK</MiscControls>
-              <Define>FPGA</Define>
+              <Define>FPGA TESTCASE</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app\Display;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\service\tracer;..\..\service\fds;..\..\service\fstorage;..\..\service\experimental_section_vars</IncludePath>
+              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app\Display;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\service\tracer;..\..\service\fds;..\..\service\fstorage;..\..\service\experimental_section_vars;..\..\test;..\..\test\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -365,7 +365,7 @@
             <TextAddressRange></TextAddressRange>
             <DataAddressRange></DataAddressRange>
             <pXoBase></pXoBase>
-            <ScatterFile>.\FPGA_eflash.sct</ScatterFile>
+            <ScatterFile>.\FPGA_ram.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
             <Misc></Misc>
@@ -375,29 +375,6 @@
         </TargetArmAds>
       </TargetOption>
       <Groups>
-        <Group>
-          <GroupName>algo</GroupName>
-        </Group>
-        <Group>
-          <GroupName>app</GroupName>
-          <Files>
-            <File>
-              <FileName>appDisplay.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\Display\appDisplay.c</FilePath>
-            </File>
-            <File>
-              <FileName>font.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\Display\font.c</FilePath>
-            </File>
-            <File>
-              <FileName>icon.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\Display\icon.c</FilePath>
-            </File>
-          </Files>
-        </Group>
         <Group>
           <GroupName>asic</GroupName>
           <Files>
@@ -482,9 +459,6 @@
               <FilePath>..\..\platform\asic\6801\wktm.c</FilePath>
             </File>
           </Files>
-        </Group>
-        <Group>
-          <GroupName>ble</GroupName>
         </Group>
         <Group>
           <GroupName>drvi</GroupName>
@@ -582,21 +556,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>oled</GroupName>
-          <Files>
-            <File>
-              <FileName>ssd1306.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\module\oled\ssd1306.c</FilePath>
-            </File>
-            <File>
-              <FileName>ssd1306_128x32.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\module\oled\ssd1306_128x32.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>service</GroupName>
           <Files>
             <File>
@@ -624,15 +583,55 @@
               <FileType>1</FileType>
               <FilePath>..\..\service\tracer\tracer.c</FilePath>
             </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>test</GroupName>
+          <Files>
             <File>
-              <FileName>fstorage.c</FileName>
+              <FileName>test_aes.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\service\fstorage\fstorage.c</FilePath>
+              <FilePath>..\..\test\src\test_aes.c</FilePath>
             </File>
             <File>
-              <FileName>fds.c</FileName>
+              <FileName>test_clock.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\service\fds\fds.c</FilePath>
+              <FilePath>..\..\test\src\test_clock.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_dhry_1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_dhry_1.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_dhry_2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_dhry_2.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_i2c.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_main.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_mem.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_mem.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_spi.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_uart.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1104,7 +1103,7 @@
               <MiscControls></MiscControls>
               <Define>FPGA</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app\Display;..\..\platform\asic\6801;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\service\tracer;..\..\service\experimental_section_vars;..\..\service\fds;..\..\service\fstorage</IncludePath>
+              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\platform\asic\6801;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\uart;..\..\service\tracer;..\..\test;..\..\test\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1144,29 +1143,6 @@
         </TargetArmAds>
       </TargetOption>
       <Groups>
-        <Group>
-          <GroupName>algo</GroupName>
-        </Group>
-        <Group>
-          <GroupName>app</GroupName>
-          <Files>
-            <File>
-              <FileName>appDisplay.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\Display\appDisplay.c</FilePath>
-            </File>
-            <File>
-              <FileName>font.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\Display\font.c</FilePath>
-            </File>
-            <File>
-              <FileName>icon.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\Display\icon.c</FilePath>
-            </File>
-          </Files>
-        </Group>
         <Group>
           <GroupName>asic</GroupName>
           <Files>
@@ -1251,9 +1227,6 @@
               <FilePath>..\..\platform\asic\6801\wktm.c</FilePath>
             </File>
           </Files>
-        </Group>
-        <Group>
-          <GroupName>ble</GroupName>
         </Group>
         <Group>
           <GroupName>drvi</GroupName>
@@ -1351,21 +1324,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>oled</GroupName>
-          <Files>
-            <File>
-              <FileName>ssd1306.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\module\oled\ssd1306.c</FilePath>
-            </File>
-            <File>
-              <FileName>ssd1306_128x32.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\module\oled\ssd1306_128x32.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>service</GroupName>
           <Files>
             <File>
@@ -1393,15 +1351,55 @@
               <FileType>1</FileType>
               <FilePath>..\..\service\tracer\tracer.c</FilePath>
             </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>test</GroupName>
+          <Files>
             <File>
-              <FileName>fstorage.c</FileName>
+              <FileName>test_aes.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\service\fstorage\fstorage.c</FilePath>
+              <FilePath>..\..\test\src\test_aes.c</FilePath>
             </File>
             <File>
-              <FileName>fds.c</FileName>
+              <FileName>test_clock.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\service\fds\fds.c</FilePath>
+              <FilePath>..\..\test\src\test_clock.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_dhry_1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_dhry_1.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_dhry_2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_dhry_2.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_i2c.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_main.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_mem.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_mem.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_spi.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_uart.c</FilePath>
             </File>
           </Files>
         </Group>

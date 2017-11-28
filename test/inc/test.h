@@ -30,8 +30,8 @@
 *
 ******************************************************************************/
 
-#ifndef _TEST_SPI_H_
-#define _TEST_SPI_H_
+#ifndef _TEST_CONFIG_H_
+#define _TEST_CONFIG_H_
 
 /******************************************************************************
 Head Block of The File
@@ -39,6 +39,7 @@ Head Block of The File
 // Sec 0: Comment block of the file
 
 // Sec 1: Include File
+#include "project.h"
 
 // Sec 2: Constant Definitions, Imported Symbols, miscellaneous
 
@@ -48,8 +49,6 @@ Declaration of External Variables & Functions
 // Sec 3: declaration of external variable
 
 // Sec 4: declaration of external function prototype
-INT16 TEST_SpiInit(void);
-void TEST_SpiRW(UINT32 dwCount);
 
 /******************************************************************************
 Declaration of data structure
@@ -73,5 +72,6 @@ Declaration of static Global Variables & Functions
 /******************************************************************************
 // Sec 10: C Functions
 ******************************************************************************/
+void TEST_Main(void);
 
-#endif // _TEST_SPI_H_
+#endif // _TEST_CONFIG_H_

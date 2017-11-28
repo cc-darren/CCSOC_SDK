@@ -33,7 +33,7 @@
 /******************************************************************************
 Head Block of The File
 ******************************************************************************/
-#include "test_config.h"
+#include "test.h"
 
 #if (TEST_I2C)
 
@@ -41,6 +41,7 @@ Head Block of The File
 #include <string.h>
 
 #include "drvi_i2c.h"
+#include "tracer.h"
 
 #define I2C_BUFFER_SIZE 64
 
@@ -58,8 +59,8 @@ Declaration of data structure
 ******************************************************************************/
 typedef struct S_I2CTxBuffer
 {
-    UINT8 bAddr;
-    UINT8 baBuffer[I2C_BUFFER_SIZE];
+    uint8_t bAddr;
+    uint8_t baBuffer[I2C_BUFFER_SIZE];
 } T_I2CTxBuffer;
 
 /******************************************************************************
@@ -70,13 +71,13 @@ Declaration of Global Variables & Functions
 Declaration of static Global Variables & Functions
 ******************************************************************************/
 __align(4) static T_I2CTxBuffer g_tI2c0TxBuffer = {0, {0}};
-__align(4) static UINT8 g_baI2c0RxBuffer[I2C_BUFFER_SIZE] = {0};
+__align(4) static uint8_t g_baI2c0RxBuffer[I2C_BUFFER_SIZE] = {0};
 
-INT16 microchip_24xx16_write(UINT8 bAddr, UINT8 *pbBuf, INT16 iSize)
+int microchip_24xx16_write(uint8_t bAddr, uint8_t *pbBuf, int iSize)
 {
-    INT16 iWSize = 0;
-    UINT8 bWAddr = bAddr;
-    INT16 iRet = CC_SUCCESS;
+    int iWSize = 0;
+    uint8_t bWAddr = bAddr;
+    int iRet = CC_SUCCESS;
 
     if (iSize > I2C_BUFFER_SIZE)
         return CC_ERROR_NO_MEM;
@@ -92,7 +93,7 @@ INT16 microchip_24xx16_write(UINT8 bAddr, UINT8 *pbBuf, INT16 iSize)
 
         g_tI2c0TxBuffer.bAddr = bWAddr & 0xFF;
 
-        iRet = drvi_I2cWrite(TEST_I2C_BUS, (UINT8 const *) &g_tI2c0TxBuffer, iWSize+sizeof(g_tI2c0TxBuffer.bAddr));
+        iRet = drvi_I2cWrite(TEST_I2C_BUS, (uint8_t const *) &g_tI2c0TxBuffer, iWSize+sizeof(g_tI2c0TxBuffer.bAddr));
         if (CC_SUCCESS != iRet)
             continue;
 
@@ -103,9 +104,9 @@ INT16 microchip_24xx16_write(UINT8 bAddr, UINT8 *pbBuf, INT16 iSize)
     return iRet;
 }
 
-void microchip_24xx16_read(UINT8 bAddr, UINT8 *pbBuf, INT16 iSize)
+void microchip_24xx16_read(uint8_t bAddr, uint8_t *pbBuf, int iSize)
 {
-    INT16 iRet = CC_SUCCESS;
+    int iRet = CC_SUCCESS;
 
     do
     {
@@ -119,26 +120,26 @@ void microchip_24xx16_read(UINT8 bAddr, UINT8 *pbBuf, INT16 iSize)
 }
 
 
-INT16 TEST_I2cInit(T_I2cDevice *tConfig)
+int TEST_I2cInit(T_I2cDevice *tConfig)
 {
     drvi_I2cDeviceRegister(tConfig);
 
     return CC_SUCCESS;
 }
 
-void TEST_I2cRW(UINT32 dwCount)
+void TEST_I2cRW(uint32_t dwCount)
 {
-    UINT32 dwIndex = 0;
-    INT16 iBlock = 0;
-    INT16 iSize = 0;
-    UINT8 bAddr = 0;
+    uint32_t dwIndex = 0;
+    int iBlock = 0;
+    int iSize = 0;
+    uint8_t bAddr = 0;
 
     T_I2cDevice i2c_config = {
        .bBusNum          = TEST_I2C_BUS,
        .bAddr            = TEST_I2C_ADDRESS,
     };
 
-    printf("I2C RW test Start!\r\n");
+    TracerInfo("I2C RW test...\r\n");
 
     while(dwIndex<dwCount)
     {
@@ -186,7 +187,7 @@ void TEST_I2cRW(UINT32 dwCount)
         dwIndex++;
     }
 
-    printf("I2C RW test Done!\r\n");
+    TracerInfo("I2C RW test Done...\r\n");
 }
 
 #endif //TEST_I2C
