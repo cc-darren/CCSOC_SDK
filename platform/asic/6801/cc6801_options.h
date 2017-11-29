@@ -59,6 +59,8 @@
 #define Interface_PWM0    0x50
 #define Interface_PWM1    0x51
 
+
+#define PIN_NULL 0xFF
 // GPIO Configuration List
 
 #define GPIO_MODE_GPIO          0

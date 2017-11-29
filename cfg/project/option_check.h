@@ -13,18 +13,11 @@
 //It will be deleted after everything is done
 
 
-#if defined(MODULE_ACC)
+#ifdef MODULE_ACC
   /*
     define ACC_IF_TYPE and ACC_IF_ID before including module driver header
     or module driver won't be able to use the definitions
   */
-  #if ((defined ACC_IF) && (ACC_IF))
-    #define ACC_IF_TYPE (ACC_IF&0xF0)
-    #define ACC_IF_ID   (ACC_IF&0x0F)
-  #else
-    #error "ACC interface not found"
-  #endif
-
   #if ((MODULE_ACC & 0xF000) == 0x1000)
     #if (MODULE_ACC == ACC_ST_LSM303C)
       #define ACC_HEADER acc_STLSM303C
@@ -58,26 +51,33 @@
       #error " no matched ACC driver found"
     #endif
   #else
-    #error "not a ACC driver"
+    #error "MODULE_ACC is not a ACC driver"
   #endif
   
+  #if ((defined ACC_IF) && (ACC_IF))
+    #define ACC_IF_TYPE (ACC_IF&0xF0)
+    #define ACC_IF_ID   (ACC_IF&0x0F)
+  #else
+    #error "please assign ACC interface"
+  #endif
+
+  #ifndef ACC_INT_PIN
+    #define ACC_INT_PIN 0xFF
+  #endif
 #else
-  #error "Please select ACC module from module_supported.h"
+  #define MODULE_ACC    ACC_NULL
+  #define ACC_HEADER    acc_null
+  #define ACC_IF        IF_NULL
+  #define ACC_INT_PIN   0xFF
 #endif
 
 
-#if defined(MODULE_MAG)
+
+#ifdef MODULE_MAG
   /*
     define MAG_IF_TYPE and MAG_IF_ID before including module driver header
     or module driver won't be able to use the definitions
   */
-  #if ((defined MAG_IF) && (MAG_IF))
-    #define MAG_IF_TYPE (MAG_IF&0xF0)
-    #define MAG_IF_ID   (MAG_IF&0x0F)
-  #else
-    #error "MAG interface not found"
-  #endif
-
   #if ((MODULE_MAG & 0xF000) == 0x2000)
     #if (MODULE_MAG == MAG_AKM_AK09912C)
       #define MAG_HEADER mag_ak09912
@@ -104,8 +104,22 @@
   #else
     #error "not a MAG driver"
   #endif
+
+  #if ((defined MAG_IF) && (MAG_IF))
+    #define MAG_IF_TYPE (MAG_IF&0xF0)
+    #define MAG_IF_ID   (MAG_IF&0x0F)
+  #else
+    #error "please assign MAG interface"
+  #endif
+
+  #ifndef MAG_INT_PIN
+    #define MAG_INT_PIN 0xFF
+  #endif
 #else
-  #error "Please select MAG module from module_supported.h"
+  #define MODULE_MAG    MAG_NULL
+  #define MAG_HEADER    mag_null
+  #define MAG_IF        IF_NULL
+  #define MAG_INT_PIN   0xFF
 #endif
 
 
@@ -114,13 +128,6 @@
     define PPG_IF_TYPE and MAG_IF_ID before including module driver header
     or module driver won't be able to use the definitions
   */
-  #if ((defined PPG_IF) && (PPG_IF))
-    #define PPG_IF_TYPE (PPG_IF&0xF0)
-    #define PPG_IF_ID   (PPG_IF&0x0F)
-  #else
-    #error "PPG interface not found"
-  #endif
-
   #if ((MODULE_PPG & 0xF000) == 0x5000)
     #if (MODULE_PPG == PPG_PXT_PAH8002)
       #define PPG_HEADER ppg_pah8002
@@ -135,8 +142,23 @@
   #else
     #error "not a PPG driver"
   #endif
+
+  #if ((defined PPG_IF) && (PPG_IF))
+    #define PPG_IF_TYPE (PPG_IF&0xF0)
+    #define PPG_IF_ID   (PPG_IF&0x0F)
+  #else
+    #error "please assign PPG interface"
+  #endif
+
+
+  #ifndef PPG_INT_PIN
+    #define PPG_INT_PIN 0xFF
+  #endif
 #else
-  #error "Please select PPG module from module_supported.h"
+  #define MODULE_PPG PPG_NULL
+  #define PPG_HEADER ppg_null
+  #define PPG_IF IF_NULL
+  #define PPG_INT_PIN 0xFF
 #endif
 
 
@@ -145,13 +167,6 @@
     define GYR_IF_TYPE and GYR_IF_ID before including module driver header
     or module driver won't be able to use the definitions
   */
-  #if ((defined GYR_IF) && (GYR_IF))
-    #define GYR_IF_TYPE (GYR_IF&0xF0)
-    #define GYR_IF_ID   (GYR_IF&0x0F)
-  #else
-    #error "GYR interface not found"
-  #endif
-
   #if ((MODULE_GYR & 0xF000) == 0x3000)
     #if (MODULE_GYR == GYR_ST_LSM6DSL)
       #define GYR_HEADER gyr_LSM6DS3
@@ -166,8 +181,22 @@
   #else
     #error "not a GYR driver"
   #endif
+
+  #if ((defined GYR_IF) && (GYR_IF))
+    #define GYR_IF_TYPE (GYR_IF&0xF0)
+    #define GYR_IF_ID   (GYR_IF&0x0F)
+  #else
+    #error "please assign GYR interface"
+  #endif
+
+  #ifndef GYR_INT_PIN
+    #define GYR_INT_PIN 0xFF
+  #endif
 #else
-  #error "Please select GYR module from module_supported.h"
+  #define MODULE_GYR    GYR_NULL
+  #define GYR_HEADER    gyr_null
+  #define GYR_IF        IF_NULL
+  #define GYR_INT_PIN   0xFF
 #endif
 
 
@@ -176,13 +205,6 @@
     define OLED_IF_TYPE and OLED_IF_ID before including module driver header
     or module driver won't be able to use the definitions
   */
-  #if ((defined OLED_IF) && (OLED_IF))
-    #define OLED_IF_TYPE (OLED_IF&0xF0)
-    #define OLED_IF_ID   (OLED_IF&0x0F)
-  #else
-    #error "OLED interface not found"
-  #endif
-
   #if ((MODULE_OLED & 0xF000) == 0x4000)
     #if (MODULE_OLED == OLED_SOLOMON_SSD1306)
       #define OLED_HEADER ssd1306
@@ -192,13 +214,23 @@
       #undef OLED_IF
       #define OLED_IF IF_NULL
     #else
-      #error " no matched oled driver found"
+      #error " no matched OLED driver found"
     #endif
   #else
     #error "not a OLED driver"
   #endif
+
+  #if ((defined OLED_IF) && (OLED_IF))
+    #define OLED_IF_TYPE (OLED_IF&0xF0)
+    #define OLED_IF_ID   (OLED_IF&0x0F)
+  #else
+    #error "please assign OLED interface"
+  #endif
+
 #else
-  #error "Please select OLED module from module_supported.h"
+  #define MODULE_OLED OLED_NULL
+  #define OLED_HEADER oled_null
+  #define OLED_IF IF_NULL
 #endif
 
 
@@ -206,28 +238,28 @@
   #define TRACER_IF_TYPE (TRACER_IF&0xF0)
   #define TRACER_IF_ID   (TRACER_IF&0x0F)
 #else
-  #error "Tracer interface not found"
+  #define TRACER_IF IF_NULL
 #endif
 
 #if ((defined HCI_IF) && (HCI_IF))
   #define HCI_IF_TYPE (HCI_IF&0xF0)
   #define HCI_IF_ID   (HCI_IF&0x0F)
 #else
-  #error "HCI interface not found"
+  #define HCI_IF IF_NULL
 #endif
 
 #if ((defined SWT_IF) && (SWT_IF))
   #define SWT_IF_TYPE (SWT_IF&0xF0)
   #define SWT_IF_ID   (SWT_IF&0x0F)
 #else
-  #error "SWT interface not found"
+  #define SWT_IF IF_NULL
 #endif
 
 #if ((defined VIBRATOR_IF) && (VIBRATOR_IF))
   #define VIBRATOR_IF_TYPE (VIBRATOR_IF&0xF0)
   #define VIBRATOR_IF_ID   (VIBRATOR_IF&0x0F)
 #else
-  #error "VIBRATOR interface not found"
+  #define VIBRATOR_IF IF_NULL
 #endif
 
 //check which interface is used
