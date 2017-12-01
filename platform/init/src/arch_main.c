@@ -101,6 +101,6 @@ int main(void)
 #ifdef CFG_BLE_APP
 void BLE_IRQHandler(void)
 {    
-	rwble_isr();
+    rwble_isr();
 }
 #endif

@@ -2,6 +2,12 @@
 #ifndef _CC_APP_SVC_HR_
     #define _CC_APP_SVC_HR_
 
+
+#define APPSRV_HRM_DEFAULT_RESTING_MAX          (150)
+#define APPSRV_HRM_DEFAULT_RESTING_MIN          ( 40)
+#define APPSRV_HRM_DEFAULT_EXERCISE_MAX(age)    ((220 - age) * 85 / 100)
+#define APPSRV_HRM_DEFAULT_EXERCISE_MIN(age)    ((220 - age) * 65 / 100)
+
 extern void CC_AppSrv_HR_Register(void);
 extern void CC_AppSrv_HR_Init(void);
 
@@ -35,6 +41,8 @@ extern uint32_t Hrm_get_sys_tick(void);
 extern void CC_AppSrv_HR_StatusReport(uint8_t _bResult);
 extern void CC_AppSrv_HR_ClrHrmStatus(void);
 extern uint8_t CC_AppSrv_HR_GetHrmStatus(void);
+extern void CC_AppSrv_HR_SetLimited(uint8_t _bRestingHrMax,uint8_t bRestingHrMin,uint8_t bExerciseHrMax,uint8_t bExerciseHrMin);
+extern void CC_AppSrv_HR_ResetLimited(uint8_t _bAge);
 
 #endif    // END of _CC_APP_SVC_HR_
 

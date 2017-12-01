@@ -27,7 +27,7 @@ typedef struct {
     float height;               //(m)
     uint32_t stepCount;         //(Counts)
     float duration;             //(Sec)
-	uint8_t StepState;          // CC_CALORIE_STATE_XXX
+    uint8_t StepState;          // CC_CALORIE_STATE_XXX
 } CC_ActivityInfo_t;
 
 void CC_CalorieBurn_Open(void);

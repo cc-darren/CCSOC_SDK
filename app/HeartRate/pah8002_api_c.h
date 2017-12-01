@@ -12,8 +12,8 @@
 #       define PXIALG_API   __declspec(dllimport)
 #   endif
 #else
-#	define PXIALG_API
-#endif	// WIN32
+#    define PXIALG_API
+#endif    // WIN32
 
 
 typedef pah8series_data_t       pah8002_data_t;

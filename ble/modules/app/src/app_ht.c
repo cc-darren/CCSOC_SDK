@@ -139,7 +139,28 @@ void app_ht_swim_meas_send(uint8_t swim_en, uint8_t style_type, uint32_t dwSwimC
 }
 
 
+#ifdef DB_EN 
+void app_ht_history_send(uint8_t id, uint16_t total, uint16_t rec_idx, uint8_t *pdata, uint8_t length)
+{
+    // Allocate the HTPT_TEMP_SEND_REQ message
+    struct htpt_history_send_req * req = KE_MSG_ALLOC(HTPT_TEMP_SEND_REQ,
+                                                    prf_get_task_from_id(TASK_ID_HTPT),
+                                                    TASK_APP,
+                                                    htpt_history_send_req);
 
+    req->history_meas.vid = 0xCC;
+    req->history_meas.type = id;
+    req->history_meas.total = total;
+    req->history_meas.rec_index = rec_idx;    
+
+    if(NULL != pdata)
+        memcpy(req->history_meas.eArray, pdata, length);                                             
+    else
+        memset(req->history_meas.eArray, 0x00, sizeof(req->history_meas.eArray));                                             
+
+    ke_msg_send(req);
+}
+#else
 void app_ht_history_send(uint8_t id)
 {
     // Allocate the HTPT_TEMP_SEND_REQ message
@@ -156,6 +177,7 @@ void app_ht_history_send(uint8_t id)
 
     ke_msg_send(req);
 }
+#endif
 
 #if (DISPLAY_SUPPORT)
 static void app_ht_update_type_string(uint8_t temp_type)

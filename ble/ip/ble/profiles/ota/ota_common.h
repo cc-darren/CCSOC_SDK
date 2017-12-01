@@ -112,20 +112,20 @@ struct htp_period_meas
     char        elen;
 */    
     
-	uint8_t vid;
-	uint8_t type;
-	uint8_t update_step_flag;
-	uint32_t step;
-	uint8_t type2;
-	uint8_t update_hr_flag;
-	uint16_t hr;
+    uint8_t vid;
+    uint8_t type;
+    uint8_t update_step_flag;
+    uint32_t step;
+    uint8_t type2;
+    uint8_t update_hr_flag;
+    uint16_t hr;
     uint32_t calorie;
 
 };
 
 struct htp_history_meas
 {
-    uint8_t vid;
+    uint8_t vid; 
     uint8_t type;
     uint16_t total;
     uint16_t rec_index;
@@ -135,10 +135,10 @@ struct htp_history_meas
 
 struct htp_swim_meas
 {
-	uint8_t     vid;
-	uint8_t     type;
-	uint8_t     is_Swim_En;
-	uint8_t     style_type;
+    uint8_t     vid;
+    uint8_t     type;
+    uint8_t     is_Swim_En;
+    uint8_t     style_type;
     uint32_t    dwSwimCnt;  
     uint32_t    dwSwimLap;
     uint32_t    dwTimestamp;

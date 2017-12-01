@@ -295,7 +295,7 @@ static void rf_blim_reg_wr (uint16_t addr, uint32_t value)
     //copy address
     rf_blim_reg_buf[3] = (uint8_t) (addr >> 8);
     rf_blim_reg_buf[4] = (uint8_t) (addr);
-	
+    
     //on old implementations (BT core 3.0, BLE core 1.0) swap the data
     rf_blim_reg_buf[5]= (uint8_t)value;
 
@@ -498,7 +498,7 @@ void rf_init(struct rwip_rf_api *api)
     ble_rtrip_delay_setf(57);
     ble_rxpwrup_setf(106);
     ble_txpwrdn_setf(15);
-  	ble_txpwrup_setf(50);
+      ble_txpwrup_setf(50);
     ble_sync_position_setf(0x0);
     ble_rfrxtmda_setf(0x8);
   break;
@@ -538,7 +538,7 @@ void rf_init(struct rwip_rf_api *api)
     rf_blim_reg_burst_wr(0x0CB0, 0x08, (uint8_t *) &RF_BLIM_REG_TBL_31_1MBPS[0xB0]);
     rf_blim_reg_burst_wr(0x0CB8, 0x05, (uint8_t *) &RF_BLIM_REG_TBL_31_1MBPS[0xB8]);
 
-	break;
+    break;
   case(0x32):
 
     // 1Mbps config setting [TODO] Burst of 8 bytes check if can be optimize
@@ -595,8 +595,8 @@ void rf_init(struct rwip_rf_api *api)
       rf_blim_reg_wr(BLIM_ICY31_TIMEOUT,0x81);
       break;
     case(0x32):
-  	  rf_blim_reg_wr(BLIM_ICY32_TIMEOUT,0x81);
-	  break;
+        rf_blim_reg_wr(BLIM_ICY32_TIMEOUT,0x81);
+      break;
     default:
     break;
     }
@@ -611,7 +611,7 @@ void rf_init(struct rwip_rf_api *api)
       {
       case(0x31):
         rf_blim_reg_burst_wr(BLIM_ICY31_CENTER_FREQ, 4, (uint8_t *) &RF_BLIM_FREQ_TBL[idx]);
-	    break;
+        break;
       case(0x32):
         rf_blim_reg_burst_wr(BLIM_ICY32_CENTER_FREQ, 4, (uint8_t *) &RF_BLIM_FREQ_TBL[idx]);
         break;
@@ -626,7 +626,7 @@ void rf_init(struct rwip_rf_api *api)
       case(0x31):
         rf_blim_reg_wr(BLIM_ICY31_FSM_MODE,0x03);
         while (rf_blim_reg_rd(BLIM_ICY31_FSM_MODE) != 0x00);
-	    break;
+        break;
       case(0x32):
         rf_blim_reg_wr(BLIM_ICY32_FSM_MODE,0x03);
         while (rf_blim_reg_rd(BLIM_ICY32_FSM_MODE) != 0x00);
@@ -644,7 +644,7 @@ void rf_init(struct rwip_rf_api *api)
       case(0x31):
         vco_sub_read = rf_blim_reg_rd((uint16_t)BLIM_ICY31_SW_CAP_FSM);
        *ptr_vcosub = vco_sub_read;
-	    break;
+        break;
       case(0x32):
         vco_sub_read = rf_blim_reg_rd((uint16_t)BLIM_ICY32_SW_CAP_FSM);
         *ptr_vcosub = vco_sub_read;
@@ -661,7 +661,7 @@ void rf_init(struct rwip_rf_api *api)
     break;
     case(0x32):
       rf_blim_reg_wr(BLIM_ICY32_TIMEOUT,0x00);
-   	break;
+       break;
     default:
     break;
     }

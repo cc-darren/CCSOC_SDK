@@ -83,7 +83,7 @@ static void _OLED_DisplayIcon16x16(unsigned char x, unsigned char y, const unsig
 
 static void _OLED_DisplayIcon(unsigned char x, unsigned char y, const unsigned char* pbuf)
 {
-    int i, j, k=0;	
+    int i, j, k=0;    
     uint8_t value = 0;
 
     ssd1306_DrawBlack(); 
@@ -93,16 +93,16 @@ static void _OLED_DisplayIcon(unsigned char x, unsigned char y, const unsigned c
     {
         for(j=0;j<40;j++)
         {
-            value = ~(pbuf[i+j*5]);				    
-            ssd1306_SendData(value);	 			        
-        }			
+            value = ~(pbuf[i+j*5]);                    
+            ssd1306_SendData(value);                         
+        }            
         k++;
-        ssd1306_SetPosition(x,y+k);  			
-    }			
+        ssd1306_SetPosition(x,y+k);              
+    }            
 }
 static void _OLED_DisplayIconNI(unsigned char x, unsigned char y, const unsigned char* pbuf)
 {
-    int i, j, k=0;	
+    int i, j, k=0;    
     uint8_t value = 0;
 
     ssd1306_DrawBlack(); 
@@ -112,12 +112,12 @@ static void _OLED_DisplayIconNI(unsigned char x, unsigned char y, const unsigned
     {
         for(j=0;j<40;j++)
         {
-            value = (pbuf[i+j*5]);				    
-            ssd1306_SendData(value);	 			        
-        }			
+            value = (pbuf[i+j*5]);                    
+            ssd1306_SendData(value);                         
+        }            
         k++;
-        ssd1306_SetPosition(x,y+k);  			
-    }			
+        ssd1306_SetPosition(x,y+k);              
+    }            
 }
 
 void _OLED_Display_CharLen_Calculation(uint32_t _dwChar, uint8_t *_bXAxiz, uint8_t *_bYAxiz)
@@ -150,7 +150,7 @@ void _OLED_Display_CharLen_Calculation(uint32_t _dwChar, uint8_t *_bXAxiz, uint8
             *_bXAxiz = (LCD_SIZE_X - 14*3)/2;
         else if(_dwChar >= 10)
             *_bXAxiz = (LCD_SIZE_X - 14*2)/2;
-        else		
+        else        
             *_bXAxiz = (LCD_SIZE_X - 14)/2;        
             
        *_bYAxiz = 0;
@@ -161,7 +161,7 @@ void _OLED_Display_CharLen_Calculation(uint32_t _dwChar, uint8_t *_bXAxiz, uint8
             *_bXAxiz = (LCD_SIZE_X - 14*3)/2;
         else if(_dwChar >= 10)
             *_bXAxiz = (LCD_SIZE_X - 14*2)/2;
-        else		
+        else        
             *_bXAxiz = (LCD_SIZE_X - 14)/2;    
         
        *_bYAxiz = 0;
@@ -294,8 +294,8 @@ void CC_Dsp_Srv_PresentTime(app_date_time_t _mCurTime, uint8_t _Format)
         //OLED_P18x36Str(LCD_X_OFFSET + x, 0,pDisplayTime);
 
     memset(pDisplayTime, 0, sizeof(pDisplayTime));
-    _index = 0;		
-    //Jason, 20170510,[VNS-14] Time format is not correct	
+    _index = 0;        
+    //Jason, 20170510,[VNS-14] Time format is not correct    
     if (_mCurTime.month >=10) 
     {
         sprintf(&pDisplayTime[_index],"%2d",_mCurTime.month); 
@@ -403,12 +403,12 @@ void CC_Dsp_Srv_SwimmingStatus(uint8_t isSwimming)
     char strbuf[9] = {0};
 
     ssd1306_DrawBlack();
-	
-	if(isSwimming == 1)	
-	  sprintf(strbuf, "SWIM ON");	
-	else
-		sprintf(strbuf, "SWIM OFF");	
-	
+    
+    if(isSwimming == 1)    
+      sprintf(strbuf, "SWIM ON");    
+    else
+        sprintf(strbuf, "SWIM OFF");    
+    
        ssd1306_DrawPixel8x16(LCD_X_OFFSET + 5, 2, (uint8_t*)strbuf); 
 
 #ifdef RD_DEBUG
@@ -443,23 +443,23 @@ void CC_Dsp_Srv_SwimmingStatus(uint8_t isSwimming)
 void CC_Dsp_Srv_SwimmingConfirm(uint8_t isConfrimYes)
 {
   char strbuf[9] = {0};
-	char strbuf2[9] = {0};
+    char strbuf2[9] = {0};
 
 
     ssd1306_DrawBlack();
-	
-	if(isConfrimYes == 1)
-	{
-	    sprintf(strbuf, "SWIM ON");	
-		sprintf(strbuf2, "Yes?");	
-		
-	}
-	else
-	{		
-		sprintf(strbuf, "SWIM ON");	
-		sprintf(strbuf2, "No?");	
-	}
-	
+    
+    if(isConfrimYes == 1)
+    {
+        sprintf(strbuf, "SWIM ON");    
+        sprintf(strbuf2, "Yes?");    
+        
+    }
+    else
+    {        
+        sprintf(strbuf, "SWIM ON");    
+        sprintf(strbuf2, "No?");    
+    }
+    
     ssd1306_DrawPixel8x16(LCD_X_OFFSET+5, 1, (uint8_t*)strbuf);    
     ssd1306_DrawPixel8x16(LCD_X_OFFSET+20, 3, (uint8_t*)strbuf2);   
 
@@ -472,9 +472,9 @@ void CC_Dsp_Srv_HeartRateStrapModeStatus(uint8_t bIsHrsModeOn)
     ssd1306_DrawBlack();
     
     if (bIsHrsModeOn)
-        sprintf(_caMsg, "HRS ON");	
+        sprintf(_caMsg, "HRS ON");    
     else
-        sprintf(_caMsg, "HRS OFF");	
+        sprintf(_caMsg, "HRS OFF");    
 
     ssd1306_DrawPixel8x16(LCD_X_OFFSET + 11, 2, (uint8_t*)_caMsg);    
 }
@@ -484,7 +484,7 @@ void CC_Dsp_Srv_BatteryLife(uint8_t _bBatCap)
     char strbuf[8] = {0};
     uint8_t _bX = 0;
     uint8_t _bY = 0;
-	
+    
     sprintf(strbuf, "%d",  _bBatCap);
     ssd1306_DrawBlack();
     _OLED_Display_CharLen_Calculation(_bBatCap, &_bX, &_bY);
@@ -496,7 +496,7 @@ void CC_Dsp_Srv_BatteryLevel(uint16_t _wAdcLevel)
     char strbuf[8] = {0};
     uint8_t _bX = 0;
     uint8_t _bY = 0;
-	
+    
     sprintf(strbuf, "%d",  _wAdcLevel);
     _OLED_Display_CharLen_Calculation(_wAdcLevel, &_bX, &_bY);
     ssd1306_DrawPixel8x16_Thin(LCD_X_OFFSET , 0, (uint8_t*)strbuf); 
@@ -584,37 +584,37 @@ void CC_Dsp_Srv_CharingIn(uint8_t _bBatCap)
 
 void CC_Dsp_Set_DB_Full(void)
 {
-	CC_Dsp_DB_Full_Msg(0);
-	
-	CC_VENUS_OLEDDisplayServiceTimerStart(1000);
-	s_tDspVal._eScreenFlashInd = eMMI_DB_FULL;
-	s_tDspVal._bIndex		   = 0;
-	s_tDspVal._bAction		   = eStateOn;	
+    CC_Dsp_DB_Full_Msg(0);
+    
+    CC_VENUS_OLEDDisplayServiceTimerStart(1000);
+    s_tDspVal._eScreenFlashInd = eMMI_DB_FULL;
+    s_tDspVal._bIndex           = 0;
+    s_tDspVal._bAction           = eStateOn;    
 
 }
 
 void CC_Dsp_DB_Full_Msg(uint8_t page)
 {
-	 char strbuf[8] = {0};
-	 char strbuf1[9] = {0};
-	 
-	 ssd1306_DrawBlack();
+     char strbuf[8] = {0};
+     char strbuf1[9] = {0};
+     
+     ssd1306_DrawBlack();
 
-	 if(page == 0x00)	 
-	 {
-		 sprintf(strbuf, "Storage"); 
-	 	 sprintf(strbuf1, "Full"); 
+     if(page == 0x00)     
+     {
+         sprintf(strbuf, "Storage"); 
+          sprintf(strbuf1, "Full"); 
 
-		 ssd1306_DrawPixel8x16(LCD_X_OFFSET+5, 0, (uint8_t*)strbuf);	 
-		 ssd1306_DrawPixel8x16(LCD_X_OFFSET+15, 3, (uint8_t*)strbuf1);	 	 		 
-	 }
-	 else if(page == 0x01)	 
-	 {
-		 sprintf(strbuf, "Sync APP"); 
+         ssd1306_DrawPixel8x16(LCD_X_OFFSET+5, 0, (uint8_t*)strbuf);     
+         ssd1306_DrawPixel8x16(LCD_X_OFFSET+15, 3, (uint8_t*)strbuf1);                   
+     }
+     else if(page == 0x01)     
+     {
+         sprintf(strbuf, "Sync APP"); 
 
-		 ssd1306_DrawPixel8x16(LCD_X_OFFSET+5, 1, (uint8_t*)strbuf);	 		 
-	 }
-	 
+         ssd1306_DrawPixel8x16(LCD_X_OFFSET+5, 1, (uint8_t*)strbuf);              
+     }
+     
 }
 
 
@@ -756,9 +756,9 @@ void CC_Dsp_Srv_Reflash_Screen(void)
         case eMMI_HRM_PAGE:
             _Screen_Ref_HRM_PAGE();
             break;
-		case eMMI_DB_FULL:
-			_Screen_Ref_DB_Full_PAGE();
-			break;
+        case eMMI_DB_FULL:
+            _Screen_Ref_DB_Full_PAGE();
+            break;
         // add case if need
         default:
             break;

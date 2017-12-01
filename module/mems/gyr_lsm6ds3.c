@@ -79,14 +79,14 @@ typedef struct
 
 typedef struct
 {
-	uint16_t data_end_index;
-	uint16_t max_size;
-	int16_t *mems_fifo_data;
+    uint16_t data_end_index;
+    uint16_t max_size;
+    int16_t *mems_fifo_data;
 } cc_mems_fifo_user_t;
 
 /* Private define ------------------------------------------------------------*/
-#define MEMS_FIFO_MAX_USER		8
-#define GET_BIT8(bit)	((uint8_t)(0x01 << bit))
+#define MEMS_FIFO_MAX_USER        8
+#define GET_BIT8(bit)    ((uint8_t)(0x01 << bit))
 /* Private macro -------------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
@@ -222,7 +222,7 @@ u8_t LSM6DS3_ACC_GYRO_ReadMulti(void *handle, u8_t RegAddr, u8_t *Bufp, u16_t le
     }
 
 
-    return MEMS_SUCCESS;	
+    return MEMS_SUCCESS;    
 //  if (Sensor_IO_Read(handle, Reg, Bufp, len))
 //  {
 //    return MEMS_ERROR;
@@ -234,17 +234,17 @@ u8_t LSM6DS3_ACC_GYRO_ReadMulti(void *handle, u8_t RegAddr, u8_t *Bufp, u16_t le
 }
 
 /*******************************************************************************
-* Function Name		: SwapHighLowByte
-* Description		: Swap High/low byte in multiple byte values
+* Function Name        : SwapHighLowByte
+* Description        : Swap High/low byte in multiple byte values
 *                     It works with minimum 2 byte for every dimension.
 *                     Example x,y,z with 2 byte for every dimension
 *
-* Input				: bufferToSwap -> buffer to swap
+* Input                : bufferToSwap -> buffer to swap
 *                     numberOfByte -> the buffer length in byte
 *                     dimension -> number of dimension
 *
-* Output			: bufferToSwap -> buffer swapped
-* Return			: None
+* Output            : bufferToSwap -> buffer swapped
+* Return            : None
 *******************************************************************************/
 void LSM6DS3_ACC_GYRO_SwapHighLowByte(u8_t *bufferToSwap, u8_t numberOfByte, u8_t dimension)
 {
@@ -256,10 +256,10 @@ void LSM6DS3_ACC_GYRO_SwapHighLowByte(u8_t *bufferToSwap, u8_t numberOfByte, u8_
 
   for (i=0; i<dimension;i++ )
   {
-	for (j=0; j<numberOfByteForDimension;j++ )
-		tempValue[j]=bufferToSwap[j+i*numberOfByteForDimension];
-	for (j=0; j<numberOfByteForDimension;j++ )
-		*(bufferToSwap+i*(numberOfByteForDimension)+j)=*(tempValue+(numberOfByteForDimension-1)-j);
+    for (j=0; j<numberOfByteForDimension;j++ )
+        tempValue[j]=bufferToSwap[j+i*numberOfByteForDimension];
+    for (j=0; j<numberOfByteForDimension;j++ )
+        *(bufferToSwap+i*(numberOfByteForDimension)+j)=*(tempValue+(numberOfByteForDimension-1)-j);
   }
 }
 
@@ -6442,10 +6442,10 @@ status_t LSM6DS3_ACC_GYRO_GetRawAccData(void *handle, i16_t *buff)
  */
 //static const long long LSM6DS3_ACC_Sensitivity_List[4] =
 //{
-//   61,	/* FS @2g */
-//  122,	/* FS @4g */
-//  244,	/* FS @8g */
-//  488,	/* FS @16g */
+//   61,    /* FS @2g */
+//  122,    /* FS @4g */
+//  244,    /* FS @8g */
+//  488,    /* FS @16g */
 //};
 
 /*
@@ -6870,7 +6870,7 @@ status_t LSM6DS3_X_SLEEP( void )
   {
     return MEMS_ERROR;
   }
-	return MEMS_SUCCESS;
+    return MEMS_SUCCESS;
 }
 
 void CC_GYRO_Set_ODR(LSM6DS3_ACC_GYRO_ODR_G_t ODR)
@@ -6915,48 +6915,48 @@ status_t CC_SETTING_ACCL_FIFO_MODE(void)
   //=============================================================================================
   if(LSM6DS3_ACC_GYRO_W_FIFO_Watermark(handle, FIFO_DEPTH_T) == MEMS_ERROR) //32bytes for each axis
   {
-    return MEMS_ERROR;	  
+    return MEMS_ERROR;      
   }
 
     if(LSM6DS3_ACC_GYRO_W_FIFO_MODE(handle, LSM6DS3_ACC_GYRO_FIFO_MODE_BYPASS) == MEMS_ERROR)
     {
-    return MEMS_ERROR;	  
+    return MEMS_ERROR;      
     }
 
 
   if(LSM6DS3_ACC_GYRO_W_FIFO_MODE(handle, LSM6DS3_ACC_GYRO_FIFO_MODE_DYN_STREAM_2) == MEMS_ERROR)
   {
-    return MEMS_ERROR;	  
+    return MEMS_ERROR;      
   }
 
     if(LSM6DS3_ACC_GYRO_W_ODR_FIFO(handle, LSM6DS3_ACC_GYRO_ODR_FIFO_50Hz) == MEMS_ERROR)
   {
-    return MEMS_ERROR;	  
+    return MEMS_ERROR;      
   }
 
     #if 0
   if(LSM6DS3_ACC_GYRO_W_FIFO_TSHLD_on_INT1(handle, LSM6DS3_ACC_GYRO_INT1_FTH_ENABLED) == MEMS_ERROR)
   {
-    return MEMS_ERROR;	  
+    return MEMS_ERROR;      
   }
     #endif
 
     // ACCL
   if(LSM6DS3_ACC_GYRO_W_DEC_FIFO_XL(handle, LSM6DS3_ACC_GYRO_DEC_FIFO_XL_NO_DECIMATION) == MEMS_ERROR)
   {
-    return MEMS_ERROR;	  
+    return MEMS_ERROR;      
   }
     //GYRO
     #if 1
     if(LSM6DS3_ACC_GYRO_W_DEC_FIFO_G(handle, LSM6DS3_ACC_GYRO_DEC_FIFO_G_DATA_NOT_IN_FIFO) == MEMS_ERROR)
   {
-    return MEMS_ERROR;	  
+    return MEMS_ERROR;      
   }
 #endif
 
   if(LSM6DS3_ACC_GYRO_W_STOP_ON_FTH(handle, LSM6DS3_ACC_GYRO_STOP_ON_FTH_ENABLED) == MEMS_ERROR)
   {
-    return MEMS_ERROR;	  
+    return MEMS_ERROR;      
   }
     return MEMS_SUCCESS;
   }
@@ -6998,7 +6998,7 @@ status_t CC_SET_FIFO_RESET(void)
 
     if(LSM6DS3_ACC_GYRO_W_FIFO_MODE(handle, LSM6DS3_ACC_GYRO_FIFO_MODE_BYPASS) == MEMS_ERROR)
     {
-    return MEMS_ERROR;	  
+    return MEMS_ERROR;      
     }
 
   
@@ -7017,7 +7017,7 @@ status_t CC_SET_FIFI_GYRO(uint8_t _Enable)
     {
         if(LSM6DS3_ACC_GYRO_W_DEC_FIFO_G(handle, LSM6DS3_ACC_GYRO_DEC_FIFO_G_NO_DECIMATION) == MEMS_ERROR)
         {
-            return MEMS_ERROR;	  
+            return MEMS_ERROR;      
         }
     }
     else
@@ -7028,7 +7028,7 @@ status_t CC_SET_FIFI_GYRO(uint8_t _Enable)
     return MEMS_ERROR;
   }
     }
-	return MEMS_SUCCESS;
+    return MEMS_SUCCESS;
 }
 
 status_t CC_SET_ACC_ODR(uint8_t _Enable)
@@ -7094,7 +7094,7 @@ u16_t CC_LSM6DSX_FifoGetUnReadData(void)
 
 status_t CC_LSM6DSX_GyroPowerDown(void)
 {
-	
+    
     LSM6DS3_ACC_GYRO_W_ODR_G(0x00, LSM6DS3_ACC_GYRO_ODR_G_POWER_DOWN);
 
     return (MEMS_SUCCESS);
@@ -7160,18 +7160,18 @@ void CC_LSM6DSX_FifoEnable(E_LSM6DSX_FIFO_TARGET_DEVICE eTargetDevice)
 
     switch (eTargetDevice)
     {
-	    case E_LSM6DSX_FIFO_CONTROL_ACCEL_GYRO:
-	         _CC_LSM6DSX_RegWrite(LSM6DS3_ACC_GYRO_FIFO_CTRL3,
-	                             (LSM6DS3_ACC_GYRO_DEC_FIFO_G_NO_DECIMATION | LSM6DS3_ACC_GYRO_DEC_FIFO_XL_NO_DECIMATION));
-	         break;
+        case E_LSM6DSX_FIFO_CONTROL_ACCEL_GYRO:
+             _CC_LSM6DSX_RegWrite(LSM6DS3_ACC_GYRO_FIFO_CTRL3,
+                                 (LSM6DS3_ACC_GYRO_DEC_FIFO_G_NO_DECIMATION | LSM6DS3_ACC_GYRO_DEC_FIFO_XL_NO_DECIMATION));
+             break;
 
-	    case E_LSM6DSX_FIFO_CONTROL_ACCEL:
-	         LSM6DS3_ACC_GYRO_W_DEC_FIFO_XL(0x00, LSM6DS3_ACC_GYRO_DEC_FIFO_XL_NO_DECIMATION);
-	         break;
+        case E_LSM6DSX_FIFO_CONTROL_ACCEL:
+             LSM6DS3_ACC_GYRO_W_DEC_FIFO_XL(0x00, LSM6DS3_ACC_GYRO_DEC_FIFO_XL_NO_DECIMATION);
+             break;
 
-	    case E_LSM6DSX_FIFO_CONTROL_GYRO:
-	         LSM6DS3_ACC_GYRO_W_DEC_FIFO_G(0x00, LSM6DS3_ACC_GYRO_DEC_FIFO_G_NO_DECIMATION);
-	         break;
+        case E_LSM6DSX_FIFO_CONTROL_GYRO:
+             LSM6DS3_ACC_GYRO_W_DEC_FIFO_G(0x00, LSM6DS3_ACC_GYRO_DEC_FIFO_G_NO_DECIMATION);
+             break;
     }
 
     _CC_LSM6DSX_RegWrite(LSM6DS3_ACC_GYRO_FIFO_CTRL5,
@@ -7183,18 +7183,18 @@ void CC_LSM6DSX_FifoDisable(E_LSM6DSX_FIFO_TARGET_DEVICE eTargetDevice)
 {
     switch (eTargetDevice)
     {
-	    case E_LSM6DSX_FIFO_CONTROL_ACCEL_GYRO:
-	         _CC_LSM6DSX_RegWrite(LSM6DS3_ACC_GYRO_FIFO_CTRL3,
-	                             (LSM6DS3_ACC_GYRO_DEC_FIFO_G_DATA_NOT_IN_FIFO | LSM6DS3_ACC_GYRO_DEC_FIFO_XL_DATA_NOT_IN_FIFO));
-	         break;
+        case E_LSM6DSX_FIFO_CONTROL_ACCEL_GYRO:
+             _CC_LSM6DSX_RegWrite(LSM6DS3_ACC_GYRO_FIFO_CTRL3,
+                                 (LSM6DS3_ACC_GYRO_DEC_FIFO_G_DATA_NOT_IN_FIFO | LSM6DS3_ACC_GYRO_DEC_FIFO_XL_DATA_NOT_IN_FIFO));
+             break;
 
-	    case E_LSM6DSX_FIFO_CONTROL_ACCEL:
-	         LSM6DS3_ACC_GYRO_W_DEC_FIFO_XL(0x00, LSM6DS3_ACC_GYRO_DEC_FIFO_XL_DATA_NOT_IN_FIFO);
-	         break;
+        case E_LSM6DSX_FIFO_CONTROL_ACCEL:
+             LSM6DS3_ACC_GYRO_W_DEC_FIFO_XL(0x00, LSM6DS3_ACC_GYRO_DEC_FIFO_XL_DATA_NOT_IN_FIFO);
+             break;
 
-	    case E_LSM6DSX_FIFO_CONTROL_GYRO:
-	         LSM6DS3_ACC_GYRO_W_DEC_FIFO_G(0x00, LSM6DS3_ACC_GYRO_DEC_FIFO_G_DATA_NOT_IN_FIFO);
-	         break;
+        case E_LSM6DSX_FIFO_CONTROL_GYRO:
+             LSM6DS3_ACC_GYRO_W_DEC_FIFO_G(0x00, LSM6DS3_ACC_GYRO_DEC_FIFO_G_DATA_NOT_IN_FIFO);
+             break;
     }
 
     LSM6DS3_ACC_GYRO_W_FIFO_MODE(0x00, LSM6DS3_ACC_GYRO_FIFO_MODE_BYPASS);
@@ -7204,61 +7204,61 @@ void CC_LSM6DSX_FifoDisable(E_LSM6DSX_FIFO_TARGET_DEVICE eTargetDevice)
 
 void CC_Mems_Fifo_Register(cc_mems_fifo_user_type_t user_id, int16_t *pdata, uint16_t _max_size)
 {
-	mems_fifo_register_flag |= GET_BIT8(user_id);
-	mems_fifo_user[user_id].data_end_index = 0;
-	mems_fifo_user[user_id].max_size = _max_size;
-	mems_fifo_user[user_id].mems_fifo_data = pdata;
+    mems_fifo_register_flag |= GET_BIT8(user_id);
+    mems_fifo_user[user_id].data_end_index = 0;
+    mems_fifo_user[user_id].max_size = _max_size;
+    mems_fifo_user[user_id].mems_fifo_data = pdata;
 }
 
 void CC_Mems_Fifo_UnRegister(cc_mems_fifo_user_type_t user_id)
 {
-	mems_fifo_register_flag &= ~ GET_BIT8(user_id);
-	mems_fifo_user[user_id].data_end_index = 0;
-	mems_fifo_user[user_id].mems_fifo_data = 0;
+    mems_fifo_register_flag &= ~ GET_BIT8(user_id);
+    mems_fifo_user[user_id].data_end_index = 0;
+    mems_fifo_user[user_id].mems_fifo_data = 0;
 
 }
 
 void CC_Mems_Fifo_Reset(cc_mems_fifo_user_type_t user_id)
 {
-	mems_fifo_user[user_id].data_end_index = 0;
+    mems_fifo_user[user_id].data_end_index = 0;
 }
 
 uint16_t  CC_Mems_Fifo_Get_UnRead_Length(cc_mems_fifo_user_type_t user_id)
 {
-	return mems_fifo_user[user_id].data_end_index;
+    return mems_fifo_user[user_id].data_end_index;
 }
 
 void CC_Mems_Fifo_Update_Data(void)
 {
-	uint16_t fifo_len = 0;
-	uint16_t data_index;
-	int16_t mems_data[3];
-		
-	LSM6DS3_ACC_GYRO_R_FIFONumOfEntries(0, &fifo_len);
+    uint16_t fifo_len = 0;
+    uint16_t data_index;
+    int16_t mems_data[3];
+        
+    LSM6DS3_ACC_GYRO_R_FIFONumOfEntries(0, &fifo_len);
 
 
 
-	fifo_len /= 3;
+    fifo_len /= 3;
 
-	for(int i = 0; i < fifo_len; i++)
-	{
-		LSM6DS3_ACC_Get_Acceleration(mems_data, FIFO_EN);
+    for(int i = 0; i < fifo_len; i++)
+    {
+        LSM6DS3_ACC_Get_Acceleration(mems_data, FIFO_EN);
 
-		for(uint8_t user_id = 0; user_id < MEMS_FIFO_MAX_USER; user_id++)
-		{
-			if(GET_BIT8(user_id) & mems_fifo_register_flag)
-			{
-				data_index = mems_fifo_user[user_id].data_end_index;
+        for(uint8_t user_id = 0; user_id < MEMS_FIFO_MAX_USER; user_id++)
+        {
+            if(GET_BIT8(user_id) & mems_fifo_register_flag)
+            {
+                data_index = mems_fifo_user[user_id].data_end_index;
 
-				if(data_index < mems_fifo_user[user_id].max_size)
-				{
-					memcpy(&mems_fifo_user[user_id].mems_fifo_data[data_index], mems_data, 0x06);
+                if(data_index < mems_fifo_user[user_id].max_size)
+                {
+                    memcpy(&mems_fifo_user[user_id].mems_fifo_data[data_index], mems_data, 0x06);
 
-					mems_fifo_user[user_id].data_end_index += 3;
-				}
-			}
-		}
-	}
+                    mems_fifo_user[user_id].data_end_index += 3;
+                }
+            }
+        }
+    }
 
 }
 

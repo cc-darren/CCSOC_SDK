@@ -482,7 +482,7 @@ enum hci_opcode
 #endif // (BLE_EMB_PRESENT)
 
     #if (RW_DEBUG && BT_EMB_PRESENT)
-	HCI_DBG_BT_DISCARD_LMP_EN_CMD_OPCODE      	= 0xFC44,
+    HCI_DBG_BT_DISCARD_LMP_EN_CMD_OPCODE          = 0xFC44,
     #endif //RW_DEBUG && BT_EMB_PRESENT
 
     HCI_DBG_MWS_COEX_CMD_OPCODE                 = 0xFC45,
@@ -2523,8 +2523,8 @@ enum tci_evt_subcode
 };
 
 /// LMP direction
-#define TCI_LMP_DIR_TX	0
-#define TCI_LMP_DIR_RX	1
+#define TCI_LMP_DIR_TX    0
+#define TCI_LMP_DIR_RX    1
 
 /// HCI tci lmp exchange event structure
 struct hci_tci_lmp_evt
@@ -4076,9 +4076,9 @@ struct hci_dbg_rd_mem_info_cmd_cmp_evt
     uint8_t status;
     /// memory size currently used into each heaps.
 #if (BLE_HOST_PRESENT) // modified by Chiu
-	uint16_t mem_used[4];	
+    uint16_t mem_used[4];    
 #else
-	uint16_t mem_used[3];
+    uint16_t mem_used[3];
     //uint16_t mem_used[KE_MEM_BLOCK_MAX];
 #endif
     /// peak of memory usage measured

@@ -1111,7 +1111,7 @@ GUI_CONST_STORAGE unsigned char _acbatteryfull[] = {
 
 
 GUI_CONST_STORAGE unsigned char _acbatteryLevel4[] = {
-  XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX,	
+  XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX,    
   XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX, XXXXXXXX,
   XXXXXXXX, X_______, ________, _______X, XXXXXXXX,
   XXXXXXXX, ________, ________, ________, XXXXXXXX,

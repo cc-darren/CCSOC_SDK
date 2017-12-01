@@ -51,7 +51,7 @@ typedef fs_cb_t dfu_flash_callback_t;
  *
  * @param[in]  sd_enabled Set the flash handling to run with or without the SoftDevice enabled.
  *
- * @retval NRF_SUCCESS             If the operation was successful.
+ * @retval CC_SUCCESS             If the operation was successful.
  * @retval NRF_ERROR_INVALID_STATE If the fstorage module could not be initiated or the SoftDevice could not set the event handler.
  */
 uint32_t nrf_dfu_flash_init(bool fstorage_enable);

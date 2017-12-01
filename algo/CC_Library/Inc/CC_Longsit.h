@@ -13,7 +13,7 @@
 #ifndef _LONGSIT_H_
 #define _LONGSIT_H_
 
-#define LIB_OPEN_PASS 	      1
+#define LIB_OPEN_PASS           1
 #define LIB_OPEN_FAIL         0
 
 /** 

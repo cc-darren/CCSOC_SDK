@@ -208,6 +208,7 @@ static void on_operation_success(fs_op_t * const p_op)
 
             if (p_op->store.offset == p_op->store.length_words)
             {
+                drvi_EflashFlush();
                 // The operation has finished.
                 send_event(p_op, FS_SUCCESS);
                 queue_advance();

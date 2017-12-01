@@ -780,7 +780,7 @@ enum rwip_coex_config_idx
     RWIP_COEX_CONNECT_IDX,
     #endif //#if (BT_EMB_PRESENT)
     #if (BLE_EMB_PRESENT)
-	RWIP_COEX_CON_IDX,
+    RWIP_COEX_CON_IDX,
     RWIP_COEX_CON_DATA_IDX,
     RWIP_COEX_ADV_IDX,
     RWIP_COEX_SCAN_IDX,

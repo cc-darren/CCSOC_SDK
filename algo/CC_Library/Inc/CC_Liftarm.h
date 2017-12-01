@@ -1,7 +1,7 @@
 #ifndef __liftarm_H__
 #define __liftarm_H__
 
-#define LIB_OPEN_PASS 	      1
+#define LIB_OPEN_PASS           1
 #define LIB_OPEN_FAIL         0
 
 #ifdef __cplusplus
@@ -50,7 +50,7 @@ void CC_Liftarm_onStateChange(uint8_t State);
  *  AlGOTITHM_MAJOR(4bits).MINOR(4bits).BUILD(4bits).Reserve(4bits).INTERFACE_MAJOR(4bits).MINOR(4bits).BUILD(4bits).Reserve(4bits)
  *         
  */
-unsigned long liftarm_get_version(void);	
+unsigned long liftarm_get_version(void);    
 
 #ifdef __cplusplus
 }

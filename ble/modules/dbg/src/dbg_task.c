@@ -515,17 +515,17 @@ hci_dbg_rd_par_cmd_handler(ke_msg_id_t const msgid, struct hci_dbg_rd_par_cmd co
 
     #if (NVDS_SUPPORT && RW_DEBUG_NVDS)
 
-	if(jump_table_struct[JT_POS_PARA_NVDS_ENABLE] == 0)
-	{	
-	    event->buf.length = sizeof(event->buf.data);
-	    nvds_get(param->param_tag, (uint8_t*)&event->buf.length, (uint8_t*)&event->buf.data[0]);
-	    event->status = CO_ERROR_NO_ERROR;
-	}
-	else
+    if(jump_table_struct[JT_POS_PARA_NVDS_ENABLE] == 0)
+    {    
+        event->buf.length = sizeof(event->buf.data);
+        nvds_get(param->param_tag, (uint8_t*)&event->buf.length, (uint8_t*)&event->buf.data[0]);
+        event->status = CO_ERROR_NO_ERROR;
+    }
+    else
     {
         event->buf.length = 0;
         event->status = CO_ERROR_UNSUPPORTED;
-    }		
+    }        
     #else //RW_DEBUG_NVDS
     event->buf.length = 0;
     event->status = CO_ERROR_UNSUPPORTED;

@@ -32,8 +32,8 @@
 /// IcyTRx RF interface selection
 enum RF_INTF_SEL
 {
-	RF_INTF_V1X_V2X,
-	RF_INTF_V3X_V4X,
+    RF_INTF_V1X_V2X,
+    RF_INTF_V3X_V4X,
 };
 
 /*

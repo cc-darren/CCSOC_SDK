@@ -44,7 +44,7 @@ typedef struct
  * @param[in]  p_buf    FIFO buffer for storing data. The buffer size must be a power of two.
  * @param[in]  buf_size Size of the FIFO buffer provided. This size must be a power of two.
  *
- * @retval     NRF_SUCCESS              If initialization was successful.
+ * @retval     CC_SUCCESS              If initialization was successful.
  * @retval     NRF_ERROR_NULL           If a NULL pointer is provided as buffer.
  * @retval     NRF_ERROR_INVALID_LENGTH If size of buffer provided is not a power of two.
  */
@@ -55,7 +55,7 @@ uint32_t app_fifo_init(app_fifo_t * p_fifo, uint8_t * p_buf, uint16_t buf_size);
  * @param[in]  p_fifo   Pointer to the FIFO.
  * @param[in]  byte     Data byte to add to the FIFO.
  *
- * @retval     NRF_SUCCESS              If an element has been successfully added to the FIFO.
+ * @retval     CC_SUCCESS              If an element has been successfully added to the FIFO.
  * @retval     NRF_ERROR_NO_MEM         If the FIFO is full.
  */
 uint32_t app_fifo_put(app_fifo_t * p_fifo, uint8_t byte);
@@ -65,7 +65,7 @@ uint32_t app_fifo_put(app_fifo_t * p_fifo, uint8_t byte);
  * @param[in]  p_fifo   Pointer to the FIFO.
  * @param[out] p_byte   Byte fetched from the FIFO.
  *
- * @retval     NRF_SUCCESS              If an element was returned.
+ * @retval     CC_SUCCESS              If an element was returned.
  * @retval     NRF_ERROR_NOT_FOUND      If there are no more elements in the queue.
  */
 uint32_t app_fifo_get(app_fifo_t * p_fifo, uint8_t * p_byte);
@@ -74,7 +74,7 @@ uint32_t app_fifo_get(app_fifo_t * p_fifo, uint8_t * p_byte);
  *
  * @param[in]  p_fifo   Pointer to the FIFO.
  *
- * @retval     NRF_SUCCESS              If the FIFO was flushed successfully.
+ * @retval     CC_SUCCESS              If the FIFO was flushed successfully.
  */
 uint32_t app_fifo_flush(app_fifo_t * p_fifo);
 
@@ -92,7 +92,7 @@ uint32_t app_fifo_flush(app_fifo_t * p_fifo);
  *                             If p_byte_array is set to NULL by the application, this parameter
  *                             returns the number of bytes in the FIFO.
  *
- * @retval     NRF_SUCCESS          If the procedure is successful. The actual number of bytes read might
+ * @retval     CC_SUCCESS          If the procedure is successful. The actual number of bytes read might
  *                                  be less than the requested maximum, depending on how many elements exist
  *                                  in the FIFO. Even if less bytes are returned, the procedure is considered
  *                                  successful.
@@ -116,7 +116,7 @@ uint32_t app_fifo_read(app_fifo_t * p_fifo, uint8_t * p_byte_array, uint32_t * p
  *                          If p_byte_array is set to NULL by the application, this parameter
  *                          returns the number of bytes available in the FIFO.
  *
- * @retval     NRF_SUCCESS       If the procedure is successful. The actual number of bytes written might
+ * @retval     CC_SUCCESS       If the procedure is successful. The actual number of bytes written might
  *                               be less than the requested maximum, depending on how much room there is in
  *                               the FIFO. Even if less bytes are written, the procedure is considered
  *                               successful. If the write was partial, the application should use

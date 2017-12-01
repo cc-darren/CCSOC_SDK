@@ -295,7 +295,7 @@ void appm_init()
     // Load the device name from NVDS
 
     // Get the Device Name to add in the Advertising Data (Default one or NVDS one)
-    #if (NVDS_SUPPORT)	
+    #if (NVDS_SUPPORT)    
     app_env.dev_name_len = APP_DEVICE_NAME_MAX_LEN;
     if (nvds_get(NVDS_TAG_DEVICE_NAME, &(app_env.dev_name_len), app_env.dev_name) != NVDS_OK)
     #endif //(NVDS_SUPPORT)

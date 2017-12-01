@@ -80,9 +80,9 @@ extern "C" {
 
 // The size of a physical page, in 4-byte words.
 #if   (defined(CC6801))
-    #define FDS_PHY_PAGE_SIZE   (2048)
+    #define FDS_PHY_PAGE_SIZE   (512)
 #elif (defined(CC6802))
-    #define FDS_PHY_PAGE_SIZE   (2048)
+    #define FDS_PHY_PAGE_SIZE   (512)
 #endif
 
 // The number of physical pages to be used. This value is configured indirectly.

@@ -188,7 +188,7 @@ static int otat_notify_send_req_handler(ke_msg_id_t const msgid,
             ke_msg_send(rsp);
         }
         else
-#endif			
+#endif            
         {
             // allocate operation to execute
             otat_env->operation    = (struct otat_op *) ke_malloc(sizeof(struct otat_op) + OTAT_NOTIFY_SEND_MAX_LEN, KE_MEM_ATT_DB);
@@ -205,9 +205,9 @@ static int otat_notify_send_req_handler(ke_msg_id_t const msgid,
             otat_env->operation->handle  = OTAT_HANDLE(OTAS_IDX_OTA_VAL);
 #endif            
 
-			otat_env->operation->length  = param->lenth;//sizeof(struct otat_notify_send_req);
+            otat_env->operation->length  = param->lenth;//sizeof(struct otat_notify_send_req);
 
-			memcpy(otat_env->operation->data, param->eArray, param->lenth);
+            memcpy(otat_env->operation->data, param->eArray, param->lenth);
 
             //Pack the temperature measurement value
             //otat_env->operation->length  = otat_pack_temp_value(&(otat_env->operation->data[0]), param->temp_meas);
@@ -250,7 +250,7 @@ static int otat_period_meas_send_req_handler(ke_msg_id_t const msgid,
             ke_msg_send(rsp);
         }
         else
-#endif			
+#endif            
         {
             // allocate operation to execute
             otat_env->operation    = (struct otat_op *) ke_malloc(sizeof(struct otat_op) + OTAT_TEMP_MEAS_MAX_LEN, KE_MEM_ATT_DB);
@@ -276,9 +276,9 @@ static int otat_period_meas_send_req_handler(ke_msg_id_t const msgid,
                 otat_env->operation->handle  = OTAT_HANDLE(HTS_IDX_INTERM_TEMP_VAL);
             }
 */
-			otat_env->operation->length  = sizeof(struct htp_period_meas);
+            otat_env->operation->length  = sizeof(struct htp_period_meas);
 
-			memcpy(otat_env->operation->data, &param->period_meas, sizeof(struct htp_period_meas));
+            memcpy(otat_env->operation->data, &param->period_meas, sizeof(struct htp_period_meas));
 
             //Pack the temperature measurement value
             //otat_env->operation->length  = otat_pack_temp_value(&(otat_env->operation->data[0]), param->temp_meas);
@@ -312,7 +312,7 @@ static int otat_swim_meas_send_req_handler(ke_msg_id_t const msgid,
         // Get the address of the environment
         struct otat_env_tag *otat_env = PRF_ENV_GET(OTAT, otat);
 
-        if(1)	
+        if(1)    
         {
             // allocate operation to execute
             otat_env->operation    = (struct otat_op *) ke_malloc(sizeof(struct otat_op) + OTAT_TEMP_MEAS_MAX_LEN, KE_MEM_ATT_DB);
@@ -325,10 +325,10 @@ static int otat_swim_meas_send_req_handler(ke_msg_id_t const msgid,
             otat_env->operation->op      = OTAT_CFG_INTERM_MEAS_NTF;
             otat_env->operation->handle  = OTAT_HANDLE(HTS_IDX_INTERM_TEMP_VAL);
             
-			otat_env->operation->length  = sizeof(struct htp_swim_meas);
+            otat_env->operation->length  = sizeof(struct htp_swim_meas);
 
-    	    memcpy(otat_env->operation->data, &param->swim_meas, sizeof(struct htp_swim_meas));
-			    
+            memcpy(otat_env->operation->data, &param->swim_meas, sizeof(struct htp_swim_meas));
+                
             //Pack the temperature measurement value
             //otat_env->operation->length  = otat_pack_temp_value(&(otat_env->operation->data[0]), param->temp_meas);
 

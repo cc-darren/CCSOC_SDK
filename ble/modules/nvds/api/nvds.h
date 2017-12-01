@@ -150,9 +150,9 @@ enum NVDS_TAG
     NVDS_TAG_DIAG_PLF                   = 0x34,
 
     /// RSSI threshold tags
-	NVDS_TAG_RSSI_HIGH_THR              = 0x3A,
-	NVDS_TAG_RSSI_LOW_THR               = 0x3B,
-	NVDS_TAG_RSSI_INTERF_THR            = 0x3C,
+    NVDS_TAG_RSSI_HIGH_THR              = 0x3A,
+    NVDS_TAG_RSSI_LOW_THR               = 0x3B,
+    NVDS_TAG_RSSI_INTERF_THR            = 0x3C,
 
     /// BLE Channel Assessment tags
     NVDS_TAG_BLE_CA_TIMER_DUR           = 0x40,
@@ -248,8 +248,8 @@ enum NVDS_LEN
      NVDS_LEN_DIAG_BLE_HW                = 4,
      NVDS_LEN_DIAG_SW                    = 4,
      NVDS_LEN_DIAG_PLF                   = 4,
-	 /// RSSI thresholds
-	 NVDS_LEN_RSSI_THR                   = 1,
+     /// RSSI thresholds
+     NVDS_LEN_RSSI_THR                   = 1,
 
 
      NVDS_LEN_BLE_CA_TIMER_DUR           = 2,

@@ -124,9 +124,9 @@ void CC_Vib_Srv_Icon(eMMI_Page_t _PageIndex)
         case eMMI_ALARM_PAGE:
             _CC_Set_VibParameter(TIMER_START_TIMEOUT, _PageIndex, VIB_CONTINUES,RESTART_TIMER_100);
             break;
-		case eMMI_SWIMMING_ON_PAGE:
-		case eMMI_SWIMMING_OFF_PAGE:
-			_CC_Set_VibParameter(TIMER_START_TIMEOUT, _PageIndex, VIB_ONETIME,RESTART_TIMER_100);
+        case eMMI_SWIMMING_ON_PAGE:
+        case eMMI_SWIMMING_OFF_PAGE:
+            _CC_Set_VibParameter(TIMER_START_TIMEOUT, _PageIndex, VIB_ONETIME,RESTART_TIMER_100);
             break;
         case eMMI_LOWPOWER:
             _CC_Set_VibParameter(TIMER_START_TIMEOUT, _PageIndex, VIB_THREETIME,RESTART_TIMER_100);
@@ -152,8 +152,8 @@ void CC_Vib_Srv_Handler(void)
         case eMMI_LONGSIT_PAGE:
         case eMMI_INCOMMING_CALL_PAGE:
         case eMMI_INCOMMING_SMS_PAGE:
-		case eMMI_SWIMMING_ON_PAGE:
-		case eMMI_SWIMMING_OFF_PAGE:
+        case eMMI_SWIMMING_ON_PAGE:
+        case eMMI_SWIMMING_OFF_PAGE:
         case eMMI_ALARM_PAGE:
         case eMMI_LOWPOWER:
         if (s_tVibVal._bPeriod <=VIB_THREETIME )    

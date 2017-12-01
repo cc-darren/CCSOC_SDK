@@ -40,6 +40,10 @@ Head Block of The File
 
 // Sec 1: Include File
 #include "global.h"
+#include "appTime.h"
+#include "stdint.h"
+#include "CC_Calorie_burn.h"
+//#include "CC_DB_Structure.h"
 
 // Sec 2: Constant Definitions, Imported Symbols, miscellaneous
 
@@ -52,6 +56,7 @@ Head Block of The File
 #define MSC_CLOCK               1
 #define CLK_TCK                 32000   //HW timer clock is 32KHz for Dhrystone measurement
 #define Number_Of_Runs          1000000
+
 
 
 
@@ -416,15 +421,16 @@ Declaration of static Global Variables & Functions
 /******************************************************************************
 // Sec 11: Application settings
 ******************************************************************************/
-#include "appTime.h"
-#include "stdint.h"
-#include "CC_Calorie_burn.h"
+
+
+
 
 #define DEVICE_MODEL "VENUS"
 #define VENUS_HW_VERSION "v0.000.001"
 #define VENUS_FW_VERSION "v0.000.001" 
 
 //#define CFG_APP_CODE_ONLY
+
 
 #ifndef CFG_APP_CODE_ONLY 
 #define CFG_JUMP_TABLE_2
@@ -437,10 +443,22 @@ Declaration of static Global Variables & Functions
 #define HRM_EN
 //#define SLEEP_EN
 //#define BLE_OTA_BL_MODE_EN
+#define DB_EN
+#define FACTORY_RESET
+
 
 #define TOUCH_INT_PIN       1
 #define HRM_INT_PIN         22
 #define HRM_RST_PIN         30
+
+//-----------------------------------
+//  _bState : 1  , Init form system reboot
+//          : 2 ,  Init form Venus app setting
+//------------------------------------
+#define   DB_INIT_FROM_SYSTEM       1
+#define   DB_INIT_FROM_APP              2
+#define   DB_INIT_FROM_APP_FACTORY_RESET 3
+
 
 enum
 {
@@ -458,6 +476,8 @@ enum
     E_VENUS_EVENT_HRM_SERVICE_RESUME,
     E_VENUS_EVENT_HRM_SERVICE_HR_LOCK,
     E_VENUS_EVENT_HRM_SERVICE_HR_UNLOCK,
+    E_VENUS_EVENT_HRM_SERVICE_HR_ALERT_OUT_OF_RANGE,
+   
 
     E_VENUS_EVENT_OLED_UPDATE,
     E_VENUS_EVENT_OLED_UPDATE_ALARM,
@@ -481,6 +501,13 @@ enum
 
     E_VENUS_EVENT_BATTERYLIFE,
     E_VENUS_EVENT_BATTERYLIFE_CHARGEOUT,
+#ifdef FACTORY_RESET
+    E_VENUS_EVENT_OLED_UPDATE_FACTORYRESET_START,
+    E_VENUS_EVENT_OLED_UPDATE_FACTORYRESET_STOP,
+    E_VENUS_EVENT_FACTORY_RESET_START,
+    E_VENUS_EVENT_OLED_UPDATE_FACTORYRESET_DONE,
+    
+#endif    
 #ifdef BatteryLog_EN
     E_VENUS_EVENT_BATTERYLIFE_LOG_SAVE,
 #endif
@@ -518,6 +545,9 @@ enum
     eEvent_INCOMMINGCALL_OFF,
     eEvent_INCOMMINGSMS,
     eEvent_ALARM,    
+    eEvent_FACTORY_RESET_START,
+    eEvent_FACTORY_RESET_DONE,
+    eEvent_FACTORY_RESET_STOP,  //LOW POWER FAIL    
     eEvent_Dummy
 };
 
@@ -604,8 +634,9 @@ typedef enum
 {
     eDisable=0,
     eEnable,
-    eInvaild
+    eInvaild,
 }eStete_t;
+
 
 typedef enum 
 {
@@ -647,10 +678,15 @@ typedef struct
 #define CHARGE_MAX_USERS 8
 typedef void (*charge_cb_t)(eDEV_CHARGE_STATE_t eState);
 
+#if 1
+
+
+#if 0
+
 typedef struct 
 {
-   int16_t	Data[3];
-   uint16_t 	wVaildFlag;
+   int16_t    Data[3];
+   uint16_t     wVaildFlag;
 }db_sys_static_gyro_offset_t __attribute__((aligned(4))); 
 
 
@@ -668,6 +704,7 @@ typedef struct
     uint16_t count;
     uint8_t rsvd[2];
 }db_sleep_record_count_t __attribute__((aligned(4)));
+
 
 
 typedef struct 
@@ -688,13 +725,42 @@ typedef struct
     uint32_t period_second;
 }db_sleep_time_period_t __attribute__((aligned(4)));
 
+
 typedef struct 
 {
     db_sleep_time_t         detect_time;
     db_sleep_time_period_t  period;
 }db_sleep_t __attribute__((aligned(4)));
+#endif
 
 #if 1 // from venus: ble_rscs.h
+
+typedef struct
+{
+   uint8_t     command;   
+   uint8_t     is_update_steps; 
+   uint32_t    dwTotal_steps;
+   uint32_t    dwTotal_calorie;
+   
+}CC_Ble_Ped_Info_T;
+
+typedef struct
+{
+   uint8_t     command;
+   uint8_t     is_update_hrm;  //bit 0: Ped = 0xF1, Hrm = 0xF2 Sleep = 0xF3
+   uint16_t    hrmdata;
+}CC_Ble_Hrm_Info_T;
+
+typedef struct
+{
+   uint8_t     command;
+   uint8_t     is_Swim_En;  //bit 0: Ped = 0xF1, Hrm = 0xF2 Sleep = 0xF3  Swim = 0xF4
+   uint8_t     style_type;
+   uint32_t   dwSwimCnt;  
+   uint32_t     cSwimLap;
+   unsigned long   dwTimestamp;
+}CC_Ble_Swim_Info_T;
+
 typedef struct
 {
     uint8_t cHeight;
@@ -704,7 +770,13 @@ typedef struct
     uint8_t cStride_Lenght;
     eSWIM_LEN_SET_t cSwim_Pool_Size;
     uint8_t bBandLocation;
+
+    uint8_t bRestingHrMax;
+    uint8_t bRestingHrMin;
+    uint8_t bExerciseHrMax;
+    uint8_t bExerciseHrMin;
     uint8_t BRsv;
+
 }CC_Ble_General_Info_T;
 
 
@@ -712,7 +784,7 @@ typedef struct
 {
     uint8_t cUnitLength;
     uint8_t cUnitWeight;
-	uint16_t rsvd;
+    uint16_t rsvd;
 }CC_Ble_Unit_Info_T;
 
 
@@ -763,19 +835,8 @@ typedef struct
     CC_Ble_Clock_Set_T cAlarmTime[4];
 }CC_Ble_Clock_Alarm_T;
 
-typedef struct
-{
-    uint8_t _cNotify_General_Info_Flag;
-    CC_Ble_General_Info_T _eGeneralInfo;
-    uint8_t _cNotify_Unit_Flag;
-    CC_Ble_Unit_Info_T _eUnitInfo;
-    uint8_t _cNotify_ClockAlarm_Flag;
-    CC_Ble_Clock_Alarm_T _eClockAlarmInfo;
-    uint8_t _cNotify_SleepMonitorTimeSetting_Flag;
-    db_sys_sleep_monitor_t  _stSleepMonitorTimeSetting;
-}CC_SYNCDATA_T;
 
-
+#if 0
 typedef struct 
 {
     eStete_t eIsHrsEnabled;
@@ -792,8 +853,12 @@ typedef struct
     uint8_t incomming_call_en;
     uint8_t incomming_sms_en;
     uint8_t longsit_en;
-    uint8_t lifearm_en;	
+    uint8_t lifearm_en;    
 }db_sys_notify_enabled_t __attribute__((aligned(4)));
+#endif
+
+
+#endif
 
 #endif
 

@@ -298,9 +298,9 @@ static int cc6801_UartBaudrateSet(T_UartPort *pUartPort)
 {
     T_cc6801UartPort port = g_tUartPort[pUartPort->bPortNum];
     U_regUARTCTRL *pUartCtrlBase = port.pCtrlReg;
-	uint32_t dwBaud;
+    uint32_t dwBaud;
 
-	dwBaud = pUartPort->dwConfig & UART_BAUDRATE;
+    dwBaud = pUartPort->dwConfig & UART_BAUDRATE;
 
     switch (dwBaud)
     {

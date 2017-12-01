@@ -192,9 +192,9 @@ SVCI(NRF_CRYPTO_SVCI_SHARED_SECRET_COMPUTE, uint32_t, \
 #ifdef SVC_INTERFACE_CALL_AS_NORMAL_FUNCTION
   uint32_t nrf_crypto_sign(uint32_t curve, nrf_crypto_key_t const *p_sk, nrf_crypto_key_t const *p_hash, nrf_crypto_key_t *p_sig);
 #else
-SVCI(NRF_CRYPTO_SVCI_SIGN, uint32_t,	\
+SVCI(NRF_CRYPTO_SVCI_SIGN, uint32_t,    \
         nrf_crypto_sign, uint32_t, curve, \
-                        nrf_crypto_key_t const *, p_sk,	\
+                        nrf_crypto_key_t const *, p_sk,    \
                         nrf_crypto_key_t const *, p_hash, \
                         nrf_crypto_key_t *, p_sig);
 #endif
