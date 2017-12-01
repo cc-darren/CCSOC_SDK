@@ -25,7 +25,7 @@ typedef unsigned long ulong_T;
 typedef char char_T;
 typedef char_T byte_T;
 
-#define CREAL_T	
+#define CREAL_T    
    typedef struct {  
       real32_T re;  
       real32_T im;  
@@ -73,18 +73,18 @@ typedef char_T byte_T;
 
 
 
-#define MAX_int8_T  	((int8_T)(127))
-#define MIN_int8_T  	((int8_T)(-128))
-#define MAX_uint8_T 	((uint8_T)(255))
-#define MIN_uint8_T 	((uint8_T)(0))
-#define MAX_int16_T 	((int16_T)(32767))
-#define MIN_int16_T 	((int16_T)(-32768))
-#define MAX_uint16_T	((uint16_T)(65535))
-#define MIN_uint16_T	((uint16_T)(0))
-#define MAX_int32_T 	((int32_T)(2147483647))
-#define MIN_int32_T 	((int32_T)(-2147483647-1))
-#define MAX_uint32_T	((uint32_T)(0xFFFFFFFFU))
-#define MIN_uint32_T	((uint32_T)(0))
+#define MAX_int8_T      ((int8_T)(127))
+#define MIN_int8_T      ((int8_T)(-128))
+#define MAX_uint8_T     ((uint8_T)(255))
+#define MIN_uint8_T     ((uint8_T)(0))
+#define MAX_int16_T     ((int16_T)(32767))
+#define MIN_int16_T     ((int16_T)(-32768))
+#define MAX_uint16_T    ((uint16_T)(65535))
+#define MIN_uint16_T    ((uint16_T)(0))
+#define MAX_int32_T     ((int32_T)(2147483647))
+#define MIN_int32_T     ((int32_T)(-2147483647-1))
+#define MAX_uint32_T    ((uint32_T)(0xFFFFFFFFU))
+#define MIN_uint32_T    ((uint32_T)(0))
 
 #if !defined(__cplusplus) && !defined(__true_false_are_keywords)
 #  ifndef false
@@ -95,7 +95,7 @@ typedef char_T byte_T;
 #  endif
 #endif
 
-#define TMW_NAME_LENGTH_MAX	64
+#define TMW_NAME_LENGTH_MAX    64
 
 #endif
 #endif

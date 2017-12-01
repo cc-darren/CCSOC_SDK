@@ -301,37 +301,37 @@ void app_hid_enable_prf(uint8_t conidx)
     app_hid_env.state = APP_HID_ENABLED;
 
     #if (NVDS_SUPPORT)
-	if(jump_table_struct[JT_POS_PARA_NVDS_ENABLE] != 0)
-	{
-	    // If first connection with the peer device
-	    if (app_sec_get_bond_status())
-	    {
-	        // Length of the value read in NVDS
-	        uint8_t length   = NVDS_LEN_MOUSE_NTF_CFG;
-	        // Notification configuration
+    if(jump_table_struct[JT_POS_PARA_NVDS_ENABLE] != 0)
+    {
+        // If first connection with the peer device
+        if (app_sec_get_bond_status())
+        {
+            // Length of the value read in NVDS
+            uint8_t length   = NVDS_LEN_MOUSE_NTF_CFG;
+            // Notification configuration
 
-	        if (nvds_get(NVDS_TAG_MOUSE_NTF_CFG, &length, (uint8_t *)&ntf_cfg) != NVDS_OK)
-	        {
-	            // If we are bonded this information should be present in the NVDS
-	            ASSERT_ERR(0);
-	        }
+            if (nvds_get(NVDS_TAG_MOUSE_NTF_CFG, &length, (uint8_t *)&ntf_cfg) != NVDS_OK)
+            {
+                // If we are bonded this information should be present in the NVDS
+                ASSERT_ERR(0);
+            }
 
-	        // CCC enable notification
-	        if ((ntf_cfg & HOGPD_CFG_REPORT_NTF_EN ) != 0)
-	        {
-	            // The device is ready to send reports to the peer device
-	            app_hid_env.state = APP_HID_READY;
-	            app_hid_env.nb_report = APP_HID_NB_SEND_REPORT;
+            // CCC enable notification
+            if ((ntf_cfg & HOGPD_CFG_REPORT_NTF_EN ) != 0)
+            {
+                // The device is ready to send reports to the peer device
+                app_hid_env.state = APP_HID_READY;
+                app_hid_env.nb_report = APP_HID_NB_SEND_REPORT;
 
-	            // Restart the mouse timeout timer if needed
-	            if (app_hid_env.timeout != 0)
-	            {
-	                ke_timer_set(APP_HID_MOUSE_TIMEOUT_TIMER, TASK_APP, (uint16_t)(app_hid_env.timeout));
-	                app_hid_env.timer_enabled = true;
-	            }
-	        }
-	    }
-	}
+                // Restart the mouse timeout timer if needed
+                if (app_hid_env.timeout != 0)
+                {
+                    ke_timer_set(APP_HID_MOUSE_TIMEOUT_TIMER, TASK_APP, (uint16_t)(app_hid_env.timeout));
+                    app_hid_env.timer_enabled = true;
+                }
+            }
+        }
+    }
     #endif //(NVDS_SUPPORT)
 
     req->ntf_cfg[conidx] = ntf_cfg;

@@ -17,15 +17,15 @@
 
 typedef enum
 {
-	PWM_0 = 0,
-	PWM_1,
-	PWM_TOTAL
+    PWM_0 = 0,
+    PWM_1,
+    PWM_TOTAL
 } E_pwmTotal;
 
 typedef struct
 {
-	U_regPWMWKTM *pReg;
-	T_callback fpCallback;
+    U_regPWMWKTM *pReg;
+    T_callback fpCallback;
 } T_pwmPort;
 
 

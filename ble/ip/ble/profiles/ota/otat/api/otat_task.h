@@ -166,14 +166,14 @@ struct otat_temp_send_rsp
 /*
 struct otat_period_meas_send_req
 {
-	struct htp_period_meas period_meas;
-	
+    struct htp_period_meas period_meas;
+    
 };
 */
 struct otat_notify_send_req
 {
     uint8_t     lenth;
-	uint8_t     eArray[20];
+    uint8_t     eArray[20];
 };
 
 
@@ -182,8 +182,8 @@ struct otat_notify_send_req
 /*
 struct otat_swim_meas_send_req
 {
-	struct htp_swim_meas swim_meas;
-	
+    struct htp_swim_meas swim_meas;
+    
 };
 */
 
@@ -191,8 +191,8 @@ struct otat_swim_meas_send_req
 /*
 struct otat_history_send_req
 {
-	struct htp_history_meas history_meas;
-	
+    struct htp_history_meas history_meas;
+    
 };
 */
 /*
@@ -234,7 +234,7 @@ struct otat_packet_send_cmd
 {
     //uint8_t     conidx;
     uint16_t    length;
-	uint8_t  value[50];
+    uint8_t  value[50];
 };
 
 /// Parameters of the @ref OTAT_CFG_INDNTF_IND message

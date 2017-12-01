@@ -218,7 +218,7 @@ const struct rwip_eif_api* rwip_eif_get(uint8_t type)
     {
         typedef struct rwip_eif_api* (*my_function)(uint8_t type);
 
-		return ((my_function) (jump_table2_struct[JT_POS_FUNC_EIF_GET]))(type);
+        return ((my_function) (jump_table2_struct[JT_POS_FUNC_EIF_GET]))(type);
     }
     //TracerInfo("test2\r\n");
 #endif

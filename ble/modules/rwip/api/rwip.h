@@ -53,8 +53,8 @@ enum prevent_sleep
     RW_CRYPT_ONGOING = 0x0010,
     /// Flag indicating that a element deletion is on going
     RW_DELETE_ELT_ONGOING = 0x0020,
-	/// Flag indicating that controller shall not sleep due to not CSB LPO_Allowed 
-	RW_CSB_NOT_LPO_ALLOWED = 0x0040,
+    /// Flag indicating that controller shall not sleep due to not CSB LPO_Allowed 
+    RW_CSB_NOT_LPO_ALLOWED = 0x0040,
     /// Flag indicating the MWS/WLAN Event Generator is in operation
     RW_MWS_WLAN_EVENT_GENERATOR_ACTIVE = 0x0080
 };

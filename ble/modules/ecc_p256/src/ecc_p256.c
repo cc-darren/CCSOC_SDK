@@ -1573,7 +1573,7 @@ int GF_Jacobian_Point_Double256(const ECC_Jacobian_Point256* pPointP, ECC_Jacobi
     bigHex256 S_sqr;
 
     if (((pJac_PointY1->len <= 1) && (pJac_PointY1->num[HIGHEST_INDEX_BIG_HEX256] == 0x00)) ||
-    	Is_Infinite256(pPointP))
+        Is_Infinite256(pPointP))
     {
         // Point at Infinity
         // pResultPoint = Infinity

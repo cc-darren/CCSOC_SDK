@@ -69,13 +69,13 @@ void app_sec_init()
      * RETRIEVE BOND STATUS
      *------------------------------------------------------*/
     #if (NVDS_SUPPORT)
-	
-	if(jump_table_struct[JT_POS_PARA_NVDS_ENABLE] == 0)
-	{
-		return;
-	}
+    
+    if(jump_table_struct[JT_POS_PARA_NVDS_ENABLE] == 0)
+    {
+        return;
+    }
 
-	
+    
     uint8_t length = NVDS_LEN_PERIPH_BONDED;
 
     // Get bond status from NVDS

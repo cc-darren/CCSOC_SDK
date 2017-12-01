@@ -38,7 +38,7 @@ static uint8_t m_tx_buf[32];
  */
 void pah8002_twi_init (void)
 {
- 	    
+         
     #if (PPG_IF_TYPE == IF_I2C)
     T_I2cDevice i2c_sensor_config = {
        .bBusNum          = PPG_IF_ID,

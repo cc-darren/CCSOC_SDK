@@ -604,7 +604,7 @@ static uint32_t gap_params_init(void)
     err_code = sd_ble_gap_device_name_set(&sec_mode,
                                           (const uint8_t *)deviceName,
                                           strlen(deviceName));
-	
+    
 
     //err_code = sd_ble_gap_device_name_set(&sec_mode,
     //                                      (const uint8_t *)DEVICE_NAME,
@@ -827,7 +827,7 @@ uint32_t ble_dfu_transport_close(void)
     m_flags |= DFU_BLE_FLAG_TEAR_DOWN_IN_PROGRESS;
 
     TracerInfo("Waiting for buffers to be cleared before disconnect\r\n");
-    nrf_delay_ms(MAX_CONN_INTERVAL_MS*4);
+    cc6801_ClockDelayMs(MAX_CONN_INTERVAL_MS*4);
     TracerInfo("Disconnecting\r\n");
 
     if (m_conn_handle != BLE_CONN_HANDLE_INVALID)

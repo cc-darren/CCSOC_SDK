@@ -823,7 +823,7 @@ static timer_user_op_t * user_op_alloc(timer_user_t * p_user, uint8_t * p_last_i
  * @param[in]  timeout_periodic  Time (in ticks) between periodic expiries.
  * @param[in]  p_context         General purpose pointer. Will be passed to the timeout handler when
  *                               the timer expires.
- * @return     NRF_SUCCESS on success, otherwise an error code.
+ * @return     CC_SUCCESS on success, otherwise an error code.
  */
 static uint32_t timer_start_op_schedule(timer_user_id_t user_id,
                                         timer_node_t * p_node,
@@ -859,7 +859,7 @@ static uint32_t timer_start_op_schedule(timer_user_id_t user_id,
  * @param[in]  user_id    Id of user calling this function.
  * @param[in]  timer_id   Id of timer to stop.
  *
- * @return NRF_SUCCESS on successful scheduling a timer stop operation. NRF_ERROR_NO_MEM when there
+ * @return CC_SUCCESS on successful scheduling a timer stop operation. NRF_ERROR_NO_MEM when there
  *         is no memory left to schedule the timer stop operation.
  */
 static uint32_t timer_stop_op_schedule(timer_user_id_t user_id, timer_node_t * p_node)

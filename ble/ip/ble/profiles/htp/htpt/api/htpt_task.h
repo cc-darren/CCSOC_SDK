@@ -35,7 +35,7 @@
 #include "rwip_task.h" // Task definitions
 #include "htp_common.h"
 #include "project.h"
-
+#include "CC_DB_Structure.h"
 /*
  * DEFINES
  ****************************************************************************************
@@ -162,23 +162,23 @@ struct htpt_temp_send_rsp
 /// Parameters of the @ref STEP_COUNT_SEND_REQ message
 struct htpt_period_meas_send_req
 {
-	struct htp_period_meas period_meas;
-	
+    struct htp_period_meas period_meas;
+    
 };
 
 /// Parameters of the @ref STEP_COUNT_SEND_REQ message
 struct htpt_swim_meas_send_req
 {
-	struct htp_swim_meas swim_meas;
-	
+    struct htp_swim_meas swim_meas;
+    
 };
 
 
 /// Parameters of the @ref STEP_COUNT_SEND_REQ message
 struct htpt_history_send_req
 {
-	struct htp_history_meas history_meas;
-	
+    struct htp_history_meas history_meas;
+    
 };
 
 
@@ -264,7 +264,16 @@ void CC_BLE_Cmd_GetGeneralInfo(CC_Ble_General_Info_T *pData, uint8_t _Option);
 eStete_t CC_BLE_Cmd_GetLiftArmStatus(void);
 uint8_t  CC_BLE_Cmd_GetLiftArmBandSetting(void);
 eStete_t CC_BLE_Cmd_GetLongSitStatus(void);
-
+void CC_BLE_Cmd_SetGeneralInfo(const uint8_t *pData);
+void CC_BLE_Cmd_SetClockAlarm(const uint8_t *pData);
+void CC_BLE_Cmd_GetNotifySetting(db_sys_notify_enabled_t *notify_setting);
+void CC_BLE_Cmd_SetNotifySetting(uint8_t *pData);
+void CC_BLE_Cmd_SetUnitInfo(const uint8_t *pData);
+void CC_BLE_Cmd_SetHrSetting(db_sys_hr_setting_t *ptHrSetting);
+uint8_t CC_BLE_Cmd_CheckSleepTimeSetting(void);
+void CC_BLE_Cmd_SetSleepTimeSetting(uint8_t * pData);
+void CC_BLE_Cmd_GetSleepTimeSetting(db_sys_sleep_monitor_t *pData, uint8_t _bOption);
+void CC_BLE_Cmd_SetNotificaitonState(uint8_t state, uint8_t index);
 
 /// @} HTPTTASK
 #endif // HTPT_TASK_H_

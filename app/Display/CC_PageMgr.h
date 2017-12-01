@@ -2,7 +2,7 @@
 #define _CC_PAGE_MGR__
 
 // DB for temporarily
-#define CC_DB_Check_DB_Full()     0x00
+//#define CC_DB_Check_DB_Full()     0x00
 
 // HRM for temporarily
 /*

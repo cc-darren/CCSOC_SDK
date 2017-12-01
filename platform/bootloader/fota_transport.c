@@ -28,7 +28,7 @@
 
 #ifdef CFG_BLE_APP
      uint32_t error;
-	 
+     
      GLOBAL_INT_STOP()
 
 #ifndef CFG_JUMP_TABLE_2

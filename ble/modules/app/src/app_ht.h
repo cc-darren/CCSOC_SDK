@@ -144,8 +144,12 @@ void app_ht_temp_type_dec(void);
 void app_ht_temp_type_inc(void);
 void app_ht_period_meas_send(bool update_step, uint32_t step_data, bool update_hr, uint16_t hr_data, uint32_t calorie);
 void app_ht_swim_meas_send(uint8_t swim_en, uint8_t style_type, uint32_t dwSwimCnt, uint32_t dwSwimLap, uint32_t dwTimestamp);
-void app_ht_history_send(uint8_t id);
 
+#ifdef DB_EN 
+void app_ht_history_send(uint8_t id, uint16_t total, uint16_t rec_idx, uint8_t *pdata, uint8_t length);
+#else
+void app_ht_history_send(uint8_t id);
+#endif
 
 
 #endif //(BLE_APP_HT)

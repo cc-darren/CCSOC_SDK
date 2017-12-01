@@ -193,7 +193,7 @@ const struct rwip_prio rwip_priority[RWIP_PRIO_IDX_MAX]={
     {RWIP_PRIO_INQ_DFT,       RWIP_INCR_INQ_DFT},
     {RWIP_PRIO_ISCAN_DFT,     RWIP_INCR_ISCAN_DFT},
     {RWIP_PRIO_PAGE_DFT,      RWIP_INCR_PAGE_DFT},
-	{RWIP_PRIO_PAGE_1ST_PKT,  RWIP_INCR_PAGE_1ST_PKT},
+    {RWIP_PRIO_PAGE_1ST_PKT,  RWIP_INCR_PAGE_1ST_PKT},
     {RWIP_PRIO_PCA_DFT,       RWIP_INCR_PCA_DFT},
     {RWIP_PRIO_PSCAN_DFT,     RWIP_INCR_PSCAN_DFT},
     {RWIP_PRIO_PSCAN_1ST_PKT, RWIP_INCR_PSCAN_1ST_PKT},
@@ -232,11 +232,11 @@ const uint8_t rwip_coex_cfg[RWIP_COEX_CFG_MAX]={
             | (RWIP_MWS_TXEN << RWIP_MWSTXDSB_POS) | (RWIP_MWS_RXEN << RWIP_MWSRXDSB_POS),
     #endif // #if (BT_EMB_PRESENT)
     #if (BLE_EMB_PRESENT)
-    [RWIP_COEX_CON_IDX]   	= (uint8_t)((RWIP_PTI_TXDIS << RWIP_TXBSY_POS)  | (RWIP_PTI_RXDIS << RWIP_RXBSY_POS)  | (RWIP_PTI_DNABORTDIS << RWIP_DNABORT_POS)),
-	[RWIP_COEX_CON_DATA_IDX]= (uint8_t)((RWIP_PTI_TXEN << RWIP_TXBSY_POS)  | (RWIP_PTI_RXEN << RWIP_RXBSY_POS)  | (RWIP_PTI_DNABORTDIS << RWIP_DNABORT_POS)),
-    [RWIP_COEX_ADV_IDX]   	= (uint8_t)((RWIP_PTI_TXEN << RWIP_TXBSY_POS)  | (RWIP_PTI_RXDIS << RWIP_RXBSY_POS) | (RWIP_PTI_DNABORTDIS << RWIP_DNABORT_POS)),
-    [RWIP_COEX_SCAN_IDX]  	= (uint8_t)((RWIP_PTI_TXDIS << RWIP_TXBSY_POS) | (RWIP_PTI_RXEN << RWIP_RXBSY_POS)  | (RWIP_PTI_DNABORTDIS << RWIP_DNABORT_POS)),
-    [RWIP_COEX_INIT_IDX]  	= (uint8_t)((RWIP_PTI_TXEN << RWIP_TXBSY_POS)  | (RWIP_PTI_RXEN << RWIP_RXBSY_POS)  | (RWIP_PTI_DNABORTDIS << RWIP_DNABORT_POS)),
+    [RWIP_COEX_CON_IDX]       = (uint8_t)((RWIP_PTI_TXDIS << RWIP_TXBSY_POS)  | (RWIP_PTI_RXDIS << RWIP_RXBSY_POS)  | (RWIP_PTI_DNABORTDIS << RWIP_DNABORT_POS)),
+    [RWIP_COEX_CON_DATA_IDX]= (uint8_t)((RWIP_PTI_TXEN << RWIP_TXBSY_POS)  | (RWIP_PTI_RXEN << RWIP_RXBSY_POS)  | (RWIP_PTI_DNABORTDIS << RWIP_DNABORT_POS)),
+    [RWIP_COEX_ADV_IDX]       = (uint8_t)((RWIP_PTI_TXEN << RWIP_TXBSY_POS)  | (RWIP_PTI_RXDIS << RWIP_RXBSY_POS) | (RWIP_PTI_DNABORTDIS << RWIP_DNABORT_POS)),
+    [RWIP_COEX_SCAN_IDX]      = (uint8_t)((RWIP_PTI_TXDIS << RWIP_TXBSY_POS) | (RWIP_PTI_RXEN << RWIP_RXBSY_POS)  | (RWIP_PTI_DNABORTDIS << RWIP_DNABORT_POS)),
+    [RWIP_COEX_INIT_IDX]      = (uint8_t)((RWIP_PTI_TXEN << RWIP_TXBSY_POS)  | (RWIP_PTI_RXEN << RWIP_RXBSY_POS)  | (RWIP_PTI_DNABORTDIS << RWIP_DNABORT_POS)),
     #endif // #if (BLE_EMB_PRESENT)
 };
 #endif//#if (BLE_EMB_PRESENT || BT_EMB_PRESENT)
@@ -821,7 +821,7 @@ void rwip_init(uint32_t error)
     #endif //(EA_PRESENT)
 
     // at device initialization, disable deep sleep, enable it at reset only
-		#if (DEEP_SLEEP)
+        #if (DEEP_SLEEP)
     rwip_env.sleep_enable = false;
     #endif
 
@@ -994,11 +994,11 @@ bool rwip_sleep(void)
          ************************************************************************/
         // Check if some kernel processing is ongoing
         if (
-				   #if (DEEP_SLEEP)
-					   ((rwip_env.prevent_sleep & RW_WAKE_UP_ONGOING) == 0)
-				     &&
-				   #endif
-				     !ke_sleep_check())
+                   #if (DEEP_SLEEP)
+                       ((rwip_env.prevent_sleep & RW_WAKE_UP_ONGOING) == 0)
+                     &&
+                   #endif
+                     !ke_sleep_check())
             break;
         // Processor sleep can be enabled
         proc_sleep = true;

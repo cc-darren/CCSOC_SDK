@@ -112,22 +112,22 @@ typedef enum IRQn
 #define __VTOR_PRESENT            1         /* VTOR present */
 
 #if defined (ARMCM4_FP)
-	/* --------  Configuration of the Cortex-M4 Processor and Core Peripherals  ------- */
-	#define __CM4_REV                 0x0001U   /* Core revision r0p1 */
-	#define __MPU_PRESENT             1         /* MPU present */
-	#define __NVIC_PRIO_BITS          3         /* Number of Bits used for Priority Levels */
-	#define __Vendor_SysTickConfig    0         /* Set to 1 if different SysTick Config is used */
-	#define __FPU_PRESENT             1         /* FPU present */
+    /* --------  Configuration of the Cortex-M4 Processor and Core Peripherals  ------- */
+    #define __CM4_REV                 0x0001U   /* Core revision r0p1 */
+    #define __MPU_PRESENT             1         /* MPU present */
+    #define __NVIC_PRIO_BITS          3         /* Number of Bits used for Priority Levels */
+    #define __Vendor_SysTickConfig    0         /* Set to 1 if different SysTick Config is used */
+    #define __FPU_PRESENT             1         /* FPU present */
 
-	#include "core_cm4.h"                       /* Processor and core peripherals */
+    #include "core_cm4.h"                       /* Processor and core peripherals */
 #elif defined (ARMCM0P)
-	/* --------  Configuration of the Cortex-M0+ Processor and Core Peripherals  ------ */
-	#define __CM0PLUS_REV             0x0000U   /* Core revision r0p0 */
-	#define __MPU_PRESENT             0         /* MPU present or not */
-	#define __NVIC_PRIO_BITS          2         /* Number of Bits used for Priority Levels */
-	#define __Vendor_SysTickConfig    0         /* Set to 1 if different SysTick Config is used */
+    /* --------  Configuration of the Cortex-M0+ Processor and Core Peripherals  ------ */
+    #define __CM0PLUS_REV             0x0000U   /* Core revision r0p0 */
+    #define __MPU_PRESENT             0         /* MPU present or not */
+    #define __NVIC_PRIO_BITS          2         /* Number of Bits used for Priority Levels */
+    #define __Vendor_SysTickConfig    0         /* Set to 1 if different SysTick Config is used */
 
-	#include "core_cm0plus.h"                   /* Processor and core peripherals */
+    #include "core_cm0plus.h"                   /* Processor and core peripherals */
 #else
   #error device not specified!
 #endif

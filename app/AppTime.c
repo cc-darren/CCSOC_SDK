@@ -1,11 +1,15 @@
 
+
 #include <stdint.h>
 #include <string.h>
+#include "project.h"
 #include "appTime.h"
-//#include "cc_db.h"
+#include "cc_db.h"
 
 
-static app_sys_time_t m_SystemTime;
+//static app_sys_time_t m_SystemTime;
+app_sys_time_t m_SystemTime; // no static for test
+
 
 extern void CC_DB_Init(uint8_t _bState);
 
@@ -169,26 +173,26 @@ void app_Time_Init(void)
 
 uint8_t app_Get_Update_Time_Flag(void)
 {
-	return m_SystemTime.is_updated;
+    return m_SystemTime.is_updated;
 }
 
 uint8_t app_Check_Time_And_DB_Init(void)
 {
 
-	if(m_SystemTime.is_db_init_done == 0)
-		return 0x01;
-	else
-		return 0x00;	
+    if(m_SystemTime.is_db_init_done == 0)
+        return 0x01;
+    else
+        return 0x00;    
 }
 
 void app_Set_DB_Init_Done(void)
 {
-	m_SystemTime.is_db_init_done = 1;
+    m_SystemTime.is_db_init_done = 1;
 }
 
 void app_Force_Init_DB(void)
 {
-	m_SystemTime.is_db_init_done = 0;
+    m_SystemTime.is_db_init_done = 0;
 }
 
 void app_UpdatTimeDate(const uint8_t *data)
@@ -197,18 +201,18 @@ void app_UpdatTimeDate(const uint8_t *data)
     if(1 == m_SystemTime.inited)
     {
 
-        m_SystemTime.systime.year 		= (*data++) + 2000;
-        m_SystemTime.systime.month 		= (*data++);
-        m_SystemTime.systime.day 		  = (*data++);
-        m_SystemTime.systime.hours  	= *data++;
-        m_SystemTime.systime.minutes 	= *data++;
-        m_SystemTime.systime.seconds	= *data++;
+        m_SystemTime.systime.year         = (*data++) + 2000;
+        m_SystemTime.systime.month         = (*data++);
+        m_SystemTime.systime.day           = (*data++);
+        m_SystemTime.systime.hours      = *data++;
+        m_SystemTime.systime.minutes     = *data++;
+        m_SystemTime.systime.seconds    = *data++;
         m_SystemTime.systime.dayofweek = *data; 
 
 /*
         if(0x00 == CC_DB_Check_Magic_Code())
         {
-            CC_DB_System_Save_Request(DB_SYS_TIME);	
+            CC_DB_System_Save_Request(DB_SYS_TIME);    
             // Save Init Data to DB
             CC_DB_System_Save_Request(DB_SYS_GENERAL_INFO);
             CC_DB_System_Save_Request(DB_SYS_ALARM);
@@ -217,7 +221,7 @@ void app_UpdatTimeDate(const uint8_t *data)
             CC_DB_System_Save_Request(DB_SYS_SLEEP_MONITOR_TIME_SETTING);
 
         }
-*/				
+*/                
         m_SystemTime.is_updated     = 1;
 
         // Jason, Algin dayofweek to DB current time fileID and RecID 
@@ -227,7 +231,7 @@ void app_UpdatTimeDate(const uint8_t *data)
 app_date_time_t app_Time_Proc(uint8_t _cnt)
 {
 
-  app_time_update(_cnt);	
+  app_time_update(_cnt);    
   //TracerInfo("System Date %d.%d.%d %d \r\n",m_SystemTime.systime.year,m_SystemTime.systime.month,m_SystemTime.systime.day,m_SystemTime.systime.dayofweek);
   //TracerInfo("System Clock %d:%d:%d \r\n",m_SystemTime.systime.hours,m_SystemTime.systime.minutes,m_SystemTime.systime.seconds); 
   return m_SystemTime.systime;
@@ -268,7 +272,7 @@ app_date_time_t app_time_add(const app_date_time_t t, const app_interval_t n)
         return time_move_carry(time);
     }
     return time;
-		    
+            
 }
 
 int8_t app_time_is_valid(const app_date_time_t t)

@@ -31,13 +31,13 @@ typedef short int i16_t;
 typedef unsigned int u32_t;
 typedef int i32_t;
 typedef enum {
-  MEMS_SUCCESS				=		0x01,
-  MEMS_ERROR				=		0x00	
+  MEMS_SUCCESS                =        0x01,
+  MEMS_ERROR                =        0x00    
 } status_t;
 
 typedef enum {
-  MEMS_ENABLE				=		0x01,
-  MEMS_DISABLE				=		0x00	
+  MEMS_ENABLE                =        0x01,
+  MEMS_DISABLE                =        0x00    
 } State_t;
 #endif /*__ARCHDEP__TYPES*/
 
@@ -79,54 +79,54 @@ typedef struct {
 
 
 typedef enum { 
-	AK09912_MAG_NO_OVERFLOW =	0x00,
-	AK09912_MAG_OVERFLOW 	=	0x04
+    AK09912_MAG_NO_OVERFLOW =    0x00,
+    AK09912_MAG_OVERFLOW     =    0x04
 } AK09912_MAG_HOFL_t;
 
 typedef enum { 
-	AK09912_MAG_TEMP_EN_DISABLE =		 0x00,
-	AK09912_MAG_TEMP_EN_ENABLE 	=	 0x80
+    AK09912_MAG_TEMP_EN_DISABLE =         0x00,
+    AK09912_MAG_TEMP_EN_ENABLE     =     0x80
 } AK09912_MAG_TEMP_EN_t;
 
 typedef enum { 
-	AK09912_MAG_NSF_DISABLE =	 0x00,
-	AK09912_MAG_NSF_LOW =		 0x20,
-	AK09912_MAG_NSF_MIDDLE =	 0x40,
-	AK09912_MAG_NSF_HIGH= 		 0x60
+    AK09912_MAG_NSF_DISABLE =     0x00,
+    AK09912_MAG_NSF_LOW =         0x20,
+    AK09912_MAG_NSF_MIDDLE =     0x40,
+    AK09912_MAG_NSF_HIGH=          0x60
 } AK09912_MAG_NSF_t;
 
 typedef enum { 
-	AK09912_MAG_POWER_DOWN  =	 0x00,
-	AK09912_MAG_SINGLE      =	 0x01,
-	AK09912_MAG_DO_10_Hz 	=	 0x02,
-	AK09912_MAG_DO_20_hZ 	=	 0x04,
-	AK09912_MAG_DO_50_Hz 	=	 0x06,
-	AK09912_MAG_DO_100_Hz 	=	 0x08,
-	AK09912_MAG_EXT_TRIG 	=	 0x0A,
-	AK09912_MAG_SELF_TEST   =	 0x10,
-	AK09912_MAG_ROM_ACCESS  =	 0x1F
+    AK09912_MAG_POWER_DOWN  =     0x00,
+    AK09912_MAG_SINGLE      =     0x01,
+    AK09912_MAG_DO_10_Hz     =     0x02,
+    AK09912_MAG_DO_20_hZ     =     0x04,
+    AK09912_MAG_DO_50_Hz     =     0x06,
+    AK09912_MAG_DO_100_Hz     =     0x08,
+    AK09912_MAG_EXT_TRIG     =     0x0A,
+    AK09912_MAG_SELF_TEST   =     0x10,
+    AK09912_MAG_ROM_ACCESS  =     0x1F
 } AK09912_MAG_MODE_t;
 
 typedef enum { 
-	AK09912_MAG_SOFT_RST_DISABLE =		 0x00,
-	AK09912_MAG_SOFT_RST_ENABLE =		 0x01
+    AK09912_MAG_SOFT_RST_DISABLE =         0x00,
+    AK09912_MAG_SOFT_RST_ENABLE =         0x01
 } AK09912_MAG_SOFT_RST_t;
 
 typedef enum { 
-	AK09912_MAG_I2C_ENALBE =	 0x00,
-	AK09912_MAG_I2C_DISABLE =	 0x1B
+    AK09912_MAG_I2C_ENALBE =     0x00,
+    AK09912_MAG_I2C_DISABLE =     0x1B
 } AK09912_MAG_I2CDIS_t;
 
 typedef enum { 
-	AK09912_MAG_I2C_HS_DISABLE =	 0x00,
-	AK09912_MAG_I2C_HS_ENABLE =	 0x80
+    AK09912_MAG_I2C_HS_DISABLE =     0x00,
+    AK09912_MAG_I2C_HS_ENABLE =     0x80
 } AK09912_MAG_I2CHS_EN_t;
 
 
 typedef enum { 
-	AK09912_MAG_DOR_DRDY_DEFAULT 	=  	 0x00, 
-	AK09912_MAG_DRDY    =	 0x01,
-	AK09912_MAG_DOR     =	 0x02
+    AK09912_MAG_DOR_DRDY_DEFAULT     =       0x00, 
+    AK09912_MAG_DRDY    =     0x01,
+    AK09912_MAG_DOR     =     0x02
 } AK09912_MAG_DOR_DRDY_t;
 
 
@@ -134,24 +134,24 @@ typedef enum {
 #define     AK09912_MAG_WHO_AM_I    0x04
 #define     AKM_COMPANY_ID    0x48
 
-#define 	AK09912_AKM_ID      0x00
-#define 	AK09912_MAG_ID      0x01
-#define 	AK09912_MAG_ST1     0x10
-#define 	AK09912_MAG_HXL		0x11
-#define 	AK09912_MAG_HXH		0x12
-#define 	AK09912_MAG_HYL		0x13
-#define 	AK09912_MAG_HYH		0x14
-#define 	AK09912_MAG_HZL		0x15
-#define 	AK09912_MAG_HZH		0x16
-#define 	AK09912_MAG_TMPS    0x17
-#define 	AK09912_MAG_ST2     0x18
-#define 	AK09912_MAG_CNTL1   0x30
-#define 	AK09912_MAG_CNTL2   0x31
-#define 	AK09912_MAG_CNTL3   0x32
-#define 	AK09912_MAG_I2CDIS  0x36
-#define 	AK09912_MAG_ASAX    0x60
-#define 	AK09912_MAG_ASAY    0x61
-#define 	AK09912_MAG_ASAZ    0x62
+#define     AK09912_AKM_ID      0x00
+#define     AK09912_MAG_ID      0x01
+#define     AK09912_MAG_ST1     0x10
+#define     AK09912_MAG_HXL        0x11
+#define     AK09912_MAG_HXH        0x12
+#define     AK09912_MAG_HYL        0x13
+#define     AK09912_MAG_HYH        0x14
+#define     AK09912_MAG_HZL        0x15
+#define     AK09912_MAG_HZH        0x16
+#define     AK09912_MAG_TMPS    0x17
+#define     AK09912_MAG_ST2     0x18
+#define     AK09912_MAG_CNTL1   0x30
+#define     AK09912_MAG_CNTL2   0x31
+#define     AK09912_MAG_CNTL3   0x32
+#define     AK09912_MAG_I2CDIS  0x36
+#define     AK09912_MAG_ASAX    0x60
+#define     AK09912_MAG_ASAY    0x61
+#define     AK09912_MAG_ASAZ    0x62
 
 /* Exported macro ------------------------------------------------------------*/
 

@@ -13,7 +13,7 @@
 #include "CC_AppSrvc_HeartRate.h"
 
 #include "appTime.h"
-//#include "cc_db.h"
+#include "cc_db.h"
 #include "tracer.h"
 
 
@@ -132,11 +132,11 @@ void _PageMgr_DrawPath(eMMI_Page_t _PageIndex)
         case eMMI_CLOCK_PAGE:
         {    
             app_date_time_t _stCurTime;
-			#ifdef RD_DEBUG
-				uint8_t _bTimeFormat =0;
-			#else
+            #ifdef RD_DEBUG
+                uint8_t _bTimeFormat =0;
+            #else
             uint8_t _bTimeFormat =1;
-			#endif
+            #endif
             CC_MainGet_CurrentTime(&_stCurTime);
             CC_Dsp_Srv_PresentTime(_stCurTime, _bTimeFormat);  
         }    
@@ -179,29 +179,29 @@ void _PageMgr_DrawPath(eMMI_Page_t _PageIndex)
              CC_Dsp_Draw_Icon(_PageIndex);
              break;
 
-		case eMMI_SWIMMING_ON_PAGE:
-		{
-			CC_Dsp_Srv_SwimmingStatus(1);
-			//CC_Vib_Srv_Icon(_PageIndex);
-		}
-			break;
-		case eMMI_SWIMMING_OFF_PAGE:
-		{
-			CC_Dsp_Srv_SwimmingStatus(0);
-			//CC_Vib_Srv_Icon(_PageIndex);
-		}
-			break;
-		case eMMI_SWIMMING_CONFIRM_ON_PAGE:
-		{
-			CC_Dsp_Srv_SwimmingConfirm(1);
-		}
-			break;		
-		case eMMI_SWIMMING_CONFIRM_OFF_PAGE:
-		{
-			CC_Dsp_Srv_SwimmingConfirm(0);
-		
-			break;
-		}
+        case eMMI_SWIMMING_ON_PAGE:
+        {
+            CC_Dsp_Srv_SwimmingStatus(1);
+            //CC_Vib_Srv_Icon(_PageIndex);
+        }
+            break;
+        case eMMI_SWIMMING_OFF_PAGE:
+        {
+            CC_Dsp_Srv_SwimmingStatus(0);
+            //CC_Vib_Srv_Icon(_PageIndex);
+        }
+            break;
+        case eMMI_SWIMMING_CONFIRM_ON_PAGE:
+        {
+            CC_Dsp_Srv_SwimmingConfirm(1);
+        }
+            break;        
+        case eMMI_SWIMMING_CONFIRM_OFF_PAGE:
+        {
+            CC_Dsp_Srv_SwimmingConfirm(0);
+        
+            break;
+        }
         case eMMI_HRMTIMEOUT_PAGE:
         case eMMI_LONGSIT_PAGE:
         case eMMI_INCOMMING_CALL_PAGE:
@@ -223,11 +223,11 @@ void _PageMgr_DrawPath(eMMI_Page_t _PageIndex)
             CC_Dsp_Draw_Icon(_PageIndex);           
             CC_Vib_Srv_Icon(_PageIndex);         
         }  
-		break;
+        break;
 
         case eMMI_DB_FULL:
         {
-			CC_Dsp_Set_DB_Full();
+            CC_Dsp_Set_DB_Full();
         }
         break;
         case eMMI_DUMMY_PAGE:
@@ -400,15 +400,15 @@ static void _PageMgr_PageSwitch(S_VenusEvent *_stEvent)
                     } 
                 }
                 else 
-                s_tPage.eNowPage = eMMI_CLOCK_PAGE;        	
+                s_tPage.eNowPage = eMMI_CLOCK_PAGE;            
             else if (eMMI_SWIMMING_ON_PAGE == s_tPage.ePrePage) 
                 s_tPage.eNowPage = eMMI_CLOCK_PAGE; 
             else if (eMMI_SWIMMING_OFF_PAGE == s_tPage.ePrePage)
                 s_tPage.eNowPage = eMMI_CLOCK_PAGE; 
-			else if (eMMI_SWIMMING_CONFIRM_ON_PAGE == s_tPage.ePrePage)
-				s_tPage.eNowPage = eMMI_SWIMMING_CONFIRM_OFF_PAGE; 
-			else if (eMMI_SWIMMING_CONFIRM_OFF_PAGE == s_tPage.ePrePage)
-				s_tPage.eNowPage = eMMI_SWIMMING_CONFIRM_ON_PAGE; 			
+            else if (eMMI_SWIMMING_CONFIRM_ON_PAGE == s_tPage.ePrePage)
+                s_tPage.eNowPage = eMMI_SWIMMING_CONFIRM_OFF_PAGE; 
+            else if (eMMI_SWIMMING_CONFIRM_OFF_PAGE == s_tPage.ePrePage)
+                s_tPage.eNowPage = eMMI_SWIMMING_CONFIRM_ON_PAGE;             
             else  if (eMMI_PRE_LOWPOWER== s_tPage.ePrePage)
             {//START:[VNS-97]
                 if((eMMI_CLOCK_PAGE != s_tPage.eNowPage) && (eMMI_DB_FULL != s_tPage.ePrePage)
@@ -421,8 +421,8 @@ static void _PageMgr_PageSwitch(S_VenusEvent *_stEvent)
                     s_tPage.eNowPage = eMMI_CLOCK_PAGE; 
                 }
             }//END:[VNS-97]
-			else if (eMMI_DB_FULL == s_tPage.ePrePage)
-				s_tPage.eNowPage = eMMI_CLOCK_PAGE; 
+            else if (eMMI_DB_FULL == s_tPage.ePrePage)
+                s_tPage.eNowPage = eMMI_CLOCK_PAGE; 
             else
             {
                 if (eDEVICE_CHARGE_IN ==CC_GetChargeStatus())
@@ -430,7 +430,7 @@ static void _PageMgr_PageSwitch(S_VenusEvent *_stEvent)
                     if ( eDEVICE_CHARGE_FULL==CC_GetChargeFullStatus())
                         s_tPage.eNowPage = eMMI_CHARGING_IN_FULL; 
                     else
-                    	s_tPage.eNowPage = eMMI_CHARGING_IN_PAGE;
+                        s_tPage.eNowPage = eMMI_CHARGING_IN_PAGE;
                 }    
                 else if ((eMMI_HRM_HRS_INIT_PAGE == s_tPage.eNowPage) ||(eMMI_HRM_HRS_ACTIVATED_PAGE == s_tPage.eNowPage) || (eMMI_HRM_HRS_DATA_PAGE == s_tPage.eNowPage))
                     break;
@@ -456,7 +456,7 @@ static void _PageMgr_PageSwitch(S_VenusEvent *_stEvent)
                             s_tPage.eNowPage = eMMI_SWIMMING_ON_PAGE;
                         else
                         {
-               	 		    s_tPage.eNowPage++;
+                                s_tPage.eNowPage++;
 
                             if(1 == CC_BLE_Cmd_GetSwimmingEN())
                             {
@@ -481,18 +481,18 @@ static void _PageMgr_PageSwitch(S_VenusEvent *_stEvent)
             }
             break;
 
-		case eEvent_SWIM_ON:
-				s_tPage.eNowPage= eMMI_SWIMMING_ON_PAGE; 
-			break;
-		case eEvent_SWIM_OFF:
-				s_tPage.eNowPage= eMMI_SWIMMING_OFF_PAGE; 				
-			break;
-		case eEvent_SWIM_CONFIRM_ON:
-				s_tPage.eNowPage= eMMI_SWIMMING_CONFIRM_ON_PAGE;				
-			break;
-		case eEvent_SWIM_CONFIRM_OFF:
-				s_tPage.eNowPage= eMMI_SWIMMING_CONFIRM_OFF_PAGE;							
-			break;
+        case eEvent_SWIM_ON:
+                s_tPage.eNowPage= eMMI_SWIMMING_ON_PAGE; 
+            break;
+        case eEvent_SWIM_OFF:
+                s_tPage.eNowPage= eMMI_SWIMMING_OFF_PAGE;                 
+            break;
+        case eEvent_SWIM_CONFIRM_ON:
+                s_tPage.eNowPage= eMMI_SWIMMING_CONFIRM_ON_PAGE;                
+            break;
+        case eEvent_SWIM_CONFIRM_OFF:
+                s_tPage.eNowPage= eMMI_SWIMMING_CONFIRM_OFF_PAGE;                            
+            break;
 
         case eEvent_HEARTRATESTRAPMODE_ON:
              s_tPage.eNowPage = eMMI_HRM_HRS_INIT_PAGE; 
@@ -619,7 +619,7 @@ static void _PageMgr_UpdateEvent(void)
 
 eMMI_Page_t _PageMgr_GetPrePage(void)
 {
-	return s_tPage.ePrePage;
+    return s_tPage.ePrePage;
 }
 
 

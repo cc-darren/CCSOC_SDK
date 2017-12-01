@@ -8,8 +8,8 @@
 #include <stdlib.h>
 
 //#include "LSM6DS3_ACC_GYRO_driver.h"
-//#include "cc_db.h"
-//#include "cc_db_structure.h"
+#include "cc_db.h"
+#include "cc_db_structure.h"
 #include "CC_AppSrvc_HeartRate.h"
 #include "clock.h"
 #include "tracer.h"
@@ -22,8 +22,8 @@
 #define TOTAL_CHANNELS_FOR_ALG  3
 
 //#define MEMS_ZERO  //Default Accelerometer data are all zero 
-#define MEMS_SAMPLES_PER_CH_READ 	50//20
-#define MEMS_SAMPLES_PER_READ		(TOTAL_CHANNELS* MEMS_SAMPLES_PER_CH_READ)
+#define MEMS_SAMPLES_PER_CH_READ     50//20
+#define MEMS_SAMPLES_PER_READ        (TOTAL_CHANNELS* MEMS_SAMPLES_PER_CH_READ)
 //#define PPG_MODE_ONLY 
 
 
@@ -121,9 +121,9 @@ static bool pah8002_wakeup(void)
         return false;
     }
 
-	pah8002_write_reg(0x7f, 0x02); 
-	pah8002_write_reg(0x70, 0x00); 
-	
+    pah8002_write_reg(0x7f, 0x02); 
+    pah8002_write_reg(0x70, 0x00); 
+    
     return true;
 }
 
@@ -137,7 +137,7 @@ static bool pah8002_sw_reset(void)
     }       
 
     cc6801_ClockDelayMs(5); 
-	
+    
     return true;
 }
 
@@ -179,22 +179,22 @@ static bool pah8002_sensor_init(void)
     for (int i = 0; i<(HEART_RATE_MODE_SAMPLES_PER_READ * 3);i++)
         _mems_data[i] = 0x0001;
 #else
-	memset(_mems_data, 0, sizeof(_mems_data)); 
-	_pah8002_data.mems_data = _mems_data; 
+    memset(_mems_data, 0, sizeof(_mems_data)); 
+    _pah8002_data.mems_data = _mems_data; 
     _pah8002_data.nf_mems = MEMS_SAMPLES_PER_CH_READ; 
 #endif 
 
-	// Allocate heap memory
+    // Allocate heap memory
     open_size = pah8002_query_open_size(); 
     TracerInfo("pah8002 heap size: %d\r\n", open_size);
-    //_pah8002_alg_buffer = malloc(open_size); 		
+    //_pah8002_alg_buffer = malloc(open_size);         
     _pah8002_alg_buffer = _pah8002_alg_local_buffer; // NO USE HEAP space!!!
-	
+    
     if(pah8002_open(_pah8002_alg_buffer) != MSG_SUCCESS)
         return false; 
 
-	if (MSG_SUCCESS != pah8002_set_param(PAH8002_PARAM_IDX_GSENSOR_MODE, 2))
-		return false;
+    if (MSG_SUCCESS != pah8002_set_param(PAH8002_PARAM_IDX_GSENSOR_MODE, 2))
+        return false;
 
     if (MSG_SUCCESS != pah8002_set_param(PAH8002_PARAM_IDX_HAS_IR_CH, 2))   
         return false;
@@ -211,48 +211,48 @@ static bool pah8002_sensor_init(void)
     for(int i = 0; i < INIT_PPG_REG_ARRAY_SIZE;i++) 
     {
         if ( pah8002_write_reg( init_ppg_register_array[i][0], 
-        	init_ppg_register_array[i][1]) != MEMS_SUCCESS ) 
+            init_ppg_register_array[i][1]) != MEMS_SUCCESS ) 
         { 
             return false; 
         } 
     }
 
-    pah8002_write_reg(0x7f, 0x00); 		//Bank0 
+    pah8002_write_reg(0x7f, 0x00);         //Bank0 
     pah8002_read_reg(0x0D, &_ir_expo);  // IR Exposure Time 
-    pah8002_write_reg(0x7f, 0x01); 		//Bank1 
+    pah8002_write_reg(0x7f, 0x01);         //Bank1 
     pah8002_read_reg(0xBA, &_ir_dac);   //IR Led DAC 
     
 //    TracerInfo("<<< pah8002_enter_normal_mode ir_dac %x, ir_expo %x\r\n", _ir_dac, _ir_expo); 
 
-	pah8002_write_reg(0x7f, 0x01);
-	
+    pah8002_write_reg(0x7f, 0x01);
+    
     // Adjust fifo size
-	pah8002_write_reg(0xea, (HEART_RATE_MODE_SAMPLES_PER_READ + 1)); 
+    pah8002_write_reg(0xea, (HEART_RATE_MODE_SAMPLES_PER_READ + 1)); 
 
-	//enable sensor, TG enable. REQTIMER_ENABLE
-	pah8002_write_reg(0xd5, 1);  
+    //enable sensor, TG enable. REQTIMER_ENABLE
+    pah8002_write_reg(0xd5, 1);  
 
-	_timestamp = sys_tick = Hrm_get_sys_tick(); // 1ms tick
+    _timestamp = sys_tick = Hrm_get_sys_tick(); // 1ms tick
 
 #ifndef MEMS_ZERO 
-	hrm_mems_enabled = true;
+    hrm_mems_enabled = true;
 
-	#ifdef FIFO_MODE_EN	
-		CC_Mems_Fifo_Register(MEMS_FIFO_USER_HRM, _mems_data, MEMS_SAMPLES_PER_READ);
-	#else
-		hrm_mems_index = 0;
-	#endif
+    #ifdef FIFO_MODE_EN    
+        CC_Mems_Fifo_Register(MEMS_FIFO_USER_HRM, _mems_data, MEMS_SAMPLES_PER_READ);
+    #else
+        hrm_mems_index = 0;
+    #endif
 
-#endif	
+#endif    
 
-	return true;
+    return true;
 }
 
 static void pah8002_sensor_deinit(void)
 {
-#ifndef MEMS_ZERO	
-	hrm_mems_enabled = false;
-#endif	
+#ifndef MEMS_ZERO    
+    hrm_mems_enabled = false;
+#endif    
     pah8002_enter_suspend_mode(); 
     pah8002_close(); 
 
@@ -266,35 +266,35 @@ static void pah8002_sensor_deinit(void)
 
 static uint32_t pah8002_update_timestamp(void)
 {
-	uint32_t new_timestamp = 0;
-		
-	sys_tick = Hrm_get_sys_tick();
-	new_timestamp = sys_tick - _timestamp; 
-	_timestamp = sys_tick; 	
+    uint32_t new_timestamp = 0;
+        
+    sys_tick = Hrm_get_sys_tick();
+    new_timestamp = sys_tick - _timestamp; 
+    _timestamp = sys_tick;     
 
-	return new_timestamp;
+    return new_timestamp;
 }
 
 static bool pah8002_cmp_ppg_checksum(uint32_t * ppg_data, uint8_t *cks)
 {
-	uint32_t *s = ppg_data;
-	uint32_t cks_cal = *s; 
-	uint32_t cks_rx = *((uint32_t *)cks) ; 
-	uint32_t i ; 
-	
-	//for(i = 1; i < HEART_RATE_MODE_SAMPLES_PER_READ; i++) 
-	for(i = 1; i < HEART_RATE_MODE_SAMPLES_PER_READ/4; i++) // only for 60 Bytes
-	{ 
-		cks_cal = cks_cal ^ (*(s+i)) ; 
-	} 
-	
-	if(cks_cal != cks_rx) 
-	{
-		TracerInfo("checksum error %x != %x\r\n",cks_cal, cks_rx);
-		return true;
-	}
-	else
-		return false;
+    uint32_t *s = ppg_data;
+    uint32_t cks_cal = *s; 
+    uint32_t cks_rx = *((uint32_t *)cks) ; 
+    uint32_t i ; 
+    
+    //for(i = 1; i < HEART_RATE_MODE_SAMPLES_PER_READ; i++) 
+    for(i = 1; i < HEART_RATE_MODE_SAMPLES_PER_READ/4; i++) // only for 60 Bytes
+    { 
+        cks_cal = cks_cal ^ (*(s+i)) ; 
+    } 
+    
+    if(cks_cal != cks_rx) 
+    {
+        TracerInfo("checksum error %x != %x\r\n",cks_cal, cks_rx);
+        return true;
+    }
+    else
+        return false;
 }
 
 static uint8_t pah8002_get_touch_flag_ppg_mode() 
@@ -357,8 +357,8 @@ void pah8002_log(void)
 { 
     int i = 0 ; 
     uint32_t *ppg_data = (uint32_t *)_pah8002_data.ppg_data ; 
-    int16_t *mems_data = _pah8002_data.mems_data ; 	
-	//TracerInfo("Time stamp, %d \r\n", _timestamp); 
+    int16_t *mems_data = _pah8002_data.mems_data ;     
+    //TracerInfo("Time stamp, %d \r\n", _timestamp); 
     TracerInfo("Frame Count, %d \r\n", _pah8002_data.frame_count); 
     TracerInfo("Time, %d \r\n", _pah8002_data.time); 
     TracerInfo("PPG, %d, %d, ", _pah8002_data.touch_flag, _pah8002_data.nf_ppg_per_channel); 
@@ -412,7 +412,7 @@ static void pah8002_task(void)
 
         if( (int_req & 0x01) != 0) // check fifo interrupt
         {
-             // filo data ready	                
+             // filo data ready                    
 
 #if 1 
             for(uint8_t i = 0; i < 4; i++)
@@ -440,12 +440,12 @@ static void pah8002_task(void)
 
             pah8002_cmp_ppg_checksum((uint32_t*)pah8002_ppg_data, cks);
 #endif
-           	// process algorithm
+               // process algorithm
 #ifdef MEMS_ZERO 
 #else       
             //TracerInfo("mems_index(%d)\r\n",hrm_mems_index);
 
-    #ifdef FIFO_MODE_EN	
+    #ifdef FIFO_MODE_EN    
 
             _pah8002_data.nf_mems = CC_Mems_Fifo_Get_UnRead_Length(MEMS_FIFO_USER_HRM)/3;
 
@@ -464,14 +464,14 @@ static void pah8002_task(void)
             memcpy(_pah8002_data.mems_data, _mems_data, MEMS_SAMPLES_PER_READ*2);
 
             hrm_mems_index = 0;
-            hrm_mems_enabled = true;	
+            hrm_mems_enabled = true;    
             //TracerInfo("get gyro sample number:%d\r\n",CC_LSM6DSX_FifoGetUnReadData());
     #endif
 #endif 
             _pah8002_data.time = pah8002_update_timestamp();
             _pah8002_data.touch_flag = pah8002_get_touch_flag_ppg_mode(); ; 
 
-            //TracerInfo("sys_tick	%d\r\n", _pah8002_data.time); 
+            //TracerInfo("sys_tick    %d\r\n", _pah8002_data.time); 
             //pah8002_log(); 
 
             ret = pah8002_entrance(&_pah8002_data); 
@@ -483,22 +483,22 @@ static void pah8002_task(void)
                  { 
                     case MSG_ALG_NOT_OPEN: 
                         TracerInfo("Algorithm is not initialized.\r\n"); 
-                       	break; 
+                           break; 
                     case MSG_MEMS_LEN_TOO_SHORT: 
                         TracerInfo("MEMS data length is shorter than PPG data length.\r\n"); 
-                       	break; 
+                           break; 
                     case MSG_NO_TOUCH: 
                         TracerInfo("PPG is no touch.\r\n"); 
-                       	break; 
+                           break; 
                     case MSG_PPG_LEN_TOO_SHORT: 
                         TracerInfo("PPG data length is too short.\r\n"); 
-                       	break; 
+                           break; 
                     case MSG_FRAME_LOSS: 
                         TracerInfo("Frame count is not continuous.\r\n"); 
-                       	break; 
+                           break; 
                     default:
                         TracerInfo("ret = %d\r\n",ret); 
-                       	break;
+                           break;
                     } 
 
             } 
@@ -517,7 +517,7 @@ static void pah8002_task(void)
                
             } 
             _pah8002_data.frame_count++; 
-        }	
+        }    
 
 
 }
@@ -538,7 +538,7 @@ uint8_t CC_HRM_PPG_INIT(void)
         
         pah8002_twi_init(); 
         
-        drvi_GpioWrite(HRM_RST_PIN, 1); 	//power on hrm 
+        drvi_GpioWrite(HRM_RST_PIN, 1);     //power on hrm 
         if (false == pah8002_sensor_init())
             return false;
         

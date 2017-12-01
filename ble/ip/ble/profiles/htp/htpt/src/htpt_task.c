@@ -38,6 +38,7 @@
 #include "co_utils.h"
 #include "project.h"
 #include "tracer.h"
+#include "CC_DB_Structure.h"
 /*
  * FUNCTION DEFINITIONS
  ****************************************************************************************
@@ -50,8 +51,23 @@
  ****************************************************************************************
  */
 
-#define HISTORY_NOTIFY_INTERVAL		       10	
+#define HISTORY_NOTIFY_INTERVAL               10    
 #define SPEED_AND_CADENCE_NOTIFY_INTERVAL  1000
+
+
+
+typedef struct
+{
+    uint8_t _cNotify_General_Info_Flag;
+    CC_Ble_General_Info_T _eGeneralInfo;
+    uint8_t _cNotify_Unit_Flag;
+    CC_Ble_Unit_Info_T _eUnitInfo;
+    uint8_t _cNotify_ClockAlarm_Flag;
+    CC_Ble_Clock_Alarm_T _eClockAlarmInfo;
+    uint8_t _cNotify_SleepMonitorTimeSetting_Flag;
+    db_sys_sleep_monitor_t  _stSleepMonitorTimeSetting;
+}CC_SYNCDATA_T;
+
 
 void CC_VENUS_RscTimerStart(uint32_t interval_ms);
 void CC_VENUS_RscTimerStop(void);
@@ -106,7 +122,7 @@ uint16_t CC_BLE_Cmd_GetHistoryRecordIndex(void)
 
 void CC_BLE_Cmd_ClrHistoryRecordIndex(void)
 {
-	_cBleCmd_HistoryRecordIndex = 1;
+    _cBleCmd_HistoryRecordIndex = 1;
 }
 
 uint8_t CC_BLE_Cmd_GetHistoryType(void)
@@ -193,7 +209,7 @@ void CC_BLE_Cmd_SetNotificaitonState(uint8_t state, uint8_t index)
         
     }
 
-	//CC_DB_System_Save_Request(DB_SYS_NOTIFY);
+    //CC_DB_System_Save_Request(DB_SYS_NOTIFY);
 
 }
 
@@ -208,18 +224,18 @@ void CC_BLE_Cmd_SetHrSetting(db_sys_hr_setting_t *ptHrSetting)
 
 void CC_BLE_Cmd_GetNotifySetting(db_sys_notify_enabled_t *notify_setting)
 {
-	notify_setting->incomming_call_en = _cBleCmd_NotifyCall;
-	notify_setting->incomming_sms_en = _cBleCmd_NotifySms;
-	notify_setting->longsit_en = _cBleCmd_NotifyLongsit;
-	notify_setting->lifearm_en = _cBleCmd_NotifyLiftarm;
+    notify_setting->incomming_call_en = _cBleCmd_NotifyCall;
+    notify_setting->incomming_sms_en = _cBleCmd_NotifySms;
+    notify_setting->longsit_en = _cBleCmd_NotifyLongsit;
+    notify_setting->lifearm_en = _cBleCmd_NotifyLiftarm;
 }
 
 void CC_BLE_Cmd_SetNotifySetting(uint8_t *pData)
 {
-	_cBleCmd_NotifyCall = (eCALL_state_t)*pData++;
-	_cBleCmd_NotifySms = (eSMS_state_t)*pData++;
-	_cBleCmd_NotifyLongsit = (eStete_t)*pData++;
-	_cBleCmd_NotifyLiftarm = (eStete_t)*pData;
+    _cBleCmd_NotifyCall = (eCALL_state_t)*pData++;
+    _cBleCmd_NotifySms = (eSMS_state_t)*pData++;
+    _cBleCmd_NotifyLongsit = (eStete_t)*pData++;
+    _cBleCmd_NotifyLiftarm = (eStete_t)*pData;
 }
 
 
@@ -297,6 +313,32 @@ eStete_t CC_BLE_Cme_Get_24HourHeartRateMode(void)
     return _cBleCmd_NotifySetting_24HHeartRateMode;
 }
 
+uint8_t CC_BLE_Cmd_CheckSleepTimeSetting(void)
+{
+    return s_tVensuSyncData._cNotify_SleepMonitorTimeSetting_Flag;
+}
+
+void CC_BLE_Cmd_SetSleepTimeSetting(uint8_t *pData)
+{
+    s_tVensuSyncData._cNotify_SleepMonitorTimeSetting_Flag = true;
+    s_tVensuSyncData._stSleepMonitorTimeSetting.start_time_hour= (uint8_t)*pData++;
+    s_tVensuSyncData._stSleepMonitorTimeSetting.start_time_min= (uint8_t)*pData++;
+    s_tVensuSyncData._stSleepMonitorTimeSetting.end_time_hour= (uint8_t)*pData++;
+    s_tVensuSyncData._stSleepMonitorTimeSetting.end_time_min= (uint8_t)*pData;
+}
+
+void CC_BLE_Cmd_GetSleepTimeSetting(db_sys_sleep_monitor_t *pData, uint8_t _bOption)
+{
+    memcpy(pData,&s_tVensuSyncData._stSleepMonitorTimeSetting,sizeof(db_sys_sleep_monitor_t));
+    // the option, true = get form one second polling, false get form DB,
+    // avoid DB get data before one second polling. 
+    if (_bOption == true) 
+    s_tVensuSyncData._cNotify_SleepMonitorTimeSetting_Flag = false;
+    TracerInfo("CC_BLE_Cmd_GetSleepTimeSetting   [%d]   \r\n",s_tVensuSyncData._cNotify_SleepMonitorTimeSetting_Flag);
+
+}
+
+
 void CC_BLE_Cmd_GetClockAlarm(CC_Ble_Clock_Alarm_T *pData,uint8_t _Option)
 {
     memcpy(pData,&s_tVensuSyncData._eClockAlarmInfo,sizeof(CC_Ble_Clock_Alarm_T));
@@ -322,15 +364,6 @@ void CC_BLE_Cmd_GetCallState(uint8_t *_Notify,eCALL_state_t *_stCall,
     //return 0;
 }
 
-void CC_BLE_Cmd_GetSleepTimeSetting(db_sys_sleep_monitor_t *pData, uint8_t _bOption)
-{
-    memcpy(pData,&s_tVensuSyncData._stSleepMonitorTimeSetting,sizeof(db_sys_sleep_monitor_t));
-    // the option, true = get form one second polling, false get form DB,
-    // avoid DB get data before one second polling. 
-    if (_bOption == true) 
-    s_tVensuSyncData._cNotify_SleepMonitorTimeSetting_Flag = false;
-
-}
 
 eStete_t CC_BLE_Cmd_GetLiftArmStatus(void)
 {
@@ -482,7 +515,7 @@ static int htpt_period_meas_send_req_handler(ke_msg_id_t const msgid,
             ke_msg_send(rsp);
         }
         else
-#endif			
+#endif            
         {
             // allocate operation to execute
             htpt_env->operation    = (struct htpt_op *) ke_malloc(sizeof(struct htpt_op) + HTPT_TEMP_MEAS_MAX_LEN, KE_MEM_ATT_DB);
@@ -508,9 +541,9 @@ static int htpt_period_meas_send_req_handler(ke_msg_id_t const msgid,
                 htpt_env->operation->handle  = HTPT_HANDLE(HTS_IDX_INTERM_TEMP_VAL);
             }
 */
-			htpt_env->operation->length  = sizeof(struct htp_period_meas);
+            htpt_env->operation->length  = sizeof(struct htp_period_meas);
 
-			memcpy(htpt_env->operation->data, &param->period_meas, sizeof(struct htp_period_meas));
+            memcpy(htpt_env->operation->data, &param->period_meas, sizeof(struct htp_period_meas));
 
             //Pack the temperature measurement value
             //htpt_env->operation->length  = htpt_pack_temp_value(&(htpt_env->operation->data[0]), param->temp_meas);
@@ -544,7 +577,7 @@ static int htpt_swim_meas_send_req_handler(ke_msg_id_t const msgid,
         // Get the address of the environment
         struct htpt_env_tag *htpt_env = PRF_ENV_GET(HTPT, htpt);
 
-        if(1)	
+        if(1)    
         {
             // allocate operation to execute
             htpt_env->operation    = (struct htpt_op *) ke_malloc(sizeof(struct htpt_op) + HTPT_TEMP_MEAS_MAX_LEN, KE_MEM_ATT_DB);
@@ -557,10 +590,10 @@ static int htpt_swim_meas_send_req_handler(ke_msg_id_t const msgid,
             htpt_env->operation->op      = HTPT_CFG_INTERM_MEAS_NTF;
             htpt_env->operation->handle  = HTPT_HANDLE(HTS_IDX_INTERM_TEMP_VAL);
             
-			htpt_env->operation->length  = sizeof(struct htp_swim_meas);
+            htpt_env->operation->length  = sizeof(struct htp_swim_meas);
 
-    	    memcpy(htpt_env->operation->data, &param->swim_meas, sizeof(struct htp_swim_meas));
-			    
+            memcpy(htpt_env->operation->data, &param->swim_meas, sizeof(struct htp_swim_meas));
+                
             //Pack the temperature measurement value
             //htpt_env->operation->length  = htpt_pack_temp_value(&(htpt_env->operation->data[0]), param->temp_meas);
 

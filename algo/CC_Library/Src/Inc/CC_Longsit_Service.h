@@ -1,6 +1,7 @@
 #ifndef _CC_LONGSIT_SRV_
 #define _CC_LONGSIT_SRV_
 
+#include "project.h"
 
 void CC_Longsit_Srv_Enable(void);
 void CC_Longsit_Srv_Disable(void);

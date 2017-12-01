@@ -564,7 +564,7 @@ void prf_init(bool reset)
     {   //TracerInfo("prf_init1\r\n");     
         typedef void (*my_function)(bool reset);
 
-		((my_function) (jump_table2_struct[JT_POS_FUNC_PRF_INIT]))(reset);
+        ((my_function) (jump_table2_struct[JT_POS_FUNC_PRF_INIT]))(reset);
         return;
     }
 #endif
@@ -626,7 +626,7 @@ uint8_t prf_add_profile(struct gapm_profile_task_add_cmd * params, ke_task_id_t*
         typedef uint8_t (*my_function)(struct gapm_profile_task_add_cmd * params, ke_task_id_t* prf_task);
         //TracerInfo("prf_add_profile1\r\n");
 
-		return((my_function) (jump_table2_struct[JT_POS_FUNC_PRF_ADD_PROFILE]))(params, prf_task);
+        return((my_function) (jump_table2_struct[JT_POS_FUNC_PRF_ADD_PROFILE]))(params, prf_task);
     }
 #endif
 
@@ -697,7 +697,7 @@ void prf_create(uint8_t conidx)
         typedef void (*my_function)(uint8_t conidx);
         //TracerInfo("prf_create1\r\n");
 
-		((my_function) (jump_table2_struct[JT_POS_FUNC_PRF_CREATE]))(conidx);
+        ((my_function) (jump_table2_struct[JT_POS_FUNC_PRF_CREATE]))(conidx);
 
         return;
     }
@@ -729,7 +729,7 @@ void prf_cleanup(uint8_t conidx, uint8_t reason)
         typedef void (*my_function)(uint8_t conidx, uint8_t reason);
         //TracerInfo("prf_cleanup1\r\n");
 
-		((my_function) (jump_table2_struct[JT_POS_FUNC_PRF_CLEANUP]))(conidx, reason); 
+        ((my_function) (jump_table2_struct[JT_POS_FUNC_PRF_CLEANUP]))(conidx, reason); 
 
         return;
     }
@@ -806,7 +806,7 @@ ke_task_id_t prf_get_id_from_task(ke_msg_id_t task)
         typedef ke_task_id_t (*my_function)(ke_msg_id_t task);
         //TracerInfo("prf_get_id_from_task1\r\n");
 
-		return ((my_function) (jump_table2_struct[JT_POS_FUNC_PRF_GET_ID_FROM_TASK]))(task); 
+        return ((my_function) (jump_table2_struct[JT_POS_FUNC_PRF_GET_ID_FROM_TASK]))(task); 
 
     }
 #endif
@@ -842,7 +842,7 @@ ke_task_id_t prf_get_task_from_id(ke_msg_id_t id)
         typedef ke_task_id_t (*my_function)(ke_msg_id_t id);
         //TracerInfo("prf_get_task_from_id1\r\n");
 
-		return ((my_function) (jump_table2_struct[JT_POS_FUNC_PRF_GET_TASK_FROM_ID]))(id); 
+        return ((my_function) (jump_table2_struct[JT_POS_FUNC_PRF_GET_TASK_FROM_ID]))(id); 
        
     }
 #endif

@@ -1305,8 +1305,8 @@ void rf_init(struct rwip_rf_api *api)
         uint8_t length;
         length = NVDS_LEN_RSSI_THR;
         if (   (nvds_get(NVDS_TAG_RSSI_HIGH_THR, &length, (uint8_t*)&api->rssi_high_thr) != NVDS_OK)
-        	|| (nvds_get(NVDS_TAG_RSSI_LOW_THR, &length, (uint8_t*)&api->rssi_low_thr) != NVDS_OK)
-			|| (nvds_get(NVDS_TAG_RSSI_INTERF_THR, &length, (uint8_t*)&api->rssi_interf_thr) != NVDS_OK) )
+            || (nvds_get(NVDS_TAG_RSSI_LOW_THR, &length, (uint8_t*)&api->rssi_low_thr) != NVDS_OK)
+            || (nvds_get(NVDS_TAG_RSSI_INTERF_THR, &length, (uint8_t*)&api->rssi_interf_thr) != NVDS_OK) )
         #endif // NVDS_SUPPORT
         {
             api->rssi_high_thr = (int8_t)RPL_RSSI_20dB_THRHLD;
@@ -1327,7 +1327,7 @@ void rf_init(struct rwip_rf_api *api)
 
     #if !defined(CFG_BT)
         /* BLE RADIOCNTL0 */
-	    	ble_sync_pulse_mode_setf(0x0);
+            ble_sync_pulse_mode_setf(0x0);
         ble_dpcorr_en_setf(1);
         ble_forceagc_en_setf(1);
         ble_spifreq_setf(0); //6.5MHz
@@ -1339,7 +1339,7 @@ void rf_init(struct rwip_rf_api *api)
         /* BLE RADIOPWRUPDN */
 
         /* BLE RADIOCNTL2 */
-		    ble_sync_position_setf(0x0);
+            ble_sync_position_setf(0x0);
         ble_forceagc_length_setf(0x420);
 
     #endif // !defined CFG_BT

@@ -183,7 +183,7 @@ typedef enum
  *                                 to make the timer module call the time-out handler directly from
  *                                 the timer interrupt handler.
  *
- * @retval     NRF_SUCCESS               If the module was initialized successfully.
+ * @retval     CC_SUCCESS               If the module was initialized successfully.
  * @retval     NRF_ERROR_INVALID_PARAM   If a parameter was invalid (buffer not aligned to a 4 byte
  *                                       boundary or NULL).
  */
@@ -198,7 +198,7 @@ uint32_t app_timer_init(uint32_t                      prescaler,
  * @param[in]  mode              Timer mode.
  * @param[in]  timeout_handler   Function to be executed when the timer expires.
  *
- * @retval     NRF_SUCCESS               If the timer was successfully created.
+ * @retval     CC_SUCCESS               If the timer was successfully created.
  * @retval     NRF_ERROR_INVALID_PARAM   If a parameter was invalid.
  * @retval     NRF_ERROR_INVALID_STATE   If the application timer module has not been initialized or
  *                                       the timer is running.
@@ -223,7 +223,7 @@ uint32_t app_timer_create(app_timer_id_t const *      p_timer_id,
  * @param[in]       p_context     General purpose pointer. Will be passed to the time-out handler when
  *                                the timer expires.
  *
- * @retval     NRF_SUCCESS               If the timer was successfully started.
+ * @retval     CC_SUCCESS               If the timer was successfully started.
  * @retval     NRF_ERROR_INVALID_PARAM   If a parameter was invalid.
  * @retval     NRF_ERROR_INVALID_STATE   If the application timer module has not been initialized or the timer
  *                                       has not been created.
@@ -241,7 +241,7 @@ uint32_t app_timer_start(app_timer_id_t timer_id, uint32_t timeout_ticks, void *
  *
  * @param[in]  timer_id                  Timer identifier.
  *
- * @retval     NRF_SUCCESS               If the timer was successfully stopped.
+ * @retval     CC_SUCCESS               If the timer was successfully stopped.
  * @retval     NRF_ERROR_INVALID_PARAM   If a parameter was invalid.
  * @retval     NRF_ERROR_INVALID_STATE   If the application timer module has not been initialized or the timer
  *                                       has not been created.
@@ -251,7 +251,7 @@ uint32_t app_timer_stop(app_timer_id_t timer_id);
 
 /**@brief Function for stopping all running timers.
  *
- * @retval     NRF_SUCCESS               If all timers were successfully stopped.
+ * @retval     CC_SUCCESS               If all timers were successfully stopped.
  * @retval     NRF_ERROR_INVALID_STATE   If the application timer module has not been initialized.
  * @retval     NRF_ERROR_NO_MEM          If the timer operations queue was full.
  */
@@ -261,7 +261,7 @@ uint32_t app_timer_stop_all(void);
  *
  * @param[out] p_ticks   Current value of the HW counter.
  *
- * @retval     NRF_SUCCESS   If the counter was successfully read.
+ * @retval     CC_SUCCESS   If the counter was successfully read.
  */
 uint32_t app_timer_cnt_get(uint32_t * p_ticks);
 
@@ -271,7 +271,7 @@ uint32_t app_timer_cnt_get(uint32_t * p_ticks);
  * @param[in]  ticks_from     Value returned by app_timer_cnt_get().
  * @param[out] p_ticks_diff   Number of ticks from ticks_from to ticks_to.
  *
- * @retval     NRF_SUCCESS   If the counter difference was successfully computed.
+ * @retval     CC_SUCCESS   If the counter difference was successfully computed.
  */
 uint32_t app_timer_cnt_diff_compute(uint32_t   ticks_to,
                                     uint32_t   ticks_from,

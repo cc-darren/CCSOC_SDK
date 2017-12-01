@@ -10,8 +10,11 @@
 #include "CC_AppSrvc_HeartRate.h"
 #include "sw_timer.h"
 #include "tracer.h"
-
-
+#ifdef DB_EN
+#include "fds.h"
+#include "cc_db_structure.h"
+#include "cc_db.h"
+#endif
 /**********************************************************
  *** STRUCT / DEFINE / ENUM
  **********************************************************/
@@ -59,19 +62,26 @@ typedef struct
     uint32_t             dwPeriodicMeasurementTime;
     uint32_t             dwOneMeasurementMaxTime;
 
+    uint8_t              bRestingHrMax;
+    uint8_t              bRestingHrMin;
+    uint8_t              bExerciseHrMax;
+    uint8_t              bExerciseHrMin;
+
     bool                 bIs1stMeasurementDropped;
     bool                 bIsAppLocked;
+    bool                 bIsWarningLocked;
 
     uint8_t              b24HrDataCount;
-    uint32_t             tick_cnt;
-}   S_AppSrv_HR_CB;
+    uint32_t             dwSysTick;
 
-/**********************************************************
+}   S_AppSrv_HR_CB;
+/********************************************
+**************
  *** VARIABLE
  **********************************************************/
 S_AppSrv_HR_CB    s_tAppSrvHrCB;
 
-//db_heartrate_t    s_tDbHrm __attribute__((aligned(4)));
+db_heartrate_t    s_tDbHrm __attribute__((aligned(4)));
 
 APP_TIMER_DEF(s_tAppSrvHR_Timer_24HR_PeriodicMeasurement);
 APP_TIMER_DEF(s_tAppSrvHR_Timer_24HR_OneMeasurement     );
@@ -98,7 +108,7 @@ extern uint8_t CC_Charge_Register(charge_cb_t cb);
 /**********************************************************
  *** FUNCTION
  **********************************************************/
-/* 
+
 static void _DB_Save_Hrm_Data(int16_t nHrData, int16_t nTrustLevel)
 {
     app_date_time_t    _tTime;
@@ -118,16 +128,16 @@ static void _DB_Save_Hrm_Data(int16_t nHrData, int16_t nTrustLevel)
     if (FDS_SUCCESS != CC_Save_Record(eHrm, ((uint32_t *) &s_tDbHrm), sizeof(db_heartrate_t)))
         TracerInfo("!!! ERROR !!! fail to save HRM to DB...\r\n");
 }
-*/
+
 void Hrm_SysTick_Handler(void * pvContext)
 {
     UNUSED_PARAMETER(pvContext);
-    s_tAppSrvHrCB.tick_cnt++;
+    s_tAppSrvHrCB.dwSysTick++;
 }
 
 uint32_t Hrm_get_sys_tick(void)
 {
-    return s_tAppSrvHrCB.tick_cnt;
+    return s_tAppSrvHrCB.dwSysTick;
 }
 
 
@@ -160,7 +170,7 @@ static void _AppSrv_HR_Charge_Evt_CB(eDEV_CHARGE_STATE_t eState)
 {
     if (eDEVICE_CHARGE_IN == eState)
     {
-		// nothing.    
+        // nothing.    
     }
     else if (eDEVICE_CHARGE_OUT== eState)
     {
@@ -192,6 +202,29 @@ void CC_AppSrv_HR_Init(void)
     app_timer_create(&s_tAppSrvHR_Timer_SystemTick, APP_TIMER_MODE_REPEATED, Hrm_SysTick_Handler);
     app_timer_create(&s_tAppSrvHR_Timer_24HR_PeriodicMeasurement, APP_TIMER_MODE_SINGLE_SHOT, _TO_24HR_PeriodicMeasurement);
     app_timer_create(&s_tAppSrvHR_Timer_24HR_OneMeasurement     , APP_TIMER_MODE_SINGLE_SHOT, _TO_24HR_OneMeasurement     );
+}
+
+
+void CC_AppSrv_HR_SetLimited(uint8_t _bRestingHrMax,uint8_t bRestingHrMin,uint8_t bExerciseHrMax,uint8_t bExerciseHrMin)
+{
+  
+    s_tAppSrvHrCB.bRestingHrMax = _bRestingHrMax;
+    s_tAppSrvHrCB.bRestingHrMin = bRestingHrMin;
+    s_tAppSrvHrCB.bExerciseHrMax= bExerciseHrMax;
+    s_tAppSrvHrCB.bExerciseHrMin= bExerciseHrMin;
+    TracerInfo("bRestingHrMax = %d\r\n",_bRestingHrMax);
+    TracerInfo("bRestingHrMin = %d\r\n",bRestingHrMin);
+    TracerInfo("bExerciseHrMax = %d\r\n",bExerciseHrMax);
+    TracerInfo("bExerciseHrMin = %d\r\n",bExerciseHrMin);     
+}
+
+void CC_AppSrv_HR_ResetLimited(uint8_t _bAge)
+{
+
+    s_tAppSrvHrCB.bRestingHrMax = APPSRV_HRM_DEFAULT_RESTING_MAX;
+    s_tAppSrvHrCB.bRestingHrMin = APPSRV_HRM_DEFAULT_RESTING_MIN;
+    s_tAppSrvHrCB.bExerciseHrMax = APPSRV_HRM_DEFAULT_EXERCISE_MAX(_bAge);
+    s_tAppSrvHrCB.bExerciseHrMin = APPSRV_HRM_DEFAULT_EXERCISE_MIN(_bAge);
 }
 
 void CC_AppSrv_HR_StartSystemTick(void)
@@ -352,7 +385,7 @@ void CC_AppSrv_HR_DataReport(int16_t nHrData, int16_t nTrustLevel)
     s_tAppSrvHrCB.tData.nData       = nHrData;
     s_tAppSrvHrCB.tData.nTrustLevel = nTrustLevel;
 
-    //_DB_Save_Hrm_Data(nHrData, nTrustLevel);
+    _DB_Save_Hrm_Data(nHrData, nTrustLevel);
 
     if (   (E_APPSRV_HRM_ST_IN_MEASUREMENT == s_tAppSrvHrCB.eSingleHrState)
         || (E_APPSRV_HRM_ST_IN_MEASUREMENT == s_tAppSrvHrCB.eHrsState     ))

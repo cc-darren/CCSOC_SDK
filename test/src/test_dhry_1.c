@@ -114,12 +114,12 @@ unsigned long t;
 
 void scu_clk_config(unsigned long config)
 {
-	unsigned long rdata;
+    unsigned long rdata;
 
-	rd(SCU_CLKCFG0_REG, rdata);
-	rdata &= ~0x1F;
-	rdata |= (config&0x1F);
-	wr(SCU_CLKCFG0_REG, rdata);
+    rd(SCU_CLKCFG0_REG, rdata);
+    rdata &= ~0x1F;
+    rdata |= (config&0x1F);
+    wr(SCU_CLKCFG0_REG, rdata);
 }
 #endif
 

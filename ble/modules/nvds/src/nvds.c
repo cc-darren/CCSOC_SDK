@@ -447,10 +447,10 @@ static void nvds_null_erase(uint32_t address, uint32_t length){}
 static uint8_t nvds_null_init(void)
 {
 
-	if(jump_table_struct[JT_POS_PARA_NVDS_ENABLE] == 0)
-	{
-		return NVDS_FAIL;
-	}
+    if(jump_table_struct[JT_POS_PARA_NVDS_ENABLE] == 0)
+    {
+        return NVDS_FAIL;
+    }
 
     // init all the structure
     memset( &nvds_env, 0, sizeof(nvds_env));

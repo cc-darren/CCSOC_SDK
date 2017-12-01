@@ -32,12 +32,12 @@ static uint8_t m_tx_buf[32];
 /* Private function prototypes -----------------------------------------------*/
 
 /*******************************************************************************
-* Function Name		: AK09912_MAG_ReadReg
-* Description		: Generic Reading function. It must be fullfilled with either
-*					: I2C or SPI reading functions					
-* Input				: Register Address
-* Output			: Data REad
-* Return			: None
+* Function Name        : AK09912_MAG_ReadReg
+* Description        : Generic Reading function. It must be fullfilled with either
+*                    : I2C or SPI reading functions                    
+* Input                : Register Address
+* Output            : Data REad
+* Return            : None
 *******************************************************************************/
 u8_t AK09912_MAG_ReadReg(u8_t Reg, u8_t* Data) {
   
@@ -58,12 +58,12 @@ u8_t AK09912_MAG_ReadReg(u8_t Reg, u8_t* Data) {
 }
 
 /*******************************************************************************
-* Function Name		: AK09912_MAG_WriteReg
-* Description		: Generic Writing function. It must be fullfilled with either
-*					: I2C or SPI writing function
-* Input				: Register Address, Data to be written
-* Output			: None
-* Return			: None
+* Function Name        : AK09912_MAG_WriteReg
+* Description        : Generic Writing function. It must be fullfilled with either
+*                    : I2C or SPI writing function
+* Input                : Register Address, Data to be written
+* Output            : None
+* Return            : None
 *******************************************************************************/
 u8_t AK09912_MAG_WriteReg(u8_t Reg, u8_t Data) {
     
@@ -111,9 +111,9 @@ status_t AK09912_MAG_SetMode(AK09912_MAG_MODE_t ov){
 
   if( !AK09912_MAG_ReadReg(AK09912_MAG_CNTL2, &value) )
     return MEMS_ERROR;
-	
+    
   value &= ~AK09912_MAG_ROM_ACCESS; //mask
-  value |= ov;		
+  value |= ov;        
 
   if( !AK09912_MAG_WriteReg(AK09912_MAG_CNTL2, value) )
     return MEMS_ERROR;
@@ -139,7 +139,7 @@ status_t AK09912_MAG_TemperatureEN(AK09912_MAG_TEMP_EN_t ov){
     return MEMS_ERROR;
 
   value &= ~AK09912_MAG_TEMP_EN_ENABLE; //mask
-  value |= ov;	
+  value |= ov;    
 
   if( !AK09912_MAG_WriteReg(AK09912_MAG_CNTL1, value) )
     return MEMS_ERROR;
@@ -161,7 +161,7 @@ status_t AK09912_MAG_SoftReset(AK09912_MAG_SOFT_RST_t ov){
     return MEMS_ERROR;
 
   value &= ~AK09912_MAG_SOFT_RST_ENABLE; //mask
-  value |= ov;	
+  value |= ov;    
 
   if( !AK09912_MAG_WriteReg(AK09912_MAG_CNTL3, value) )
     return MEMS_ERROR;
@@ -182,9 +182,9 @@ status_t AK09912_MAG_I2CDisable(AK09912_MAG_I2CDIS_t ov){
 
   if( !AK09912_MAG_ReadReg(AK09912_MAG_I2CDIS, &value) )
     return MEMS_ERROR;
-	
+    
   value &= ~0xFF; //mask
-  value |= ov;	
+  value |= ov;    
 
   if( !AK09912_MAG_WriteReg(AK09912_MAG_I2CDIS, value) )
     return MEMS_ERROR;
@@ -204,9 +204,9 @@ status_t AK09912_MAG_I2CHS_En(AK09912_MAG_I2CHS_EN_t ov){
 
   if( !AK09912_MAG_ReadReg(AK09912_MAG_ST1, &value) )
     return MEMS_ERROR;
-	
+    
   value &= ~AK09912_MAG_I2C_HS_ENABLE; //mask
-  value |= ov;	
+  value |= ov;    
 
   if( !AK09912_MAG_WriteReg(AK09912_MAG_ST1, value) )
     return MEMS_ERROR;
@@ -317,12 +317,12 @@ status_t AK09912_MAG_GetMagRaw(AxesRaw_t* buff) {
   //{
   //   AK09912_MAG_Data_Ready(&tmp);
   //}
-	
+    
 //  do{  
 //    AK09912_MAG_ReadReg(AK09912_MAG_ST1, &stat);
 //  } while ((stat & 0x03) == 0);
   
-	
+    
   if( !AK09912_MAG_ReadReg(AK09912_MAG_HXL, &valueL) )
       return MEMS_ERROR;
   
@@ -363,10 +363,10 @@ status_t AK09912_MAG_GetMagRaw(AxesRaw_t* buff) {
 *******************************************************************************/
 status_t AK09912_MAG_GetTemperatureRaw(u8_t* buff) {
   u8_t value;
-	
+    
   if( !AK09912_MAG_ReadReg(AK09912_MAG_TMPS, &value) )
       return MEMS_ERROR;
-	  
+      
   *buff = value;
   return MEMS_SUCCESS;  
 }
@@ -380,7 +380,7 @@ status_t AK09912_MAG_GetTemperatureRaw(u8_t* buff) {
 *******************************************************************************/
 status_t AK09912_MAG_AdjValue(AxesAdj_t* buff) {
   u8_t value;
-	
+    
   if( !AK09912_MAG_ReadReg(AK09912_MAG_ASAX, &value) )
       return MEMS_ERROR;
   
@@ -401,7 +401,7 @@ status_t AK09912_MAG_AdjValue(AxesAdj_t* buff) {
 
 status_t AK09912_MAG_Init(void)
 {
-	status_t response;
+    status_t response;
     u8_t id;
     #if (MAG_IF_TYPE == IF_I2C)
     T_I2cDevice i2c_sensor_config = {
@@ -436,7 +436,7 @@ status_t AK09912_MAG_Init(void)
 status_t AK09912_MAG_SLEEP(void)
 {
 
-	status_t response;
+    status_t response;
 
  response = AK09912_MAG_SetMode(AK09912_MAG_POWER_DOWN);
  if(response==MEMS_ERROR) return response; //manage here comunication error

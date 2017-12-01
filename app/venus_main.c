@@ -52,7 +52,9 @@
 #include "CC_AppSrvc_HeartRate.h"
 #include "llm.h"
 #include "app.h"
-
+#include "fds.h"
+#include "CC_DB.h"
+#include "jump_table.h"
 
 
 #define APP_TIMER_PRESCALER        0
@@ -61,15 +63,15 @@
 
 #define SPEED_AND_CADENCE_MEAS_INTERVAL     1000    
 
-#define DB_PEDO_WALK_TIMEOUT_INTERVAL		360000// 6min //180000	// 3 min
-#define DB_PEDO_RUN_TIMEOUT_INTERVAL		360000// 6min //180000	// 3 min
+#define DB_PEDO_WALK_TIMEOUT_INTERVAL        360000// 6min //180000    // 3 min
+#define DB_PEDO_RUN_TIMEOUT_INTERVAL        360000// 6min //180000    // 3 min
 
-#define LOCK_SWIM_OFF_TIMEOUT_INTERVAL		180000 // 3min
+#define LOCK_SWIM_OFF_TIMEOUT_INTERVAL        180000 // 3min
 
 
-#define ACCEL_FIFO_MODE_LONG_INTERVAL		1000		// in ms
-#define ACCEL_FIFO_MODE_SHORT_INTERVAL		300		// in ms
-#define ACCEL_POLL_MODE_INTERVAL		20		// in ms
+#define ACCEL_FIFO_MODE_LONG_INTERVAL        1000        // in ms
+#define ACCEL_FIFO_MODE_SHORT_INTERVAL        300        // in ms
+#define ACCEL_POLL_MODE_INTERVAL        20        // in ms
 #define MAG_BUF_LEN                     10
 
 #define BATTERY_LEVEL_MEAS_INTERVAL     APP_TIMER_TICKS(60000, APP_TIMER_PRESCALER)
@@ -103,8 +105,8 @@ APP_TIMER_DEF(s_tVenusTimerOLEDWakeup);
 APP_TIMER_DEF(s_tVenusTimerOLEDSleep);
 APP_TIMER_DEF(s_tVenusTimerOLEDDisplaySrvTimer);
 APP_TIMER_DEF(s_tVenusTimerPWMVibSrvTimer);
-//APP_TIMER_DEF(s_tVenusTimerPedoWalkTimer);
-//APP_TIMER_DEF(s_tVenusTimerPedoRunTimer);
+APP_TIMER_DEF(s_tVenusTimerPedoWalkTimer);
+APP_TIMER_DEF(s_tVenusTimerPedoRunTimer);
 //APP_TIMER_DEF(s_tVenusTimerBatteryLiftImmediatelyCheck);
 //APP_TIMER_DEF(s_tVenusTimerSwimCalTimer);
 APP_TIMER_DEF(s_tLockSwimOffTimer);
@@ -113,7 +115,7 @@ typedef struct
 {
     uint16_t wDataLen;
     i16_t wdata[FIFO_DEPTH_T/2];
-	i16_t wbuf[FIFO_DEPTH_T/2];
+    i16_t wbuf[FIFO_DEPTH_T/2];
     uint8_t cIndex;
 }s_SensorData_t;
 
@@ -131,6 +133,18 @@ typedef struct
     uint8_t cEnable;
 }S_TClockAlarm_t;
 
+
+typedef struct
+{
+    bool            enabled;
+    bool            saveDB;
+    uint8_t         padding[2];
+    app_date_time_t startTime;
+    app_date_time_t stopTime;
+    uint16_t        pedCount;
+    uint16_t        calorie;
+
+}S_DB_PedoRecord_t;
 
 
 
@@ -150,6 +164,12 @@ typedef struct
     uint32_t        dwTotalCalorie;
     uint32_t        dwWalkCalorie;
     uint32_t        dwRunCalorie;   
+
+    signed char    cPedState;
+    signed char    cPedLastMovingState;
+    uint8_t        baPedPadding[3];    // adjust this to keep 4-byte alignmenty
+    S_DB_PedoRecord_t stPedRecordData_Run;
+    S_DB_PedoRecord_t stPedRecordData_Walk;    
 
     //////// APPLICATION :: TOUCH   ////////////////////////////////////////////////
     uint8_t cTouchDebounceFlag;
@@ -219,6 +239,10 @@ typedef struct
     //////// APPLICATION :: Unlock Swim Off   /////////////////////////////////////////
     bool bIsLockSwimOff;    
 
+    //////// APPLICATION :: DB Init   /////////////////////////////////////////
+    bool is_db_init_done;
+    uint8_t db_init_type;
+
 }   S_VenusCB;
 
 
@@ -236,7 +260,12 @@ s_SensorData_t s_tGyro;
 S_TMagBuf_t s_tMagDataBuf;  
 AxesRaw_t s_tMagRaw;
 static uint8_t g_bMagEnCnt = 0;
-
+static db_pedometer_t m_db_pedo;
+/*
+static CC_Ble_Ped_Info_T _sPedInfo = {0xF1,0,0};
+static CC_Ble_Hrm_Info_T _sHrmInfo = {0xF2,0,0};
+static CC_Ble_Swim_Info_T _sSwimInfo = {0xF4,0,0};
+*/
 extern void _sensor_algorithm_sleepmeter_proc(void);
 extern void CC_Dsp_Srv_Reflash_Screen(void);
 
@@ -347,15 +376,61 @@ void CC_VENUS_PWMVibrationServiceEventClear(void)
 
 void CC_VENUS_RscTimerStart(uint32_t interval_ms)
 {
-	 app_timer_start(m_rsc_meas_timer_id, APP_TIMER_TICKS(interval_ms, APP_TIMER_PRESCALER), NULL);
+     app_timer_start(m_rsc_meas_timer_id, APP_TIMER_TICKS(interval_ms, APP_TIMER_PRESCALER), NULL);
 }
 
 void CC_VENUS_RscTimerStop(void)
 {
-	app_timer_stop(m_rsc_meas_timer_id);
+    app_timer_stop(m_rsc_meas_timer_id);
 }
 
 
+
+bool CC_DB_Check_Init_Done(void)
+{
+    return s_tVenusCB.is_db_init_done;
+
+}
+
+void CC_DB_Set_Init_Done(void)
+{
+	s_tVenusCB.is_db_init_done = true;
+}
+
+uint8_t CC_DB_Get_Init_Type(void)
+{
+	return s_tVenusCB.db_init_type;
+}
+
+void CC_DB_Force_Execute_Init(uint8_t init_type)
+{
+    s_tVenusCB.db_init_type = init_type;       
+	s_tVenusCB.is_db_init_done = false;
+}
+
+void CC_DB_Init(uint8_t _bState)  
+{
+    uint8_t _bFirstInit = 0;
+    ret_code_t ret = CC_DB_Init_FileRec(&_bFirstInit, _bState);
+    TracerInfo("CC_DB_Init_FileRec return = [0x%x]\r\n",ret);
+    if (false==_bFirstInit)
+        CC_Fds_Change_DayofWeek(s_tVenusCB.stSysCurTime.dayofweek,true);
+    else
+        CC_Fds_Change_DayofWeek(s_tVenusCB.stSysCurTime.dayofweek,false);
+
+    CC_DB_Set_Init_Done();
+}
+
+
+void CC_GetStaticCalibrationInfo(db_sys_static_gyro_offset_t *pData)
+{
+    memcpy(pData,&s_tVenusCB.wSwimCalData,sizeof(db_sys_static_gyro_offset_t));
+}
+
+void CC_SetStaticCalibrationInfo(db_sys_static_gyro_offset_t *pData)
+{
+    memcpy(&s_tVenusCB.wSwimCalData,pData,sizeof(db_sys_static_gyro_offset_t));
+}
 
 void CC_VENUS_Lock_SwimOff_TimerStop(void)
 {
@@ -526,7 +601,7 @@ static void _CC_CHARGE_Out_Cfg(void)
     if (1 == CC_BLE_Cmd_GetSwimmingEN())
     {
         VENUS_EVENT_ON(E_VENUS_EVENT_OLED_UPDATE , eEvent_SWIM_ON);
-		CC_AppSrv_HR_SetAppLockHrm(CC_APPSRV_HR_APP_LOCK);
+        CC_AppSrv_HR_SetAppLockHrm(CC_APPSRV_HR_APP_LOCK);
     }
     else if (eEnable == CC_BLE_Cme_Get_HeartRateStrapMode())
     {
@@ -607,7 +682,7 @@ void CC_ChargeStatePolling(void)
 void CC_ChargePPR_PinStatInit(void)
 {
    
-	uint8_t Charging = nrf_gpio_pin_read(PPR_PIN);
+    uint8_t Charging = nrf_gpio_pin_read(PPR_PIN);
     if (Charging == eDEVICE_CHARGE_IN) // 0 = charge in , 1 = no charge
     {
         _CC_CHARGE_In_Cfg();
@@ -711,7 +786,7 @@ void CC_ResumeHrm(void)
 {
     TracerInfo("\r\n[CC_ResumeHrm] \r\n");        
 
-	CC_AppSrv_HR_SetAppLockHrm(CC_APPSRV_HR_APP_UNLOCK);
+    CC_AppSrv_HR_SetAppLockHrm(CC_APPSRV_HR_APP_UNLOCK);
 
     if (eEnable == CC_BLE_Cme_Get_24HourHeartRateMode())
         CC_AppSrv_HR_Start24HR();
@@ -723,14 +798,106 @@ void CC_ResumeHrm(void)
 
 void CC_Swim_OLED_Update(uint8_t _bSwitch)
 {
-	if(_bSwitch == 1)
-	{
-		VENUS_EVENT_ON(E_VENUS_EVENT_OLED_UPDATE , eEvent_SWIM_ON);
-	}
-	else
-	{
-		VENUS_EVENT_ON(E_VENUS_EVENT_OLED_UPDATE , eEvent_SWIM_OFF);
-	}
+    if(_bSwitch == 1)
+    {
+        VENUS_EVENT_ON(E_VENUS_EVENT_OLED_UPDATE , eEvent_SWIM_ON);
+    }
+    else
+    {
+        VENUS_EVENT_ON(E_VENUS_EVENT_OLED_UPDATE , eEvent_SWIM_OFF);
+    }
+}
+
+
+static void CC_DB_Save_Pedo_Data(uint8_t ped_type, S_DB_PedoRecord_t *ped_record_data)
+{
+
+    m_db_pedo.ped_state.state = ped_type;
+    m_db_pedo.time.year = (uint8_t)(ped_record_data->startTime.year - 2000);
+    m_db_pedo.time.month = ped_record_data->startTime.month;
+    m_db_pedo.time.day = ped_record_data->startTime.day;
+    m_db_pedo.time.hour = ped_record_data->startTime.hours;
+    m_db_pedo.time.min = ped_record_data->startTime.minutes;
+    m_db_pedo.time.sec = ped_record_data->startTime.seconds;
+    m_db_pedo.ped_single.count = (uint16_t)ped_record_data->pedCount;
+    m_db_pedo.endoftime.hour = ped_record_data->stopTime.hours;
+    m_db_pedo.endoftime.min = ped_record_data->stopTime.minutes;
+    m_db_pedo.endoftime.sec = ped_record_data->stopTime.seconds;
+    m_db_pedo.calorie = ped_record_data->calorie;
+
+    if(FDS_SUCCESS != CC_Save_Record(ePed, (uint32_t*)&m_db_pedo, sizeof(db_pedometer_t)))
+    {
+        TracerInfo("HRM_DB_Save_Err\r\n");
+    }
+    else
+    {
+        TracerInfo("PEDO_DB_SAVE OK!!\r\n");
+        //TracerInfo("start_time.year:%d\r\n",ped_record_data->startTime.year, ped_record_data->startTime.year);
+        TracerInfo("pedo_state: %d, step: %d\r\n", m_db_pedo.ped_state.state, m_db_pedo.ped_single.count);
+    }
+
+}
+
+void CC_VENUS_WALK_PedoTimerStart(uint32_t interval_ms)
+{
+    app_timer_start(s_tVenusTimerPedoWalkTimer, APP_TIMER_TICKS(interval_ms, APP_TIMER_PRESCALER), NULL);
+}
+
+void CC_VENUS_WALK_PedoTimerStop(void)
+{
+    app_timer_stop(s_tVenusTimerPedoWalkTimer);
+}
+
+void cc_pedo_walk_timeout_handler(void * p_context)
+{
+    UNUSED_PARAMETER(p_context);
+
+    s_tVenusCB.stPedRecordData_Walk.saveDB = 1;
+
+}
+
+void CC_VENUS_RUN_PedoTimerStart(uint32_t interval_ms)
+{
+    app_timer_start(s_tVenusTimerPedoRunTimer, APP_TIMER_TICKS(interval_ms, APP_TIMER_PRESCALER), NULL);
+}
+
+void CC_VENUS_RUN_PedoTimerStop(void)
+{
+	app_timer_stop(s_tVenusTimerPedoRunTimer);
+}
+
+void cc_pedo_run_timeout_handler(void * p_context)
+{
+    UNUSED_PARAMETER(p_context);
+    
+    s_tVenusCB.stPedRecordData_Run.saveDB = 1;
+
+}
+
+void CC_Pedo_Check_Save_Database(void)
+{
+    if(s_tVenusCB.stPedRecordData_Walk.saveDB == 1)
+    {
+        //Jason, caculate walk calorie
+        s_tVenusCB.stPedRecordData_Walk.calorie = (uint16_t) CC_CalorieBurnCalStepV2(s_tVenusCB.stPedRecordData_Walk.pedCount,1,ePedo_Walk);
+        CC_DB_Save_Pedo_Data(ePedo_Walk, &s_tVenusCB.stPedRecordData_Walk);
+
+
+        s_tVenusCB.stPedRecordData_Walk.saveDB = 0;
+        s_tVenusCB.stPedRecordData_Walk.pedCount = 0;
+        s_tVenusCB.stPedRecordData_Walk.enabled = 0;
+        
+    }
+    else if(s_tVenusCB.stPedRecordData_Run.saveDB == 1)
+    {
+        //Jason, caculate walk calorie
+        s_tVenusCB.stPedRecordData_Run.calorie = (uint16_t) CC_CalorieBurnCalStepV2(s_tVenusCB.stPedRecordData_Run.pedCount,1,ePedo_Run);
+        CC_DB_Save_Pedo_Data(ePedo_Run, &s_tVenusCB.stPedRecordData_Run);
+
+        s_tVenusCB.stPedRecordData_Run.saveDB = 0;
+        s_tVenusCB.stPedRecordData_Run.pedCount = 0;
+        s_tVenusCB.stPedRecordData_Run.enabled = 0;
+    }
 }
 
 void CC_MainGet_CurrentTime(app_date_time_t *_stCurTime)
@@ -769,15 +936,15 @@ void TOUCH_int_handler(void) // no implement parameter
     
 //    if(pin == TOUCH_INT_PIN)
     if(0x00 == drvi_GpioRead(TOUCH_INT_PIN))
-    {	
+    {    
         if (s_tVenusCB.cTouchDebounceFlag == 0)
         {
-			_TouchDebounce_Handler(50);
-			s_tVenusCB.cTouchDebounceFlag = 1;	  			 
+            _TouchDebounce_Handler(50);
+            s_tVenusCB.cTouchDebounceFlag = 1;                   
         }
 #ifdef LONGTOUCH_SWIM_SWITCH_EN
-		_LongTouchTrigger_Handler(100);
-		 s_tVenusCB.cLongTouchCount = 0;
+        _LongTouchTrigger_Handler(100);
+         s_tVenusCB.cLongTouchCount = 0;
 #endif         
     }        
 }
@@ -805,7 +972,7 @@ static void cc_touch_debounce_timeout(void * p_context)
     UNUSED_PARAMETER(p_context);
 
     if (0x00 == drvi_GpioRead(TOUCH_INT_PIN))
-	{
+    {
         VENUS_EVENT_ON(E_VENUS_EVENT_TOUCH_INT ,eEvent_None);
     }    
     else
@@ -872,22 +1039,22 @@ void CC_VENUS_AccelTimerFifoModeStart(void)
     if(1)   // force to enable lift arm
         app_timer_start(s_tVenusTimerAccel, APP_TIMER_TICKS(ACCEL_FIFO_MODE_SHORT_INTERVAL, APP_TIMER_PRESCALER), NULL);
     else
-    	app_timer_start(s_tVenusTimerAccel, APP_TIMER_TICKS(ACCEL_FIFO_MODE_LONG_INTERVAL, APP_TIMER_PRESCALER), NULL);
+        app_timer_start(s_tVenusTimerAccel, APP_TIMER_TICKS(ACCEL_FIFO_MODE_LONG_INTERVAL, APP_TIMER_PRESCALER), NULL);
 }
 
 void CC_VENUS_AccelTimerPollModeStart(void)
 {
-	app_timer_start(s_tVenusTimerAccel, APP_TIMER_TICKS(ACCEL_POLL_MODE_INTERVAL, APP_TIMER_PRESCALER), NULL);
+    app_timer_start(s_tVenusTimerAccel, APP_TIMER_TICKS(ACCEL_POLL_MODE_INTERVAL, APP_TIMER_PRESCALER), NULL);
 }
 
 void CC_VENUS_AccelTimerReset(void)
 {
-	app_timer_start(s_tVenusTimerAccel, APP_TIMER_TICKS(0,APP_TIMER_PRESCALER), NULL);
+    app_timer_start(s_tVenusTimerAccel, APP_TIMER_TICKS(0,APP_TIMER_PRESCALER), NULL);
 }
 
 void CC_VENUS_AccelTimerStop(void)
 {
-	app_timer_stop(s_tVenusTimerAccel);
+    app_timer_stop(s_tVenusTimerAccel);
 }
 
 void CC_SetHrmCloseSwitch(eHrm_Close_EventID _bEvent)
@@ -942,51 +1109,356 @@ static void battery_level_meas_timeout_handler(void * p_context)
 }
 
 
-/*
-static uint8_t CC_Ble_CommandParse(const uint8_t index, ble_rscs_meas_t * p_rsc_measurement)
-{
-    p_rsc_measurement->eHeader = 0xCC;
 
-    if( 0x00 ==s_tVenusCB.cSwimmingEn )
+static void _Ble_CommandHistroyPedoParse(void)
+{
+    uint32_t    _dwlen =0;
+    uint16_t total;
+    uint16_t rec_index;
+    db_pedometer_t pedo_db_data;
+    uint16_t rsize;
+    app_date_time_t curr_time;
+    uint8_t dayofweek;
+
+    CC_MainGet_CurrentTime(&curr_time); 
+
+    if(CC_BLE_Cmd_GetHistoryDayIndex() <= 7)
     {
-            _sPedInfo.is_update_steps =  1;
-            _sPedInfo.dwTotal_steps = s_tVenusCB.dwPedTotalStepCount;
-            _sPedInfo.dwTotal_calorie = s_tVenusCB.dwTotalCalorie;
-    
-            _sHrmInfo.is_update_hrm = s_tVenusCB.chrmDataReady_Flag;
-            _sHrmInfo.hrmdata       = s_tVenusCB.cHrmData;
-            CC_MainSet_HrmDataFlag(false);
-    
-            p_rsc_measurement->eArray[_dwlen++] = _sPedInfo.command;
-            p_rsc_measurement->eArray[_dwlen++] = _sPedInfo.is_update_steps;
-            _dwlen += uint32_encode(_sPedInfo.dwTotal_steps,&p_rsc_measurement->eArray[_dwlen]);
+        dayofweek = (curr_time.dayofweek + CC_BLE_Cmd_GetHistoryDayIndex()) % 7;
+
+        rec_index = CC_BLE_Cmd_GetHistoryRecordIndex();
+
+        if(FDS_SUCCESS == CC_Read_DayofRecoordLen(ePed, dayofweek, &total))
+        {
+            if((total != 0) && (rec_index <= total))
+            {
+
+                if(FDS_SUCCESS == CC_Read_Record(ePed, dayofweek, rec_index, (uint32_t*)&pedo_db_data, &rsize))
+                {
+                    //TracerInfo("rsize:%d\r\n",total, rsize);
+                    uint8_t db_array[14];
+
+                    memset(db_array, 0x00, 14);
+                    db_array[_dwlen++] = pedo_db_data.time.year;
+                    db_array[_dwlen++] = pedo_db_data.time.month;
+                    db_array[_dwlen++] = pedo_db_data.time.day;
+                    db_array[_dwlen++] = pedo_db_data.time.hour;
+                    db_array[_dwlen++] = pedo_db_data.time.min;
+                    db_array[_dwlen++] = pedo_db_data.time.sec;
+                    db_array[_dwlen++] = pedo_db_data.ped_state.state;                    
+                    co_write16p(&db_array[_dwlen], pedo_db_data.ped_single.count);
+                    _dwlen += 2;
+                    db_array[_dwlen++] = pedo_db_data.endoftime.hour;
+                    db_array[_dwlen++] = pedo_db_data.endoftime.min;
+                    db_array[_dwlen++] = pedo_db_data.endoftime.sec;
+                    co_write16p(&db_array[_dwlen], pedo_db_data.calorie);
+                    _dwlen += 2;                    
+                        
+                    app_ht_history_send(BLE_DB_PED_COMMAND_ID, total, rec_index, db_array, _dwlen);                    
+                }
+                else
+                    return;
+            }
+            else
+            {
+                app_ht_history_send(BLE_DB_PED_COMMAND_ID, total, rec_index, NULL, _dwlen);   
+                TracerInfo("total:%d, index:%d, dayofweek:%d\r\n",total, rec_index, dayofweek);	
+            }
+
+        }
+        else 
+            return;
+
             
-        
-            p_rsc_measurement->eArray[_dwlen++] = _sHrmInfo.command;
-            p_rsc_measurement->eArray[_dwlen++] = _sHrmInfo.is_update_hrm;
-            _dwlen += uint16_encode(_sHrmInfo.hrmdata,&p_rsc_measurement->eArray[_dwlen]);
-    
-            //total calorie
-            _dwlen += uint32_encode(_sPedInfo.dwTotal_calorie,&p_rsc_measurement->eArray[_dwlen]);
+        CC_BLE_Cmd_UpdateHistoryRecordIndex();
+
+        if(CC_BLE_Cmd_GetHistoryRecordIndex() > total)
+        {
+            if(total != 0)
+                CC_DB_Delete_OneDay_File(ePed, dayofweek);           
+
+            CC_BLE_Cmd_ClrHistoryRecordIndex();
+            CC_BLE_Cmd_UpdateHistoryDayIndex();
+
+            return;
+        }
     }
     else
     {
-        _sSwimInfo.is_Swim_En = s_tVenusCB.cSwimmingEn;
-        _sSwimInfo.style_type= s_tVenusCB.stSwimmingResult.swimstyle;
-        _sSwimInfo.dwSwimCnt = s_tVenusCB.stSwimmingResult.swimcount;
-        _sSwimInfo.cSwimLap= s_tVenusCB.dwSwimLapCnt;
-        _sSwimInfo.dwTimestamp= s_tVenusCB.stSwimmingResult.timestamp;
-    
-        p_rsc_measurement->eArray[_dwlen++] = _sSwimInfo.command;
-        p_rsc_measurement->eArray[_dwlen++] = _sSwimInfo.is_Swim_En;
-        p_rsc_measurement->eArray[_dwlen++] = _sSwimInfo.style_type;
-        _dwlen += uint32_encode(_sSwimInfo.dwSwimCnt,&p_rsc_measurement->eArray[_dwlen]);
-        _dwlen += uint32_encode(_sSwimInfo.cSwimLap,&p_rsc_measurement->eArray[_dwlen]);
-        _dwlen += uint32_encode(_sSwimInfo.dwTimestamp,&p_rsc_measurement->eArray[_dwlen]);
-    }
+        if(0x00 != CC_BLE_Cmd_GetHistoryType())
+        {
+            CC_VENUS_RscTimerStop();
 
+            CC_BLE_Cmd_ClrHistoryType();
+
+            CC_VENUS_RscTimerStart(SPEED_AND_CADENCE_MEAS_INTERVAL);
+        }
+        
+        return;
+    }
 }
-*/
+
+static void _Ble_CommandHistroyHrmParse(void)
+{
+    uint32_t    _dwlen =0;    
+    uint16_t total;
+    uint16_t rec_index;
+    db_heartrate_t hr_db_data;    
+    uint16_t rsize;
+    app_date_time_t curr_time;
+    uint8_t dayofweek;
+    
+
+    CC_MainGet_CurrentTime(&curr_time); 
+
+    if(CC_BLE_Cmd_GetHistoryDayIndex() <= 7)
+    {
+        dayofweek = (curr_time.dayofweek + CC_BLE_Cmd_GetHistoryDayIndex()) % 7;
+
+        rec_index = CC_BLE_Cmd_GetHistoryRecordIndex();
+
+        if(FDS_SUCCESS == CC_Read_DayofRecoordLen(eHrm, dayofweek, &total))
+        {
+
+            if((total != 0) && (rec_index <= total))
+            {
+                if(FDS_SUCCESS == CC_Read_Record(eHrm, dayofweek, rec_index, (uint32_t*)&hr_db_data, &rsize))
+                {
+                    uint8_t db_array[14];
+
+                    memset(db_array, 0x00, 14);
+
+                    db_array[_dwlen++] = hr_db_data.time.year;
+                    db_array[_dwlen++] = hr_db_data.time.month;
+                    db_array[_dwlen++] = hr_db_data.time.day;
+                    db_array[_dwlen++] = hr_db_data.time.hour;
+                    db_array[_dwlen++] = hr_db_data.time.min;
+                    db_array[_dwlen++] = hr_db_data.time.sec;
+                    db_array[_dwlen++] = hr_db_data.data.hr;	
+
+                    app_ht_history_send(BLE_DB_HRM_COMMAND_ID, total, rec_index, db_array, _dwlen); 
+                    
+                    //TracerInfo("total:%d, index:%d\r\n",total, rec_index);
+                }
+                else
+                    return;
+            }
+            else
+            {
+                app_ht_history_send(BLE_DB_HRM_COMMAND_ID, total, rec_index, NULL, _dwlen); 
+
+                TracerInfo("total:%d, index:%d, dayofweek:%d\r\n",total, rec_index, dayofweek);	
+            }
+
+
+        }
+        else 
+        	return;
+
+        CC_BLE_Cmd_UpdateHistoryRecordIndex();
+
+        if(CC_BLE_Cmd_GetHistoryRecordIndex() > total)
+        {
+            if(total != 0)
+                CC_DB_Delete_OneDay_File(eHrm, dayofweek);
+
+            CC_BLE_Cmd_ClrHistoryRecordIndex();
+            CC_BLE_Cmd_UpdateHistoryDayIndex();
+
+            return;
+        }
+    }
+    else
+    {
+        if(0x00 != CC_BLE_Cmd_GetHistoryType())
+        {
+            CC_VENUS_RscTimerStop();
+
+            CC_BLE_Cmd_ClrHistoryType();
+            	
+            CC_VENUS_RscTimerStart(SPEED_AND_CADENCE_MEAS_INTERVAL);
+        }
+        return;
+    }
+}
+
+
+static void  _Ble_CommandHistroySleepParse(void)
+{
+    uint32_t    _dwlen =0;    
+    uint16_t    total;
+    uint16_t    rec_index;
+    db_sleep_t sleep_db_data;    
+    uint16_t rsize;
+    app_date_time_t curr_time;
+    uint8_t dayofweek;
+    
+    CC_MainGet_CurrentTime(&curr_time); 
+
+    if(CC_BLE_Cmd_GetHistoryDayIndex() <= 7)
+    {
+        dayofweek = (curr_time.dayofweek + CC_BLE_Cmd_GetHistoryDayIndex()) % 7;
+
+        rec_index = CC_BLE_Cmd_GetHistoryRecordIndex();
+        
+
+        if(FDS_SUCCESS == CC_Read_DayofRecoordLen(eSleep, dayofweek, &total))
+        {
+            if((total != 0) && (rec_index <= total))
+            {
+                if(FDS_SUCCESS == CC_Read_Record(eSleep, dayofweek, rec_index, (uint32_t*)&sleep_db_data, &rsize))
+                {
+
+                    uint8_t db_array[14];
+                    
+                    memset(db_array, 0x00, 14);
+
+                    db_array[_dwlen++] = sleep_db_data.detect_time.year;
+                    db_array[_dwlen++] = sleep_db_data.detect_time.month;
+                    db_array[_dwlen++] = sleep_db_data.detect_time.day;
+                    db_array[_dwlen++] = sleep_db_data.detect_time.hour;
+                    db_array[_dwlen++] = sleep_db_data.detect_time.min;
+                    db_array[_dwlen++] = sleep_db_data.detect_time.sec;
+                    db_array[_dwlen++] = sleep_db_data.detect_time.sleep_state;
+                    co_write32p(&db_array[_dwlen], sleep_db_data.period.exec_time_second);
+                    _dwlen += 4;                    
+                    db_array[_dwlen++] = sleep_db_data.detect_time.bCommandHeader;                    
+                    co_write16p(&db_array[_dwlen], sleep_db_data.period.period_min);
+                    _dwlen += 2;                       
+                        
+                    app_ht_history_send(BLE_DB_SLEEP_COMMAND_ID, total, rec_index, db_array, _dwlen);   
+
+                }
+                else
+                    return;
+            }
+            else
+            {
+                app_ht_history_send(BLE_DB_SLEEP_COMMAND_ID, total, rec_index, NULL, _dwlen);
+
+                TracerInfo("total:%d, index:%d, dayofweek:%d\r\n",total, rec_index, dayofweek);	
+
+            }
+            
+        }
+        else 
+            return;
+
+        CC_BLE_Cmd_UpdateHistoryRecordIndex();
+
+        if(CC_BLE_Cmd_GetHistoryRecordIndex() > total)
+        {
+            if(total != 0)
+                CC_DB_Delete_OneDay_File(eSleep, dayofweek);
+
+            CC_BLE_Cmd_ClrHistoryRecordIndex();
+            CC_BLE_Cmd_UpdateHistoryDayIndex();
+
+            return;
+        }
+    }
+    else
+    {
+        if(0x00 != CC_BLE_Cmd_GetHistoryType())
+        {
+            CC_VENUS_RscTimerStop();
+
+            CC_BLE_Cmd_ClrHistoryType();
+
+            CC_VENUS_RscTimerStart(SPEED_AND_CADENCE_MEAS_INTERVAL);
+        }
+        return;
+    }
+}
+
+static void _Ble_CommandHistroySwimParse(void)
+{
+    uint32_t    _dwlen =0;    
+    uint16_t    total;
+    uint16_t    rec_index;
+    db_swimming_t swim_db_data;    
+    uint16_t rsize;
+    app_date_time_t curr_time;
+    uint8_t dayofweek;
+
+    CC_MainGet_CurrentTime(&curr_time); 
+
+    if(CC_BLE_Cmd_GetHistoryDayIndex() <= 7)
+    {
+        dayofweek = (curr_time.dayofweek + CC_BLE_Cmd_GetHistoryDayIndex()) % 7;
+
+        rec_index = CC_BLE_Cmd_GetHistoryRecordIndex();
+
+        if(FDS_SUCCESS == CC_Read_DayofRecoordLen(eSwim, dayofweek, &total))
+        {
+            if((total != 0) && (rec_index <= total))
+            {
+
+                if(FDS_SUCCESS == CC_Read_Record(eSwim, dayofweek, rec_index, (uint32_t*)&swim_db_data, &rsize))
+                {
+
+                    uint8_t db_array[14];
+                    
+                    memset(db_array, 0x00, 14);
+                    
+                    db_array[_dwlen++] = swim_db_data.section.section_num;
+                    db_array[_dwlen++] = swim_db_data.section.uInfo.cInfo;
+                    db_array[_dwlen++] = swim_db_data.start_time.year;
+                    db_array[_dwlen++] = swim_db_data.start_time.month;
+                    db_array[_dwlen++] = swim_db_data.start_time.day;
+                    db_array[_dwlen++] = swim_db_data.start_time.hour;
+                    db_array[_dwlen++] = swim_db_data.start_time.min;
+                    db_array[_dwlen++] = swim_db_data.start_time.sec;
+                    co_write16p(&db_array[_dwlen], swim_db_data.endofperiod.swimming_count);
+                    _dwlen += 2; 
+                    co_write16p(&db_array[_dwlen], swim_db_data.start_time.lap_number);
+                    _dwlen += 2; 
+                    co_write16p(&db_array[_dwlen], swim_db_data.endofperiod.time_period);
+                    _dwlen += 2;                     
+
+                    app_ht_history_send(BLE_DB_SWIM_COMMAND_ID, total, rec_index, db_array, _dwlen);                       
+                }
+                else
+                    return;
+            }
+            else
+            {
+                app_ht_history_send(BLE_DB_SWIM_COMMAND_ID, total, rec_index, NULL, _dwlen);
+
+                TracerInfo("total:%d, index:%d, dayofweek:%d\r\n",total, rec_index, dayofweek);	
+
+            }
+
+        }
+        else 
+            return;
+
+        CC_BLE_Cmd_UpdateHistoryRecordIndex();
+
+        if(CC_BLE_Cmd_GetHistoryRecordIndex() > total)
+        {
+            if(total != 0)
+                CC_DB_Delete_OneDay_File(eSwim, dayofweek);
+
+            CC_BLE_Cmd_ClrHistoryRecordIndex();
+            CC_BLE_Cmd_UpdateHistoryDayIndex();
+
+            return;
+        }
+    }
+    else
+    {
+        if(0x00 != CC_BLE_Cmd_GetHistoryType())
+        {
+            CC_VENUS_RscTimerStop();
+
+            CC_BLE_Cmd_ClrHistoryType();
+
+            CC_VENUS_RscTimerStart(SPEED_AND_CADENCE_MEAS_INTERVAL);
+        }
+        return;
+    }
+}
 
 static void ble_notify_handler(void)
 {
@@ -999,12 +1471,28 @@ static void ble_notify_handler(void)
     {
         switch(db_notify_id)
         {
-            case 0xFA:
+#ifdef DB_EN    
+            case 0xFA:             
+                _Ble_CommandHistroyPedoParse();
+                break;
+            case 0xFB:
+                _Ble_CommandHistroyHrmParse();
+                break;
+            case 0xFC:
+                _Ble_CommandHistroySleepParse();
+                break;
+            case 0xFD:
+                _Ble_CommandHistroySwimParse();
+                break;
+
+#else   // w/o DB
+            case 0xFA:             
             case 0xFB:
             case 0xFC:
             case 0xFD:
                 if(CC_BLE_Cmd_GetHistoryDayIndex() <= 7)
                 {
+                    
                     app_ht_history_send(db_notify_id);
 
                     CC_BLE_Cmd_ClrHistoryRecordIndex();
@@ -1031,6 +1519,9 @@ static void ble_notify_handler(void)
                     }
                         
                 }
+
+#endif
+
         }
     }
     else
@@ -1056,7 +1547,7 @@ static void ble_notify_handler(void)
         {
             err_code = ble_rscs_measurement_send(&m_rscs, &m_rscs.rscs_measurement);
 
-            if(err_code != NRF_SUCCESS)
+            if(err_code != CC_SUCCESS)
                 m_rscs.re_send = 1;
             else
                 m_rscs.re_send = 0;
@@ -1066,7 +1557,7 @@ static void ble_notify_handler(void)
     {
         err_code = ble_rscs_measurement_send(&m_rscs, &m_rscs.rscs_measurement);
 
-        if(err_code != NRF_SUCCESS)
+        if(err_code != CC_SUCCESS)
             m_rscs.re_send = 1;
         else
             m_rscs.re_send = 0;
@@ -1232,7 +1723,7 @@ static void application_timers_start(void)
     //APP_ERROR_CHECK(err_code);
 
     // disable this timer to unify standby timers
-	  app_timer_start(s_tVenusTimerAccel, APP_TIMER_TICKS(ACCEL_FIFO_MODE_LONG_INTERVAL, APP_TIMER_PRESCALER), NULL);
+      app_timer_start(s_tVenusTimerAccel, APP_TIMER_TICKS(ACCEL_FIFO_MODE_LONG_INTERVAL, APP_TIMER_PRESCALER), NULL);
 
     app_timer_start(s_tVenusTimerDataTime, APP_TIMER_TICKS(DATETIME_CNT,APP_TIMER_PRESCALER), NULL);
 
@@ -1484,7 +1975,7 @@ static void _sensor_algorithm_liftarm_proc()
     //TracerInfo("_sensor_algorithm_liftarm_proc \r\n");
     if (eEnable== s_tVenusCB.cLiftarmEn)
     {
-        //static uint8_t  _cTmp =0;	
+        //static uint8_t  _cTmp =0;    
         //if (_cTmp ==0)
         if(1)
         {
@@ -1594,7 +2085,7 @@ static void _sensor_algorithm_swimming_proc(void)
         
         TracerInfo( "Swimming dwSwimLapCnt = %d \r\n",s_tVenusCB.dwSwimLapCnt);
         #ifdef DB_EN
-        _CC_DB_Save_SwimmingProc();
+        //_CC_DB_Save_SwimmingProc();
         #endif
         
         
@@ -1652,7 +2143,7 @@ void _sensor_accel_gyro_on_change(void)
 
                 CC_Mems_Fifo_Update_Data();
 
-                fifo_len = CC_Mems_Fifo_Get_UnRead_Length(MEMS_FIFO_USER_PEDO);		
+                fifo_len = CC_Mems_Fifo_Get_UnRead_Length(MEMS_FIFO_USER_PEDO);        
 
 
                 //TracerInfo("fifo_len: %d\r\n", fifo_len);
@@ -1676,7 +2167,7 @@ void _sensor_accel_gyro_on_change(void)
                    _wAccelData[0] = (s_tAcc.wdata[k] / 4); // x->y 
                    _wAccelData[1] = (s_tAcc.wdata[k+1] / 4); //y ->-x 
                    _wAccelData[2] = (s_tAcc.wdata[k+2] / 4);
-                 	_sensor_algorithm_liftarm_proc();    
+                     _sensor_algorithm_liftarm_proc();    
             
                     uint32_t       _dwPedTotalStepCount = 0;
                     signed char    _cPedState = ePedo_Stop;                     
@@ -1687,7 +2178,7 @@ void _sensor_accel_gyro_on_change(void)
                     {     
                         //TracerInfo("ped_cnt: %d, ped_st: %d\r\n", _dwPedTotalStepCount, _cPedState);
 
-#if 0 // for DB
+#ifdef DB_EN
                         
                         if(ePedo_Walk == _cPedState)
                         {
@@ -1721,7 +2212,7 @@ void _sensor_accel_gyro_on_change(void)
                                 s_tVenusCB.stPedRecordData_Walk.saveDB = 0;
 
                                 CC_VENUS_WALK_PedoTimerStop();
-                                CC_VENUS_WALK_PedoTimerStart(DB_PEDO_WALK_TIMEOUT_INTERVAL);	
+                                CC_VENUS_WALK_PedoTimerStart(DB_PEDO_WALK_TIMEOUT_INTERVAL);    
 
                         }
                         else if(ePedo_Run == _cPedState)
@@ -1766,7 +2257,7 @@ void _sensor_accel_gyro_on_change(void)
 
                     } 
 
-#if 0 // for DB
+#ifdef DB_EN
                     if(s_tVenusCB.cPedState != _cPedState)  
                     {
                     
@@ -1850,6 +2341,126 @@ void _sensor_accel_gyro_on_change(void)
 
 #endif
 
+#ifdef FACTORY_RESET
+void CC_SYS_FactroyReset_Setting(void)
+{
+    CC_Vib_Srv_Reset();
+//    CC_BLE_Cmd_SetSwimmingEN(0);
+    s_tVenusCB.cSwimmingEn = CC_BLE_Cmd_GetSwimmingEN();
+
+    if (CC_AppSrv_HR_IsHrmWorking())
+    {
+        
+        if (CC_AppSrv_HR_IsSingleHrEnabled())
+            CC_AppSrv_HR_StopSingleHR();
+        if (CC_AppSrv_HR_IsHrsEnabled())
+        {
+            CC_BLE_Cmd_SetNotificaitonState(eDisable,eNOTIFY_SETTING_HEARTRATESTRAP_MODE);
+            CC_AppSrv_HR_StopHRS();
+        }
+        if (CC_AppSrv_HR_Is24HrEnabled())
+        {
+            CC_BLE_Cmd_SetNotificaitonState(eDisable,eNOTIFY_SETTING_24HHEARTRATE_MODE);
+            CC_AppSrv_HR_Stop24HR();
+        }    
+    }
+
+    
+}
+void CC_SYS_FactoryReset_Handler(void)
+{
+    
+    //DB data reset
+    CC_DB_Factory_System_DataReset();
+
+    CC_DB_Set_Init_Done();
+
+    //System data reset
+    CC_BLE_Cmd_GetGeneralInfo(&s_tVenusCB.stGeneralInfo,true);
+    CC_AppSrv_HR_ResetLimited(s_tVenusCB.stGeneralInfo.cAge);
+    
+    CC_CalorieInfoSetting();
+
+    CC_BLE_Cmd_GetUnitInfo(&s_tVenusCB.stUnitInfo,true);
+
+    CC_BLE_Cmd_GetClockAlarm(&s_tVenusCB.stClockAlarm,true);
+    CC_ClockAlarm_Parse();
+
+    CC_BLE_Cmd_GetSleepTimeSetting(&s_tVenusCB.stSleepAlgExecPeriod,true);
+
+    CC_BLE_Cmd_GetCallState(&s_tVenusCB.cNotify_flag,
+                                                    &s_tVenusCB.cIncommingCallState,
+                                                    &s_tVenusCB.cIncommingSMSState,
+                                                    &s_tVenusCB.cLongsitEn,
+                                                    &s_tVenusCB.cLiftarmEn);
+
+
+    CC_DB_System_Save_Request(DB_SYS_GENERAL_INFO);
+    CC_DB_System_Save_Request(DB_SYS_ALARM);
+    CC_DB_System_Save_Request(DB_SYS_NOTIFY);
+    CC_DB_System_Save_Request(DB_SYS_UNIT);
+    CC_DB_System_Save_Request(DB_SYS_SLEEP_MONITOR_TIME_SETTING);
+
+    CC_DB_System_Check_Request_And_Save();
+
+    //Algorithm Reset
+    //Swim
+    CC_Swim_DeInit();
+    CC_Swim_Init(s_tVenusCB.stGeneralInfo.cSwim_Pool_Size,(band_location)s_tVenusCB.stGeneralInfo.bBandLocation);
+    s_tVenusCB.dwSwimLapCnt = 0; 
+    s_tVenusCB.dwLastSwimcount =0;
+    s_tVenusCB.wSwimmingLen = 0;
+    memset(&s_tVenusCB.stLastLapTime,0x00,sizeof(app_date_time_t));
+    
+    memset(&s_tVenusCB.stSwimmingResult,0x00,sizeof(result_event));
+
+    //Pedo and calorie
+    s_tVenusCB.dwPedTotalStepCount =0;
+    s_tVenusCB.dwPedRunCount=0;
+    s_tVenusCB.dwPedWalkCount=0;
+    s_tVenusCB.dwTotalCalorie=0;
+    s_tVenusCB.dwWalkCalorie=0;
+    s_tVenusCB.dwRunCalorie=0;
+
+    FP_PED_8Bit_terminate();
+    FP_PED_8Bit_initialize();
+    CC_CalorieBurn_Close();
+    CC_CalorieBurn_Open();
+
+    //Sleep
+#ifdef SLEEP_EN
+    g_fSleepCalSeconds = 0;
+    g_bSleepEnCnt =0.0f;
+    //CC_SleepMonitor_Srv_SyncTimeSlot(&s_tVenusCB.stSleepAlgExecPeriod); 
+    // factory reset will erase sleep algorithm start and end time records, 
+    // So, call disable
+    // after reset done, device will reinit sleep algorithm and save new start and end time records.
+    CC_SleepMonitor_Srv_Disable();
+    
+    CC_SleepMonitor_InitSetTimePeriod(&s_tVenusCB.stSleepAlgExecPeriod);
+    CC_SleepMonitor_Srv_StartService();
+    CC_SleepMonitor_Srv_PollingCheck();
+#endif
+
+    //Liftarm
+#ifdef LIFTARM_EN
+    s_tVenusCB.cLiftarmEn = CC_BLE_Cmd_GetLiftArmStatus();
+    if ( eEnable==s_tVenusCB.cLiftarmEn )
+    {
+        liftarm_open();
+        s_tVenusCB.stGeneralInfo.bBandLocation = CC_BLE_Cmd_GetLiftArmBandSetting();
+        liftarm_set_hangconfig(s_tVenusCB.stGeneralInfo.bBandLocation);
+    }
+    else 
+    {        
+        liftarm_close();     // default disable liftarm
+    }
+#endif
+
+    //Longsit
+    CC_Longsit_Srv_LowPowerStateChange(s_tVenusCB.cLongsitEn, s_tVenusCB.bIsLowPower);
+}
+#endif
 
 
 
@@ -2086,100 +2697,232 @@ bool _app_scheduler(void)
              _System_DayLine_Change();
          }   
 
-
-        if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_HRM_SERVICE_24HR_START) )
-        {
-            TracerInfo("\r\n<E_VENUS_EVENT_HRM_SERVICE_24HR_START>\r");
-
-            CC_AppSrv_HR_Start24HR();
-
-            VENUS_EVENT_OFF(E_VENUS_EVENT_HRM_SERVICE_24HR_START);
-
-            _bScheduleOperating = true;
-        }
-
-        if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_HRM_SERVICE_24HR_TO_PERIODIC_MEASUREMENT) )
-        {
-            TracerInfo("\r\n<E_VENUS_EVENT_HRM_SERVICE_24HR_TO_PERIODIC_MEASUREMENT>\r");
-
-            CC_AppSrv_24HR_Handler_ToPeriodicMeasurement();
-
-            VENUS_EVENT_OFF(E_VENUS_EVENT_HRM_SERVICE_24HR_TO_PERIODIC_MEASUREMENT);
-
-            _bScheduleOperating = true;
-        }
-
-        if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_HRM_SERVICE_24HR_TO_ONE_MEASUREMENT) )
-        {
-            TracerInfo("\r\n<E_VENUS_EVENT_HRM_SERVICE_24HR_TO_ONE_MEASUREMENT>\r");
-
-            CC_AppSrv_24HR_Handler_ToOneMeasurement();
-
-            VENUS_EVENT_OFF(E_VENUS_EVENT_HRM_SERVICE_24HR_TO_ONE_MEASUREMENT);
-
-            _bScheduleOperating = true;
-        }
-
-        if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_HRM_SERVICE_24HR_STOP) )
-        {
-            TracerInfo("\r\n<E_VENUS_EVENT_HRM_SERVICE_24HR_STOP>\r");
-
-            CC_AppSrv_HR_Stop24HR();
-
-            VENUS_EVENT_OFF(E_VENUS_EVENT_HRM_SERVICE_24HR_STOP);
-
-            _bScheduleOperating = true;
-        }
-
-        if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_HRM_SERVICE_RESUME) )
-        {
-            TracerInfo("\r\n<E_VENUS_EVENT_HRM_SERVICE_RESUME>\r\n");
-
-            CC_ResumeHrm();
-
-            VENUS_EVENT_OFF(E_VENUS_EVENT_HRM_SERVICE_RESUME);
-
-            _bScheduleOperating = true;
-        }
-
-        if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_HRM_SERVICE_HR_LOCK) )
-        {
-            VENUS_EVENT_OFF(E_VENUS_EVENT_HRM_SERVICE_HR_LOCK);
-
-            TracerInfo("\r\n<E_VENUS_EVENT_HRM_SERVICE_HR_LOCK>\r\n");
-
-            CC_AppSrv_HR_SetAppLockHrm(CC_APPSRV_HR_APP_LOCK);
-
-            _bScheduleOperating = true;
-        }
-
-        if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_HRM_SERVICE_HR_UNLOCK) )
-        {
-            VENUS_EVENT_OFF(E_VENUS_EVENT_HRM_SERVICE_HR_UNLOCK);
-
-            TracerInfo("\r\n<E_VENUS_EVENT_HRM_SERVICE_HR_UNLOCK>\r\n");
-
-            CC_AppSrv_HR_SetAppLockHrm(CC_APPSRV_HR_APP_UNLOCK);
-
-            _bScheduleOperating = true;
-        }
-
-
-
-#ifdef DB_FIRST_USE_EN
-         if(app_Check_Time_And_DB_Init() == 0x01)
+#ifdef DB_EN        
+         if((false == CC_DB_Check_Init_Done()) && (0x01 == app_Get_Update_Time_Flag()))
          {
-             CC_DB_Init(DB_INIT_FROM_APP);
-             app_Set_DB_Init_Done();
+             TracerInfo("DB_Init:%d\r\n",CC_DB_Get_Init_Type());
+             
+             if(DB_INIT_FROM_APP_FACTORY_RESET == CC_DB_Get_Init_Type())
+             {
+                 CC_SYS_FactroyReset_Setting();
+                 CC_SYS_FactoryReset_Handler(); 
+             }
+             else
+                 CC_DB_Init(CC_DB_Get_Init_Type());
+
+             CC_DB_Set_Init_Done();
          }
-#endif
 
-//         CC_DB_System_Check_Request_And_Save();
+         CC_DB_System_Check_Request_And_Save();
 
-//         CC_Pedo_Check_Save_Database();            
-            
+         CC_Pedo_Check_Save_Database();             
+#endif            
          _bScheduleOperating =true;
     }
+
+
+    if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_HRM_SERVICE_24HR_START) )
+    {
+         TracerInfo("\r\n<E_VENUS_EVENT_HRM_SERVICE_24HR_START>\r");
+
+         CC_AppSrv_HR_Start24HR();
+
+         VENUS_EVENT_OFF(E_VENUS_EVENT_HRM_SERVICE_24HR_START);
+
+         _bScheduleOperating = true;
+    }
+
+    if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_HRM_SERVICE_24HR_TO_PERIODIC_MEASUREMENT) )
+    {
+         TracerInfo("\r\n<E_VENUS_EVENT_HRM_SERVICE_24HR_TO_PERIODIC_MEASUREMENT>\r");
+
+         CC_AppSrv_24HR_Handler_ToPeriodicMeasurement();
+
+         VENUS_EVENT_OFF(E_VENUS_EVENT_HRM_SERVICE_24HR_TO_PERIODIC_MEASUREMENT);
+
+         _bScheduleOperating = true;
+    }
+
+    if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_HRM_SERVICE_24HR_TO_ONE_MEASUREMENT) )
+    {
+         TracerInfo("\r\n<E_VENUS_EVENT_HRM_SERVICE_24HR_TO_ONE_MEASUREMENT>\r");
+
+         CC_AppSrv_24HR_Handler_ToOneMeasurement();
+
+         VENUS_EVENT_OFF(E_VENUS_EVENT_HRM_SERVICE_24HR_TO_ONE_MEASUREMENT);
+
+         _bScheduleOperating = true;
+    }
+
+    if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_HRM_SERVICE_24HR_STOP) )
+    {
+         TracerInfo("\r\n<E_VENUS_EVENT_HRM_SERVICE_24HR_STOP>\r");
+
+         CC_AppSrv_HR_Stop24HR();
+
+         VENUS_EVENT_OFF(E_VENUS_EVENT_HRM_SERVICE_24HR_STOP);
+
+         _bScheduleOperating = true;
+    }
+
+    if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_HRM_SERVICE_RESUME) )
+    {
+         TracerInfo("\r\n<E_VENUS_EVENT_HRM_SERVICE_RESUME>\r\n");
+
+         CC_ResumeHrm();
+
+         VENUS_EVENT_OFF(E_VENUS_EVENT_HRM_SERVICE_RESUME);
+
+         _bScheduleOperating = true;
+    }
+
+    if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_HRM_SERVICE_HR_LOCK) )
+    {
+         VENUS_EVENT_OFF(E_VENUS_EVENT_HRM_SERVICE_HR_LOCK);
+
+         TracerInfo("\r\n<E_VENUS_EVENT_HRM_SERVICE_HR_LOCK>\r\n");
+
+         CC_AppSrv_HR_SetAppLockHrm(CC_APPSRV_HR_APP_LOCK);
+
+         _bScheduleOperating = true;
+    }
+
+    if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_HRM_SERVICE_HR_UNLOCK) )
+    {
+         VENUS_EVENT_OFF(E_VENUS_EVENT_HRM_SERVICE_HR_UNLOCK);
+
+         TracerInfo("\r\n<E_VENUS_EVENT_HRM_SERVICE_HR_UNLOCK>\r\n");
+
+         CC_AppSrv_HR_SetAppLockHrm(CC_APPSRV_HR_APP_UNLOCK);
+
+         _bScheduleOperating = true;
+    }
+
+    if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_HRM_SERVICE_HR_ALERT_OUT_OF_RANGE) )
+    {
+        TracerInfo("\r\n<E_VENUS_EVENT_HRM_SERVICE_HR_ALERT_OUT_OF_RANGE>\r\n");
+    
+         if (CC_PageMgr_IsBlockingOLED())
+        {
+            //NRF_LOG_INFO(" OLED IS BLOCKING \r\n");
+        }
+        else
+        {
+            if (CC_PageMgr_ActiveOLED())
+            {                    
+                CC_PageMgr_Proc(&s_tVenusCB.taEvent[E_VENUS_EVENT_HRM_SERVICE_HR_ALERT_OUT_OF_RANGE]);
+    
+                VENUS_EVENT_OFF(E_VENUS_EVENT_HRM_SERVICE_HR_ALERT_OUT_OF_RANGE);
+                _bScheduleOperating =true;
+            }
+        }
+    
+        _bScheduleOperating = true;
+    } 
+
+#ifdef FACTORY_RESET
+    if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_FACTORY_RESET_START))
+    {
+        TracerInfo("\r\n<E_VENUS_EVENT_FACTORY_RESET_START>\r\n");
+            
+      
+        VENUS_EVENT_OFF(E_VENUS_EVENT_FACTORY_RESET_START);
+            
+        _bScheduleOperating = true;
+
+        if (false == s_tVenusCB.bIsPreLowPower) 
+        {
+            VENUS_EVENT_ON(E_VENUS_EVENT_OLED_UPDATE_FACTORYRESET_START, eEvent_FACTORY_RESET_START);
+        }
+        else
+        {
+            //if (s_tVenusCB.eChargingState == eDEVICE_CHARGE_IN )
+            //{
+            //    VENUS_EVENT_ON(E_VENUS_EVENT_OLED_UPDATE_FACTORYRESET_START, eEvent_FACTORY_RESET_START);
+            //}
+            //else
+            {
+                VENUS_EVENT_ON(E_VENUS_EVENT_OLED_UPDATE_FACTORYRESET_STOP, eEvent_FACTORY_RESET_STOP);
+            }    
+        }
+           
+    }   
+
+    if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_OLED_UPDATE_FACTORYRESET_START))
+    {
+        TracerInfo("\r\n<E_VENUS_EVENT_FACTORY_RESET_PROC>\r\n");
+
+        if (CC_PageMgr_IsBlockingOLED())
+        {
+             //NRF_LOG_INFO(" OLED IS BLOCKING \r\n");
+        }
+        else
+        {
+             if (CC_PageMgr_ActiveOLED())
+             {                    
+                 CC_PageMgr_Proc(&s_tVenusCB.taEvent[E_VENUS_EVENT_OLED_UPDATE_FACTORYRESET_START]);
+    
+                 _bScheduleOperating = true;
+                                       
+                 CC_SYS_FactroyReset_Setting();
+                 CC_SYS_FactoryReset_Handler(); 
+                 VENUS_EVENT_OFF(E_VENUS_EVENT_OLED_UPDATE_FACTORYRESET_START);
+                 _bScheduleOperating =true;
+                 VENUS_EVENT_ON(E_VENUS_EVENT_OLED_UPDATE_FACTORYRESET_DONE, eEvent_FACTORY_RESET_DONE);
+
+             }
+        }            
+
+    }
+        
+           
+    if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_OLED_UPDATE_FACTORYRESET_DONE))
+    {
+         TracerInfo("\r\n<E_VENUS_EVENT_OLED_UPDATE_FACTORYRESET_DONE>\r\n");
+
+         if (CC_PageMgr_IsBlockingOLED())
+         {
+              //NRF_LOG_INFO(" OLED IS BLOCKING \r\n");
+         }
+         else
+         {
+              if (CC_PageMgr_ActiveOLED())
+              {                    
+                  CC_PageMgr_Proc(&s_tVenusCB.taEvent[E_VENUS_EVENT_OLED_UPDATE_FACTORYRESET_DONE]);
+  
+                  _bScheduleOperating = true;
+
+                  VENUS_EVENT_OFF(E_VENUS_EVENT_OLED_UPDATE_FACTORYRESET_DONE);
+                  _bScheduleOperating =true;
+              }
+         }
+            _bScheduleOperating =true;
+    }
+
+    if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_OLED_UPDATE_FACTORYRESET_STOP))
+    {
+         TracerInfo("\r\n<E_VENUS_EVENT_OLED_UPDATE_FACTORYRESET_STOP>\r\n");
+
+         if (CC_PageMgr_IsBlockingOLED())
+         {
+            //NRF_LOG_INFO(" OLED IS BLOCKING \r\n");
+         }
+         else
+         {
+             if (CC_PageMgr_ActiveOLED())
+             {                    
+                 CC_PageMgr_Proc(&s_tVenusCB.taEvent[E_VENUS_EVENT_OLED_UPDATE_FACTORYRESET_STOP]);
+
+                 _bScheduleOperating = true;
+
+                 VENUS_EVENT_OFF(E_VENUS_EVENT_OLED_UPDATE_FACTORYRESET_STOP);
+                 _bScheduleOperating =true;
+             }
+         }
+         _bScheduleOperating =true;
+    }
+#endif
+    
 
 
 
@@ -2243,7 +2986,7 @@ void venus_algorithm_init()
 
 void venus_platform_init(void)
 {  
-
+    ret_code_t ret;
 
     drvi_RequestIrq(TOUCH_INT_PIN, TOUCH_int_handler, IRQ_TYPE_EDGE_FALLING);
     drvi_EnableIrq(TOUCH_INT_PIN);
@@ -2259,7 +3002,12 @@ void venus_platform_init(void)
 
     app_displayoled_start();
 
+#ifdef DB_EN
+    ret = CC_Fds_init();
 
+    if(FDS_SUCCESS != ret)
+        TracerInfo("fds_init error: 0x%x\r\n", ret);
+#endif
 }
 
 void venus_app_init(void)
@@ -2289,12 +3037,6 @@ void venus_ready_to_bootloader(void)
 
 
 /*
-void rwip_ignore_ll_conn_param_update_patch(void)
-{
-    *p_llm_le_event_mask &= ~LE_REM_CON_PARA_REQ_EVT_MSK; // test by Samuel
-}
-*/
-/*
  * VENUS MAIN FUNCTION
  ****************************************************************************************
  */
@@ -2304,11 +3046,14 @@ int venus_main(void)
     
     TracerInfo("== Venus Main Start==\r\n");
 
+
 #ifdef CFG_BLE_APP
     uint32_t error = 0;
 
     GLOBAL_INT_STOP();
-
+#ifndef CFG_JUMP_TABLE_2
+    memset(((void *) JUMP_TABLE_2_BASE_ADDR), 0, 1024);
+#endif
     memset (((void *) 0x40006000), 0, 8192);
     memset (((void *) 0x20000048), 0, 0x820);   
     *((uint32_t *) 0x4000011C) = 0x00000008;
@@ -2320,14 +3065,18 @@ int venus_main(void)
     rwip_init(error);
 
     GLOBAL_INT_START();
+    
 #endif
 
 
+    GLOBAL_INT_START();
     venus_platform_init();
 
     venus_app_init();
 
     application_timers_start();
+
+    CC_DB_Init(DB_INIT_FROM_SYSTEM);
 
     s_tVenusCB.bAvg_BatLevel = 100;
 

@@ -10,7 +10,7 @@
 //#include "nrf_log.h"
 //#include "nrf_log_ctrl.h"
 #include "tracer.h"
-#define LONGSIT_TIME_TH 	60
+#define LONGSIT_TIME_TH     60
 
 
 extern uint8_t CC_Charge_Register(charge_cb_t cb);
@@ -63,7 +63,7 @@ void CC_Longsit_Srv_Disable(void)
         {
     if (LongSit_is_open())
         {
-		LongSit_close();
+        LongSit_close();
         TracerInfo("CC_Longsit_Srv_Disable  LongSit_close \r\n");
     }
 }
@@ -141,6 +141,6 @@ void CC_Longsit_Srv_handle(uint32_t _dwPedStep)
 
 void CC_Longsit_Srv_Reset_Notification(void)
 {
-	LongSit_reset_notification(); 
+    LongSit_reset_notification(); 
 }
 

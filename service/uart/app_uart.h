@@ -178,7 +178,7 @@ typedef void (* app_uart_event_handler_t) (app_uart_evt_t * p_app_uart_event);
  * @param[in]     error_handler     Function to be called in case of an error.
  * @param[in]     irq_priority      Interrupt priority level.
  *
- * @retval      NRF_SUCCESS               If successful initialization.
+ * @retval      CC_SUCCESS               If successful initialization.
  * @retval      NRF_ERROR_INVALID_LENGTH  If a provided buffer is not a power of two.
  * @retval      NRF_ERROR_NULL            If one of the provided buffers is a NULL pointer.
  *
@@ -204,7 +204,7 @@ uint32_t app_uart_init(const app_uart_comm_params_t * p_comm_params,
  *
  * @param[out] p_byte    Pointer to an address where next byte received on the UART will be copied.
  *
- * @retval NRF_SUCCESS          If a byte has been received and pushed to the pointer provided.
+ * @retval CC_SUCCESS          If a byte has been received and pushed to the pointer provided.
  * @retval NRF_ERROR_NOT_FOUND  If no byte is available in the RX buffer of the app_uart module.
  */
 uint32_t app_uart_get(uint8_t * p_byte);
@@ -215,7 +215,7 @@ uint32_t app_uart_get(uint8_t * p_byte);
  *
  * @param[in] byte   Byte to be transmitted on the UART.
  *
- * @retval NRF_SUCCESS        If the byte was successfully put on the TX buffer for transmission.
+ * @retval CC_SUCCESS        If the byte was successfully put on the TX buffer for transmission.
  * @retval NRF_ERROR_NO_MEM   If no more space is available in the TX buffer.
  *                            NRF_ERROR_NO_MEM may occur if flow control is enabled and CTS signal
  *                            is high for a long period and the buffer fills up.
@@ -226,13 +226,13 @@ uint32_t app_uart_put(uint8_t byte);
 /**@brief Function for flushing the RX and TX buffers (Only valid if FIFO is used).
  *        This function does nothing if FIFO is not used.
  *
- * @retval  NRF_SUCCESS  Flushing completed (Current implementation will always succeed).
+ * @retval  CC_SUCCESS  Flushing completed (Current implementation will always succeed).
  */
 uint32_t app_uart_flush(void);
 
 /**@brief Function for closing the UART module.
  *
- * @retval  NRF_SUCCESS             If successfully closed.
+ * @retval  CC_SUCCESS             If successfully closed.
  * @retval  NRF_ERROR_INVALID_PARAM If an invalid user id is provided or the user id differs from
  *                                  the current active user.
  */
