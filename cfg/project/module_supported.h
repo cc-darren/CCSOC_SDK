@@ -65,5 +65,8 @@
 #define PPG_PXT_PAH8002         0x5001
 #define PPG_NULL                0x5FFF //choose this if PPG is not in using
 
+//Supported ADC modules
+#define ADC_MCP_MCP3421         0x6001
+#define ADC_NULL                0x6FFF //choose this if ADC is not in using
 
 #endif  //_MODULE_SUPPORTED_H_

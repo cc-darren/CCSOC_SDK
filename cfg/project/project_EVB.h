@@ -206,6 +206,18 @@ Head Block of The File
 ***************************************************/
 #define VIBRATOR_IF             UseInterface(PWM,0)
 
+/**************************************************
+*   Config ADC interface
+*
+*   ADC_IF : the interface assigned to ADC
+*
+*   ADC_IF_TYPE / ADC_IF_ID will be generated automatically.
+*   ADC_IF_TYPE : the ADC interface type
+*   ADC_IF_ID   : the ADC interface id
+***************************************************/
+#define MODULE_ADC              ADC_MCP_MCP3421
+#define ADC_IF                  UseInterface(I2C,0)
+
 /******************************************************************************************************************
 *   Set SPI master configuration
 *   (all the configs are in cc6801_options.h)
@@ -393,6 +405,9 @@ Declaration of Global Variables & Functions
 Declaration of static Global Variables & Functions
 ******************************************************************************/
 // Sec 8: declaration of static global variable
+#define FSTORAGE_ENABLED     1
+#define FDS_ENABLED          1
+
 
 // Sec 9: declaration of static function prototype
 

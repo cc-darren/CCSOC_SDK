@@ -335,7 +335,7 @@
               <MiscControls>--no_inline --no_multifile -DMSC_CLOCK</MiscControls>
               <Define>FPGA</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app\Display;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\service\tracer;..\..\service\fds;..\..\service\fstorage;..\..\service\experimental_section_vars</IncludePath>
+              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app\Display;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\module\adc;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\service\tracer;..\..\service\fds;..\..\service\fstorage;..\..\service\experimental_section_vars</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -555,6 +555,11 @@
               <FilePath>..\..\module\mems\acc_null.c</FilePath>
             </File>
             <File>
+              <FileName>adc_null.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\module\adc\adc_null.c</FilePath>
+            </File>
+            <File>
               <FileName>mag_null.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\module\mems\mag_null.c</FilePath>
@@ -568,6 +573,11 @@
               <FileName>acc_lsm6ds3.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\module\mems\acc_lsm6ds3.c</FilePath>
+            </File>
+            <File>
+              <FileName>adc_mcp3421.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\module\adc\adc_mcp3421.c</FilePath>
             </File>
             <File>
               <FileName>mag_ak09912.c</FileName>
@@ -1324,6 +1334,11 @@
               <FilePath>..\..\module\mems\acc_null.c</FilePath>
             </File>
             <File>
+              <FileName>adc_null.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\module\adc\adc_null.c</FilePath>
+            </File>
+            <File>
               <FileName>mag_null.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\module\mems\mag_null.c</FilePath>
@@ -1337,6 +1352,11 @@
               <FileName>acc_lsm6ds3.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\module\mems\acc_lsm6ds3.c</FilePath>
+            </File>
+            <File>
+              <FileName>adc_mcp3421.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\module\adc\adc_mcp3421.c</FilePath>
             </File>
             <File>
               <FileName>mag_ak09912.c</FileName>
