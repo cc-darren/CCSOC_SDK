@@ -49,6 +49,9 @@
 
 
 
+//#define SCU_CLKCFG1_REG             (SCU_ADDR_BASE + 0x00000014)
+    #define SCU_CLKCFG1_REG_HSGatedClockEn      0x00000200
+
 //#define SCU_ISOCTRL_REG             (SCU_ADDR_BASE + 0x00000020)
 //define each bit for peripheral
 #define ISO_PSO_RTC       0x00000002
