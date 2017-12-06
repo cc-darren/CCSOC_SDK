@@ -142,7 +142,7 @@ Head Block of The File
 *   OLED_IF_TYPE : the OLED interface type
 *   OLED_IF_ID   : the OLED interface id
 ***************************************************/
-#define MODULE_OLED             OLED_SOLOMON_SSD1306
+#define MODULE_OLED             OLED_SOLOMON_SH1107
 #define OLED_IF                 UseInterface(SPI,2)
 
 /**************************************************

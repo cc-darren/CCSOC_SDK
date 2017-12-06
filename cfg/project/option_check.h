@@ -209,6 +209,9 @@
     #if (MODULE_OLED == OLED_SOLOMON_SSD1306)
       #define OLED_HEADER ssd1306
 
+    #elif (MODULE_OLED == OLED_SOLOMON_SH1107)
+      #define OLED_HEADER sh1107
+
     #elif (MODULE_OLED == OLED_NULL)
       #define OLED_HEADER oled_null
       #undef OLED_IF
