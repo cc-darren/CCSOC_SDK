@@ -1,7 +1,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "project_FPGA_Venus.h"
+#include "project.h"
 //#include "CC_HRM_drv.h"
 #include "CC_PageMgr.h"
 #include "ssd1306.h"

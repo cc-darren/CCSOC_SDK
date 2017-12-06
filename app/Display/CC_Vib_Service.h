@@ -1,6 +1,6 @@
 #ifndef _CC_PWM_SRV_
 #define _CC_PWM_SRV_
-#include "project_FPGA_Venus.h"
+#include "project.h"
 
 
 void CC_Vib_Srv_Reset(void);

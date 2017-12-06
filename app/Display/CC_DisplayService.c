@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "project_FPGA_Venus.h"
+#include "project.h"
 #include "CC_DisplayService.h"
 #include "CC_SleepMonitor_Service.h"
 #include "ssd1306.h"

@@ -12,7 +12,7 @@
 /******************************************************************************
 *  Filename:
 *  ---------
-*  project_FPGA.h
+*  project_test_FPGA.h
 *
 *  Project:
 *  --------
@@ -20,7 +20,7 @@
 *
 *  Description:
 *  ------------
-*  FW configuration for FPGA
+*  Test case configuration for FPGA
 *
 *  Author:
 *  -------
@@ -30,8 +30,8 @@
 *
 ******************************************************************************/
 
-#ifndef _PROJECT_FPGA_H_
-#define _PROJECT_FPGA_H_
+#ifndef _PROJECT_TEST_FPGA_H_
+#define _PROJECT_TEST_FPGA_H_
 
 /******************************************************************************
 Head Block of The File
@@ -207,6 +207,18 @@ Head Block of The File
 #define VIBRATOR_IF             UseInterface(PWM,0)
 
 /**************************************************
+*   Config ADC interface
+*
+*   ADC_IF : the interface assigned to ADC
+*
+*   ADC_IF_TYPE / ADC_IF_ID will be generated automatically.
+*   ADC_IF_TYPE : the ADC interface type
+*   ADC_IF_ID   : the ADC interface id
+***************************************************/
+#define MODULE_ADC              ADC_NULL
+#define ADC_IF                  UseInterface(I2C,0)
+
+/**************************************************
 *   Config TEST interface
 *
 *   TEST_XXX_IF : the interface assigned to Tester
@@ -278,7 +290,7 @@ Head Block of The File
 #define RTC_DEFAULT_MIN         0
 #define RTC_DEFAULT_SEC         0
 #define RTC_DEFAULT_WEEK        RTC_SUNDAY   //2017-1-1 is Sunday
-#define RTC_DEFAULT_H24         RTC_HOUR_AM   
+#define RTC_DEFAULT_H24         RTC_HOUR_AM
 
 
 /******************************************************************************************************************
@@ -439,4 +451,4 @@ Declaration of static Global Variables & Functions
 // Sec 10: C Functions
 ******************************************************************************/
 
-#endif // _PROJECT_FPGA_H_
+#endif // _PROJECT_TEST_FPGA_H_

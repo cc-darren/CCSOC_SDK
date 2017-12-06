@@ -55,6 +55,16 @@ Head Block of The File
     #else
         #include "project_FPGA.h"
     #endif
+#elif defined(EVB) && EVB
+    #if defined(BOOTLOADER) && BOOTLOADER
+        #include "project_bootloader_EVB.h"
+    #elif defined(ZEUS_WRISTBAND) && ZEUS_WRISTBAND
+        #include "project_zeus_EVB.h"
+    #elif defined(TESTCASE) && TESTCASE
+        #include "project_test_EVB.h"
+    #else
+        #include "project_EVB.h"
+    #endif
 #elif defined(ASIC) && ASIC
     #include "project_ASIC.h"
 #else
