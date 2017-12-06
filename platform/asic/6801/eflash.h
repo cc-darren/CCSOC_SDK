@@ -17,6 +17,8 @@
 
 typedef void (*fpEflash_Callback)(uint32_t sys_evt);
 
+//#define SCU_CLKCFG1_REG             (SCU_ADDR_BASE + 0x00000014)
+    #define SCU_CLKCFG1_REG_HSGatedClockEn      0x00000200
 //#define SCU_ICACHE_REG              (SCU_ADDR_BASE + 0x00000034)
     #define FLUSH_EN    0x00000001
 

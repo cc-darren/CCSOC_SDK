@@ -803,6 +803,7 @@ static ret_code_t record_header_flag_dirty(uint32_t * const p_record, uint16_t p
     fs_ret_t ret = fs_store(&fs_config, p_record,
                             (uint32_t*)&dwTmp, FDS_HEADER_SIZE_TL, NULL);
 #else
+    // Flag the record as dirty.
     fs_ret_t ret = fs_store(&fs_config, p_record,
                             (uint32_t*)&m_fds_tl_dirty, FDS_HEADER_SIZE_TL, NULL);
 #endif

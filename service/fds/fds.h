@@ -67,17 +67,17 @@ extern "C" {
 
 // <o> FDS_OP_QUEUE_SIZE - Size of the internal queue. 
 #ifndef FDS_OP_QUEUE_SIZE
-#define FDS_OP_QUEUE_SIZE 4
+#define FDS_OP_QUEUE_SIZE 16
 #endif
 
 // <o> FDS_CHUNK_QUEUE_SIZE - Determines how many @ref fds_record_chunk_t structures can be buffered at any time. 
 #ifndef FDS_CHUNK_QUEUE_SIZE
-#define FDS_CHUNK_QUEUE_SIZE 8
+#define FDS_CHUNK_QUEUE_SIZE 16
 #endif
 
 // <o> FDS_MAX_USERS - Maximum number of callbacks that can be registered. 
 #ifndef FDS_MAX_USERS
-#define FDS_MAX_USERS 8
+#define FDS_MAX_USERS 4
 #endif
 
 // <o> FDS_VIRTUAL_PAGES - Number of virtual flash pages to use. 

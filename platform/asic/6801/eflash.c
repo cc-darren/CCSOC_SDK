@@ -161,7 +161,7 @@ BOOL cc6801_EflashEraseALL(void)
     uint32_t tdata;  //32bit
 
     //set efalsh start address at 0
-    wr(EF_ACCESS_REG,0); 
+        wr(EF_ACCESS_REG,0<<8);
 
     //set efalsh mode to mass erase
     tdata = (EF_FLASHMODE_REG_AHBEnable | EF_FLASHMODE_REG_ModeMassErase);
@@ -221,7 +221,7 @@ BOOL cc6801_EflashErasePage(uint32_t dwEflashAdr)
         uint32_t tdata;  //32bit
 
         //set efalsh start address at 0
-        wr(EF_ACCESS_REG,dwEflashAdr); 
+        wr(EF_ACCESS_REG,dwEflashAdr<<8);
 
         //set efalsh mode to mass erase
         tdata = (EF_FLASHMODE_REG_AHBEnable | EF_FLASHMODE_REG_ModeMainErase);
@@ -257,9 +257,10 @@ void cc6801_EflashProgram(uint32_t dwEflashAdr,unsigned char * pBufAdr,uint32_t 
     wr(EF_ACCESS_REG,dwEflashAdr<<8);
     
     //set eflash mode to program
+    /*
     tdata = (EF_FLASHMODE_REG_AHBEnable | EF_FLASHMODE_REG_DMAChannel | EF_FLASHMODE_REG_ModeMain);
     wr(EF_FLASHMODE_REG, tdata);
-    
+    */
     //set dma write address
     tdata = dwEflashAdr;
     wr(EF_DMA_WADDR_REG,dwEflashAdr);
@@ -271,6 +272,12 @@ void cc6801_EflashProgram(uint32_t dwEflashAdr,unsigned char * pBufAdr,uint32_t 
     dwBufSize--;
     tdata = (EF_DMA_CTRL_REG_DMAEnable | EF_DMA_CTRL_REG_OPModeWrite | dwBufSize<<16 | EF_DMA_CTRL_REG_DMABurst | dwBufSize);
     wr(EF_DMA_CTRL_REG, tdata);
+    
+    //set eflash mode to program
+    
+    tdata = (EF_FLASHMODE_REG_AHBEnable | EF_FLASHMODE_REG_DMAChannel | EF_FLASHMODE_REG_ModeMain);
+    wr(EF_FLASHMODE_REG, tdata);
+    
 //    //wait eflash status
 //    do {
 //      rd(EF_INTERRUPT_REG,tdata);
