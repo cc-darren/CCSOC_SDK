@@ -604,6 +604,16 @@
               <FileType>1</FileType>
               <FilePath>..\..\module\oled\ssd1306_128x32.c</FilePath>
             </File>
+            <File>
+              <FileName>sh1107.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\module\oled\sh1107.c</FilePath>
+            </File>
+            <File>
+              <FileName>sh1107_128x32.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\module\oled\sh1107_128x32.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1383,6 +1393,16 @@
               <FileType>1</FileType>
               <FilePath>..\..\module\oled\ssd1306_128x32.c</FilePath>
             </File>
+            <File>
+              <FileName>sh1107.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\module\oled\sh1107.c</FilePath>
+            </File>
+            <File>
+              <FileName>sh1107_128x32.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\module\oled\sh1107_128x32.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2096,6 +2116,16 @@
               <FileName>ssd1306_128x32.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\module\oled\ssd1306_128x32.c</FilePath>
+            </File>
+            <File>
+              <FileName>sh1107.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\module\oled\sh1107.c</FilePath>
+            </File>
+            <File>
+              <FileName>sh1107_128x32.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\module\oled\sh1107_128x32.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2875,6 +2905,16 @@
               <FileName>ssd1306_128x32.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\module\oled\ssd1306_128x32.c</FilePath>
+            </File>
+            <File>
+              <FileName>sh1107.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\module\oled\sh1107.c</FilePath>
+            </File>
+            <File>
+              <FileName>sh1107_128x32.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\module\oled\sh1107_128x32.c</FilePath>
             </File>
           </Files>
         </Group>
