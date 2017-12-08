@@ -290,6 +290,17 @@ extern "C" {
 #define AES_DMA_WADDR_REG           (AES_ADDR_BASE + 0x0000000c)
 #define AES_DMA_RADDR_REG           (AES_ADDR_BASE + 0x00000010)
 
+//DMIC
+#define DMIC_INTR_REG               (DMIC_ADDR_BASE + 0x00000000)
+#define DMIC_CTRL_REG               (DMIC_ADDR_BASE + 0x00000004)
+#define DMIC_DMA_BYTE_REG           (DMIC_ADDR_BASE + 0x00000008)
+#define DMIC_DMA_L_START_REG        (DMIC_ADDR_BASE + 0x0000000C)
+#define DMIC_DMA_L_END_REG          (DMIC_ADDR_BASE + 0x00000010)
+#define DMIC_DMA_R_START_REG        (DMIC_ADDR_BASE + 0x00000014)
+#define DMIC_DMA_R_END_REG          (DMIC_ADDR_BASE + 0x00000018)
+#define DMIC_DMA_ENABLE_REG         (DMIC_ADDR_BASE + 0x0000001C)
+#define DMIC_DMA_CURRENT_ADDR_REG   (DMIC_ADDR_BASE + 0x00000020)
+
 
 
 /******************************/

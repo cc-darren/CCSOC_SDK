@@ -335,7 +335,7 @@
               <MiscControls>--no_inline --no_multifile -DMSC_CLOCK</MiscControls>
               <Define>FPGA TESTCASE</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app\Display;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\service\tracer;..\..\service\fds;..\..\service\fstorage;..\..\service\experimental_section_vars;..\..\test;..\..\test\inc</IncludePath>
+              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app\Display;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\service\tracer;..\..\service\fds;..\..\service\fstorage;..\..\service\experimental_section_vars;..\..\test;..\..\test\inc;..\..\service\ring_buffer</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -503,6 +503,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\platform\drvi\drvi_rtc.c</FilePath>
             </File>
+            <File>
+              <FileName>drvi_dmic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\drvi\drvi_dmic.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -583,6 +588,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\service\tracer\tracer.c</FilePath>
             </File>
+            <File>
+              <FileName>ring_buffer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\ring_buffer\ring_buffer.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -632,6 +642,11 @@
               <FileName>test_uart.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\test\src\test_uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_dmic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_dmic.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1103,7 +1118,7 @@
               <MiscControls></MiscControls>
               <Define>FPGA TESTCASE</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\platform\asic\6801;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\uart;..\..\service\tracer;..\..\test;..\..\test\inc</IncludePath>
+              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\platform\asic\6801;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\uart;..\..\service\tracer;..\..\test;..\..\test\inc;..\..\service\ring_buffer</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1271,6 +1286,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\platform\drvi\drvi_rtc.c</FilePath>
             </File>
+            <File>
+              <FileName>drvi_dmic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\drvi\drvi_dmic.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1351,6 +1371,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\service\tracer\tracer.c</FilePath>
             </File>
+            <File>
+              <FileName>ring_buffer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\ring_buffer\ring_buffer.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1400,6 +1425,11 @@
               <FileName>test_uart.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\test\src\test_uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_dmic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_dmic.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1806,7 +1836,7 @@
               <MiscControls>--no_inline --no_multifile -DMSC_CLOCK</MiscControls>
               <Define>EVB TESTCASE</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app\Display;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\service\tracer;..\..\service\fds;..\..\service\fstorage;..\..\service\experimental_section_vars;..\..\test;..\..\test\inc</IncludePath>
+              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app\Display;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\service\tracer;..\..\service\fds;..\..\service\fstorage;..\..\service\experimental_section_vars;..\..\test;..\..\test\inc;..\..\service\ring_buffer</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1974,6 +2004,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\platform\drvi\drvi_rtc.c</FilePath>
             </File>
+            <File>
+              <FileName>drvi_dmic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\drvi\drvi_dmic.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2054,6 +2089,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\service\tracer\tracer.c</FilePath>
             </File>
+            <File>
+              <FileName>ring_buffer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\ring_buffer\ring_buffer.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2103,6 +2143,11 @@
               <FileName>test_uart.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\test\src\test_uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_dmic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_dmic.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2574,7 +2619,7 @@
               <MiscControls></MiscControls>
               <Define>EVB TESTCASE</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\platform\asic\6801;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\uart;..\..\service\tracer;..\..\test;..\..\test\inc</IncludePath>
+              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\platform\asic\6801;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\uart;..\..\service\tracer;..\..\test;..\..\test\inc;..\..\service\ring_buffer</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -2742,6 +2787,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\platform\drvi\drvi_rtc.c</FilePath>
             </File>
+            <File>
+              <FileName>drvi_dmic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\drvi\drvi_dmic.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2822,6 +2872,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\service\tracer\tracer.c</FilePath>
             </File>
+            <File>
+              <FileName>ring_buffer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\ring_buffer\ring_buffer.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2871,6 +2926,11 @@
               <FileName>test_uart.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\test\src\test_uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_dmic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_dmic.c</FilePath>
             </File>
           </Files>
         </Group>

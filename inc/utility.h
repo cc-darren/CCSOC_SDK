@@ -64,6 +64,15 @@ typedef enum
 
 #endif
 
+
+#if !defined(MAX)
+#define MAX(a, b) (((a) > (b)) ? (a) : (b))
+#endif
+#if !defined(MIN)
+#define MIN(a, b) (((a) < (b)) ? (a) : (b))
+#endif
+
+
 /**@brief Perform rounded integer division (as opposed to truncating the result).
  *
  * @param[in]   A   Numerator.

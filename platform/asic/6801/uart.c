@@ -353,6 +353,10 @@ static int cc6801_UartBaudrateSet(T_UartPort *pUartPort)
         pUartCtrlBase->dw.ovr = 0x07;
         break;
       case UART_BAUDRATE_57600:
+        pUartCtrlBase->dw.baud = 0x2;
+        pUartCtrlBase->dw.psr = ((0xC << 3) | 0x0);
+        pUartCtrlBase->dw.ovr = 0x07;
+        break;
       default:
       case UART_BAUDRATE_115200:
         //FPGA DEMO setting, clk=16M
