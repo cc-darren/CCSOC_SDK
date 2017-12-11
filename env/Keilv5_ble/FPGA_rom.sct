@@ -7,6 +7,11 @@ SOC 0x00000000 0x20000  ; 128KB
     STARTUP + 0
     {
         *(VECTOR_IN_EFLASH, +First)
+    }
+
+    HEADER + 0 ;should be start from offset 0x08
+    {
+        *(IMAGE_HEADER, +First)
         *(InRoot$$Sections)
     }
 

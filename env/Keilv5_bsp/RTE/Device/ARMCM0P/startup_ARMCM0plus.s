@@ -124,8 +124,19 @@ __Vectors_End
 
 __Vectors_Size  EQU     __Vectors_End - __Vectors
 
-                AREA    |.text|, CODE, READONLY
+                AREA    IMAGE_HEADER, DATA, READONLY
+                IMPORT  |Load$$LR$$SOC$$Length|
+                EXPORT  __Header
+__Header
+                DCB     "6801"                  ;4 bytes name
+                DCD     0x01001001              ;4 bytes version: 0xAABBBCCC, AA=major, BBB=minor, CCC=update
+                DCD     |Load$$LR$$SOC$$Length| ;4 bytes image size
+                DCD     0xFFFFFFFF              ;4 bytes image checksum
+                DCD     0xFFFFFFFF              ;4 bytes flag for future usage
+                DCD     0xFFFFFFFF              ;4 bytes to store random key(should be in bootloader)
+__Heade_End
 
+                AREA    |.text|, CODE, READONLY
 ; Reset Handler
 
 Reset_Handler   PROC
