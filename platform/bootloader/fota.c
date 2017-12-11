@@ -30,13 +30,6 @@
 #include "rwip.h"
 #endif
 
-/** Leaves the minimum of the two 32-bit arguments */
-/*lint -emacro(506, MIN) */ /* Suppress "Constant value Boolean */
-#define MIN(a, b) ((a) < (b) ? (a) : (b))
-/** Leaves the maximum of the two 32-bit arguments */
-/*lint -emacro(506, MAX) */ /* Suppress "Constant value Boolean */
-#define MAX(a, b) ((a) < (b) ? (b) : (a))
-
 #define SCHED_MAX_EVENT_DATA_SIZE       MAX(APP_TIMER_SCHED_EVT_SIZE, 0)                        /**< Maximum size of scheduler events. */
 
 #define SCHED_QUEUE_SIZE                20                                                      /**< Maximum number of events in the scheduler queue. */
