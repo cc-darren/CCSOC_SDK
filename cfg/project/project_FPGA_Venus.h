@@ -214,6 +214,18 @@ Head Block of The File
 ***************************************************/
 #define VIBRATOR_IF             UseInterface(PWM,0)
 
+/**************************************************
+*   Config ADC interface
+*
+*   ADC_IF : the interface assigned to ADC
+*
+*   ADC_IF_TYPE / ADC_IF_ID will be generated automatically.
+*   ADC_IF_TYPE : the ADC interface type
+*   ADC_IF_ID   : the ADC interface id
+***************************************************/
+#define MODULE_ADC              ADC_NULL
+#define ADC_IF                  UseInterface(I2C,0)
+
 /******************************************************************************************************************
 *   Set SPI master configuration
 *   (all the configs are in cc6801_options.h)
@@ -222,8 +234,11 @@ Head Block of The File
 *    Ex : SPIM0_CONFIG         (SPI_MODE_0 | SPI_CS_HIGH)
 *******************************************************************************************************************/
 #define SPIM0_CONFIG            (SPI_MODE_0)
+#define SPIM0_CLOCK             (1000000)
 #define SPIM1_CONFIG            (SPI_MODE_3)
+#define SPIM1_CLOCK             (10000000)
 #define SPIM2_CONFIG            (SPI_MODE_3)
+#define SPIM2_CLOCK             (8000000)
 
 
 /******************************************************************************************************************

@@ -15,6 +15,8 @@
 #include "global.h"
 #include "cc6801_reg.h"
 
+#define TracerFormat(fmt) "SPI: " fmt
+
 #define SPIM_INT_EVENT_DISABLE_BIT                     (0)
 #define SPIM_INT_EVENT_DISABLE_MASK                    (SPIM_INT_EVENT_DISABLE_BIT << 0)
 #define SPIM_INT_EVENT_ENABLE_BIT                      (1)
@@ -81,7 +83,6 @@
 #define SPIM_DMA_RWADDR_BIT                            (0x1FFFF)
 #define SPIM_DMA_RWADDR_MASK                           (SPIM_DMA_RWADDR_BIT << 0)
 
-
 typedef struct S_SpiDevice T_SpiDevice;
 
 typedef enum
@@ -102,6 +103,7 @@ typedef enum
 typedef struct
 {
     void *pReg;
+    uint32_t dwClkHz;
     int (*fpSpimXfer)(U_regSPI * p_spim);
 } T_SpiMaster;
 

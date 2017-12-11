@@ -32,9 +32,15 @@
 
 #include <stdio.h>
 
+#include "drvi_clock.h"
 #include "drvi_spi.h"
 #include "spim.h"
 #include "tracer.h"
+
+#define SPI_CLKDIV_MAX    0x1F
+
+extern E_ClockSupported g_dwCurrentClock;
+extern const T_ClockConfig g_aClockTable[CLOCK_TOTAL_SUPPORTED];
 
 volatile uint32_t SPI0_M_INTR = 0;
 volatile uint32_t SPI1_M_INTR = 0;
@@ -176,7 +182,7 @@ static int cc6801_SpimTransfer(uint8_t bBusNum,
     return g_tSpim[bBusNum].fpSpimXfer(pSpimBase);
 }
 
-__STATIC_INLINE void cc6801_SpimConfig(U_regSPI * pSpimBase,
+static void cc6801_SpimConfig(U_regSPI * pSpimBase,
                                         T_SpiDevice *spi)
 {
     uint32_t dwDmaCtrl = pSpimBase->dw.DmaCtrl;
@@ -211,50 +217,62 @@ __STATIC_INLINE void cc6801_SpimConfig(U_regSPI * pSpimBase,
     pSpimBase->dw.spiCtrl = dwSpiCtrl;
     pSpimBase->dw.DmaCtrl = dwDmaCtrl;
 
-    TracerInfo("setup mode %d, %s%s%s %u Hz max\n",
+    TracerInfo("setup mode %d, %s%s%s %u Hz\n",
         (int) (spi->wMode & (SPI_CPOL | SPI_CPHA)),
         (spi->wMode & SPI_CS_HIGH) ? "cs_high, " : "",
         (spi->wMode & SPI_LSB_FIRST) ? "lsb, " : "",
         (spi->wMode & SPI_3WIRE) ? "3wire, " : "",
-        spi->dwMaxSpeedHz);
+        g_tSpim[spi->bBusNum].dwClkHz);
 }
 
 int cc6801_SpimInit(T_SpiDevice *pSpiDev)
 {
     U_regSPI *pSpimBase;
+    uint32_t dwSysClkHz = 0;
+    uint32_t dwSpiMaxClkHz = 0;
+    uint8_t bClkDiv = 1;
+
     uint8_t bIdx = pSpiDev->bBusNum;
+
+    dwSysClkHz = g_aClockTable[g_dwCurrentClock].dwMHz;
+    dwSpiMaxClkHz = dwSysClkHz/2;
+    bClkDiv = dwSpiMaxClkHz/pSpiDev->dwMaxSpeedHz;
+
+    if(bClkDiv > SPI_CLKDIV_MAX)
+        bClkDiv = SPI_CLKDIV_MAX;
+    else if (bClkDiv <= 0)
+        bClkDiv = 1;
+
+    g_tSpim[bIdx].dwClkHz = dwSpiMaxClkHz/bClkDiv;
 
     if (pSpiDev->bBusNum == SPIM_0)
     {
+        regCKGEN->bf.spi0ClkDiv = bClkDiv;
         g_tSpim[bIdx].pReg = (void *)regSPI0,
         g_tSpim[bIdx].fpSpimXfer = cc6801_Spim0Xfer;
     }
     else if (pSpiDev->bBusNum == SPIM_1)
     {
+        regCKGEN->bf.spi1ClkDiv = bClkDiv;
         g_tSpim[bIdx].pReg = (void *)regSPI1,
         g_tSpim[bIdx].fpSpimXfer = cc6801_Spim1Xfer;
     }
     else if (pSpiDev->bBusNum == SPIM_2)
     {
+        regCKGEN->bf.spi2ClkDiv = bClkDiv;
         g_tSpim[bIdx].pReg = (void *)regSPI2,
         g_tSpim[bIdx].fpSpimXfer = cc6801_Spim2Xfer;
     }
     else
     {
-        TracerErr("Not Support SPI%d\r\n", pSpiDev->bBusNum);
+        TracerErr("Not Support SPI%d\n", pSpiDev->bBusNum);
         return CC_ERROR_INVALID_PARAM;
     }
 
-    pSpimBase = g_tSpim[bIdx].pReg;
-
-    regCKGEN->bf.spi0ClkDiv = 2;
-    regCKGEN->bf.spi1ClkDiv = 2;
-    regCKGEN->bf.spi2ClkDiv = 2;
-
     cc6801_SpimConfig(g_tSpim[bIdx].pReg, pSpiDev);
 
+    pSpimBase = g_tSpim[bIdx].pReg;
     pSpimBase->bf.spi_m_en = SPIM_CTRL_ENABLE_BIT;
-
     pSpimBase->bf.error_int_en = SPIM_INT_ERROR_ENABLE_BIT;
     pSpimBase->bf.event_int_en = SPIM_INT_EVENT_ENABLE_BIT;
 
