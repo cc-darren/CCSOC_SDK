@@ -57,6 +57,13 @@
 #define I2C_DMA_ENABLE_BIT (1)
 #define I2C_DMA_ENABLE_MASK (I2C_DMA_ENABLE_BIT << 31)
 
+#define I2C_CONFIG_PRESCALER_SHIFT                     (16)
+#define I2C_CONFIG_PRESCALER_BIT                       (0xFFF)
+#define I2C_CONFIG_PRESCALER_MASK                      (I2C_CONFIG_PRESCALER_BIT << I2C_CONFIG_PRESCALER_SHIFT)
+
+#define I2C_CONFIG_CFGMASK_SHIFT                       (2)
+#define I2C_CONFIG_CFGMASK_BIT                         (0x3F)
+#define I2C_CONFIG_CFGMASK_MASK                        (I2C_CONFIG_CFGMASK_BIT << I2C_CONFIG_CFGMASK_SHIFT)
 
 #define I2C_ERR_NONE        0x00
 #define I2C_ERR_NO_ACK      0x01
@@ -74,10 +81,12 @@ typedef enum
 typedef struct
 {
     U_regI2C *pReg;
+    uint8_t bClkSrc;
+
     int (*fpI2cXfer)(U_regI2C * p_i2c);
 } cc6801_I2cMaster;
 
-int cc6801_I2cInit(uint8_t bBusNum);
+int cc6801_I2cInit(T_I2cDevice *tpDev);
 
 int cc6801_I2cFreqSet(uint8_t bBusNum, uint32_t dwFreq);
 

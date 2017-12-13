@@ -16,27 +16,22 @@
 #if defined I2C_INUSE && (I2C_INUSE)
 int drvi_I2cInit(void)
 {
-    uint8_t bBusNum = 0;
-    uint32_t dwClock = 0;
+    T_I2cDevice tI2cDev;
     int iResult = 0;
 
     #if defined I2C0_INUSE && (I2C0_INUSE)
-    bBusNum = 0;
-    iResult = cc6801_I2cInit(bBusNum);
-    if (!iResult)
+    tI2cDev.bBusNum = 0;
+    tI2cDev.dwFreq = I2C0_CLOCK;
+    iResult = cc6801_I2cInit(&tI2cDev);
+    if (iResult)
         TracerErr("I2C0 initial error\n");
-
-    dwClock = I2C0_CLOCK;
-    cc6801_I2cFreqSet(bBusNum, dwClock);
     #endif
     #if defined I2C1_INUSE && (I2C1_INUSE)
-    bBusNum = 1;
-    iResult = cc6801_I2cInit(bBusNum);
-    if (!iResult)
+    tI2cDev.bBusNum = 1;
+    tI2cDev.dwFreq = I2C1_CLOCK;
+    iResult = cc6801_I2cInit(&tI2cDev);
+    if (iResult)
         TracerErr("I2C1 initial error\n");
-
-    dwClock = I2C1_CLOCK;
-    cc6801_I2cFreqSet(bBusNum, dwClock);
     #endif
 
     return iResult;

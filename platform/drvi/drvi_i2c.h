@@ -33,6 +33,7 @@ typedef struct S_I2cDevice
 {
     uint8_t bBusNum;
     uint8_t bAddr;
+    uint32_t dwFreq;
 
     void (*fpComplete)(T_I2cEvent *pEvent);
 } T_I2cDevice;
