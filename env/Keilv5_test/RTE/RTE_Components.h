@@ -4,7 +4,7 @@
  *      *** Do not modify ! ***
  *
  * Project: 'cc6801' 
- * Target:  'FPGA_M0p' 
+ * Target:  'EVB_M0p' 
  */
 
 #ifndef RTE_COMPONENTS_H
