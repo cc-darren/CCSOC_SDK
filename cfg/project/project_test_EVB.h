@@ -410,11 +410,13 @@ Head Block of The File
 
 
 //#define TEST_AES 1
-#define TEST_CLOCK 1
-#define TEST_MEMRW 1
+//#define TEST_CLOCK 1
+//#define TEST_MEMRW 1
 //#define TEST_SPI 1
 //#define TEST_I2C 1
 //#define TEST_UART_LOOPBACK 1
+#define TEST_WKTM 1
+//#define TEST_DMIC  1        //When DMIC is enabled, other testing must be disabled.
 
 /******************************************************************************
 Declaration of External Variables & Functions

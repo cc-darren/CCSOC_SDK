@@ -648,6 +648,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\test\src\test_dmic.c</FilePath>
             </File>
+            <File>
+              <FileName>test_wktm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_wktm.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1431,6 +1436,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\test\src\test_dmic.c</FilePath>
             </File>
+            <File>
+              <FileName>test_wktm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_wktm.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2149,6 +2159,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\test\src\test_dmic.c</FilePath>
             </File>
+            <File>
+              <FileName>test_wktm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_wktm.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2416,12 +2431,12 @@
             <UseTargetDll>1</UseTargetDll>
             <UseExternalTool>0</UseExternalTool>
             <RunIndependent>0</RunIndependent>
-            <UpdateFlashBeforeDebugging>1</UpdateFlashBeforeDebugging>
+            <UpdateFlashBeforeDebugging>0</UpdateFlashBeforeDebugging>
             <Capability>1</Capability>
-            <DriverSelection>4096</DriverSelection>
+            <DriverSelection>4099</DriverSelection>
           </Flash1>
-          <bUseTDR>1</bUseTDR>
-          <Flash2>BIN\UL2CM3.DLL</Flash2>
+          <bUseTDR>0</bUseTDR>
+          <Flash2>Segger\JL2CM3.dll</Flash2>
           <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
@@ -2649,7 +2664,7 @@
             <TextAddressRange>0x00000000</TextAddressRange>
             <DataAddressRange>0x20000000</DataAddressRange>
             <pXoBase></pXoBase>
-            <ScatterFile>.\FPGA_eflash.sct</ScatterFile>
+            <ScatterFile>.\FPGA_ram.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
             <Misc></Misc>
@@ -2931,6 +2946,11 @@
               <FileName>test_dmic.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\test\src\test_dmic.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_wktm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_wktm.c</FilePath>
             </File>
           </Files>
         </Group>
