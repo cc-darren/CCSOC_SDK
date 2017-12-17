@@ -50,7 +50,7 @@ Head Block of The File
 
 //#define DHRY_TEST               1
 #define MSC_CLOCK               1
-#define CLK_TCK                 32000   //HW timer clock is 32KHz for Dhrystone measurement
+#define CLK_TCK                 32768   //HW timer clock is 32KHz for Dhrystone measurement
 #define Number_Of_Runs          1000000
 
 
@@ -415,8 +415,9 @@ Head Block of The File
 //#define TEST_SPI 1
 //#define TEST_I2C 1
 //#define TEST_UART_LOOPBACK 1
-#define TEST_WKTM 1
+//#define TEST_WKTM 1
 //#define TEST_DMIC  1        //When DMIC is enabled, other testing must be disabled.
+#define TEST_DHRYSTONE 1
 
 /******************************************************************************
 Declaration of External Variables & Functions

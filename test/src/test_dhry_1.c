@@ -129,6 +129,8 @@ void dhry_main(void)
   /* main program, corresponds to procedures        */
   /* Main and Proc_0 in the Ada version             */
 {
+  static uint32_t i;
+    
         One_Fifty       Int_1_Loc;
   REG   One_Fifty       Int_2_Loc;
         One_Fifty       Int_3_Loc;
@@ -159,19 +161,19 @@ void dhry_main(void)
 
 #if 1
   TracerInfo ("\n");
-  TracerInfo ("Dhrystone Benchmark, Version 2.1 (Language: C)\n");
-  TracerInfo ("\n");
+  TracerInfo ("Dhrystone Benchmark, Version 2.1 (Language: C)  r=%d\n", ++i);
+  //TracerInfo ("\n");
   if (Reg)
   {
     TracerInfo ("Program compiled with 'register' attribute\n");
-    TracerInfo ("\n");
+    //TracerInfo ("\n");
   }
   else
   {
     TracerInfo ("Program compiled without 'register' attribute\n");
-    TracerInfo ("\n");
+    //TracerInfo ("\n");
   }
-  TracerInfo ("Please give the number of runs through the benchmark: ");
+  //TracerInfo ("Please give the number of runs through the benchmark: ");
 #endif
   {
 
@@ -179,8 +181,7 @@ void dhry_main(void)
 
   }
 #if 1
-  TracerInfo ("\n");
-
+  //TracerInfo ("\n");
   TracerInfo ("Execution starts, %d runs through Dhrystone\n", Number_Of_Runs);
 #endif
 
@@ -266,7 +267,7 @@ void dhry_main(void)
   free(Next_Ptr_Glob);
   free(Ptr_Glob);
   
-#if 1
+#if 0
   TracerInfo ("Execution ends\n");
   TracerInfo ("\n");
   TracerInfo ("Final values of the variables used in the benchmark:\n");
@@ -347,7 +348,7 @@ void dhry_main(void)
     TracerInfo ("%6.1f \n", Microseconds);
     TracerInfo ("Dhrystones per Second:                      ");
     TracerInfo ("%6.1f \n", Dhrystones_Per_Second);
-    TracerInfo ("\n");
+    //TracerInfo ("\n");
 
     DMIPS = Dhrystones_Per_Second / (float) 1757;
     DMIPS_Per_MHz = DMIPS * 1000000 / (float) g_aClockTable[g_dwCurrentClock].dwMHz;

@@ -54,7 +54,7 @@ Head Block of The File
 
 //#define DHRY_TEST               1
 #define MSC_CLOCK               1
-#define CLK_TCK                 32000   //HW timer clock is 32KHz for Dhrystone measurement
+#define CLK_TCK                 32768   //HW timer clock is 32KHz for Dhrystone measurement
 #define Number_Of_Runs          1000000
 
 

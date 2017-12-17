@@ -114,7 +114,6 @@ static void INTERVAL_800ms_timeout_handler(void *p_context)
     Cnt800++;
 }
 
-
 static void timers_start_test(void)
 {
     volatile uint32_t err_code;
@@ -183,4 +182,3 @@ void TEST_Wktm(void)
 }
 
 #endif //TEST_WKTM
-
