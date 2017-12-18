@@ -373,16 +373,10 @@ void cc6801_UartConfigSet(T_UartPort *pUartPort)
 {
     T_cc6801UartPort port = g_tUartPort[pUartPort->bPortNum];
     U_regUARTCTRL *pUartCtrlBase = port.pCtrlReg;
-    uint8_t bFrs, bMdsl, bIntCtrl;
+    uint8_t bFrs = 0, bMdsl = 0, bIntCtrl = 0;
 
     bFrs = cc6801_ComputeFRS(pUartPort->dwConfig);
     cc6801_UartBaudrateSet(pUartPort);
-
-    bIntCtrl |= UART_CTRL_INT_ETI_ENABLE_MASK;
-    bIntCtrl |= UART_CTRL_INT_EEI_ENABLE_MASK;
-    bIntCtrl |= UART_CTRL_INT_ERI_ENABLE_MASK;
-
-    bMdsl |= UART_MDSL_RTS_ENABLE_MASK;
 
     if (pUartPort->dwConfig & UART_RTSCTS)
     {
@@ -390,8 +384,13 @@ void cc6801_UartConfigSet(T_UartPort *pUartPort)
         bMdsl |= UART_MDSL_FCE_ENABLE_MASK;
     }
 
-    bMdsl |= UART_MDSL_ETD_ENABLE_MASK;
-    bMdsl |= UART_MDSL_ERD_ENABLE_MASK;
+    bIntCtrl |= (UART_CTRL_INT_ETI_ENABLE_MASK |
+                 UART_CTRL_INT_EEI_ENABLE_MASK |
+                 UART_CTRL_INT_ERI_ENABLE_MASK);
+
+    bMdsl |= (UART_MDSL_RTS_ENABLE_MASK |
+              UART_MDSL_ETD_ENABLE_MASK |
+              UART_MDSL_ERD_ENABLE_MASK);
 
     pUartCtrlBase->dw.ictrl = bIntCtrl;
     pUartCtrlBase->dw.frs = bFrs;
