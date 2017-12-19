@@ -9,6 +9,12 @@
  */
 #include <stdint.h>
 
+#ifdef OLED_SOLOMON_SH1107
+#include "sh1107.h"
+#elif defined (OLED_SOLOMON_SSD1306)
+#include "ssd1306.h"
+#endif
+
 /**
  * -----------------------------------------------------------------------------
  * Type declarations

@@ -82,7 +82,7 @@ typedef enum
 #ifndef __LSM6DS3_SHARED__TYPES
 #define __LSM6DS3_SHARED__TYPES
 
-#define FIFO_DEPTH 100 // ori:32
+#define FIFO_DEPTH 520 // ori:32
 #define FIFO_DEPTH_T FIFO_DEPTH*3  //3 Axes
 #define FIFO_EN 1
 #define LSM6DSL
@@ -2942,15 +2942,30 @@ status_t CC_SET_ACC_ODR(uint8_t _Enable);
 
 typedef enum
 {
-    MEMS_FIFO_USER_PEDO    =  0, 
-    MEMS_FIFO_USER_HRM    =  1, 
+	MEMS_FIFO_USER_PEDO	=  0, 
+	MEMS_FIFO_USER_HRM, 
+	MEMS_FIFO_USER_SWIM, 
+
+    MEMS_FIFO_USER_TOTAL,
+
 }cc_mems_fifo_user_type_t;
 
+/*
 void CC_Mems_Fifo_Register(cc_mems_fifo_user_type_t user_id, int16_t *pdata, uint16_t _max_size);
 void CC_Mems_Fifo_UnRegister(cc_mems_fifo_user_type_t user_id);
 void CC_Mems_Fifo_Reset(cc_mems_fifo_user_type_t user_id);
 uint16_t  CC_Mems_Fifo_Get_UnRead_Length(cc_mems_fifo_user_type_t user_id);
 void CC_Mems_Fifo_Update_Data(void);
+*/
+void CC_LSM6DSX_Fifo_Accel_Register(uint8_t handle, int16_t *iSampleData, uint32_t nFifoDepth);
+void CC_LSM6DSX_Fifo_Gyro_Register(uint8_t handle, int16_t *iSampleData, uint32_t nFifoDepth);
+void CC_LSM6DSX_Fifo_Accel_UnRegister(uint8_t handle);
+void CC_LSM6DSX_Fifo_Gyro_UnRegister(uint8_t handle);
+void CC_LSM6DSX_Fifo_Accel_Read_Done(uint8_t handle);
+void CC_LSM6DSX_Fifo_Gyro_Read_Done(uint8_t handle);
+uint32_t  CC_LSM6DSX_Fifo_Get_Accel_UnRead_Samples(uint8_t handle);
+uint32_t  CC_LSM6DSX_Fifo_Get_Gyro_UnRead_Samples(uint8_t handle);
+void CC_LSM6DSX_Fifo_Update_Data(void);
 
 
 /////////////////////////// CC Gyro definition ver2 as below: /////////////////////////////
@@ -2969,7 +2984,6 @@ status_t CC_LSM6DSX_GyroPowerON(LSM6DS3_ACC_GYRO_ODR_G_t eGyroODR);
 status_t CC_LSM6DSX_AccelPowerON(LSM6DS3_ACC_GYRO_ODR_XL_t eAccelODR);
 void CC_LSM6DSX_FifoEnable(E_LSM6DSX_FIFO_TARGET_DEVICE eTargetDevice);
 void CC_LSM6DSX_FifoDisable(E_LSM6DSX_FIFO_TARGET_DEVICE eTargetDevice);
-
 
 
 status_t LSM6DS3_ACC_GYRO_WriteReg(void *handle, u8_t RegAddr, u8_t Data); // for TEST!!!!!!

@@ -4,6 +4,7 @@
 #include "global.h"
 
 
+#ifdef CFG_BLE_APP
 
 #ifdef CFG_JUMP_TABLE_2
 #define JUMP_TABLE_BASE_ADDR            0x10000200
@@ -21,6 +22,12 @@ extern const uint32_t * const jump_table_base[JUMP_TABLE_SIZE] __attribute__((se
 extern uint32_t volatile *const jump_table2_base;
 #endif
 
+
+
+#else
+extern uint32_t volatile *const jump_table_base;
+extern uint32_t volatile *const jump_table2_base;
+#endif
 
 #define jump_table_struct (uint32_t)jump_table_base
 #define jump_table2_struct (uint32_t)jump_table2_base
@@ -104,4 +111,5 @@ extern uint32_t volatile *const jump_table2_base;
 
 
 #endif
+
 

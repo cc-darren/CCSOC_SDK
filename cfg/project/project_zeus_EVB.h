@@ -146,7 +146,7 @@ Head Block of The File
 *   OLED_IF_TYPE : the OLED interface type
 *   OLED_IF_ID   : the OLED interface id
 ***************************************************/
-#define MODULE_OLED             OLED_SOLOMON_SSD1306
+#define MODULE_OLED             OLED_SOLOMON_SH1107
 #define OLED_IF                 UseInterface(SPI,2)
 
 /**************************************************
@@ -308,7 +308,7 @@ Head Block of The File
 
 // GPIO Pin Group1
 #define GPIO_MODE_PINGROUP1                  GPIO_MODE_GPIO
-#define GPIO4_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
+#define GPIO4_CONFIG                        ((GPIO_PULL_UP) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT) | (GPIO_INPUT_NOPULL)) // modified by Samuel
 #define GPIO5_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
 #define GPIO6_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
 #define GPIO7_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
@@ -339,7 +339,8 @@ Head Block of The File
 #define GPIO20_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
 #define GPIO21_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
 #define GPIO22_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
-#define GPIO23_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT) | (GPIO_INPUT_NOPULL))
+#define GPIO23_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT)  | (GPIO_OUTPUT_HIGH))
+
 
 // GPIO Pin Group6
 #define GPIO_MODE_PINGROUP6                  GPIO_MODE_SPI_4WIRE
@@ -370,9 +371,10 @@ Head Block of The File
 #define GPIO39_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
 
 // GPIO Pin Group10
-#define GPIO_MODE_PINGROUP10                  GPIO_MODE_GPIO_I2C
-#define GPIO40_CONFIG                         ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT) | (GPIO_INPUT_NOPULL))
-#define GPIO41_CONFIG                         ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT) | (GPIO_INPUT_NOPULL))
+//#define GPIO_MODE_PINGROUP10                  GPIO_MODE_GPIO_I2C
+#define GPIO_MODE_PINGROUP10                  GPIO_MODE_GPIO
+#define GPIO40_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
+#define GPIO41_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
 #define GPIO42_CONFIG                        ((GPIO_PULL_UP)   | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT) | (GPIO_INPUT_NOPULL))
 #define GPIO43_CONFIG                        ((GPIO_PULL_UP)   | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT) | (GPIO_INPUT_NOPULL))
 
@@ -434,11 +436,11 @@ Declaration of static Global Variables & Functions
 
 
 
-#define DEVICE_MODEL "VENUS"
+#define DEVICE_MODEL "ZEUS"
 #define VENUS_HW_VERSION "v0.000.001"
 #define VENUS_FW_VERSION "v0.000.001" 
 
-//#define CFG_APP_CODE_ONLY
+#define CFG_APP_CODE_ONLY
 
 
 #ifndef CFG_APP_CODE_ONLY 
@@ -449,14 +451,14 @@ Declaration of static Global Variables & Functions
 //#define LONGSIT_EN
 #define MEMS_ZERO  // not ready for MEMS
 #define PEDO_EN
-#define HRM_EN
+//#define HRM_EN
 //#define SLEEP_EN
 //#define BLE_OTA_BL_MODE_EN
-#define DB_EN
+//#define DB_EN
 #define FACTORY_RESET
 
 
-#define TOUCH_INT_PIN       1
+#define TOUCH_INT_PIN       4
 #define HRM_INT_PIN         22
 #define HRM_RST_PIN         30
 
@@ -880,7 +882,7 @@ typedef struct
 #define CFG_BLE    1
 
 // <h> BLE IP ARCH CONFIGURATION
-#define CFG_BLE_APP
+//#define CFG_BLE_APP
 
 //==========================================================
 // <q> EMB   - BLE Embedded Sub-block

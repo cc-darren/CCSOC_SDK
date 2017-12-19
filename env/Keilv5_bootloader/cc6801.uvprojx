@@ -2086,7 +2086,7 @@
             <TextAddressRange></TextAddressRange>
             <DataAddressRange></DataAddressRange>
             <pXoBase></pXoBase>
-            <ScatterFile>.\FPGA_ram.sct</ScatterFile>
+            <ScatterFile>..\Keilv5_ble\FPGA_eflash.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
             <Misc>.\rom_symdef_M0.txt  --keep=jump_table.o(jump_table_mem_area)</Misc>

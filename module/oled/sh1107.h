@@ -41,12 +41,20 @@
 #define oled_DrawPixel8x16(x,y,buf)                   sh1107_DrawPixel8x16(x,y,buf)
 #define oled_DrawFrameBuffer(fb,size,x,y)             sh1107_DrawFrameBuffer(fb,size,x,y)
 #define oled_DrawBitmap(x0,y0,x1,y1,bmp)              sh1107_DrawBitmap(x0,y0,x1,y1,bmp)
+
+#define oled_SendData(bByte)                          sh1107_SendData(bByte)
+#define oled_SetPosition(x,y)                         sh1107_SetPosition(x,y)
+#define oled_SetPwrCtrlHigh()                         sh1107_SetPwrCtlHigh()
+#define oled_SetPwrCtrlLow()                          sh1107_SetPwrCtlLow()
+
+
+
 #endif //_OLED_SHARE_TYPE_
 
 #define OLED_SH1107_SPI                              OLED_IF_ID
-#define OLED_SH1107_PWR                              GPIO_PIN_15
-#define OLED_SH1107_RST                              GPIO_PIN_31
-#define OLED_SH1107_DC                               GPIO_PIN_14
+#define OLED_SH1107_PWR                              GPIO_PIN_41//GPIO_PIN_15
+#define OLED_SH1107_RST                              GPIO_PIN_23//GPIO_PIN_31
+#define OLED_SH1107_DC                               GPIO_PIN_40//GPIO_PIN_14
 
 #define SH1107_LCDWIDTH                              128
 #define SH1107_LCDHEIGHT                             32

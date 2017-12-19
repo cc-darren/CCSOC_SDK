@@ -24,14 +24,14 @@ int drvi_I2cInit(void)
     tI2cDev.dwFreq = I2C0_CLOCK;
     iResult = cc6801_I2cInit(&tI2cDev);
     if (iResult)
-        TracerErr("I2C0 initial error\n");
+        TracerErr("I2C0 initial error\r\n");
     #endif
     #if defined I2C1_INUSE && (I2C1_INUSE)
     tI2cDev.bBusNum = 1;
     tI2cDev.dwFreq = I2C1_CLOCK;
     iResult = cc6801_I2cInit(&tI2cDev);
     if (iResult)
-        TracerErr("I2C1 initial error\n");
+        TracerErr("I2C1 initial error\r\n");
     #endif
 
     return iResult;

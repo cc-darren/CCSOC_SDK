@@ -236,7 +236,7 @@ Head Block of The File
 #define SPIM0_CONFIG            (SPI_MODE_0)
 #define SPIM0_CLOCK             (1000000)
 #define SPIM1_CONFIG            (SPI_MODE_3)
-#define SPIM1_CLOCK             (10000000)
+#define SPIM1_CLOCK             (8000000)
 #define SPIM2_CONFIG            (SPI_MODE_3)
 #define SPIM2_CLOCK             (8000000)
 

@@ -10,9 +10,9 @@
 #include "Icon.h"
 
 // redirect to other size temporarily
-#define OLED_P12x24Str  ssd1306_DrawPixel8x16
-#define OLED_P14x38Str  ssd1306_DrawPixel8x16
-#define ssd1306_DrawPixel8x16_Thin  ssd1306_DrawPixel6x8
+#define OLED_P12x24Str  oled_DrawPixel8x16
+#define OLED_P14x38Str  oled_DrawPixel8x16
+#define oled_DrawPixel8x16_Thin  oled_DrawPixel6x8
 
 extern void CC_VENUS_OLEDDisplayServiceTimerStart(uint16_t _wdata);
 extern void CC_VENUS_OLEDDisplayServiceTimerReset(void);
@@ -47,16 +47,16 @@ static void _OLED_DisplayIcon24x24(unsigned char x, unsigned char y, const unsig
     int i, j, k=0;    
     uint8_t value = 0;
 
-    ssd1306_SetPosition(x,y); 
+    oled_SetPosition(x,y); 
     for(i=2;i>=0;i--)
     {
         for(j=0;j<24;j++)
         {
             value = ~(pbuf[i+j*3]);                    
-            ssd1306_SendData(value);                         
+            oled_SendData(value);                         
         }            
         k++;
-        ssd1306_SetPosition(x,y+k);              
+        oled_SetPosition(x,y+k);              
     }            
 }
 #endif
@@ -67,16 +67,16 @@ static void _OLED_DisplayIcon16x16(unsigned char x, unsigned char y, const unsig
     int i, j, k=0;    
     uint8_t value = 0;
 
-    ssd1306_SetPosition(x,y); 
+    oled_SetPosition(x,y); 
     for(i=1;i>=0;i--)
     {
         for(j=0;j<16;j++)
         {
             value = ~(pbuf[i+j*2]);                    
-            ssd1306_SendData(value);                         
+            oled_SendData(value);                         
         }            
         k++;
-        ssd1306_SetPosition(x,y+k);              
+        oled_SetPosition(x,y+k);              
     }            
 }
 #endif
@@ -86,18 +86,18 @@ static void _OLED_DisplayIcon(unsigned char x, unsigned char y, const unsigned c
     int i, j, k=0;    
     uint8_t value = 0;
 
-    ssd1306_DrawBlack(); 
+    oled_DrawBlack();     
 
-    ssd1306_SetPosition(x,y); 
+    oled_SetPosition(x,y); 
     for(i=4;i>=0;i--)
     {
         for(j=0;j<40;j++)
         {
             value = ~(pbuf[i+j*5]);                    
-            ssd1306_SendData(value);                         
+            oled_SendData(value);                         
         }            
         k++;
-        ssd1306_SetPosition(x,y+k);              
+        oled_SetPosition(x,y+k);              
     }            
 }
 static void _OLED_DisplayIconNI(unsigned char x, unsigned char y, const unsigned char* pbuf)
@@ -105,18 +105,18 @@ static void _OLED_DisplayIconNI(unsigned char x, unsigned char y, const unsigned
     int i, j, k=0;    
     uint8_t value = 0;
 
-    ssd1306_DrawBlack(); 
+    oled_DrawBlack(); 
 
-    ssd1306_SetPosition(x,y); 
+    oled_SetPosition(x,y); 
     for(i=4;i>=0;i--)
     {
         for(j=0;j<40;j++)
         {
             value = (pbuf[i+j*5]);                    
-            ssd1306_SendData(value);                         
+            oled_SendData(value);                         
         }            
         k++;
-        ssd1306_SetPosition(x,y+k);              
+        oled_SetPosition(x,y+k);              
     }            
 }
 
@@ -174,7 +174,7 @@ void _Screen_Ref_HRM_PAGE(void)
     {
         if ( s_tDspVal._bIndex == 0)
         {
-            ssd1306_DrawBlack();
+            oled_DrawBlack();
 
             if (eMMI_HRM_HRS_ACTIVATED_PAGE == s_tDspVal._eScreenFlashInd)
                 CC_Dsp_Srv_HeartRateStrapModeStatus(1);
@@ -194,7 +194,7 @@ void _Screen_Ref_DB_Full_PAGE(void)
     {
         if ( s_tDspVal._bIndex == 0)
         {
-            ssd1306_DrawBlack();
+            oled_DrawBlack();
 
             CC_Dsp_DB_Full_Msg(1);
         }
@@ -213,7 +213,7 @@ void CC_Dsp_Srv_Init(void)
 
     uint8_t x = 0;
     x = (LCD_SIZE_X - 8*5)/2;
-    ssd1306_DrawPixel8x16(LCD_X_OFFSET + x,1,"Venus");
+    oled_DrawPixel8x16(LCD_X_OFFSET + x,1,"Venus");
 
 }
 //extern uint8_t CC_SleepMonitor_GetSleepState(void);
@@ -225,7 +225,7 @@ void CC_Dsp_Srv_PresentTime(app_date_time_t _mCurTime, uint8_t _Format)
     char pDisplayTime[16] = {0};
     uint8_t _index =0;
     uint8_t x = 0;   
-    ssd1306_DrawBlack();   
+    oled_DrawBlack();   
 
     if (0 == _Format)
     {
@@ -238,7 +238,7 @@ void CC_Dsp_Srv_PresentTime(app_date_time_t _mCurTime, uint8_t _Format)
     x = (LCD_SIZE_X - _index*12)/2;
     
     
-    ssd1306_DrawBlack();    
+    oled_DrawBlack();    
     OLED_P12x24Str(LCD_X_OFFSET + x, 0, (uint8_t*)pDisplayTime);
     
     
@@ -252,14 +252,14 @@ void CC_Dsp_Srv_PresentTime(app_date_time_t _mCurTime, uint8_t _Format)
         sprintf(strbuf,"%s",sleepEN);
         
         _bX = (LCD_SIZE_X - 10*6)/2;
-        ssd1306_DrawPixel6x8(LCD_X_OFFSET+_bX, 3, (uint8_t*)strbuf);  
+        oled_DrawPixel6x8(LCD_X_OFFSET+_bX, 3, (uint8_t*)strbuf);  
         
         uint32_t temp = CC_GetSleepAlgorithmReport_State();        
         uint8_t temp1 = (uint8_t) temp;
         memset(strbuf,0x00,sizeof(strbuf));
         sprintf(strbuf,"%d",temp1);
         _bX = (LCD_SIZE_X - 10*6)/2;
-        ssd1306_DrawPixel6x8(LCD_X_OFFSET+_bX+12, 3, (uint8_t*)strbuf);      
+        oled_DrawPixel6x8(LCD_X_OFFSET+_bX+12, 3, (uint8_t*)strbuf);      
 
     }
     else
@@ -268,7 +268,7 @@ void CC_Dsp_Srv_PresentTime(app_date_time_t _mCurTime, uint8_t _Format)
         uint8_t sleepEN[3] = {'S',':','X'};
         sprintf(strbuf,"%s",sleepEN);
         _bX = (LCD_SIZE_X - 10*6)/2;
-        ssd1306_DrawPixel6x8(LCD_X_OFFSET+_bX, 3, (uint8_t*)strbuf);  
+        oled_DrawPixel6x8(LCD_X_OFFSET+_bX, 3, (uint8_t*)strbuf);  
     }    
 
     
@@ -277,7 +277,7 @@ void CC_Dsp_Srv_PresentTime(app_date_time_t _mCurTime, uint8_t _Format)
     memset(strbuf,0x00,sizeof(strbuf));
     sprintf(strbuf,"%d",temp2);
     _bX = (LCD_SIZE_X - 10*6)/2;
-    ssd1306_DrawPixel6x8(LCD_X_OFFSET+_bX+30, 3, (uint8_t*)strbuf);  
+    oled_DrawPixel6x8(LCD_X_OFFSET+_bX+30, 3, (uint8_t*)strbuf);  
 
 
 
@@ -285,7 +285,7 @@ void CC_Dsp_Srv_PresentTime(app_date_time_t _mCurTime, uint8_t _Format)
     uint8_t DB_State[3] = {'D','B',':'}; 
     sprintf(strbuf,"%s",DB_State);
     _bX = (LCD_SIZE_X - 10*6)/2;
-    ssd1306_DrawPixel6x8(LCD_X_OFFSET+_bX, 4, (uint8_t*)strbuf);  
+    oled_DrawPixel6x8(LCD_X_OFFSET+_bX, 4, (uint8_t*)strbuf);  
 
 #if 0
         x = (LCD_SIZE_X - _index*12)/2;
@@ -337,7 +337,7 @@ void CC_Dsp_Srv_PresentTime(app_date_time_t _mCurTime, uint8_t _Format)
     
     x = (LCD_SIZE_X - _index*8) / 2;
 
-    ssd1306_DrawPixel8x16_Thin(LCD_X_OFFSET + x, 3, pDisplayTime);     
+    oled_DrawPixel8x16_Thin(LCD_X_OFFSET + x, 3, pDisplayTime);     
 #endif    
 }
     else
@@ -367,12 +367,12 @@ void CC_Dsp_Srv_PedCnt(uint32_t _dwData)
 
     sprintf(strbuf,"%d",_dwData);    
     _OLED_Display_CharLen_Calculation(_dwData, &_bX, &_bY);
-    ssd1306_DrawBlack(); 
+    oled_DrawBlack(); 
 
     OLED_P14x38Str(LCD_X_OFFSET + _bX, 1, (uint8_t*)strbuf);
     /*
     if (_bY == 2)
-        ssd1306_DrawPixel8x16(LCD_X_OFFSET + _bX, _bY, (uint8_t*)strbuf);    
+        oled_DrawPixel8x16(LCD_X_OFFSET + _bX, _bY, (uint8_t*)strbuf);    
     else if  (_bY == 1)
         OLED_P12x24Str(LCD_X_OFFSET + _bX, _bY, (uint8_t*)strbuf);
     else       
@@ -387,7 +387,7 @@ void CC_Dsp_Srv_HrmData(uint16_t _wHrmData)
     uint8_t _bX = 0;
     uint8_t _bY = 0;
 
-    ssd1306_DrawBlack();
+    oled_DrawBlack();
     sprintf(strbuf, "%d",  _wHrmData);
     _OLED_Display_CharLen_Calculation(_wHrmData, &_bX, &_bY);
     OLED_P14x38Str(LCD_X_OFFSET + _bX, 1, (uint8_t*)strbuf);
@@ -402,40 +402,40 @@ void CC_Dsp_Srv_SwimmingStatus(uint8_t isSwimming)
 {
     char strbuf[9] = {0};
 
-    ssd1306_DrawBlack();
+    oled_DrawBlack();
     
     if(isSwimming == 1)    
       sprintf(strbuf, "SWIM ON");    
     else
         sprintf(strbuf, "SWIM OFF");    
     
-       ssd1306_DrawPixel8x16(LCD_X_OFFSET + 5, 2, (uint8_t*)strbuf); 
+       oled_DrawPixel8x16(LCD_X_OFFSET + 5, 2, (uint8_t*)strbuf); 
 
 #ifdef RD_DEBUG
     uint8_t _bX = 0;
-    ssd1306_DrawPixel8x16(LCD_X_OFFSET + 5, 0, strbuf); 
+    oled_DrawPixel8x16(LCD_X_OFFSET + 5, 0, strbuf); 
     uint8_t Lap[2] = {'L',':'};
     sprintf(strbuf,"%s",Lap);
     _bX = (LCD_SIZE_X - 10*6)/2;
-    ssd1306_DrawPixel6x8(LCD_X_OFFSET+_bX, 3, strbuf);  
+    oled_DrawPixel6x8(LCD_X_OFFSET+_bX, 3, strbuf);  
 
     uint32_t temp = CC_Get_SwimmingLapCount();        
     uint8_t temp1 = (uint8_t) temp;
     sprintf(strbuf,"%d",temp1);
     _bX = (LCD_SIZE_X - 10*6)/2;
-    ssd1306_DrawPixel6x8(LCD_X_OFFSET+_bX+40, 3, strbuf);  
+    oled_DrawPixel6x8(LCD_X_OFFSET+_bX+40, 3, strbuf);  
     
 
 
     uint8_t Storke[2] = {'S',':'};
     sprintf(strbuf,"%s",Storke);
     _bX = (LCD_SIZE_X - 10*6)/2;
-    ssd1306_DrawPixel6x8(LCD_X_OFFSET+_bX, 4, strbuf);  
+    oled_DrawPixel6x8(LCD_X_OFFSET+_bX, 4, strbuf);  
 
     uint32_t temp2 = CC_Get_SwimmingStrokeCount();
     sprintf(strbuf,"%d",temp2);
     _bX = (LCD_SIZE_X - 10*6)/2;
-    ssd1306_DrawPixel6x8(LCD_X_OFFSET+_bX+40, 4, strbuf);  
+    oled_DrawPixel6x8(LCD_X_OFFSET+_bX+40, 4, strbuf);  
 #endif    
 
 }
@@ -446,7 +446,7 @@ void CC_Dsp_Srv_SwimmingConfirm(uint8_t isConfrimYes)
     char strbuf2[9] = {0};
 
 
-    ssd1306_DrawBlack();
+    oled_DrawBlack();
     
     if(isConfrimYes == 1)
     {
@@ -460,8 +460,8 @@ void CC_Dsp_Srv_SwimmingConfirm(uint8_t isConfrimYes)
         sprintf(strbuf2, "No?");    
     }
     
-    ssd1306_DrawPixel8x16(LCD_X_OFFSET+5, 1, (uint8_t*)strbuf);    
-    ssd1306_DrawPixel8x16(LCD_X_OFFSET+20, 3, (uint8_t*)strbuf2);   
+    oled_DrawPixel8x16(LCD_X_OFFSET+5, 1, (uint8_t*)strbuf);    
+    oled_DrawPixel8x16(LCD_X_OFFSET+20, 3, (uint8_t*)strbuf2);   
 
 }
 
@@ -469,14 +469,14 @@ void CC_Dsp_Srv_HeartRateStrapModeStatus(uint8_t bIsHrsModeOn)
 {
     char    _caMsg[8] = { 0 };
 
-    ssd1306_DrawBlack();
+    oled_DrawBlack();
     
     if (bIsHrsModeOn)
         sprintf(_caMsg, "HRS ON");    
     else
         sprintf(_caMsg, "HRS OFF");    
 
-    ssd1306_DrawPixel8x16(LCD_X_OFFSET + 11, 2, (uint8_t*)_caMsg);    
+    oled_DrawPixel8x16(LCD_X_OFFSET + 11, 2, (uint8_t*)_caMsg);    
 }
 
 void CC_Dsp_Srv_BatteryLife(uint8_t _bBatCap)
@@ -486,7 +486,7 @@ void CC_Dsp_Srv_BatteryLife(uint8_t _bBatCap)
     uint8_t _bY = 0;
     
     sprintf(strbuf, "%d",  _bBatCap);
-    ssd1306_DrawBlack();
+    oled_DrawBlack();
     _OLED_Display_CharLen_Calculation(_bBatCap, &_bX, &_bY);
     OLED_P14x38Str(LCD_X_OFFSET + _bX, 0, (uint8_t*)strbuf); 
 }
@@ -499,7 +499,7 @@ void CC_Dsp_Srv_BatteryLevel(uint16_t _wAdcLevel)
     
     sprintf(strbuf, "%d",  _wAdcLevel);
     _OLED_Display_CharLen_Calculation(_wAdcLevel, &_bX, &_bY);
-    ssd1306_DrawPixel8x16_Thin(LCD_X_OFFSET , 0, (uint8_t*)strbuf); 
+    oled_DrawPixel8x16_Thin(LCD_X_OFFSET , 0, (uint8_t*)strbuf); 
 
 
 }
@@ -509,7 +509,7 @@ void CC_Dsp_Srv_PedDistance(uint32_t _dwData, uint8_t _bStrideLen, uint8_t _bUni
     char strbuf[16] = {0};
     double _fpTmpDist = 0;
       //avg step length is 65~70 cm
-    ssd1306_DrawBlack();
+    oled_DrawBlack();
     _fpTmpDist = ((float)(_dwData*_bStrideLen)/100) / 1000 ;
     if (_bUnitSetting ==0)
     {
@@ -531,7 +531,7 @@ void CC_Dsp_Srv_PedCalorie(uint32_t _dwCalo)
     char strbuf[16] = {0};
     uint8_t _bX = 0;
     uint8_t _bY = 0;
-    ssd1306_DrawBlack();  
+    oled_DrawBlack();  
     sprintf(strbuf, "%d", _dwCalo);
     _OLED_Display_CharLen_Calculation(_dwCalo, &_bX, &_bY);
     OLED_P12x24Str(LCD_X_OFFSET + _bX, 2, (uint8_t*)strbuf);
@@ -546,7 +546,7 @@ void CC_Dsp_Srv_SwimgDistance(eSWIM_LEN_SET_t _bPoolSize, uint32_t _dwSwimLen)
     char strbuf[8] = {0};
     uint8_t _bX = 0;
     uint8_t _bY = 0;
-    ssd1306_DrawBlack();                    
+    oled_DrawBlack();                    
     sprintf(strbuf,"%d",_dwSwimLen);
 
     _OLED_Display_CharLen_Calculation(_dwSwimLen, &_bX, &_bY);
@@ -574,7 +574,7 @@ void CC_Dsp_Srv_CharingIn(uint8_t _bBatCap)
 
     sprintf(strbuf, "%d",  _bBatCap);
     strcat(strbuf, "%");
-    ssd1306_DrawBlack();
+    oled_DrawBlack();
     _OLED_Display_CharLen_Calculation(_bBatCap, &_bX, &_bY);
     
     OLED_P12x24Str(LCD_X_OFFSET + _bX, 2, strbuf); 
@@ -598,21 +598,21 @@ void CC_Dsp_DB_Full_Msg(uint8_t page)
      char strbuf[8] = {0};
      char strbuf1[9] = {0};
      
-     ssd1306_DrawBlack();
+     oled_DrawBlack();
 
      if(page == 0x00)     
      {
          sprintf(strbuf, "Storage"); 
           sprintf(strbuf1, "Full"); 
 
-         ssd1306_DrawPixel8x16(LCD_X_OFFSET+5, 0, (uint8_t*)strbuf);     
-         ssd1306_DrawPixel8x16(LCD_X_OFFSET+15, 3, (uint8_t*)strbuf1);                   
+         oled_DrawPixel8x16(LCD_X_OFFSET+5, 0, (uint8_t*)strbuf);     
+         oled_DrawPixel8x16(LCD_X_OFFSET+15, 3, (uint8_t*)strbuf1);                   
      }
      else if(page == 0x01)     
      {
          sprintf(strbuf, "Sync APP"); 
 
-         ssd1306_DrawPixel8x16(LCD_X_OFFSET+5, 1, (uint8_t*)strbuf);              
+         oled_DrawPixel8x16(LCD_X_OFFSET+5, 1, (uint8_t*)strbuf);              
      }
      
 }
@@ -623,16 +623,16 @@ void CC_Dsp_Srv_DeviceInfo(void)
 {
     char strbuf[11] = {0};
     uint8_t _bX = 0;
-    ssd1306_DrawBlack();
+    oled_DrawBlack();
     
     sprintf(strbuf,"%s",deviceName);
 
     _bX = (LCD_SIZE_X - 9*8)/2;
-    ssd1306_DrawPixel8x16(LCD_X_OFFSET+_bX, 1, (uint8_t*)strbuf);  
+    oled_DrawPixel8x16(LCD_X_OFFSET+_bX, 1, (uint8_t*)strbuf);  
     sprintf(strbuf,"%s",VENUS_FW_VERSION);
 
     _bX = (LCD_SIZE_X - 10*6)/2;
-    ssd1306_DrawPixel6x8(LCD_X_OFFSET+_bX, 4, (uint8_t*)strbuf);  
+    oled_DrawPixel6x8(LCD_X_OFFSET+_bX, 4, (uint8_t*)strbuf);  
 
 }
 

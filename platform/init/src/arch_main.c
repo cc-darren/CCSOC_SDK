@@ -89,6 +89,8 @@ int main(void)
     bootloader_main();
 #elif VENUS_WRISTBAND
     venus_main();
+#elif ZEUS_WRISTBAND
+    venus_main();
 #endif
 
 

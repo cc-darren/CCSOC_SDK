@@ -2299,7 +2299,6 @@ void _DB_TEST(void)
     #endif
     //NRF_LOG_FLUSH();
     
-#endif
 }
 
 
@@ -2733,10 +2732,11 @@ uint8_t _DB_TEST_Full_DB(void)
         }
     }
 
-#endif  
+
     return 1;
+#endif  
 
 }
 
-
+#endif // DB_EN
 

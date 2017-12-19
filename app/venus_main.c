@@ -71,6 +71,7 @@
 
 #define ACCEL_FIFO_MODE_LONG_INTERVAL        1000        // in ms
 #define ACCEL_FIFO_MODE_SHORT_INTERVAL        300        // in ms
+#define ACCEL_FIFO_MODE_SWIM_INTERVAL        100         // in ms
 #define ACCEL_POLL_MODE_INTERVAL        20        // in ms
 #define MAG_BUF_LEN                     10
 
@@ -92,6 +93,7 @@
 // STANDBY TIMER ===============================
 APP_TIMER_DEF(s_tVenusTimerAccel);     // disable this timer to unify standby timers
 APP_TIMER_DEF(s_tVenusTimerDataTime);    // TBD: should rename like standby-base-timer
+APP_TIMER_DEF(s_tVenusTimerDiffTime); // for test
 
 // FUNCTION TIMER ===============================
 APP_TIMER_DEF(s_tTouchDebounceTime);
@@ -259,8 +261,8 @@ s_SensorData_t s_tAcc;
 s_SensorData_t s_tGyro;
 S_TMagBuf_t s_tMagDataBuf;  
 AxesRaw_t s_tMagRaw;
-static uint8_t g_bMagEnCnt = 0;
-static db_pedometer_t m_db_pedo;
+//static uint8_t g_bMagEnCnt = 0;
+//static db_pedometer_t m_db_pedo;
 /*
 static CC_Ble_Ped_Info_T _sPedInfo = {0xF1,0,0};
 static CC_Ble_Hrm_Info_T _sHrmInfo = {0xF2,0,0};
@@ -385,6 +387,7 @@ void CC_VENUS_RscTimerStop(void)
 }
 
 
+#ifdef DB_EN
 
 bool CC_DB_Check_Init_Done(void)
 {
@@ -420,7 +423,7 @@ void CC_DB_Init(uint8_t _bState)
 
     CC_DB_Set_Init_Done();
 }
-
+#endif
 
 void CC_GetStaticCalibrationInfo(db_sys_static_gyro_offset_t *pData)
 {
@@ -808,6 +811,7 @@ void CC_Swim_OLED_Update(uint8_t _bSwitch)
     }
 }
 
+#ifdef DB_EN
 
 static void CC_DB_Save_Pedo_Data(uint8_t ped_type, S_DB_PedoRecord_t *ped_record_data)
 {
@@ -837,6 +841,7 @@ static void CC_DB_Save_Pedo_Data(uint8_t ped_type, S_DB_PedoRecord_t *ped_record
     }
 
 }
+#endif
 
 void CC_VENUS_WALK_PedoTimerStart(uint32_t interval_ms)
 {
@@ -873,6 +878,7 @@ void cc_pedo_run_timeout_handler(void * p_context)
     s_tVenusCB.stPedRecordData_Run.saveDB = 1;
 
 }
+#ifdef DB_EN
 
 void CC_Pedo_Check_Save_Database(void)
 {
@@ -899,7 +905,7 @@ void CC_Pedo_Check_Save_Database(void)
         s_tVenusCB.stPedRecordData_Run.enabled = 0;
     }
 }
-
+#endif
 void CC_MainGet_CurrentTime(app_date_time_t *_stCurTime)
 {
     *_stCurTime = s_tVenusCB.stSysCurTime; 
@@ -1057,6 +1063,11 @@ void CC_VENUS_AccelTimerStop(void)
     app_timer_stop(s_tVenusTimerAccel);
 }
 
+void CC_VENUS_SwimTimerFifoModeStart(void)
+{
+    app_timer_start(s_tVenusTimerAccel, APP_TIMER_TICKS(ACCEL_FIFO_MODE_SWIM_INTERVAL, APP_TIMER_PRESCALER), NULL);
+}
+
 void CC_SetHrmCloseSwitch(eHrm_Close_EventID _bEvent)
 {
     s_tVenusCB.m_HrmcloseID = _bEvent;
@@ -1082,7 +1093,7 @@ static void cc_toolbox_sensor_accel_on_change(void * p_context)
 
 static void cc_toolbox_Datatime_hanndler(void * p_context)
 {   
-    cc_toolbox_sensor_accel_on_change(p_context);
+    //cc_toolbox_sensor_accel_on_change(p_context);
 
     VENUS_EVENT_ON(E_VENUS_EVENT_DATETIMEFLUSH , eEvent_None);
 
@@ -1109,7 +1120,7 @@ static void battery_level_meas_timeout_handler(void * p_context)
 }
 
 
-
+#ifdef DB_EN 
 static void _Ble_CommandHistroyPedoParse(void)
 {
     uint32_t    _dwlen =0;
@@ -1460,6 +1471,9 @@ static void _Ble_CommandHistroySwimParse(void)
     }
 }
 
+#endif
+
+#ifdef CFG_BLE_APP 
 static void ble_notify_handler(void)
 {
     //uint32_t        err_code;
@@ -1564,6 +1578,7 @@ static void ble_notify_handler(void)
     }
 */    
 }
+#endif
 
 static void rsc_meas_timeout_handler(void * p_context)
 {
@@ -1709,6 +1724,22 @@ static void app_multiple_timer_init(void)
 
 }
 
+
+
+static uint32_t systime_ms = 0;
+static void System_time_handler(void * pvContext)
+{
+    UNUSED_PARAMETER(pvContext);
+    //systime_ms++;
+    systime_ms+=2;
+}
+
+uint32_t Get_system_time_ms(void)
+{
+    return systime_ms;
+}
+
+
 static void application_timers_start(void)
 {
     //uint32_t err_code;
@@ -1717,16 +1748,24 @@ static void application_timers_start(void)
     app_timer_start(m_rsc_meas_timer_id, APP_TIMER_TICKS(SPEED_AND_CADENCE_MEAS_INTERVAL, APP_TIMER_PRESCALER), NULL);
 
     // Start application timers.
-    app_timer_start(m_battery_timer_id, BATTERY_LEVEL_MEAS_INTERVAL, NULL); 
+    //app_timer_start(m_battery_timer_id, BATTERY_LEVEL_MEAS_INTERVAL, NULL); 
 
     //err_code = app_timer_start(m_rsc_meas_timer_id, APP_TIMER_TICKS(SPEED_AND_CADENCE_MEAS_INTERVAL, APP_TIMER_PRESCALER), NULL);
     //APP_ERROR_CHECK(err_code);
 
     // disable this timer to unify standby timers
-      app_timer_start(s_tVenusTimerAccel, APP_TIMER_TICKS(ACCEL_FIFO_MODE_LONG_INTERVAL, APP_TIMER_PRESCALER), NULL);
+    app_timer_start(s_tVenusTimerAccel, APP_TIMER_TICKS(ACCEL_FIFO_MODE_LONG_INTERVAL, APP_TIMER_PRESCALER), NULL);
 
     app_timer_start(s_tVenusTimerDataTime, APP_TIMER_TICKS(DATETIME_CNT,APP_TIMER_PRESCALER), NULL);
 
+#if 1 //test time diff
+
+    app_timer_create(&s_tVenusTimerDiffTime,
+                     APP_TIMER_MODE_REPEATED,
+                     System_time_handler);
+
+    app_timer_start(s_tVenusTimerDiffTime, APP_TIMER_TICKS(2, APP_TIMER_PRESCALER), NULL); // test by Samuel
+#endif
                           
 }
 
@@ -1991,9 +2030,23 @@ static void _sensor_algorithm_liftarm_proc()
             #endif
             
 
-            //NRF_LOG_INFO( "oringin  x=[%d] y=[%d] z=[%d]\r\n",_wAccelData[0],_wAccelData[1],_wAccelData[2]);
-            //NRF_LOG_INFO( "change x=[%d] y=[%d] z=[%d]\r\n",input[0],input[1],input[2]);
+            //TracerInfo( "oringin  x=[%d] y=[%d] z=[%d]\r\n",_wAccelData[0],_wAccelData[1],_wAccelData[2]);
+            //TracerInfo( "change x=[%d] y=[%d] z=[%d]\r\n",input[0],input[1],input[2]);
+
+#if 0 // test app loop time           
+            static uint32_t old_tick = 0;
+
+            old_tick = Get_system_time_ms();                                                                         
+#endif
+
+            
             liftarm_process( input,&_GestureOut, &_WinStatus);
+
+#if 0 // test app loop time                                               
+            TracerInfo("%d\r\n", Get_system_time_ms() - old_tick);                                                                                      
+#endif
+
+
             if (1 == _WinStatus) 
             {
                 if (1 == _GestureOut || 2 == _GestureOut)       /**< 1: up, 2: down */
@@ -2002,7 +2055,9 @@ static void _sensor_algorithm_liftarm_proc()
                     {
                         if (!CC_PageMgr_IsOLEDActive() && !CC_PageMgr_IsBlockingOLED())
                         {
+                            TracerInfo("Lift Arm!\r\n");
                             CC_PageMgr_ActiveOLED();
+                            
                             VENUS_EVENT_ON(E_VENUS_EVENT_OLED_UPDATE, eEvent_LIFTARM);
                         }
                     }
@@ -2029,10 +2084,153 @@ uint32_t CC_Get_SwimmingStrokeCount(void)
 }        
 
 static void _sensor_algorithm_swimming_proc(void)
-{
+{   
+
+    raw_sensor_event _stSwmimingData;
+    int16_t wacc_data[FIFO_DEPTH_T/2];    
+    int16_t wgyro_data[FIFO_DEPTH_T/2];
+
+    //static uint32_t old_time = 0;
+    //static uint32_t curr_time = 0;
+    //TracerInfo("_sensor_algorithm_swimming_proc \r\n");
+
+    uint16_t fifo_len;
+    
+    CC_LSM6DSX_Fifo_Update_Data();                
+    
+    fifo_len = CC_LSM6DSX_Fifo_Get_Accel_UnRead_Samples(MEMS_FIFO_USER_SWIM);       
+
+    //TracerInfo("swim_len: %d\r\n", fifo_len);
+
+
+    AKM_Data_Get(); 
+    if ((s_tMagRaw.AXIS_X == 0) &&
+        (s_tMagRaw.AXIS_Y == 0) &&
+        (s_tMagRaw.AXIS_Z == 0))
+    {
+         TracerInfo( "Swimming Send Mag data  invaild !!!!!!!!!!!!!\r\n");    
+    }
+    else
+    {
+         memcpy( &_stSwmimingData.mag_data,&s_tMagRaw,sizeof(s_tMagRaw));
+                _stSwmimingData.type |= MAG_SENSOR;
+
+         CC_Swimming_Proc(_stSwmimingData, &s_tVenusCB.stSwimmingResult);
+
+         _stSwmimingData.type = 0;
+    }
+           
+
+    if(fifo_len >= 260) // 260 samples(x,y,z) @5sec
+    {    
+    
+        memcpy(wacc_data, s_tAcc.wbuf, (fifo_len*3*2));   // *3 => x,y,z; *2 => 16bits
+        memcpy(wgyro_data, s_tGyro.wbuf, (fifo_len*3*2)); // *3 => x,y,z; *2 => 16bits   
+
+         //curr_time = Hrm_get_sys_tick();
+         //TracerInfo("diff_time: %d\r\n", curr_time - old_time);
+        
+         //TracerInfo("acc_nb: %d, gyro_nb: %d\r\n", CC_LSM6DSX_Fifo_Get_Accel_UnRead_Samples(MEMS_FIFO_USER_SWIM),
+         //                                            CC_LSM6DSX_Fifo_Get_Gyro_UnRead_Samples(MEMS_FIFO_USER_SWIM));
+         //old_time = curr_time;
+
+         //old_time = Hrm_get_sys_tick();
+         
+        CC_LSM6DSX_Fifo_Accel_Read_Done(MEMS_FIFO_USER_SWIM);
+        CC_LSM6DSX_Fifo_Gyro_Read_Done(MEMS_FIFO_USER_SWIM);        
+
+        //fifo_len /= 3;
+        
+        for(int i = 0; i < fifo_len; i++)
+        {
+             int k = 3*i;
+        
+             _wAccelData[0] = wacc_data[k]; 
+             _wAccelData[1] = wacc_data[k+1];
+             _wAccelData[2] = wacc_data[k+2];
+
+             _wGyroData[0] = wgyro_data[k]; 
+             _wGyroData[1] = wgyro_data[k+1];
+             _wGyroData[2] = wgyro_data[k+2];
+        
+/*
+            TracerInfo( "ACC_Data[0] %d\r\n",_wAccelData[0]);
+            TracerInfo( "ACC_Data[1] %d\r\n",_wAccelData[1]);
+            TracerInfo( "ACC_Data[2] %d\r\n",_wAccelData[2]);      
+
+            TracerInfo( "GYRO_Data[0] %d\r\n",_wGyroData[0]);
+            TracerInfo( "GYRO_Data[1] %d\r\n",_wGyroData[1]);
+            TracerInfo( "GYRO_Data[2] %d\r\n",_wGyroData[2]);                  
+*/
+            memcpy( &_stSwmimingData.acc_data,_wAccelData,sizeof(_wAccelData));
+            memcpy( &_stSwmimingData.gyro_data,_wGyroData,sizeof(_wGyroData));
+            _stSwmimingData.type= ACC_SENSOR | GYRO_SENSOR;
+
+#if 0 // test app loop time           
+            static uint32_t old_tick = 0;
+            static uint32_t diff_time = 0;
+            static uint32_t max_diff_time = 0;
+                            
+            old_tick = Get_system_time_ms();                                                                         
+#endif
+           
+            CC_Swimming_Proc(_stSwmimingData, &s_tVenusCB.stSwimmingResult);
+
+#if 0 // test app loop time         
+            diff_time = Get_system_time_ms() - old_tick;
+            
+            if(max_diff_time < diff_time)
+                max_diff_time = diff_time;
+                        
+            TracerInfo("%d / %d\r\n", diff_time, max_diff_time);                  
+#endif                
+
+            g_dwLapCnt = s_tVenusCB.stSwimmingResult.swimlap;
+            g_dwStroke = s_tVenusCB.stSwimmingResult.swimcount;
+            
+            
+            if ( s_tVenusCB.dwSwimLapCnt != s_tVenusCB.stSwimmingResult.swimlap) // swim lap
+            {
+                s_tVenusCB.dwSwimLapCnt = s_tVenusCB.stSwimmingResult.swimlap;
+                
+                TracerInfo( "Swimming dwSwimLapCnt = %d \r\n",s_tVenusCB.dwSwimLapCnt);
+    #ifdef DB_EN
+                _CC_DB_Save_SwimmingProc();
+    #endif                              
+                        
+                switch (s_tVenusCB.stGeneralInfo.cSwim_Pool_Size)
+                {
+                    case eSWIM_25M:
+                        s_tVenusCB.wSwimmingLen = s_tVenusCB.dwSwimLapCnt * 25;
+                    break;
+                    case eSWIM_50M:
+                        s_tVenusCB.wSwimmingLen = s_tVenusCB.dwSwimLapCnt * 50;
+                    break;
+                    case eSWIM_25YD:
+                        s_tVenusCB.wSwimmingLen = s_tVenusCB.dwSwimLapCnt * 25;
+                    break;
+                    case eSWIM_33_33M:
+                        s_tVenusCB.wSwimmingLen = (double)s_tVenusCB.dwSwimLapCnt * 33.33;
+                    break;
+                    case eSWIM_33_33YD:
+                        s_tVenusCB.wSwimmingLen = (double) s_tVenusCB.dwSwimLapCnt * 33.33;
+                    break;
+                    default:
+                        break;
+                }
+            }    
+            
+        }
+
+
+        //curr_time = Hrm_get_sys_tick();
+
+        //TracerInfo("diff_time: %d\r\n", curr_time - old_time);
+    }    
+#if 0 // old    
     raw_sensor_event _stSwmimingData;
 
-    //NRF_LOG_INFO("_sensor_algorithm_swimming_proc \r\n");
+    //TracerInfo("_sensor_algorithm_swimming_proc \r\n");
     
     LSM6DS3_ACC_GYRO_GetRawAccData(NULL, (i16_t *) _wAccelData);
     LSM6DS3_ACC_GYRO_GetRawGyroData16(NULL, (i16_t *) _wGyroData);
@@ -2057,7 +2255,7 @@ static void _sensor_algorithm_swimming_proc(void)
             if (g_bMagEnCnt == 5)
             {
                 g_bMagEnCnt= 0;
-                //NRF_LOG_INFO("reset Mag Count = %d\r\n",_cMagEnCnt);
+                //TracerInfo("reset Mag Count = %d\r\n",_cMagEnCnt);
 
             }
  
@@ -2111,6 +2309,7 @@ static void _sensor_algorithm_swimming_proc(void)
                 break;
         }
     }    
+#endif    
 }
 
 //void _DumpSensorRegisterMap(void); //test
@@ -2126,8 +2325,16 @@ void _sensor_accel_gyro_on_change(void)
         {
             CC_VENUS_AccelTimerStop();
             CC_VENUS_AccelTimerReset();
-            CC_LSM6DSX_FifoEnable(E_LSM6DSX_FIFO_CONTROL_ACCEL);
-            CC_Mems_Fifo_Register(MEMS_FIFO_USER_PEDO, s_tAcc.wbuf, (FIFO_DEPTH_T/2));
+
+            CC_LSM6DSX_Fifo_Accel_UnRegister(MEMS_FIFO_USER_SWIM);
+            CC_LSM6DSX_Fifo_Gyro_UnRegister(MEMS_FIFO_USER_SWIM); 
+            CC_LSM6DSX_FifoDisable(E_LSM6DSX_FIFO_CONTROL_ACCEL_GYRO);
+            CC_LSM6DSX_FifoEnable(E_LSM6DSX_FIFO_CONTROL_ACCEL);          
+            //CC_LSM6DSX_FifoEnable(E_LSM6DSX_FIFO_CONTROL_GYRO);  // test by Samuel!!!
+            //CC_LSM6DSX_FifoEnable(E_LSM6DSX_FIFO_CONTROL_ACCEL_GYRO);  // test by Samuel!!!
+            CC_LSM6DSX_Fifo_Accel_Register(MEMS_FIFO_USER_PEDO, s_tAcc.wbuf, (FIFO_DEPTH_T/2));
+            //CC_LSM6DSX_Fifo_Gyro_Register(MEMS_FIFO_USER_PEDO, s_tGyro.wbuf, (FIFO_DEPTH_T/2));//test
+            
             _sensor_power_down_gryo();
             _sensor_power_down_mag();
             g_GyroEnable = 0;
@@ -2140,17 +2347,30 @@ void _sensor_accel_gyro_on_change(void)
         {
 
                 uint16_t fifo_len;
+                int16_t wacc_data[FIFO_DEPTH_T/2];
+                //int16_t wgyro_data[FIFO_DEPTH_T/2];                
+                //static uint32_t old_tick = 0;
 
-                CC_Mems_Fifo_Update_Data();
+                CC_LSM6DSX_Fifo_Update_Data();                
 
-                fifo_len = CC_Mems_Fifo_Get_UnRead_Length(MEMS_FIFO_USER_PEDO);        
+                fifo_len = CC_LSM6DSX_Fifo_Get_Accel_UnRead_Samples(MEMS_FIFO_USER_PEDO);	                
 
+                //TracerInfo("Acc_fifo_len: %d, time_diff: %d\r\n", fifo_len, Get_system_time_ms() - old_tick);
+                //fifo_len = CC_LSM6DSX_Fifo_Get_Gyro_UnRead_Samples(MEMS_FIFO_USER_PEDO);         // test      
 
-                //TracerInfo("fifo_len: %d\r\n", fifo_len);
+                //TracerInfo("Gyro_fifo_len: %d, time_diff: %d\r\n", fifo_len, Hrm_get_sys_tick() - old_tick);
 
-                memcpy(s_tAcc.wdata, s_tAcc.wbuf, (fifo_len*2));
+                
+                //old_tick = Get_system_time_ms();
 
-                CC_Mems_Fifo_Reset(MEMS_FIFO_USER_PEDO);
+                memcpy(wacc_data, s_tAcc.wbuf, (fifo_len*3*2));  // *3 => x,y,z; *2 => 16bits
+
+                //memcpy(wgyro_data, s_tGyro.wbuf, (fifo_len*3*2));  // test
+
+                CC_LSM6DSX_Fifo_Accel_Read_Done(MEMS_FIFO_USER_PEDO);
+
+                //CC_LSM6DSX_Fifo_Gyro_Read_Done(MEMS_FIFO_USER_PEDO); //test
+
 
                 // Charge-in or low power, skip to execute pedometer, liftarm and sleep algorithm
                // if ((eDEVICE_CHARGE_IN== s_tVenusCB.eChargingState) || 
@@ -2158,25 +2378,49 @@ void _sensor_accel_gyro_on_change(void)
                    // return;
 
 
-                fifo_len /= 3;
-
                 for(int i = 0; i < fifo_len; i++)
                 {
                     int k = 3*i;
 
-                   _wAccelData[0] = (s_tAcc.wdata[k] / 4); // x->y 
-                   _wAccelData[1] = (s_tAcc.wdata[k+1] / 4); //y ->-x 
-                   _wAccelData[2] = (s_tAcc.wdata[k+2] / 4);
+                   _wAccelData[0] = (wacc_data[k] / 4); // x->y 
+                   _wAccelData[1] = (wacc_data[k+1] / 4); //y ->-x 
+                   _wAccelData[2] = (wacc_data[k+2] / 4);
                      _sensor_algorithm_liftarm_proc();    
+
+
+                    //TracerInfo( "ACC_Data[0] %d\r\n",wacc_data[0]);
+                    //TracerInfo( "ACC_Data[1] %d\r\n",wacc_data[1]);
+                    //TracerInfo( "ACC_Data[2] %d\r\n",wacc_data[2]);   
+
+                    //TracerInfo( "GYRO_Data[0] %d\r\n",wgyro_data[0]);
+                    //TracerInfo( "GYRO_Data[1] %d\r\n",wgyro_data[1]);
+                    //TracerInfo( "GYRO_Data[2] %d\r\n",wgyro_data[2]);   
+
             
                     uint32_t       _dwPedTotalStepCount = 0;
                     signed char    _cPedState = ePedo_Stop;                     
 
+                    // Made same with Apollo axis
+                    // x -> to ground, so x shift to y, y shit to -x 
+                    _wAccelData[0] = 0-(wacc_data[k+1] / 4); // x->y 
+                    _wAccelData[1] = (wacc_data[k] / 4); //y ->-x 
+                    _wAccelData[2] = (wacc_data[k+2] / 4);
+
+#if 0 // test app loop time           
+                     
+                    old_tick = Get_system_time_ms();                                                                         
+#endif
+                                                   
                     FP_PED_8Bit(((const short *) _wAccelData), &_dwPedTotalStepCount, &_cPedState);   
+
+#if 0 // test app loop time                                               
+                    TracerInfo("%d\r\n", Get_system_time_ms() - old_tick);                                                                                      
+#endif
+
                     //TracerInfo("%d,%d,%d\r\n", _wAccelData[0], _wAccelData[1], _wAccelData[2]);                    
                     if (s_tVenusCB.dwPedTotalStepCount != _dwPedTotalStepCount)
                     {     
-                        //TracerInfo("ped_cnt: %d, ped_st: %d\r\n", _dwPedTotalStepCount, _cPedState);
+                        TracerInfo("ped_cnt: %d, ped_st: %d\r\n", _dwPedTotalStepCount, _cPedState);
 
 #ifdef DB_EN
                         
@@ -2302,13 +2546,12 @@ void _sensor_accel_gyro_on_change(void)
                 CC_VENUS_AccelTimerStop();
                 CC_VENUS_AccelTimerReset();
 
+                CC_LSM6DSX_Fifo_Accel_UnRegister(MEMS_FIFO_USER_PEDO);
                 CC_LSM6DSX_FifoDisable(E_LSM6DSX_FIFO_CONTROL_ACCEL_GYRO);
+                CC_LSM6DSX_FifoEnable(E_LSM6DSX_FIFO_CONTROL_ACCEL_GYRO);
+                CC_LSM6DSX_Fifo_Accel_Register(MEMS_FIFO_USER_SWIM, s_tAcc.wbuf, (FIFO_DEPTH_T/2)); 
+                CC_LSM6DSX_Fifo_Gyro_Register(MEMS_FIFO_USER_SWIM, s_tGyro.wbuf, (FIFO_DEPTH_T/2)); 
 
-                CC_LSM6DSX_AccelPowerDown();
-                CC_LSM6DSX_GyroPowerDown();
-
-                CC_LSM6DSX_AccelPowerON(LSM6DS3_ACC_GYRO_ODR_XL_52Hz);
-                CC_LSM6DSX_GyroPowerON (LSM6DS3_ACC_GYRO_ODR_G_52Hz );
 
                 CC_AK09912_MAG_SET_ODR(AK09912_MAG_DO_10_Hz); 
 
@@ -2325,10 +2568,8 @@ void _sensor_accel_gyro_on_change(void)
                 //Start Record Swimming
                 //_CC_DB_Save_SwimmingStart();
 
-                CC_Mems_Fifo_UnRegister(MEMS_FIFO_USER_PEDO);
-
-                CC_VENUS_AccelTimerPollModeStart();
-                g_bMagEnCnt = 0; 
+                CC_VENUS_SwimTimerFifoModeStart();
+                
         }
         else
         {
@@ -2369,12 +2610,12 @@ void CC_SYS_FactroyReset_Setting(void)
 }
 void CC_SYS_FactoryReset_Handler(void)
 {
-    
+#ifdef DB_EN    
     //DB data reset
     CC_DB_Factory_System_DataReset();
 
     CC_DB_Set_Init_Done();
-
+#endif
     //System data reset
     CC_BLE_Cmd_GetGeneralInfo(&s_tVenusCB.stGeneralInfo,true);
     CC_AppSrv_HR_ResetLimited(s_tVenusCB.stGeneralInfo.cAge);
@@ -2394,6 +2635,7 @@ void CC_SYS_FactoryReset_Handler(void)
                                                     &s_tVenusCB.cLongsitEn,
                                                     &s_tVenusCB.cLiftarmEn);
 
+#ifdef DB_EN
 
     CC_DB_System_Save_Request(DB_SYS_GENERAL_INFO);
     CC_DB_System_Save_Request(DB_SYS_ALARM);
@@ -2402,7 +2644,7 @@ void CC_SYS_FactoryReset_Handler(void)
     CC_DB_System_Save_Request(DB_SYS_SLEEP_MONITOR_TIME_SETTING);
 
     CC_DB_System_Check_Request_And_Save();
-
+#endif
     //Algorithm Reset
     //Swim
     CC_Swim_DeInit();
@@ -2593,8 +2835,9 @@ bool _app_scheduler(void)
 
     if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_BLE_NOTIFY_TO) )
     {
+#ifdef CFG_BLE_APP        
         ble_notify_handler();
-    
+#endif    
         VENUS_EVENT_OFF(E_VENUS_EVENT_BLE_NOTIFY_TO);
         _bScheduleOperating =true;         
     }
@@ -2650,15 +2893,15 @@ bool _app_scheduler(void)
 
          }   
 
-/*
+           
+         #ifdef SLEEP_EN
          if (CC_BLE_Cmd_CheckSleepTimeSetting())
          {
              CC_BLE_Cmd_GetSleepTimeSetting(&s_tVenusCB.stSleepAlgExecPeriod,true);            
              CC_SleepMonitor_Srv_SyncTimeSlot(&s_tVenusCB.stSleepAlgExecPeriod);
              TracerInfo("Updated Sleep Monitor Time Setting \r\n");
          }
-*/            
-         #ifdef SLEEP_EN
+         
          CC_SleepMonitor_Srv_PollingCheck();
          #endif
             
@@ -2804,7 +3047,7 @@ bool _app_scheduler(void)
     
          if (CC_PageMgr_IsBlockingOLED())
         {
-            //NRF_LOG_INFO(" OLED IS BLOCKING \r\n");
+            //TracerInfo(" OLED IS BLOCKING \r\n");
         }
         else
         {
@@ -2854,7 +3097,7 @@ bool _app_scheduler(void)
 
         if (CC_PageMgr_IsBlockingOLED())
         {
-             //NRF_LOG_INFO(" OLED IS BLOCKING \r\n");
+             //TracerInfo(" OLED IS BLOCKING \r\n");
         }
         else
         {
@@ -2882,7 +3125,7 @@ bool _app_scheduler(void)
 
          if (CC_PageMgr_IsBlockingOLED())
          {
-              //NRF_LOG_INFO(" OLED IS BLOCKING \r\n");
+              //TracerInfo(" OLED IS BLOCKING \r\n");
          }
          else
          {
@@ -2905,7 +3148,7 @@ bool _app_scheduler(void)
 
          if (CC_PageMgr_IsBlockingOLED())
          {
-            //NRF_LOG_INFO(" OLED IS BLOCKING \r\n");
+            //TracerInfo(" OLED IS BLOCKING \r\n");
          }
          else
          {
@@ -2994,8 +3237,56 @@ void venus_platform_init(void)
     drvi_RequestIrq(HRM_INT_PIN, HRM_int_handler, IRQ_TYPE_EDGE_FALLING);   
 #endif
     ACC_init();
+
+#if 0 // test acc/gyro
+    if(1)
+    {
+        CC_LSM6DSX_AccelPowerDown();
+        CC_LSM6DSX_GyroPowerDown();
+        
+        CC_LSM6DSX_AccelPowerON(LSM6DS3_ACC_GYRO_ODR_XL_52Hz);
+        CC_LSM6DSX_GyroPowerON (LSM6DS3_ACC_GYRO_ODR_G_52Hz );
+
+        while(1)
+        {
+            LSM6DS3_ACC_GYRO_GetRawAccData(NULL, (i16_t *) _wAccelData);
+            LSM6DS3_ACC_GYRO_GetRawGyroData16(NULL, (i16_t *) _wGyroData);
+
+            TracerInfo("acc x: %d, y: %d, z: %d\r\n", _wAccelData[0], _wAccelData[1], _wAccelData[2]);
+            TracerInfo("gyro x: %d, y: %d, z: %d\r\n", _wGyroData[0], _wGyroData[1], _wGyroData[2]);
+
+             cc6801_ClockDelayMs(100);
+        }
+
+
+    }
+#endif
+
     //GYR_Init(); // Not nessary if ACC_init() was done.
-    MAG_Init();
+    ret = MAG_Init();
+
+    if(MEMS_SUCCESS != ret)
+    {
+        TracerInfo("mag_init error: 0x%x\r\n", ret);
+
+         cc6801_ClockDelayMs(1000);
+    }
+#if 0 // test mag    
+    else
+    {
+        CC_AK09912_MAG_SET_ODR(AK09912_MAG_DO_10_Hz); 
+
+    
+        while(1)
+        {
+            AKM_Data_Get();
+
+            TracerInfo("mag x: %d, y: %d, z: %d\r\n", s_tMagRaw.AXIS_X, s_tMagRaw.AXIS_Y, s_tMagRaw.AXIS_Z);
+
+        }
+    }
+#endif
+    
     CC_GYRO_Set_ODR(LSM6DS3_ACC_GYRO_ODR_G_POWER_DOWN);
 
     app_displayoled_init();
@@ -3017,9 +3308,9 @@ void venus_app_init(void)
 
     app_Time_Init();
     s_tVenusCB.stSysCurTime = app_getSysTime();
-
+#ifdef HRM_EN
     CC_AppSrv_HR_Init();
-
+#endif
 
     CC_PageMgr_Init();
 
@@ -3030,9 +3321,9 @@ void venus_app_init(void)
 void venus_ready_to_bootloader(void)
 {
     //TracerInfo("venus_ready_to_bootloader!\r\n");
-
+#ifdef CFG_BLE_APP
     appm_disconnect();
-   
+#endif   
 }
 
 
@@ -3075,9 +3366,10 @@ int venus_main(void)
     venus_app_init();
 
     application_timers_start();
-
+    
+#ifdef DB_EN
     CC_DB_Init(DB_INIT_FROM_SYSTEM);
-
+#endif
     s_tVenusCB.bAvg_BatLevel = 100;
 
     s_tVenusCB.eSystemPwrState = eSysStateInit;
@@ -3101,9 +3393,37 @@ int venus_main(void)
                 break;
 
             case eSysStateNormal:
+#if 0 // test app loop time
+                //static uint32_t loop_cnt = 0;
+                                            
+                static uint32_t old_tick = 0;
+                static uint32_t diff_time = 0;
+                static uint32_t max_diff_time = 0;
+                static uint8_t ignore = 0;
+                
+                old_tick = Hrm_get_sys_tick();
+#endif
+
+            
                 _app_scheduler();
-                rwip_schedule();
-                rwip_ignore_ll_conn_param_update_patch();
+#if 0 // test app loop time
+                diff_time = Hrm_get_sys_tick() - old_tick;
+                
+                if(ignore > 100)
+                {
+                     if(max_diff_time < diff_time)
+                          max_diff_time = diff_time;
+                }
+                else
+                     ignore++;
+                                    
+                NRF_LOG_RAW_INFO("%d / %d\r\n", diff_time, max_diff_time);
+#endif
+
+                #ifdef CFG_BLE_APP
+                    rwip_schedule();
+                    rwip_ignore_ll_conn_param_update_patch();
+                #endif
         
         }
     }

@@ -76,16 +76,34 @@ typedef struct
     LSM6DS3_ACC_GYRO_ODR_XL_t    eODR_Accel;
 
 }   S_CC_Lsm6dsxCB;
-
+/*
 typedef struct
 {
     uint16_t data_end_index;
     uint16_t max_size;
     int16_t *mems_fifo_data;
 } cc_mems_fifo_user_t;
+*/
+
+
+typedef struct
+{   
+    bool     isRegistered;
+    uint32_t nSamples;  // number of (x+y+z)
+    uint16_t nFifoDepth; // in 16bits
+//    uint16_t PeriodInHz;
+    int16_t *fifo_data;
+} CC_LSM6DSX_Fifo_Settings_t;
+
+typedef struct
+{   
+    CC_LSM6DSX_Fifo_Settings_t Accel;
+    CC_LSM6DSX_Fifo_Settings_t Gyro;
+    
+} CC_LSM6DSX_Fifo_Handle_t;
 
 /* Private define ------------------------------------------------------------*/
-#define MEMS_FIFO_MAX_USER        8
+//#define MEMS_FIFO_MAX_USER        8
 #define GET_BIT8(bit)    ((uint8_t)(0x01 << bit))
 /* Private macro -------------------------------------------------------------*/
 
@@ -93,9 +111,13 @@ typedef struct
 //static S_CC_Lsm6dsxCB    s_tLsm6dsxCB = {
 //                                            .bSpiID = 0x01,
 //                                        };
-
+/*
 cc_mems_fifo_user_t mems_fifo_user[MEMS_FIFO_MAX_USER];
 uint8_t mems_fifo_register_flag;
+*/
+CC_LSM6DSX_Fifo_Handle_t S_Lsm6dsx_Fifo_Handle[MEMS_FIFO_USER_TOTAL];
+E_LSM6DSX_FIFO_TARGET_DEVICE S_Lsm6dsx_Fifo_Target;
+
 
 /* Imported function prototypes ----------------------------------------------*/
 //extern uint8_t Sensor_IO_Write(void *handle, uint8_t WriteAddr, uint8_t *pBuffer, uint16_t nBytesToWrite);
@@ -7165,6 +7187,8 @@ void CC_LSM6DSX_FifoEnable(E_LSM6DSX_FIFO_TARGET_DEVICE eTargetDevice)
 
     _CC_LSM6DSX_RegWrite(LSM6DS3_ACC_GYRO_FIFO_CTRL5, LSM6DS3_ACC_GYRO_ODR_FIFO_50Hz);
 
+    S_Lsm6dsx_Fifo_Target = eTargetDevice;
+
     switch (eTargetDevice)
     {
         case E_LSM6DSX_FIFO_CONTROL_ACCEL_GYRO:
@@ -7188,6 +7212,9 @@ void CC_LSM6DSX_FifoEnable(E_LSM6DSX_FIFO_TARGET_DEVICE eTargetDevice)
 
 void CC_LSM6DSX_FifoDisable(E_LSM6DSX_FIFO_TARGET_DEVICE eTargetDevice)
 {
+
+    //S_Lsm6dsx_Fifo_Target = 0;
+
     switch (eTargetDevice)
     {
         case E_LSM6DSX_FIFO_CONTROL_ACCEL_GYRO:
@@ -7208,7 +7235,178 @@ void CC_LSM6DSX_FifoDisable(E_LSM6DSX_FIFO_TARGET_DEVICE eTargetDevice)
 }
 
 
+void CC_LSM6DSX_Fifo_Accel_Register(uint8_t handle, int16_t *iSampleData, uint32_t nFifoDepth)
+{
+    
+//    if(fifo_set->Odr > Lsm6dsx_Fifo_Config.OdrHzVal)
+//        return false;
 
+    S_Lsm6dsx_Fifo_Handle[handle].Accel.isRegistered = true;
+    S_Lsm6dsx_Fifo_Handle[handle].Accel.nSamples = 0;
+    S_Lsm6dsx_Fifo_Handle[handle].Accel.nFifoDepth = nFifoDepth;
+//    S_Lsm6dsx_Fifo_Handle[handle].Accel.PeriodInHz = LSM6DSX_ACC_GYRO_translate_ODR_Fifo(fifo_set->Odr);
+    S_Lsm6dsx_Fifo_Handle[handle].Accel.fifo_data = iSampleData;
+
+}
+
+
+void CC_LSM6DSX_Fifo_Gyro_Register(uint8_t handle, int16_t *iSampleData, uint32_t nFifoDepth)
+{
+
+//    if(fifo_set->Odr > Lsm6dsx_Fifo_Config.OdrHzVal)
+//        return false;
+
+    S_Lsm6dsx_Fifo_Handle[handle].Gyro.isRegistered = true;
+    S_Lsm6dsx_Fifo_Handle[handle].Gyro.nSamples = 0;
+    S_Lsm6dsx_Fifo_Handle[handle].Gyro.nFifoDepth = nFifoDepth;
+//    S_Lsm6dsx_Fifo_Handle[handle].Gyro.PeriodInHz = LSM6DSX_ACC_GYRO_translate_ODR_Fifo(fifo_set->Odr);
+    S_Lsm6dsx_Fifo_Handle[handle].Gyro.fifo_data = iSampleData;    
+
+}
+
+void CC_LSM6DSX_Fifo_Accel_UnRegister(uint8_t handle)
+{
+    S_Lsm6dsx_Fifo_Handle[handle].Accel.isRegistered = false;
+    S_Lsm6dsx_Fifo_Handle[handle].Accel.nSamples = 0;
+    S_Lsm6dsx_Fifo_Handle[handle].Accel.fifo_data = 0;
+
+}
+
+void CC_LSM6DSX_Fifo_Gyro_UnRegister(uint8_t handle)
+{
+    S_Lsm6dsx_Fifo_Handle[handle].Gyro.isRegistered = false;
+    S_Lsm6dsx_Fifo_Handle[handle].Gyro.nSamples = 0;
+    S_Lsm6dsx_Fifo_Handle[handle].Gyro.fifo_data = 0;
+}
+
+void CC_LSM6DSX_Fifo_Accel_Read_Done(uint8_t handle)
+{
+    S_Lsm6dsx_Fifo_Handle[handle].Accel.nSamples = 0;    
+}
+
+void CC_LSM6DSX_Fifo_Gyro_Read_Done(uint8_t handle)
+{
+    S_Lsm6dsx_Fifo_Handle[handle].Gyro.nSamples = 0;
+}
+
+uint32_t  CC_LSM6DSX_Fifo_Get_Accel_UnRead_Samples(uint8_t handle)
+{
+    return S_Lsm6dsx_Fifo_Handle[handle].Accel.nSamples;
+}
+
+uint32_t  CC_LSM6DSX_Fifo_Get_Gyro_UnRead_Samples(uint8_t handle)
+{
+    return S_Lsm6dsx_Fifo_Handle[handle].Gyro.nSamples;
+}
+
+void CC_LSM6DSX_Fifo_Update_Data(void)
+{
+    uint16_t fifo_len = 0;
+    uint16_t data_index;
+    int16_t mems_data[3];
+    uint32_t fifo_nb_consumed = 0;
+
+    LSM6DS3_ACC_GYRO_R_FIFONumOfEntries(0, &fifo_len);
+
+
+    if(0x00 == fifo_len)
+        return;
+
+
+    fifo_len /= 3; // make x,y,z => fifo_len = 1
+
+
+    while(fifo_nb_consumed < fifo_len)
+    {
+
+        // Need to process Gyro data first
+        // Process Gyro data:    
+        if((E_LSM6DSX_FIFO_CONTROL_GYRO == S_Lsm6dsx_Fifo_Target)
+            || (E_LSM6DSX_FIFO_CONTROL_ACCEL_GYRO == S_Lsm6dsx_Fifo_Target))
+        {
+
+            fifo_nb_consumed++;
+            
+            LSM6DS3_ACC_Get_Acceleration(mems_data, FIFO_EN); // 1 sample => x,y,z            
+/*
+            NRF_LOG_INFO("mems_x: 0x%02x\r\n", mems_data[0]);
+            NRF_LOG_INFO("mems_y: 0x%02x\r\n", mems_data[1]);
+            NRF_LOG_INFO("mems_z: 0x%02x\r\n", mems_data[2]);       
+*/
+
+            for(uint8_t handle = 0; handle < MEMS_FIFO_USER_TOTAL; handle++)
+            {
+                if(S_Lsm6dsx_Fifo_Handle[handle].Gyro.isRegistered)
+                {
+                    //uint32_t sample_target = (Lsm6dsx_Fifo_Config.OdrHzVal / S_Lsm6dsx_Fifo_Handle[handle].Gyro.PeriodInHz);
+                        
+                    //if(0x00 == (Lsm6dsx_Fifo_Config.SampleCount % sample_target))
+                    //{                
+                        data_index = (S_Lsm6dsx_Fifo_Handle[handle].Gyro.nSamples * 3); // x,y,z
+
+                        if(data_index < S_Lsm6dsx_Fifo_Handle[handle].Gyro.nFifoDepth)
+                        {
+                            memcpy(&S_Lsm6dsx_Fifo_Handle[handle].Gyro.fifo_data[data_index], mems_data, 0x06);
+
+                            S_Lsm6dsx_Fifo_Handle[handle].Gyro.nSamples++;
+
+                        }
+                    //}
+                }
+            }
+
+        }
+
+
+        
+        // Process Accel data:
+        if((E_LSM6DSX_FIFO_CONTROL_ACCEL == S_Lsm6dsx_Fifo_Target) 
+            || (E_LSM6DSX_FIFO_CONTROL_ACCEL_GYRO == S_Lsm6dsx_Fifo_Target))
+        {
+
+            fifo_nb_consumed++;
+            
+            LSM6DS3_ACC_Get_Acceleration(mems_data, FIFO_EN); // 1 sample => x,y,z
+        
+/*
+                NRF_LOG_INFO("mems_x: 0x%02x\r\n", mems_data[0]);
+                NRF_LOG_INFO("mems_y: 0x%02x\r\n", mems_data[1]);
+                NRF_LOG_INFO("mems_z: 0x%02x\r\n", mems_data[2]);                
+*/
+            
+            for(uint8_t handle = 0; handle < MEMS_FIFO_USER_TOTAL; handle++)
+            {
+                if(S_Lsm6dsx_Fifo_Handle[handle].Accel.isRegistered)
+                {
+         
+                    //uint32_t sample_target = (Lsm6dsx_Fifo_Config.OdrHzVal / S_Lsm6dsx_Fifo_Handle[handle].Accel.PeriodInHz);
+                
+                    //if(0x00 == (Lsm6dsx_Fifo_Config.SampleCount % sample_target))
+                    //{                
+                        data_index = (S_Lsm6dsx_Fifo_Handle[handle].Accel.nSamples * 3); // x,y,z
+
+                        if(data_index < S_Lsm6dsx_Fifo_Handle[handle].Accel.nFifoDepth)
+                        {
+                            memcpy(&S_Lsm6dsx_Fifo_Handle[handle].Accel.fifo_data[data_index], mems_data, 0x06);
+
+                            S_Lsm6dsx_Fifo_Handle[handle].Accel.nSamples++;
+
+                        }
+                    //}
+                    
+                }
+            }
+
+        }
+
+
+        //Lsm6dsx_Fifo_Config.SampleCount++;
+
+    }
+
+}
+
+/*
 void CC_Mems_Fifo_Register(cc_mems_fifo_user_type_t user_id, int16_t *pdata, uint16_t _max_size)
 {
     mems_fifo_register_flag |= GET_BIT8(user_id);
@@ -7266,7 +7464,7 @@ void CC_Mems_Fifo_Update_Data(void)
     }
 
 }
-
+*/
 
 
 void CC_LSM6DS3_RegDump(u8_t baRegMapBuf[0x6B])

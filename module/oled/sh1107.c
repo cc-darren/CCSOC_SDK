@@ -204,8 +204,8 @@ void sh1107_Sleep(void)
 }
 
 void sh1107_WakeUp(void)
-{
-    sh1107_SetPwrCtlLow();
+{ 
+    sh1107_SetPwrCtlHigh();
     OLED_DELAY(100);
     sh1107_SendCommand(0x8D); //Set Charge bump
     sh1107_SendCommand(0x14);

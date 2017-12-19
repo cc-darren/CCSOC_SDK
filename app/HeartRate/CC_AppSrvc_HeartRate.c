@@ -80,9 +80,9 @@ typedef struct
  *** VARIABLE
  **********************************************************/
 S_AppSrv_HR_CB    s_tAppSrvHrCB;
-
+#ifdef DB_EN 
 db_heartrate_t    s_tDbHrm __attribute__((aligned(4)));
-
+#endif
 APP_TIMER_DEF(s_tAppSrvHR_Timer_24HR_PeriodicMeasurement);
 APP_TIMER_DEF(s_tAppSrvHR_Timer_24HR_OneMeasurement     );
 APP_TIMER_DEF(s_tAppSrvHR_Timer_SystemTick);
@@ -108,7 +108,7 @@ extern uint8_t CC_Charge_Register(charge_cb_t cb);
 /**********************************************************
  *** FUNCTION
  **********************************************************/
-
+#ifdef DB_EN 
 static void _DB_Save_Hrm_Data(int16_t nHrData, int16_t nTrustLevel)
 {
     app_date_time_t    _tTime;
@@ -128,7 +128,7 @@ static void _DB_Save_Hrm_Data(int16_t nHrData, int16_t nTrustLevel)
     if (FDS_SUCCESS != CC_Save_Record(eHrm, ((uint32_t *) &s_tDbHrm), sizeof(db_heartrate_t)))
         TracerInfo("!!! ERROR !!! fail to save HRM to DB...\r\n");
 }
-
+#endif
 void Hrm_SysTick_Handler(void * pvContext)
 {
     UNUSED_PARAMETER(pvContext);
@@ -384,9 +384,9 @@ void CC_AppSrv_HR_DataReport(int16_t nHrData, int16_t nTrustLevel)
 
     s_tAppSrvHrCB.tData.nData       = nHrData;
     s_tAppSrvHrCB.tData.nTrustLevel = nTrustLevel;
-
+#ifdef DB_EN
     _DB_Save_Hrm_Data(nHrData, nTrustLevel);
-
+#endif
     if (   (E_APPSRV_HRM_ST_IN_MEASUREMENT == s_tAppSrvHrCB.eSingleHrState)
         || (E_APPSRV_HRM_ST_IN_MEASUREMENT == s_tAppSrvHrCB.eHrsState     ))
     {

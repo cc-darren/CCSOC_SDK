@@ -218,7 +218,7 @@ static void cc6801_SpimConfig(U_regSPI * pSpimBase,
     pSpimBase->dw.spiCtrl = dwSpiCtrl;
     pSpimBase->dw.DmaCtrl = dwDmaCtrl;
 
-    TracerInfo("setup mode %d, %s%s%s %u Hz\n",
+    TracerInfo("setup mode %d, %s%s%s %u Hz\r\n",
         (int) (spi->wMode & (SPI_CPOL | SPI_CPHA)),
         (spi->wMode & SPI_CS_HIGH) ? "cs_high, " : "",
         (spi->wMode & SPI_LSB_FIRST) ? "lsb, " : "",
@@ -266,7 +266,7 @@ int cc6801_SpimInit(T_SpiDevice *pSpiDev)
     }
     else
     {
-        TracerErr("Not Support SPI%d\n", pSpiDev->bBusNum);
+        TracerErr("Not Support SPI%d\r\n", pSpiDev->bBusNum);
         return CC_ERROR_INVALID_PARAM;
     }
 

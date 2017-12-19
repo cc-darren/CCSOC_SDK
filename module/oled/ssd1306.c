@@ -203,7 +203,7 @@ void ssd1306_Sleep(void)
 
 void ssd1306_WakeUp(void)
 {
-    ssd1306_SetPwrCtlLow();
+    ssd1306_SetPwrCtlHigh();
     OLED_DELAY(100);
     ssd1306_SendCommand(0x8D); //Set Charge bump
     ssd1306_SendCommand(0x14);

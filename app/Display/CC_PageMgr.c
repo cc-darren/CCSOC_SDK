@@ -3,10 +3,11 @@
 #include <stdbool.h>
 #include "project.h"
 //#include "CC_HRM_drv.h"
-#include "CC_PageMgr.h"
-#include "ssd1306.h"
-#include "ssd1306_128x32.h"
 #include "CC_DisplayService.h"
+#include "CC_PageMgr.h"
+//#include "ssd1306.h"
+//#include "ssd1306_128x32.h"
+#include "appDisplay.h"
 #include "CC_Vib_Service.h"
 #include "Icon.h"
 
@@ -97,7 +98,7 @@ static uint8_t _PageMgr_HRSPage_Resume(void)
 static bool _PageMgr_Srv_WakeUpOLED(void)
 {
     _cIs_OLED_Blocking = true;
-    ssd1306_SetPwrCtlHigh();
+    oled_SetPwrCtrlHigh();
     CC_VENUS_OLEDWakUpTimeOutTimerStart(GENERALTIME_TURN_ON_OFF_OLED);
     return false;
 }
@@ -105,13 +106,13 @@ static bool _PageMgr_Srv_WakeUpOLED(void)
 static bool _PageMgr_Srv_SleepOLED(void)
 {
     _cIs_OLED_Blocking = true;
-    ssd1306_Sleep();
+    oled_Sleep();
     return false;
 }
 
 static void _PageMgr_Srv_Init(void)
 {
-    ssd1306_DisplayOn();    
+    oled_DisplayOn();    
     CC_Dsp_Srv_Init();
     _cIs_OLED_Blocking = false;
     _cIs_OLED_Active = true;
@@ -227,7 +228,9 @@ void _PageMgr_DrawPath(eMMI_Page_t _PageIndex)
 
         case eMMI_DB_FULL:
         {
+#ifdef DB_EN            
             CC_Dsp_Set_DB_Full();
+#endif
         }
         break;
         case eMMI_DUMMY_PAGE:
@@ -313,7 +316,7 @@ static void _PageMgr_ResetGeneralTimer(void)
 
 static void _PageMgr_PageDestroy(eMMI_Page_t _Page, S_VenusEvent *_stEvent)
 {
-    CC_Vib_Srv_Reset();  
+    //CC_Vib_Srv_Reset(); // remarked for test 
     CC_Dsp_Srv_Set_Ind_Reset();
     _PageMgr_ResetGeneralTimer();
     
@@ -412,7 +415,11 @@ static void _PageMgr_PageSwitch(S_VenusEvent *_stEvent)
             else  if (eMMI_PRE_LOWPOWER== s_tPage.ePrePage)
             {//START:[VNS-97]
                 if((eMMI_CLOCK_PAGE != s_tPage.eNowPage) && (eMMI_DB_FULL != s_tPage.ePrePage)
+#ifdef DB_EN                    
                     && (0x01 == CC_DB_Check_DB_Full()))
+#else
+                )
+#endif
                 {
                     s_tPage.eNowPage = eMMI_DB_FULL;
                 }
@@ -447,8 +454,12 @@ static void _PageMgr_PageSwitch(S_VenusEvent *_stEvent)
                             eMMI_STANDBY_PAGE == s_tPage.eNowPage))
                             s_tPage.eNowPage = eMMI_PRE_LOWPOWER;
                         else if ((eMMI_STANDBY_PAGE == s_tPage.eNowPage) && 
-                            (eMMI_DB_FULL != s_tPage.ePrePage) && 
-                            (0x01 == CC_DB_Check_DB_Full()))
+                            (eMMI_DB_FULL != s_tPage.ePrePage)  
+#ifdef DB_EN                            
+                            && (0x01 == CC_DB_Check_DB_Full()))
+#else
+                            )
+#endif                            
                             s_tPage.eNowPage = eMMI_DB_FULL;
                         else if ((eMMI_STANDBY_PAGE == s_tPage.eNowPage) && 
                             (eEvent_SWIM_ON != s_tPage.ePrePage) && 
@@ -511,10 +522,12 @@ static void _PageMgr_PageSwitch(S_VenusEvent *_stEvent)
                     s_tPage.eNowPage= eMMI_PRE_LOWPOWER; 
                 else
                 {  
+#ifdef DB_EN                    
                     if (0x01 == CC_DB_Check_DB_Full())
                         s_tPage.eNowPage= eMMI_DB_FULL; 
                     else 
-                s_tPage.eNowPage= eMMI_CLOCK_PAGE;
+#endif                        
+                        s_tPage.eNowPage= eMMI_CLOCK_PAGE;
                 }//End    
             break;
         case eEvent_CHARGINGFULL:
@@ -787,15 +800,15 @@ void CC_PageMgr_Proc(S_VenusEvent *_stEvent)
 
 void CC_PageMgr_ExecWakeup(void)
 {
-    ssd1306_WakeUp();
+    oled_WakeUp();
     _cIs_OLED_Blocking = false;
     _cIs_OLED_Active = true;
-    ssd1306_DrawBlack();
+    oled_DrawBlack();
 }
 void CC_PageMgr_ExecSleep(void)
 {
     
-    ssd1306_SetPwrCtlLow();
+    oled_SetPwrCtrlLow();
     _cIs_OLED_Blocking = false;
     _cIs_OLED_Active = false;
         

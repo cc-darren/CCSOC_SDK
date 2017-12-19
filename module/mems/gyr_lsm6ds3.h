@@ -2943,8 +2943,12 @@ status_t CC_SET_ACC_ODR(uint8_t _Enable);
 
 typedef enum
 {
-    MEMS_FIFO_USER_PEDO    =  0, 
-    MEMS_FIFO_USER_HRM    =  1, 
+	MEMS_FIFO_USER_PEDO	=  0, 
+	MEMS_FIFO_USER_HRM, 
+	MEMS_FIFO_USER_SWIM, 
+
+    MEMS_FIFO_USER_TOTAL,
+
 }cc_mems_fifo_user_type_t;
 
 void CC_Mems_Fifo_Register(cc_mems_fifo_user_type_t user_id, int16_t *pdata, uint16_t _max_size);

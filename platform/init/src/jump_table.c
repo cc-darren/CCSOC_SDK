@@ -1,5 +1,6 @@
 
 
+#ifdef CFG_BLE_APP
 
 
 #include "jump_table.h"
@@ -310,3 +311,10 @@ const uint32_t* const jump_table_base[] __attribute__((section("jump_table_mem_a
 #endif
 
 
+
+#else // ndef CFG_BLE_APP
+
+uint32_t volatile *const jump_table_base = 0;
+uint32_t volatile *const jump_table2_base = 0;
+
+#endif
