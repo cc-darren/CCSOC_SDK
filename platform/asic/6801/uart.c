@@ -360,7 +360,11 @@ static int cc6801_UartBaudrateSet(T_UartPort *pUartPort)
       default:
       case UART_BAUDRATE_115200:
         //FPGA DEMO setting, clk=16M
-        pUartCtrlBase->dw.baud = 0x05;
+        pUartCtrlBase->dw.baud = 0x05;    //based on 32MHz source
+        //pUartCtrlBase->dw.baud = 0x02;  //16MHz   //remove it after dynamically change clock enabled
+        //pUartCtrlBase->dw.baud = 0x0B;  //64MHz   //remove it after dynamically change clock enabled
+        //pUartCtrlBase->dw.baud = 0x08;  //48MHz   //remove it after dynamically change clock enabled
+
         pUartCtrlBase->dw.psr = ((0xC << 3) | 0x0);
         pUartCtrlBase->dw.ovr = 0x07;
         break;

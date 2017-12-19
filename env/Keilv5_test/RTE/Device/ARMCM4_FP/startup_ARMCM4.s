@@ -43,7 +43,7 @@ __initial_sp
 ;   <o>  Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ; </h>
 
-Heap_Size       EQU     0x000004
+Heap_Size       EQU     0x00000100
 
                 AREA    HEAP, NOINIT, READWRITE, ALIGN=3
 __heap_base
@@ -61,11 +61,6 @@ __heap_limit
 
 ; Vector Table Mapped to Address 0 at Reset
                 AREA    VECTOR_IN_EFLASH, DATA, READONLY
-                DCD     __initial_sp              ; Top of Stack
-                DCD     Reset_Handler             ; Reset Handler
-
-; Vector Table Mapped to retention RAM for system wakeup
-                AREA    VECTOR_IN_RET_RAM, DATA, READONLY
                 EXPORT  __Vectors
                 EXPORT  __Vectors_End
                 EXPORT  __Vectors_Size
@@ -133,7 +128,7 @@ Reset_Handler   PROC
                 EXPORT  Reset_Handler             [WEAK]
                 IMPORT  sys_InitStartup
                 IMPORT  __main
-                
+
                 LDR     R0, =__initial_sp
                 MOV     SP, R0
                 LDR     R0, =sys_InitStartup

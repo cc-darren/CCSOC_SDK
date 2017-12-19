@@ -354,7 +354,7 @@ void dhry_main(void)
     DMIPS_Per_MHz = DMIPS * 1000000 / (float) g_aClockTable[g_dwCurrentClock].dwMHz;
 
     TracerInfo ("DMIPS:         %6.1f  @%dMHz\n", DMIPS, (g_aClockTable[g_dwCurrentClock].dwMHz/1000000));
-    TracerInfo ("DMPIS per MHz: %6.1f\n", DMIPS_Per_MHz);
+    TracerInfo ("DMIPS per MHz: %6.1f\n", DMIPS_Per_MHz);
     TracerInfo ("\n");
   }
 #endif
