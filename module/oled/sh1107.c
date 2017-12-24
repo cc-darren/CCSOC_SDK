@@ -108,7 +108,7 @@ void sh1107_Init(void)
     sh1107_SendCommand(0x51);
 
 
-    sh1107_SendCommand(SH1107_CMD_SET_MEMORY_ADDRESSING_MODE);  //0x20
+    sh1107_SendCommand(SH1107_CMD_SET_ADDRESSING_MODE_PAGE);  //0x20
     
     //contrast control
     sh1107_SendCommand(SH1107_CMD_SET_CONTRAST_CONTROL_FOR_BANK0);  //0x81

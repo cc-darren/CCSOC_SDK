@@ -36,8 +36,9 @@
 void sh1107_SetPosition(uint8_t x, uint8_t y)
 {
     sh1107_SendCommand(0xb0+y);
-    sh1107_SendCommand((x&0x0f)|0x01);
-    sh1107_SendCommand(((x&0xf0)>>4)|0x10);
+
+    sh1107_SendCommand((x&0x0f));
+    sh1107_SendCommand(((x&0xf0)>>4)|0x10);    
 }
 
 void sh1107_DrawFrameBuffer(uint8_t* fb, uint32_t size, uint8_t x, uint8_t y)
@@ -58,11 +59,11 @@ void sh1107_DrawWhite(void)
 {
     uint32_t j,i;
 
-    for(i=0xB0;i<=0xB4;i++)
+    for(i=0xB0;i<=0xBF;i++)
     {
         sh1107_SendCommand(i);
-        sh1107_SendCommand(0x0c);
-        sh1107_SendCommand(0x11);
+        sh1107_SendCommand(0x00);
+        sh1107_SendCommand(0x10);
 
         for(j=0;j<128;j++)
             sh1107_SendData(0xff);
@@ -73,11 +74,11 @@ void sh1107_DrawBlack(void)
 {
     uint32_t j,i;
 
-    for(i=0xB0;i<=0xB4;i++)
+    for(i=0xB0;i<=0xBF;i++)
     {
         sh1107_SendCommand(i);
-        sh1107_SendCommand(0x0c);
-        sh1107_SendCommand(0x11);
+        sh1107_SendCommand(0x00);
+        sh1107_SendCommand(0x10);
 
         for(j=0;j<128;j++)
             sh1107_SendData(0x00);

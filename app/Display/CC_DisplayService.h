@@ -21,11 +21,10 @@
 extern "C" {
 #endif
 
-#define LCD_SIZE_X 72
-#define LCD_SIZE_X_YD 66
-#define LCD_SIZE_Y 40
-#define LCD_X_OFFSET 27
 
+#define LCD_SIZE_X 64
+#define LCD_SIZE_Y 16
+#define LCD_X_OFFSET 0
 typedef enum
 {
     E_OLED_PWRSTATE_OFF= 0,

@@ -61,9 +61,9 @@
 
 #define SH1107_CMD_COL_ADD_SET_LSB(column)           (0x00 | (column))
 #define SH1107_CMD_COL_ADD_SET_MSB(column)           (0x10 | (column))
-#define SH1107_CMD_SET_MEMORY_ADDRESSING_MODE        0x20
-#define SH1107_CMD_SET_COLUMN_ADDRESS                0x21
-#define SH1107_CMD_SET_PAGE_ADDRESS                  0x22
+#define SH1107_CMD_SET_ADDRESSING_MODE_PAGE          0x20
+#define SH1107_CMD_SET_ADDRESSING_MODE_VERTICAL      0x21
+
 #define SH1107_CMD_SET_DISPLAY_START_LINE(line)      (0x40 | (line))
 #define SH1107_CMD_SET_CONTRAST_CONTROL_FOR_BANK0    0x81
 #define SH1107_CMD_SET_CHARGE_PUMP_SETTING           0x8D
