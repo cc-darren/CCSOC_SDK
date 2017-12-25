@@ -2733,9 +2733,9 @@ uint8_t _DB_TEST_Full_DB(void)
     }
 
 
-    return 1;
+    
 #endif  
-
+		return 1;
 }
 
 #endif // DB_EN

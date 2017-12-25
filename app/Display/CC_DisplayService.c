@@ -351,7 +351,10 @@ void CC_Dsp_Srv_PresentTime(app_date_time_t _mCurTime, uint8_t _Format)
         _index+=2;
       
        
-        x = (LCD_SIZE_X - _index*14)/2;
+        //x = (LCD_SIZE_X - _index*14)/2;
+			x = (LCD_SIZE_X - _index*8)/2;
+			
+			
         //OLED_P14x38Str(LCD_X_OFFSET + x, 0,(uint8_t*)pDisplayTime);
         OLED_P14x38Str(LCD_X_OFFSET + x, 1,(uint8_t*)pDisplayTime);
 

@@ -262,7 +262,9 @@ s_SensorData_t s_tGyro;
 S_TMagBuf_t s_tMagDataBuf;  
 AxesRaw_t s_tMagRaw;
 //static uint8_t g_bMagEnCnt = 0;
+#ifdef DB_EN
 static db_pedometer_t m_db_pedo;
+#endif
 /*
 static CC_Ble_Ped_Info_T _sPedInfo = {0xF1,0,0};
 static CC_Ble_Hrm_Info_T _sHrmInfo = {0xF2,0,0};

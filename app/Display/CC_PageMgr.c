@@ -807,7 +807,7 @@ void CC_PageMgr_ExecWakeup(void)
 }
 void CC_PageMgr_ExecSleep(void)
 {
-    
+    oled_DrawBlack();
     oled_SetPwrCtrlLow();
     _cIs_OLED_Blocking = false;
     _cIs_OLED_Active = false;
