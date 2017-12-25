@@ -308,7 +308,7 @@ Head Block of The File
 
 // GPIO Pin Group1
 #define GPIO_MODE_PINGROUP1                  GPIO_MODE_GPIO
-#define GPIO4_CONFIG                        ((GPIO_PULL_UP) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT) | (GPIO_INPUT_NOPULL)) // modified by Samuel
+#define GPIO4_CONFIG                        ((GPIO_PULL_UP) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT) | (GPIO_INPUT_NOPULL)) 
 #define GPIO5_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
 #define GPIO6_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
 #define GPIO7_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
@@ -320,12 +320,15 @@ Head Block of The File
 #define GPIO10_CONFIG                       ((GPIO_PULL_UP)   | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT) | (GPIO_INPUT_NOPULL))
 #define GPIO11_CONFIG                       ((GPIO_PULL_UP)   | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT) | (GPIO_INPUT_NOPULL))
 
+//#define GPIO10_CONFIG                       ((GPIO_PULL_UP)   | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT) | (GPIO_INPUT_NOPULL))
+//#define GPIO11_CONFIG                       ((GPIO_PULL_UP)   | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT) | (GPIO_INPUT_NOPULL))
+
 // GPIO Pin Group3
 #define GPIO_MODE_PINGROUP3                  GPIO_MODE_I2C_GPIO
 #define GPIO12_CONFIG                        ((GPIO_PULL_UP)   | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT) | (GPIO_INPUT_NOPULL))
 #define GPIO13_CONFIG                        ((GPIO_PULL_UP)   | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT) | (GPIO_INPUT_NOPULL))
 #define GPIO14_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT) | (GPIO_INPUT_NOPULL))
-#define GPIO15_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT) | (GPIO_INPUT_NOPULL))
+#define GPIO15_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
 
 // GPIO Pin Group4
 #define GPIO_MODE_PINGROUP4                  GPIO_MODE_SPI_4WIRE
@@ -449,18 +452,22 @@ Declaration of static Global Variables & Functions
 
 //#define SLEEP_EN
 //#define LONGSIT_EN
-#define MEMS_ZERO  // not ready for MEMS
+//#define MEMS_ZERO  // not ready for MEMS
 #define PEDO_EN
-//#define HRM_EN
+#define HRM_EN
 //#define SLEEP_EN
 //#define BLE_OTA_BL_MODE_EN
 //#define DB_EN
+#define FIFO_MODE_EN
 #define FACTORY_RESET
 
 
 #define TOUCH_INT_PIN       4
-#define HRM_INT_PIN         22
-#define HRM_RST_PIN         30
+#define HRM_INT_PIN         9
+#define HRM_RST_PIN         15
+
+#define FORCE_LIFTARM_TEST_EN   // for test
+//#define FORCE_SWIM_TEST_EN   // for test
 
 //-----------------------------------
 //  _bState : 1  , Init form system reboot

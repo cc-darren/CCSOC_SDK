@@ -235,15 +235,15 @@ static bool pah8002_sensor_init(void)
     _timestamp = sys_tick = Hrm_get_sys_tick(); // 1ms tick
 
 #ifndef MEMS_ZERO 
-    hrm_mems_enabled = true;
-
-    #ifdef FIFO_MODE_EN    
-        CC_Mems_Fifo_Register(MEMS_FIFO_USER_HRM, _mems_data, MEMS_SAMPLES_PER_READ);
-    #else
-        hrm_mems_index = 0;
-    #endif
-
-#endif    
+        hrm_mems_enabled = true;
+    
+	#ifdef FIFO_MODE_EN		
+            CC_LSM6DSX_Fifo_Accel_Register(MEMS_FIFO_USER_HRM, _mems_data, MEMS_SAMPLES_PER_READ);
+	#else
+            hrm_mems_index = 0;
+	#endif
+    
+#endif	
 
     return true;
 }
@@ -412,51 +412,41 @@ static void pah8002_task(void)
 
         if( (int_req & 0x01) != 0) // check fifo interrupt
         {
-             // filo data ready                    
+             // filo data ready                      
 
-#if 1 
-            for(uint8_t i = 0; i < 4; i++)
-            {
-                pah8002_write_reg(0x7f, 0x03);
-                pah8002_burst_read_reg((i*HEART_RATE_MODE_SAMPLES_PER_READ), &pah8002_ppg_data[i*HEART_RATE_MODE_SAMPLES_PER_READ], HEART_RATE_MODE_SAMPLES_PER_READ);
-                
-                pah8002_write_reg(0x7f, 0x02);
-                pah8002_burst_read_reg(0x80, cks, 4);
-                
-                pah8002_cmp_ppg_checksum((uint32_t*)&pah8002_ppg_data[i*HEART_RATE_MODE_SAMPLES_PER_READ], cks);
-            }
+             for(uint8_t i = 0; i < 4; i++)
+             {
+                 pah8002_write_reg(0x7f, 0x03);
+                 pah8002_burst_read_reg((i*HEART_RATE_MODE_SAMPLES_PER_READ), &pah8002_ppg_data[i*HEART_RATE_MODE_SAMPLES_PER_READ], HEART_RATE_MODE_SAMPLES_PER_READ);
+                 
+                 pah8002_write_reg(0x7f, 0x02);
+                 pah8002_burst_read_reg(0x80, cks, 4);
+                 
+                 pah8002_cmp_ppg_checksum((uint32_t*)&pah8002_ppg_data[i*HEART_RATE_MODE_SAMPLES_PER_READ], cks);
+             }
 
-            pah8002_write_reg(0x75, 0x01);
-            pah8002_write_reg(0x75, 0x00);
-#else // burst read for 240 Bytes
-            pah8002_write_reg(0x7f, 0x03);
-            pah8002_burst_read_reg(0, pah8002_ppg_data, HEART_RATE_MODE_SAMPLES_PER_READ*4);
+             pah8002_write_reg(0x75, 0x01);
+             pah8002_write_reg(0x75, 0x00);
 
-            pah8002_write_reg(0x7f, 0x02);
-            pah8002_burst_read_reg(0x80, cks, 4);
-
-            pah8002_write_reg(0x75, 0x01);
-            pah8002_write_reg(0x75, 0x00);
-
-            pah8002_cmp_ppg_checksum((uint32_t*)pah8002_ppg_data, cks);
-#endif
-               // process algorithm
+           	// process algorithm
 #ifdef MEMS_ZERO 
 #else       
-            //TracerInfo("mems_index(%d)\r\n",hrm_mems_index);
+            //NRF_LOG_INFO("mems_index(%d)\r\n",hrm_mems_index);
 
-    #ifdef FIFO_MODE_EN    
+    #ifdef FIFO_MODE_EN	
 
-            _pah8002_data.nf_mems = CC_Mems_Fifo_Get_UnRead_Length(MEMS_FIFO_USER_HRM)/3;
+            
+            _pah8002_data.nf_mems = CC_LSM6DSX_Fifo_Get_Accel_UnRead_Samples(MEMS_FIFO_USER_HRM);
 
             memcpy(_pah8002_data.mems_data, _mems_data, (_pah8002_data.nf_mems*2));
 
             //for(uint8_t i=0; i< (_pah8002_data.nf_mems);i++)
-                //TracerInfo("mems(%f)\r\n", _mems_data[i]); 
+                //NRF_LOG_INFO("mems(%f)\r\n", _mems_data[i]); 
 
-            CC_Mems_Fifo_Reset(MEMS_FIFO_USER_HRM);
+            
+            CC_LSM6DSX_Fifo_Accel_Read_Done(MEMS_FIFO_USER_HRM);
 
-            TracerInfo("nf_mems(%d)\r\n", _pah8002_data.nf_mems); 
+            //TracerInfo("nf_mems(%d)\r\n", _pah8002_data.nf_mems); 
     #else
             TracerInfo("hr_idx(%d)\r\n", hrm_mems_index); 
             _pah8002_data.nf_mems = hrm_mems_index/3;
@@ -464,14 +454,14 @@ static void pah8002_task(void)
             memcpy(_pah8002_data.mems_data, _mems_data, MEMS_SAMPLES_PER_READ*2);
 
             hrm_mems_index = 0;
-            hrm_mems_enabled = true;    
-            //TracerInfo("get gyro sample number:%d\r\n",CC_LSM6DSX_FifoGetUnReadData());
+            hrm_mems_enabled = true;	
+            //NRF_LOG_INFO("get gyro sample number:%d\r\n",CC_LSM6DSX_FifoGetUnReadData());
     #endif
 #endif 
             _pah8002_data.time = pah8002_update_timestamp();
             _pah8002_data.touch_flag = pah8002_get_touch_flag_ppg_mode(); ; 
 
-            //TracerInfo("sys_tick    %d\r\n", _pah8002_data.time); 
+            //NRF_LOG_INFO("sys_tick	%d\r\n", _pah8002_data.time); 
             //pah8002_log(); 
 
             ret = pah8002_entrance(&_pah8002_data); 
@@ -483,40 +473,44 @@ static void pah8002_task(void)
                  { 
                     case MSG_ALG_NOT_OPEN: 
                         TracerInfo("Algorithm is not initialized.\r\n"); 
-                           break; 
+                       	break; 
                     case MSG_MEMS_LEN_TOO_SHORT: 
                         TracerInfo("MEMS data length is shorter than PPG data length.\r\n"); 
-                           break; 
+                       	break; 
                     case MSG_NO_TOUCH: 
                         TracerInfo("PPG is no touch.\r\n"); 
-                           break; 
+                       	break; 
                     case MSG_PPG_LEN_TOO_SHORT: 
                         TracerInfo("PPG data length is too short.\r\n"); 
-                           break; 
+                       	break; 
                     case MSG_FRAME_LOSS: 
                         TracerInfo("Frame count is not continuous.\r\n"); 
-                           break; 
+                       	break; 
                     default:
                         TracerInfo("ret = %d\r\n",ret); 
-                           break;
+                       	break;
                     } 
-
             } 
+            else
+            {
 
-            CC_AppSrv_HR_StatusReport(ret);
-            if((ret & 0xf0) == MSG_HR_READY) 
-            { 
+                if((ret & 0xf0) == MSG_HR_READY) 
+                { 
 
-                pah8002_get_hr(&_fpHr) ; 
-                TracerInfo("HR = %d\r\n", (int16_t)(_fpHr)); 
+                    pah8002_get_hr(&_fpHr) ; 
 
-                pah8002_get_signal_grade(&hr_trust_level);
+                    TracerInfo("HR = %d\r\n", (int16_t)(_fpHr)); 
 
-                //TracerInfo("HR Trust Level = %d\r\n", hr_trust_level);
-                CC_AppSrv_HR_DataReport(((int16_t) _fpHr), hr_trust_level);    //TBD: should use call-back func by registration instead
-               
-            } 
-            _pah8002_data.frame_count++; 
+                    pah8002_get_signal_grade(&hr_trust_level);
+                  
+                    //NRF_LOG_INFO("HR Trust Level = %d\r\n", hr_trust_level);
+                    CC_AppSrv_HR_DataReport(((int16_t) _fpHr), hr_trust_level);    //TBD: should use call-back func by registration instead
+                   
+                } 
+                _pah8002_data.frame_count++; 
+            }    
+            CC_AppSrv_HR_StatusReport(ret);                  
+
         }    
 
 
@@ -531,7 +525,7 @@ void CC_HRM_PPG_INTR_ISR(void)
 uint8_t CC_HRM_PPG_INIT(void)
 {
     //TracerInfo("CC_HRM_PPG_INIT \r\n");
-    
+
     if (eHRM_Off == CC_GetHrmStatus())
     {
         CC_AppSrv_HR_StartSystemTick();
