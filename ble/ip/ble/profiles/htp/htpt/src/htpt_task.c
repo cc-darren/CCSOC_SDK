@@ -157,7 +157,11 @@ void CC_BLE_Cmd_SetSwimmingEN(uint8_t cVal)
 
 uint8_t CC_BLE_Cmd_GetSwimmingEN(void)
 {
+#ifdef FORCE_SWIM_TEST_EN
+    return _cBleCmd_SwimmingFlag = 1;
+#else
     return _cBleCmd_SwimmingFlag;
+#endif
 }
 
 
@@ -367,7 +371,11 @@ void CC_BLE_Cmd_GetCallState(uint8_t *_Notify,eCALL_state_t *_stCall,
 
 eStete_t CC_BLE_Cmd_GetLiftArmStatus(void)
 {
+#ifdef FORCE_LIFTARM_TEST_EN
+    return _cBleCmd_NotifyLiftarm = eEnable;
+#else
    return _cBleCmd_NotifyLiftarm;
+#endif
 }
 
 uint8_t  CC_BLE_Cmd_GetLiftArmBandSetting(void)
