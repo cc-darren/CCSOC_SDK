@@ -1908,7 +1908,7 @@ void _DB_TEST_READ_BATTERYLOG(void)
 extern app_sys_time_t m_SystemTime;//for test
 
 void _DB_TEST_WRITE_Hrm(void)
-    {
+{
     db_heartrate_t m_db_hrm;
     app_date_time_t curr_time;
     ret_code_t ret;                
@@ -1939,7 +1939,7 @@ void _DB_TEST_WRITE_Hrm(void)
         TracerInfo("err1: 0x%x\r\n", ret);
 
     
-    }
+}
 
 void _DB_TEST_READ_Hrm(void)
 {
@@ -2733,9 +2733,9 @@ uint8_t _DB_TEST_Full_DB(void)
     }
 
 
-    return 1;
+    
 #endif  
-
+		return 1;
 }
 
 #endif // DB_EN

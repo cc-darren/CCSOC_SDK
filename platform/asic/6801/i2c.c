@@ -192,14 +192,14 @@ int cc6801_I2cClk16MFreqSet(T_I2cDevice *tpDev)
           dwCfgMask = 5;
           break;
         default:
-          TracerWarn("Clock rate %dKHz not support\n", dwFreq/1000);
+          TracerWarn("Clock rate %dKHz not support\r\n", dwFreq/1000);
           break;
     }
 
     dwI2cConfig |= ((dwPrescaler << I2C_CONFIG_PRESCALER_SHIFT) |  (dwCfgMask << I2C_CONFIG_CFGMASK_SHIFT));
     g_tI2cBus[bBusId].pReg->dw.cfg = dwI2cConfig;
 
-    TracerInfo("I2C%d clock rate %dHz\n", bBusId, dwFreq);
+    TracerInfo("I2C%d clock rate %dHz\r\n", bBusId, dwFreq);
 
     return CC_SUCCESS;
 }
@@ -231,14 +231,14 @@ int cc6801_I2cClk24MFreqSet(T_I2cDevice *tpDev)
           dwCfgMask = 0;
           break;
         default:
-          TracerWarn("Clock rate %dKHz not support\n", dwFreq/1000);
+          TracerWarn("Clock rate %dKHz not support\r\n", dwFreq/1000);
           break;
     }
 
     dwI2cConfig |= ((dwPrescaler << I2C_CONFIG_PRESCALER_SHIFT) |  (dwCfgMask << I2C_CONFIG_CFGMASK_SHIFT));
     g_tI2cBus[bBusId].pReg->dw.cfg = dwI2cConfig;
 
-    TracerInfo("I2C%d clock rate %dHz\n", bBusId, dwFreq);
+    TracerInfo("I2C%d clock rate %dHz\r\n", bBusId, dwFreq);
 
     return CC_SUCCESS;
 }
@@ -285,7 +285,7 @@ static int cc6801_I2cClkDivSet(uint8_t bBusId)
             g_tI2cBus[bBusId].bClkSrc = CLOCK_16;
             break;
         default:
-            TracerWarn("Can't recognize system clock %d\n", g_dwCurrentClock);
+            TracerWarn("Can't recognize system clock %d\r\n", g_dwCurrentClock);
             bClkDiv = 1;
             g_tI2cBus[bBusId].bClkSrc = CLOCK_16;
             break;
@@ -317,7 +317,7 @@ int cc6801_I2cInit(T_I2cDevice *tpDev)
     }
     else
     {
-         TracerWarn("I2C%d not support\n", bBusId);
+         TracerWarn("I2C%d not support\r\n", bBusId);
          return CC_ERROR_INVALID_PARAM;
     }
 
@@ -332,7 +332,7 @@ int cc6801_I2cInit(T_I2cDevice *tpDev)
     }
     else
     {
-        TracerWarn("Default clock setting 16M\n");
+        TracerWarn("Default clock setting 16M\r\n");
     }
 
     return CC_SUCCESS;

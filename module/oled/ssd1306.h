@@ -43,7 +43,7 @@
 #define oled_DrawBitmap(x0,y0,x1,y1,bmp)              ssd1306_DrawBitmap(x0,y0,x1,y1,bmp)
 
 #define oled_SendData(bByte)                          ssd1306_SendData(bByte)
-#define oled_SetPosition(bByte)                       ssd1306_SetPosition(bByte)
+#define oled_SetPosition(x,y)                       ssd1306_SetPosition(x,y)
 #define oled_SetPwrCtrlHigh()                         ssd1306_SetPwrCtlHigh()
 #define oled_SetPwrCtrlLow()                          ssd1306_SetPwrCtlLow()
 

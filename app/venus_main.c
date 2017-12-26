@@ -262,7 +262,9 @@ s_SensorData_t s_tGyro;
 S_TMagBuf_t s_tMagDataBuf;  
 AxesRaw_t s_tMagRaw;
 //static uint8_t g_bMagEnCnt = 0;
-//static db_pedometer_t m_db_pedo;
+#ifdef DB_EN
+static db_pedometer_t m_db_pedo;
+#endif
 /*
 static CC_Ble_Ped_Info_T _sPedInfo = {0xF1,0,0};
 static CC_Ble_Hrm_Info_T _sHrmInfo = {0xF2,0,0};
@@ -1601,6 +1603,10 @@ void ACC_init(void)
         cc6801_ClockDelayMs(10);
         g_GyroEnable = 1;
     }
+
+#ifdef FORCE_SWIM_TEST_EN
+    g_GyroEnable = 0;
+#endif
 }
 
 void AKM_Data_Get(void)
@@ -2182,7 +2188,7 @@ static void _sensor_algorithm_swimming_proc(void)
             if(max_diff_time < diff_time)
                 max_diff_time = diff_time;
                         
-            TracerInfo("%d / %d\r\n", diff_time, max_diff_time);                  
+            TracerInfo("sw:%d / %d\r\n", diff_time, max_diff_time);                  
 #endif                
 
             g_dwLapCnt = s_tVenusCB.stSwimmingResult.swimlap;
@@ -2195,7 +2201,7 @@ static void _sensor_algorithm_swimming_proc(void)
                 
                 TracerInfo( "Swimming dwSwimLapCnt = %d \r\n",s_tVenusCB.dwSwimLapCnt);
     #ifdef DB_EN
-                _CC_DB_Save_SwimmingProc();
+                //_CC_DB_Save_SwimmingProc();
     #endif                              
                         
                 switch (s_tVenusCB.stGeneralInfo.cSwim_Pool_Size)
@@ -2394,7 +2400,7 @@ void _sensor_accel_gyro_on_change(void)
 
                     //TracerInfo( "GYRO_Data[0] %d\r\n",wgyro_data[0]);
                     //TracerInfo( "GYRO_Data[1] %d\r\n",wgyro_data[1]);
-                    //TracerInfo( "GYRO_Data[2] %d\r\n",wgyro_data[2]);   
+                    //TracerInfo( "GYRO_Data[2] %d\r\n",wgyro_data[2]);   t
 
             
                     uint32_t       _dwPedTotalStepCount = 0;
@@ -3401,13 +3407,13 @@ int venus_main(void)
                 static uint32_t max_diff_time = 0;
                 static uint8_t ignore = 0;
                 
-                old_tick = Hrm_get_sys_tick();
+                old_tick = Get_system_time_ms();
 #endif
 
             
                 _app_scheduler();
 #if 0 // test app loop time
-                diff_time = Hrm_get_sys_tick() - old_tick;
+                diff_time = Get_system_time_ms() - old_tick;
                 
                 if(ignore > 100)
                 {
@@ -3417,7 +3423,7 @@ int venus_main(void)
                 else
                      ignore++;
                                     
-                NRF_LOG_RAW_INFO("%d / %d\r\n", diff_time, max_diff_time);
+                TracerInfo("%d / %d\r\n", diff_time, max_diff_time);
 #endif
 
                 #ifdef CFG_BLE_APP
