@@ -111,14 +111,14 @@ int ecc_p256_public_key_compute(uint8_t const *p_le_sk, uint8_t *p_le_pk)
 
     p_curve = uECC_secp256r1();
 
-    //NRF_LOG_INFO("uECC_compute_public_key\r\n");
+    //TracerInfo("uECC_compute_public_key\r\n");
     int ret = uECC_compute_public_key((uint8_t *) p_le_sk, (uint8_t *) p_le_pk, p_curve);
     if (!ret)
     {
         return CC_ERROR_INTERNAL;
     }
 
-    //NRF_LOG_INFO("uECC_compute_public_key complete: %d\r\n", ret);
+    //TracerInfo("uECC_compute_public_key complete: %d\r\n", ret);
     return CC_SUCCESS;
 }
 
@@ -138,14 +138,14 @@ int ecc_p256_shared_secret_compute(uint8_t const *p_le_sk, uint8_t const *p_le_p
 
     p_curve = uECC_secp256r1();
 
-    //NRF_LOG_INFO("uECC_shared_secret\r\n");
+    //TracerInfo("uECC_shared_secret\r\n");
     int ret = uECC_shared_secret((uint8_t *) p_le_pk, (uint8_t *) p_le_sk, p_le_ss, p_curve);
     if (!ret)
     {
         return CC_ERROR_INTERNAL;
     }
 
-    //NRF_LOG_INFO("uECC_shared_secret complete: %d\r\n", ret);
+    //TracerInfo("uECC_shared_secret complete: %d\r\n", ret);
     return CC_SUCCESS;
 }
 
@@ -165,14 +165,14 @@ int ecc_p256_sign(uint8_t const *p_le_sk, uint8_t const * p_le_hash, uint32_t hl
 
     p_curve = uECC_secp256r1();
 
-    //NRF_LOG_INFO("uECC_sign\r\n");
+    //TracerInfo("uECC_sign\r\n");
     int ret = uECC_sign((const uint8_t *) p_le_sk, (const uint8_t *) p_le_hash, (unsigned) hlen, (uint8_t *) p_le_sig, p_curve);
     if (!ret)
     {
         return CC_ERROR_INTERNAL;
     }
 
-    //NRF_LOG_INFO("uECC_sign complete: %d\r\n", ret);
+    //TracerInfo("uECC_sign complete: %d\r\n", ret);
     return CC_SUCCESS;
 }
 
@@ -192,14 +192,14 @@ int ecc_p256_verify(uint8_t const *p_le_pk, uint8_t const * p_le_hash, uint32_t 
 
     p_curve = uECC_secp256r1();
 
-    //NRF_LOG_INFO("uECC_verify\r\n");
+    //TracerInfo("uECC_verify\r\n");
     int ret = uECC_verify((const uint8_t *) p_le_pk, (const uint8_t *) p_le_hash, (unsigned) hlen, (uint8_t *) p_le_sig, p_curve);
     if (!ret)
     {
         return CC_ERROR_INVALID_DATA;
     }
 
-    //NRF_LOG_INFO("uECC_verify complete: %d\r\n", ret);
+    //TracerInfo("uECC_verify complete: %d\r\n", ret);
     return CC_SUCCESS;
 
 }

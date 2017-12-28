@@ -36,8 +36,10 @@
  */
 
 /* Includes ------------------------------------------------------------------*/
+
 #include "project.h"
 #include "string.h"
+
 
 #if (MODULE_ACC == ACC_ST_LSM6DSL)
 /* Imported macro ------------------------------------------------------------*/
@@ -76,15 +78,8 @@ typedef struct
     LSM6DS3_ACC_GYRO_ODR_XL_t    eODR_Accel;
 
 }   S_CC_Lsm6dsxCB;
-/*
-typedef struct
-{
-    uint16_t data_end_index;
-    uint16_t max_size;
-    int16_t *mems_fifo_data;
-} cc_mems_fifo_user_t;
-*/
 
+#ifndef APP_SERV_MGR_EN     // not defined
 
 typedef struct
 {   
@@ -118,6 +113,7 @@ uint8_t mems_fifo_register_flag;
 CC_LSM6DSX_Fifo_Handle_t S_Lsm6dsx_Fifo_Handle[MEMS_FIFO_USER_TOTAL];
 E_LSM6DSX_FIFO_TARGET_DEVICE S_Lsm6dsx_Fifo_Target;
 
+#endif
 
 /* Imported function prototypes ----------------------------------------------*/
 //extern uint8_t Sensor_IO_Write(void *handle, uint8_t WriteAddr, uint8_t *pBuffer, uint16_t nBytesToWrite);
@@ -7080,9 +7076,8 @@ status_t CC_SET_ACC_ODR(uint8_t _Enable)
     return MEMS_SUCCESS;
 }
 
-/////////////////////////// CC Gyro driver ver2 as below: /////////////////////////////
 
-static status_t _CC_LSM6DSX_RegRead(u8_t bReg, u8_t *baBuf, u8_t bByteLength)
+status_t _CC_LSM6DSX_RegRead(u8_t bReg, u8_t *baBuf, u8_t bByteLength)
 {
 
     m_tx_buf[0] = bReg | 0x80;
@@ -7100,7 +7095,7 @@ static status_t _CC_LSM6DSX_RegRead(u8_t bReg, u8_t *baBuf, u8_t bByteLength)
 }
 
 
-static status_t _CC_LSM6DSX_RegWrite(u8_t bReg, u8_t bData)
+status_t _CC_LSM6DSX_RegWrite(u8_t bReg, u8_t bData)
 {
 
     m_tx_buf[0] = bReg & 0xFF;
@@ -7112,29 +7107,15 @@ static status_t _CC_LSM6DSX_RegWrite(u8_t bReg, u8_t bData)
     return (MEMS_SUCCESS);
 }
 
-u16_t CC_LSM6DSX_FifoGetUnReadData(void)
+uint16_t CC_LSM6DSX_FifoGetUnReadData(void)
 {
-    u16_t    _wUnReadData = 0;
+    uint16_t    _wUnReadData = 0;
 
     LSM6DS3_ACC_GYRO_R_FIFONumOfEntries(0x00, &_wUnReadData);
 
     return (_wUnReadData);
 }
 
-status_t CC_LSM6DSX_GyroPowerDown(void)
-{
-    
-    LSM6DS3_ACC_GYRO_W_ODR_G(0x00, LSM6DS3_ACC_GYRO_ODR_G_POWER_DOWN);
-
-    return (MEMS_SUCCESS);
-}
-
-status_t CC_LSM6DSX_AccelPowerDown(void)
-{
-    LSM6DS3_ACC_GYRO_W_ODR_XL(0x00, LSM6DS3_ACC_GYRO_ODR_XL_POWER_DOWN);
-
-    return (MEMS_SUCCESS);
-}
 
 void CC_LSM6DSX_FifoClean(void)
 {
@@ -7172,6 +7153,28 @@ status_t CC_LSM6DSX_AccelPowerON(LSM6DS3_ACC_GYRO_ODR_XL_t eAccelODR)
 
     return (MEMS_SUCCESS);
 }
+
+
+status_t CC_LSM6DSX_GyroPowerDown(void)
+{
+    
+    LSM6DS3_ACC_GYRO_W_ODR_G(0x00, LSM6DS3_ACC_GYRO_ODR_G_POWER_DOWN);
+
+    return (MEMS_SUCCESS);
+}
+
+status_t CC_LSM6DSX_AccelPowerDown(void)
+{
+    LSM6DS3_ACC_GYRO_W_ODR_XL(0x00, LSM6DS3_ACC_GYRO_ODR_XL_POWER_DOWN);
+
+    return (MEMS_SUCCESS);
+}
+
+
+/////////////////////////// CC Gyro driver ver2 as below: /////////////////////////////
+
+#ifndef APP_SERV_MGR_EN  // not defined
+
 
 void CC_LSM6DSX_FifoEnable(E_LSM6DSX_FIFO_TARGET_DEVICE eTargetDevice)
 {
@@ -7329,9 +7332,9 @@ void CC_LSM6DSX_Fifo_Update_Data(void)
             
             LSM6DS3_ACC_Get_Acceleration(mems_data, FIFO_EN); // 1 sample => x,y,z            
 /*
-            NRF_LOG_INFO("mems_x: 0x%02x\r\n", mems_data[0]);
-            NRF_LOG_INFO("mems_y: 0x%02x\r\n", mems_data[1]);
-            NRF_LOG_INFO("mems_z: 0x%02x\r\n", mems_data[2]);       
+            TracerInfo("mems_x: 0x%02x\r\n", mems_data[0]);
+            TracerInfo("mems_y: 0x%02x\r\n", mems_data[1]);
+            TracerInfo("mems_z: 0x%02x\r\n", mems_data[2]);       
 */
 
             for(uint8_t handle = 0; handle < MEMS_FIFO_USER_TOTAL; handle++)
@@ -7369,9 +7372,9 @@ void CC_LSM6DSX_Fifo_Update_Data(void)
             LSM6DS3_ACC_Get_Acceleration(mems_data, FIFO_EN); // 1 sample => x,y,z
         
 /*
-                NRF_LOG_INFO("mems_x: 0x%02x\r\n", mems_data[0]);
-                NRF_LOG_INFO("mems_y: 0x%02x\r\n", mems_data[1]);
-                NRF_LOG_INFO("mems_z: 0x%02x\r\n", mems_data[2]);                
+                TracerInfo("mems_x: 0x%02x\r\n", mems_data[0]);
+                TracerInfo("mems_y: 0x%02x\r\n", mems_data[1]);
+                TracerInfo("mems_z: 0x%02x\r\n", mems_data[2]);                
 */
             
             for(uint8_t handle = 0; handle < MEMS_FIFO_USER_TOTAL; handle++)
@@ -7404,6 +7407,12 @@ void CC_LSM6DSX_Fifo_Update_Data(void)
 
     }
 
+}
+
+
+void CC_LSM6DS3_RegDump(u8_t baRegMapBuf[0x6B])
+{
+    _CC_LSM6DSX_RegRead(0x00, baRegMapBuf, 0x6B);
 }
 
 /*
@@ -7465,13 +7474,14 @@ void CC_Mems_Fifo_Update_Data(void)
 
 }
 */
+#endif
 
 
-void CC_LSM6DS3_RegDump(u8_t baRegMapBuf[0x6B])
-{
-    _CC_LSM6DSX_RegRead(0x00, baRegMapBuf, 0x6B);
-}
+
+
 
 //#endif /*__LSM6DS3_SHARED__TYPES*/
 
 #endif //#if (MODULE_ACC == ACC_ST_LSM6DSL)
+
+

@@ -1236,7 +1236,7 @@ void _DB_TEST_READ_SLEEP(void)
         TracerInfo("time period  = %d\r\n",m_db_sleep.period.period_min);
         TracerInfo("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n");
      }  
-
+     //NRF_LOG_FLUSH();
         
 }
 
@@ -1899,7 +1899,7 @@ void _DB_TEST_READ_BATTERYLOG(void)
         
         TracerInfo("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n");
      }  
-
+     //NRF_LOG_FLUSH();
 #endif
 
 }
@@ -1908,7 +1908,7 @@ void _DB_TEST_READ_BATTERYLOG(void)
 extern app_sys_time_t m_SystemTime;//for test
 
 void _DB_TEST_WRITE_Hrm(void)
-{
+    {
     db_heartrate_t m_db_hrm;
     app_date_time_t curr_time;
     ret_code_t ret;                
@@ -1939,7 +1939,7 @@ void _DB_TEST_WRITE_Hrm(void)
         TracerInfo("err1: 0x%x\r\n", ret);
 
     
-}
+    }
 
 void _DB_TEST_READ_Hrm(void)
 {
@@ -1971,7 +1971,7 @@ void _DB_TEST_READ_Hrm(void)
         TracerInfo("total count = %d\r\n",i);
         TracerInfo("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n");
     }
-
+     //NRF_LOG_FLUSH();
 }
 
 void _DB_TEST_READ_Swim(void)
@@ -2014,7 +2014,7 @@ void _DB_TEST_READ_Swim(void)
         TracerInfo("section_num  = %d\r\n",swimming_db_data.endofperiod.time_period);
         TracerInfo("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n");
      }  
-     
+     //NRF_LOG_FLUSH();
         
 }
 
@@ -2064,7 +2064,7 @@ void _DB_TEST_WRITE_Swim(void)
             
         }
     }while(0);
-
+    //NRF_LOG_FLUSH();
         
     
 }
@@ -2184,7 +2184,7 @@ void _DB_TEST(void)
      uint32_t _pReadData_Up1[3];
 
 
-
+    //NRF_LOG_FLUSH();
 
     
 
@@ -2297,8 +2297,9 @@ void _DB_TEST(void)
  
     
     #endif
-
+    //NRF_LOG_FLUSH();
     
+#endif
 }
 
 
@@ -2677,7 +2678,7 @@ uint8_t _DB_TEST_Full_DB(void)
     m_db_hrm.data.hr = local_hr++;
     static uint8_t lock_auto_write_db = 0;
 
-
+   // NRF_LOG_FLUSH();
 
 
 //    while(1)
@@ -2732,11 +2733,10 @@ uint8_t _DB_TEST_Full_DB(void)
         }
     }
 
-
-    
 #endif  
-		return 1;
+    return 1;
+
 }
 
-#endif // DB_EN
+
 

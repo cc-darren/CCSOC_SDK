@@ -445,7 +445,6 @@ Declaration of static Global Variables & Functions
 
 #define CFG_APP_CODE_ONLY
 
-
 #ifndef CFG_APP_CODE_ONLY 
 #define CFG_JUMP_TABLE_2
 #endif
@@ -469,7 +468,8 @@ Declaration of static Global Variables & Functions
 #define FORCE_LIFTARM_TEST_EN   // for test
 //#define FORCE_SWIM_TEST_EN   // for test
 //#define FORCE_HRS_TEST_EN   // for test
-
+ 
+//#define APP_SERV_MGR_EN        // for new service/sensor manager
 
 //-----------------------------------
 //  _bState : 1  , Init form system reboot

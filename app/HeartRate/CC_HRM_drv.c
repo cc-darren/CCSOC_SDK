@@ -1,3 +1,4 @@
+
 #include "project.h"
 #include "CC_HRM_drv.h"
 #include "pah8002_reg_ir2g1_.h"
@@ -16,9 +17,7 @@
 
 #ifdef HRM_EN
 
-#define TOTAL_CHANNELS  3 //Using channel numbers 
-#define HEART_RATE_MODE_SAMPLES_PER_CH_READ (20)  //Numbers of PPG data per channel 
-#define HEART_RATE_MODE_SAMPLES_PER_READ (TOTAL_CHANNELS* HEART_RATE_MODE_SAMPLES_PER_CH_READ)   
+
 #define TOTAL_CHANNELS_FOR_ALG  3
 
 //#define MEMS_ZERO  //Default Accelerometer data are all zero 
@@ -161,7 +160,7 @@ static bool pah8002_enter_suspend_mode(void)
     return true; 
 } 
 
-static bool pah8002_sensor_init(void)
+bool pah8002_sensor_init(void)
 {
     uint32_t open_size = 0; 
 
@@ -248,7 +247,7 @@ static bool pah8002_sensor_init(void)
     return true;
 }
 
-static void pah8002_sensor_deinit(void)
+void pah8002_sensor_deinit(void)
 {
 #ifndef MEMS_ZERO    
     hrm_mems_enabled = false;
@@ -431,7 +430,7 @@ static void pah8002_task(void)
            	// process algorithm
 #ifdef MEMS_ZERO 
 #else       
-            //NRF_LOG_INFO("mems_index(%d)\r\n",hrm_mems_index);
+            //TracerInfo("mems_index(%d)\r\n",hrm_mems_index);
 
     #ifdef FIFO_MODE_EN	
 
@@ -441,11 +440,11 @@ static void pah8002_task(void)
             memcpy(_pah8002_data.mems_data, _mems_data, (_pah8002_data.nf_mems*2));
 
             //for(uint8_t i=0; i< (_pah8002_data.nf_mems);i++)
-                //NRF_LOG_INFO("mems(%f)\r\n", _mems_data[i]); 
+                //TracerInfo("mems(%f)\r\n", _mems_data[i]); 
 
-            
+#ifndef APP_SERV_MGR_EN // not defined            
             CC_LSM6DSX_Fifo_Accel_Read_Done(MEMS_FIFO_USER_HRM);
-
+#endif
 
 #ifdef FORCE_HRS_TEST_EN
 
@@ -469,13 +468,13 @@ static void pah8002_task(void)
 
             hrm_mems_index = 0;
             hrm_mems_enabled = true;	
-            //NRF_LOG_INFO("get gyro sample number:%d\r\n",CC_LSM6DSX_FifoGetUnReadData());
+            //TracerInfo("get gyro sample number:%d\r\n",CC_LSM6DSX_FifoGetUnReadData());
     #endif
 #endif 
             _pah8002_data.time = pah8002_update_timestamp();
             _pah8002_data.touch_flag = pah8002_get_touch_flag_ppg_mode(); ; 
 
-            //NRF_LOG_INFO("sys_tick	%d\r\n", _pah8002_data.time); 
+            //TracerInfo("sys_tick	%d\r\n", _pah8002_data.time); 
             //pah8002_log(); 
 
             ret = pah8002_entrance(&_pah8002_data); 
@@ -517,7 +516,7 @@ static void pah8002_task(void)
 
                     pah8002_get_signal_grade(&hr_trust_level);
                   
-                    //NRF_LOG_INFO("HR Trust Level = %d\r\n", hr_trust_level);
+                    //TracerInfo("HR Trust Level = %d\r\n", hr_trust_level);
                     CC_AppSrv_HR_DataReport(((int16_t) _fpHr), hr_trust_level);    //TBD: should use call-back func by registration instead
                    
                 } 
@@ -622,3 +621,5 @@ void CC_HRM_Get_Gsensor(int16_t *data)
 
 
 #endif
+
+
