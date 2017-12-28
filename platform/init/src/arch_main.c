@@ -80,7 +80,6 @@ int main(void)
     /****** Application Start ******/
     /*******************************/
 
-
 #if defined(TESTCASE) && TESTCASE
     TEST_Main();
 #endif

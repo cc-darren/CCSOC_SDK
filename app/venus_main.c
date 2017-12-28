@@ -2152,10 +2152,10 @@ static void _sensor_algorithm_swimming_proc(void)
          //old_time = curr_time;
 
          //old_time = Hrm_get_sys_tick();
-         
+#ifndef APP_SERV_MGR_EN // not defined         
         CC_LSM6DSX_Fifo_Accel_Read_Done(MEMS_FIFO_USER_SWIM);
         CC_LSM6DSX_Fifo_Gyro_Read_Done(MEMS_FIFO_USER_SWIM);        
-
+#endif
         //fifo_len /= 3;
         
         for(int i = 0; i < fifo_len; i++)
@@ -2351,6 +2351,7 @@ void _sensor_accel_gyro_on_change(void)
             CC_VENUS_AccelTimerStop();
             CC_VENUS_AccelTimerReset();
 
+#ifndef APP_SERV_MGR_EN		// not defined			
             CC_LSM6DSX_Fifo_Accel_UnRegister(MEMS_FIFO_USER_SWIM);
             CC_LSM6DSX_Fifo_Gyro_UnRegister(MEMS_FIFO_USER_SWIM); 
             CC_LSM6DSX_FifoDisable(E_LSM6DSX_FIFO_CONTROL_ACCEL_GYRO);
@@ -2359,7 +2360,7 @@ void _sensor_accel_gyro_on_change(void)
             //CC_LSM6DSX_FifoEnable(E_LSM6DSX_FIFO_CONTROL_ACCEL_GYRO);  // test by Samuel!!!
             CC_LSM6DSX_Fifo_Accel_Register(MEMS_FIFO_USER_PEDO, s_tAcc.wbuf, (FIFO_DEPTH_T/2));
             //CC_LSM6DSX_Fifo_Gyro_Register(MEMS_FIFO_USER_PEDO, s_tGyro.wbuf, (FIFO_DEPTH_T/2));//test
-            
+#endif            
             _sensor_power_down_gryo();
             _sensor_power_down_mag();
             g_GyroEnable = 0;
@@ -2391,11 +2392,11 @@ void _sensor_accel_gyro_on_change(void)
                 memcpy(wacc_data, s_tAcc.wbuf, (fifo_len*3*2));  // *3 => x,y,z; *2 => 16bits
 
                 //memcpy(wgyro_data, s_tGyro.wbuf, (fifo_len*3*2));  // test
-
+#ifndef APP_SERV_MGR_EN		// not defined		
                 CC_LSM6DSX_Fifo_Accel_Read_Done(MEMS_FIFO_USER_PEDO);
 
                 //CC_LSM6DSX_Fifo_Gyro_Read_Done(MEMS_FIFO_USER_PEDO); //test
-
+#endif
 
                 // Charge-in or low power, skip to execute pedometer, liftarm and sleep algorithm
                // if ((eDEVICE_CHARGE_IN== s_tVenusCB.eChargingState) || 
@@ -2570,7 +2571,7 @@ void _sensor_accel_gyro_on_change(void)
         {
                 CC_VENUS_AccelTimerStop();
                 CC_VENUS_AccelTimerReset();
-
+#ifndef APP_SERV_MGR_EN // not defined
                 CC_LSM6DSX_Fifo_Accel_UnRegister(MEMS_FIFO_USER_PEDO);
                 CC_LSM6DSX_FifoDisable(E_LSM6DSX_FIFO_CONTROL_ACCEL_GYRO);
                 CC_LSM6DSX_FifoEnable(E_LSM6DSX_FIFO_CONTROL_ACCEL_GYRO);
@@ -2579,7 +2580,7 @@ void _sensor_accel_gyro_on_change(void)
 
 
                 CC_AK09912_MAG_SET_ODR(AK09912_MAG_DO_10_Hz); 
-
+#endif
                 //Init Swimming algo and data
                 CC_Swim_Init(s_tVenusCB.stGeneralInfo.cSwim_Pool_Size,(band_location)s_tVenusCB.stGeneralInfo.bBandLocation);
                 s_tVenusCB.dwSwimLapCnt = 0; 
@@ -3377,7 +3378,6 @@ int venus_main(void)
     
     TracerInfo("== Venus Main Start==\r\n");
 
-
 #ifdef CFG_BLE_APP
     uint32_t error = 0;
 
@@ -3399,16 +3399,15 @@ int venus_main(void)
     
 #endif
 
-
+#ifdef DB_EN
+    CC_DB_Init(DB_INIT_FROM_SYSTEM);
+#endif
     venus_platform_init();
 
     venus_app_init();
 
     application_timers_start();
     
-#ifdef DB_EN
-    CC_DB_Init(DB_INIT_FROM_SYSTEM);
-#endif
     s_tVenusCB.bAvg_BatLevel = 100;
 
     s_tVenusCB.eSystemPwrState = eSysStateInit;
@@ -3471,4 +3470,6 @@ int venus_main(void)
         }
     }
 }
+
+
 

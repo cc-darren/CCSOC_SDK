@@ -7316,9 +7316,9 @@ void CC_LSM6DSX_Fifo_Update_Data(void)
             
             LSM6DS3_ACC_Get_Acceleration(mems_data, FIFO_EN); // 1 sample => x,y,z            
 /*
-            NRF_LOG_INFO("mems_x: 0x%02x\r\n", mems_data[0]);
-            NRF_LOG_INFO("mems_y: 0x%02x\r\n", mems_data[1]);
-            NRF_LOG_INFO("mems_z: 0x%02x\r\n", mems_data[2]);       
+            TracerInfo("mems_x: 0x%02x\r\n", mems_data[0]);
+            TracerInfo("mems_y: 0x%02x\r\n", mems_data[1]);
+            TracerInfo("mems_z: 0x%02x\r\n", mems_data[2]);       
 */
 
             for(uint8_t handle = 0; handle < MEMS_FIFO_USER_TOTAL; handle++)
@@ -7356,9 +7356,9 @@ void CC_LSM6DSX_Fifo_Update_Data(void)
             LSM6DS3_ACC_Get_Acceleration(mems_data, FIFO_EN); // 1 sample => x,y,z
         
 /*
-                NRF_LOG_INFO("mems_x: 0x%02x\r\n", mems_data[0]);
-                NRF_LOG_INFO("mems_y: 0x%02x\r\n", mems_data[1]);
-                NRF_LOG_INFO("mems_z: 0x%02x\r\n", mems_data[2]);                
+                TracerInfo("mems_x: 0x%02x\r\n", mems_data[0]);
+                TracerInfo("mems_y: 0x%02x\r\n", mems_data[1]);
+                TracerInfo("mems_z: 0x%02x\r\n", mems_data[2]);                
 */
             
             for(uint8_t handle = 0; handle < MEMS_FIFO_USER_TOTAL; handle++)

@@ -36,6 +36,9 @@
  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
+
+
+
 #ifndef _ACC_LSM6DS3_H_
 #define _ACC_LSM6DS3_H_
 
@@ -2950,13 +2953,23 @@ typedef enum
 
 }cc_mems_fifo_user_type_t;
 
-/*
-void CC_Mems_Fifo_Register(cc_mems_fifo_user_type_t user_id, int16_t *pdata, uint16_t _max_size);
-void CC_Mems_Fifo_UnRegister(cc_mems_fifo_user_type_t user_id);
-void CC_Mems_Fifo_Reset(cc_mems_fifo_user_type_t user_id);
-uint16_t  CC_Mems_Fifo_Get_UnRead_Length(cc_mems_fifo_user_type_t user_id);
-void CC_Mems_Fifo_Update_Data(void);
-*/
+
+
+#ifdef APP_SERV_MGR_EN
+
+
+u16_t CC_LSM6DSX_FifoGetUnReadData(void);
+status_t CC_LSM6DSX_GyroPowerDown(void);
+status_t CC_LSM6DSX_AccelPowerDown(void);
+void CC_LSM6DSX_FifoClean(void);
+status_t CC_LSM6DSX_GyroPowerON(LSM6DS3_ACC_GYRO_ODR_G_t eGyroODR);
+status_t CC_LSM6DSX_AccelPowerON(LSM6DS3_ACC_GYRO_ODR_XL_t eAccelODR);
+status_t _CC_LSM6DSX_RegWrite(u8_t bReg, u8_t bData);
+
+
+
+#else
+
 void CC_LSM6DSX_Fifo_Accel_Register(uint8_t handle, int16_t *iSampleData, uint32_t nFifoDepth);
 void CC_LSM6DSX_Fifo_Gyro_Register(uint8_t handle, int16_t *iSampleData, uint32_t nFifoDepth);
 void CC_LSM6DSX_Fifo_Accel_UnRegister(uint8_t handle);
@@ -2969,12 +2982,27 @@ void CC_LSM6DSX_Fifo_Update_Data(void);
 
 
 /////////////////////////// CC Gyro definition ver2 as below: /////////////////////////////
+
+
+u16_t CC_LSM6DSX_FifoGetUnReadData(void);
+status_t CC_LSM6DSX_GyroPowerDown(void);
+status_t CC_LSM6DSX_AccelPowerDown(void);
+void CC_LSM6DSX_FifoClean(void);
+status_t CC_LSM6DSX_GyroPowerON(LSM6DS3_ACC_GYRO_ODR_G_t eGyroODR);
+status_t CC_LSM6DSX_AccelPowerON(LSM6DS3_ACC_GYRO_ODR_XL_t eAccelODR);
+status_t _CC_LSM6DSX_RegWrite(u8_t bReg, u8_t bData);
+
+
+
+
 typedef enum
 {
     E_LSM6DSX_FIFO_CONTROL_ACCEL = 0x01,
     E_LSM6DSX_FIFO_CONTROL_GYRO,
     E_LSM6DSX_FIFO_CONTROL_ACCEL_GYRO
 }   E_LSM6DSX_FIFO_TARGET_DEVICE;
+
+
 
 u16_t CC_LSM6DSX_FifoGetUnReadData(void);
 status_t CC_LSM6DSX_GyroPowerDown(void);
@@ -2989,6 +3017,14 @@ void CC_LSM6DSX_FifoDisable(E_LSM6DSX_FIFO_TARGET_DEVICE eTargetDevice);
 status_t LSM6DS3_ACC_GYRO_WriteReg(void *handle, u8_t RegAddr, u8_t Data); // for TEST!!!!!!
 
 
+#endif
+
+
+
 #endif /*__LSM6DS3_SHARED__TYPES*/
 
 #endif //_ACC_LSM6DS3_H_
+
+
+
+
