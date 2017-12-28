@@ -446,6 +446,20 @@ static void pah8002_task(void)
             
             CC_LSM6DSX_Fifo_Accel_Read_Done(MEMS_FIFO_USER_HRM);
 
+
+#ifdef FORCE_HRS_TEST_EN
+
+            TracerInfo( "ACC_Data[0] %d\r\n",_pah8002_data.mems_data[0]);
+            TracerInfo( "ACC_Data[1] %d\r\n",_pah8002_data.mems_data[1]);
+            TracerInfo( "ACC_Data[2] %d\r\n",_pah8002_data.mems_data[2]);      
+
+            TracerInfo( "PPG_Data[0] %d\r\n",_pah8002_data.ppg_data[0]);
+            TracerInfo( "PPG_Data[1] %d\r\n",_pah8002_data.ppg_data[1]);
+            TracerInfo( "PPG_Data[2] %d\r\n",_pah8002_data.ppg_data[2]);   
+            
+#endif
+
+
             //TracerInfo("nf_mems(%d)\r\n", _pah8002_data.nf_mems); 
     #else
             TracerInfo("hr_idx(%d)\r\n", hrm_mems_index); 

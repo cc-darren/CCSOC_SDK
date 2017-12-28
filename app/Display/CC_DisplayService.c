@@ -8,11 +8,16 @@
 #include "ssd1306.h"
 #include "ssd1306_128x32.h"
 #include "Icon.h"
+#include "tracer.h"
 
 // redirect to other size temporarily
+#if 0
 #define OLED_P12x24Str  oled_DrawPixel8x16
 #define OLED_P14x38Str  oled_DrawPixel8x16
 #define oled_DrawPixel8x16_Thin  oled_DrawPixel6x8
+#endif
+
+#define OLED_P14x38Str  oled_DrawPixel8x16
 
 extern void CC_VENUS_OLEDDisplayServiceTimerStart(uint16_t _wdata);
 extern void CC_VENUS_OLEDDisplayServiceTimerReset(void);
@@ -125,9 +130,10 @@ void _OLED_Display_CharLen_Calculation(uint32_t _dwChar, uint8_t *_bXAxiz, uint8
     
     if(_dwChar >= 1000000)
     {
-       if(_dwChar >= 100000000)
-           *_bXAxiz = (LCD_SIZE_X - 8*9)/2;
-       else if(_dwChar >= 10000000)
+       //if(_dwChar >= 100000000)
+       //    *_bXAxiz = (LCD_SIZE_X - 8*9)/2;
+       //else 
+       if(_dwChar >= 10000000)
            *_bXAxiz = (LCD_SIZE_X - 8*8)/2;
        else 
            *_bXAxiz = (LCD_SIZE_X - 8*7)/2;
@@ -135,9 +141,9 @@ void _OLED_Display_CharLen_Calculation(uint32_t _dwChar, uint8_t *_bXAxiz, uint8
     }
     else if(_dwChar >= 10000)
     {
-        if(_dwChar >= 100000)
-            *_bXAxiz = (LCD_SIZE_X - 12*6)/2;
-        else
+        //if(_dwChar >= 100000)
+        //    *_bXAxiz = (LCD_SIZE_X - 12*6)/2;
+        //else
             *_bXAxiz = (LCD_SIZE_X - 12*5)/2;  
 
        *_bYAxiz = 1;
@@ -213,7 +219,7 @@ void CC_Dsp_Srv_Init(void)
 
     uint8_t x = 0;
     x = (LCD_SIZE_X - 8*5)/2;
-    oled_DrawPixel8x16(LCD_X_OFFSET + x,1,"Venus");
+    oled_DrawPixel8x16(LCD_X_OFFSET + x + 2,1,DEVICE_MODEL);
 
 }
 //extern uint8_t CC_SleepMonitor_GetSleepState(void);
@@ -222,77 +228,21 @@ extern uint32_t CC_GetSleep_StateCount(void);
 
 void CC_Dsp_Srv_PresentTime(app_date_time_t _mCurTime, uint8_t _Format)
 {
-    char pDisplayTime[16] = {0};
-    uint8_t _index =0;
-    uint8_t x = 0;   
-    oled_DrawBlack();   
 
-    if (0 == _Format)
-    {
-    
+
+    char pDisplayTime[16] = {0};
+    char _index =0;
+    uint8_t x = 0;   
+
     sprintf(&pDisplayTime[_index],"%02d",_mCurTime.hours); 
     _index+=2;
     memcpy(&pDisplayTime[_index++],":",sizeof(uint8_t));
     sprintf(&pDisplayTime[_index],"%02d",_mCurTime.minutes); 
     _index+=2;
     x = (LCD_SIZE_X - _index*12)/2;
-    
-    
+
     oled_DrawBlack();    
-    OLED_P12x24Str(LCD_X_OFFSET + x, 0, (uint8_t*)pDisplayTime);
-    
-    
-    char strbuf[11] = {0};
-    uint8_t _bX = 0;
-#ifdef SLEEP_EN    
-    if (true == CC_SleepMonitor_GetSleepState())
-    {
-        uint8_t sleepEN[2] = {'S',':'};
-        
-        sprintf(strbuf,"%s",sleepEN);
-        
-        _bX = (LCD_SIZE_X - 10*6)/2;
-        oled_DrawPixel6x8(LCD_X_OFFSET+_bX, 3, (uint8_t*)strbuf);  
-        
-        uint32_t temp = CC_GetSleepAlgorithmReport_State();        
-        uint8_t temp1 = (uint8_t) temp;
-        memset(strbuf,0x00,sizeof(strbuf));
-        sprintf(strbuf,"%d",temp1);
-        _bX = (LCD_SIZE_X - 10*6)/2;
-        oled_DrawPixel6x8(LCD_X_OFFSET+_bX+12, 3, (uint8_t*)strbuf);      
-
-    }
-    else
-#endif    
-    {
-        uint8_t sleepEN[3] = {'S',':','X'};
-        sprintf(strbuf,"%s",sleepEN);
-        _bX = (LCD_SIZE_X - 10*6)/2;
-        oled_DrawPixel6x8(LCD_X_OFFSET+_bX, 3, (uint8_t*)strbuf);  
-    }    
-
-    
-    
-    uint32_t temp2 = CC_GetSleep_StateCount();
-    memset(strbuf,0x00,sizeof(strbuf));
-    sprintf(strbuf,"%d",temp2);
-    _bX = (LCD_SIZE_X - 10*6)/2;
-    oled_DrawPixel6x8(LCD_X_OFFSET+_bX+30, 3, (uint8_t*)strbuf);  
-
-
-
-  
-    uint8_t DB_State[3] = {'D','B',':'}; 
-    sprintf(strbuf,"%s",DB_State);
-    _bX = (LCD_SIZE_X - 10*6)/2;
-    oled_DrawPixel6x8(LCD_X_OFFSET+_bX, 4, (uint8_t*)strbuf);  
-
-#if 0
-        x = (LCD_SIZE_X - _index*12)/2;
-        OLED_P12x24Str(LCD_X_OFFSET + x, 0,pDisplayTime);
-        //x = (LCD_SIZE_X - _index*18)/2;
-        //OLED_P18x36Str(LCD_X_OFFSET + x, 0,pDisplayTime);
-
+    oled_DrawPixel2x24(LCD_X_OFFSET + x, 0, (uint8_t*)pDisplayTime);
     memset(pDisplayTime, 0, sizeof(pDisplayTime));
     _index = 0;        
     //Jason, 20170510,[VNS-14] Time format is not correct    
@@ -317,7 +267,7 @@ void CC_Dsp_Srv_PresentTime(app_date_time_t _mCurTime, uint8_t _Format)
         sprintf(&pDisplayTime[_index],"%d",_mCurTime.day); 
         _index++;
     }
-    
+
     pDisplayTime[_index++] = ' ';
     if (_mCurTime.dayofweek == APP_WEEK_SUNDAY)
         strncpy((char*)&pDisplayTime[_index],"SUN",3);
@@ -334,32 +284,12 @@ void CC_Dsp_Srv_PresentTime(app_date_time_t _mCurTime, uint8_t _Format)
     else // APP_WEEK_SATURDAY
         strncpy((char*)&pDisplayTime[_index],"SAT",3);
     _index+=3;
-    
+
     x = (LCD_SIZE_X - _index*8) / 2;
 
-    oled_DrawPixel8x16_Thin(LCD_X_OFFSET + x, 3, pDisplayTime);     
-#endif    
-}
-    else
-    {
-        //uint8_t _bTempHours = 0;
-       
-        sprintf(&pDisplayTime[_index],"%02d",_mCurTime.hours); 
-        _index+=2;
-        memcpy(&pDisplayTime[_index++],":",sizeof(uint8_t));
-        sprintf(&pDisplayTime[_index],"%02d",_mCurTime.minutes); 
-        _index+=2;
-      
-       
-        //x = (LCD_SIZE_X - _index*14)/2;
-			x = (LCD_SIZE_X - _index*8)/2;
-			
-			
-        //OLED_P14x38Str(LCD_X_OFFSET + x, 0,(uint8_t*)pDisplayTime);
-        OLED_P14x38Str(LCD_X_OFFSET + x, 1,(uint8_t*)pDisplayTime);
+    oled_DrawPixel8x16_Thin(LCD_X_OFFSET + x, 3, (uint8_t*)pDisplayTime);     
 
-
-    }
+    
 }
 
 void CC_Dsp_Srv_PedCnt(uint32_t _dwData)
@@ -371,17 +301,13 @@ void CC_Dsp_Srv_PedCnt(uint32_t _dwData)
     sprintf(strbuf,"%d",_dwData);    
     _OLED_Display_CharLen_Calculation(_dwData, &_bX, &_bY);
     oled_DrawBlack(); 
-
-    OLED_P14x38Str(LCD_X_OFFSET + _bX, 1, (uint8_t*)strbuf);
-    /*
     if (_bY == 2)
         oled_DrawPixel8x16(LCD_X_OFFSET + _bX, _bY, (uint8_t*)strbuf);    
     else if  (_bY == 1)
-        OLED_P12x24Str(LCD_X_OFFSET + _bX, _bY, (uint8_t*)strbuf);
+        oled_DrawPixel2x24(LCD_X_OFFSET + _bX, _bY, (uint8_t*)strbuf);            
     else       
-        OLED_P14x38Str(LCD_X_OFFSET + _bX, _bY, (uint8_t*)strbuf);    
-*/
-        
+        oled_DrawPixel8x36(LCD_X_OFFSET + _bX, _bY, (uint8_t*)strbuf);   
+
 }
 
 void CC_Dsp_Srv_HrmData(uint16_t _wHrmData)
@@ -393,9 +319,7 @@ void CC_Dsp_Srv_HrmData(uint16_t _wHrmData)
     oled_DrawBlack();
     sprintf(strbuf, "%d",  _wHrmData);
     _OLED_Display_CharLen_Calculation(_wHrmData, &_bX, &_bY);
-    OLED_P14x38Str(LCD_X_OFFSET + _bX, 1, (uint8_t*)strbuf);
-    //OLED_P14x38Str(LCD_X_OFFSET + _bX, 0, (uint8_t*)strbuf);    
-
+    oled_DrawPixel8x36(LCD_X_OFFSET + _bX, 0, (uint8_t*)strbuf);    
 }
 
 extern uint32_t CC_Get_SwimmingLapCount(void);
@@ -484,25 +408,29 @@ void CC_Dsp_Srv_HeartRateStrapModeStatus(uint8_t bIsHrsModeOn)
 
 void CC_Dsp_Srv_BatteryLife(uint8_t _bBatCap)
 {
+
     char strbuf[8] = {0};
     uint8_t _bX = 0;
     uint8_t _bY = 0;
-    
+
     sprintf(strbuf, "%d",  _bBatCap);
     oled_DrawBlack();
     _OLED_Display_CharLen_Calculation(_bBatCap, &_bX, &_bY);
-    OLED_P14x38Str(LCD_X_OFFSET + _bX, 0, (uint8_t*)strbuf); 
+    oled_DrawPixel8x36(LCD_X_OFFSET, 0, (uint8_t*)strbuf);       
+
 }
 
 void CC_Dsp_Srv_BatteryLevel(uint16_t _wAdcLevel)
 {
+    
     char strbuf[8] = {0};
     uint8_t _bX = 0;
     uint8_t _bY = 0;
     
     sprintf(strbuf, "%d",  _wAdcLevel);
+    oled_DrawBlack();
     _OLED_Display_CharLen_Calculation(_wAdcLevel, &_bX, &_bY);
-    oled_DrawPixel8x16_Thin(LCD_X_OFFSET , 0, (uint8_t*)strbuf); 
+    oled_DrawPixel8x36(LCD_X_OFFSET + _bX, 0, (uint8_t*)strbuf);         
 
 
 }
@@ -517,15 +445,19 @@ void CC_Dsp_Srv_PedDistance(uint32_t _dwData, uint8_t _bStrideLen, uint8_t _bUni
     if (_bUnitSetting ==0)
     {
         sprintf(strbuf,"%2.1f",_fpTmpDist);       
-        OLED_P12x24Str(LCD_X_OFFSET + 10, 2, (uint8_t*)strbuf);
-        OLED_P12x24Str(LCD_X_OFFSET + 46, 2, "km");
+        oled_DrawPixel2x24(LCD_X_OFFSET, 2, (uint8_t*)strbuf);
+        oled_DrawPixel2x24(LCD_X_OFFSET + 36, 2, "km");        
+        //oled_DrawPixel2x24(LCD_X_OFFSET + 10, 2, (uint8_t*)strbuf);
+        //oled_DrawPixel2x24(LCD_X_OFFSET + 46, 2, "km");
     }
     else
     {
         _fpTmpDist = _fpTmpDist * 0.62137;
         sprintf(strbuf,"%2.1f",_fpTmpDist);       
-        OLED_P12x24Str(LCD_X_OFFSET + 10, 2, (uint8_t*)strbuf);
-        OLED_P12x24Str(LCD_X_OFFSET + 46, 2, "mi");
+        oled_DrawPixel2x24(LCD_X_OFFSET, 2, (uint8_t*)strbuf);
+        oled_DrawPixel2x24(LCD_X_OFFSET + 36, 2, "km");          
+        //oled_DrawPixel2x24(LCD_X_OFFSET + 10, 2, (uint8_t*)strbuf);
+        //oled_DrawPixel2x24(LCD_X_OFFSET + 46, 2, "mi");
     }   
 }
 
@@ -537,8 +469,9 @@ void CC_Dsp_Srv_PedCalorie(uint32_t _dwCalo)
     oled_DrawBlack();  
     sprintf(strbuf, "%d", _dwCalo);
     _OLED_Display_CharLen_Calculation(_dwCalo, &_bX, &_bY);
-    OLED_P12x24Str(LCD_X_OFFSET + _bX, 2, (uint8_t*)strbuf);
-    OLED_P12x24Str(LCD_X_OFFSET + 58, 2, "K");
+
+    oled_DrawPixel2x24(LCD_X_OFFSET + _bX, 2, (uint8_t*)strbuf);
+    oled_DrawPixel2x24(LCD_X_OFFSET + 40, 2, "K");    
 }
 
 extern uint32_t CC_Get_SwimmingLapCount(void);
@@ -546,6 +479,7 @@ extern uint32_t CC_Get_SwimmingStrokeCount(void);
 
 void CC_Dsp_Srv_SwimgDistance(eSWIM_LEN_SET_t _bPoolSize, uint32_t _dwSwimLen)
 {
+
     char strbuf[8] = {0};
     uint8_t _bX = 0;
     uint8_t _bY = 0;
@@ -553,18 +487,18 @@ void CC_Dsp_Srv_SwimgDistance(eSWIM_LEN_SET_t _bPoolSize, uint32_t _dwSwimLen)
     sprintf(strbuf,"%d",_dwSwimLen);
 
     _OLED_Display_CharLen_Calculation(_dwSwimLen, &_bX, &_bY);
-    OLED_P12x24Str(LCD_X_OFFSET + _bX, 2, (uint8_t*)strbuf);  
-    
-    
-    if ((_bPoolSize == eSWIM_25YD ) || (_bPoolSize == eSWIM_33_33YD ) )
+    oled_DrawPixel2x24(LCD_X_OFFSET + _bX, 2, (uint8_t*)strbuf);  
+
+
+    if ((_bPoolSize != eSWIM_25YD )&& (_bPoolSize != eSWIM_25YD ) )
     {           
-        OLED_P12x24Str(LCD_X_OFFSET + 48, 2, "yd");
+        oled_DrawPixel2x24(LCD_X_OFFSET + 44, 2, "m");
     }
     else
     {
-        OLED_P12x24Str(LCD_X_OFFSET + 54, 2, "m");
-    }    
-        
+        oled_DrawPixel2x24(LCD_X_OFFSET + 38, 2, "yd");        
+    }  
+
         
 }
 
@@ -580,7 +514,7 @@ void CC_Dsp_Srv_CharingIn(uint8_t _bBatCap)
     oled_DrawBlack();
     _OLED_Display_CharLen_Calculation(_bBatCap, &_bX, &_bY);
     
-    OLED_P12x24Str(LCD_X_OFFSET + _bX, 2, strbuf); 
+    oled_DrawPixel2x24(LCD_X_OFFSET + _bX, 2, strbuf); 
     _OLED_DisplayIcon16x16(LCD_X_OFFSET, 0, _acBatteryCharging16x16);
     #endif
 }
@@ -630,8 +564,10 @@ void CC_Dsp_Srv_DeviceInfo(void)
     
     sprintf(strbuf,"%s",deviceName);
 
-    _bX = (LCD_SIZE_X - 9*8)/2;
-    oled_DrawPixel8x16(LCD_X_OFFSET+_bX, 1, (uint8_t*)strbuf);  
+    //_bX = (LCD_SIZE_X - 9*8)/2;
+    //_bX = (LCD_SIZE_X - 9*8);
+    oled_DrawPixel8x16(LCD_X_OFFSET, 1, (uint8_t*)strbuf);  
+    //oled_DrawPixel8x16(LCD_X_OFFSET+_bX, 1, (uint8_t*)strbuf);  
     sprintf(strbuf,"%s",VENUS_FW_VERSION);
 
     _bX = (LCD_SIZE_X - 10*6)/2;
@@ -750,9 +686,9 @@ void CC_Dsp_Srv_Set_Ind_Reset(void)
 }
 
 void CC_Dsp_Srv_Reflash_Screen(void)
-{
-
-    //TracerInfo("CC_Dsp_Srv_Reflash_Screen \r\n");
+{             
+    
+    //TracerInfo("CC_Dsp_Srv_Reflash_Screen \r\n")
     switch (s_tDspVal._eScreenFlashInd)
     {
         case eMMI_HRM_HRS_ACTIVATED_PAGE:

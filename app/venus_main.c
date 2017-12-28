@@ -250,7 +250,8 @@ typedef struct
 
 //volatile uint8_t  *p_llm_le_event_mask = (volatile uint8_t *) 0x20000680;
 
-char deviceName[10] = {'V','N','S','_'};
+//char deviceName[10] = {'V','N','S','_'};
+char deviceName[10] = {'Z','E','U','S'};
 S_VenusCB    s_tVenusCB;
 extern uint8_t g_GyroEnable;
 static short _wGyroData[3]  = { 0 };
@@ -1121,6 +1122,7 @@ static void battery_level_meas_timeout_handler(void * p_context)
     battery_level_update(cc_get_battery_level());
 }
 
+#ifdef CFG_BLE_APP 
 
 #ifdef DB_EN 
 static void _Ble_CommandHistroyPedoParse(void)
@@ -1475,7 +1477,7 @@ static void _Ble_CommandHistroySwimParse(void)
 
 #endif
 
-#ifdef CFG_BLE_APP 
+
 static void ble_notify_handler(void)
 {
     //uint32_t        err_code;
@@ -1584,6 +1586,7 @@ static void ble_notify_handler(void)
 
 static void rsc_meas_timeout_handler(void * p_context)
 {
+
     UNUSED_PARAMETER(p_context);
     VENUS_EVENT_ON(E_VENUS_EVENT_BLE_NOTIFY_TO, eEvent_None);
 }
@@ -1737,7 +1740,15 @@ static void System_time_handler(void * pvContext)
 {
     UNUSED_PARAMETER(pvContext);
     //systime_ms++;
-    systime_ms+=2;
+    systime_ms+=20;
+
+/*
+
+  static uint8_t gpio_tmp = 0;
+  
+  gpio_tmp ^= 1;
+  drvi_GpioWrite(GPIO_PIN_38, gpio_tmp);    
+  */  
 }
 
 uint32_t Get_system_time_ms(void)
@@ -1770,7 +1781,7 @@ static void application_timers_start(void)
                      APP_TIMER_MODE_REPEATED,
                      System_time_handler);
 
-    app_timer_start(s_tVenusTimerDiffTime, APP_TIMER_TICKS(2, APP_TIMER_PRESCALER), NULL); // test by Samuel
+    app_timer_start(s_tVenusTimerDiffTime, APP_TIMER_TICKS(20, APP_TIMER_PRESCALER), NULL); // test by Samuel
 #endif
                           
 }
@@ -2159,15 +2170,22 @@ static void _sensor_algorithm_swimming_proc(void)
              _wGyroData[1] = wgyro_data[k+1];
              _wGyroData[2] = wgyro_data[k+2];
         
-/*
-            TracerInfo( "ACC_Data[0] %d\r\n",_wAccelData[0]);
-            TracerInfo( "ACC_Data[1] %d\r\n",_wAccelData[1]);
-            TracerInfo( "ACC_Data[2] %d\r\n",_wAccelData[2]);      
+#ifdef FORCE_SWIM_TEST_EN
+            if(k == 0)  // only print 1st data
+            {
+                TracerInfo( "ACC_Data[0] %d\r\n",_wAccelData[0]);
+                TracerInfo( "ACC_Data[1] %d\r\n",_wAccelData[1]);
+                TracerInfo( "ACC_Data[2] %d\r\n",_wAccelData[2]);      
 
-            TracerInfo( "GYRO_Data[0] %d\r\n",_wGyroData[0]);
-            TracerInfo( "GYRO_Data[1] %d\r\n",_wGyroData[1]);
-            TracerInfo( "GYRO_Data[2] %d\r\n",_wGyroData[2]);                  
-*/
+                TracerInfo( "GYRO_Data[0] %d\r\n",_wGyroData[0]);
+                TracerInfo( "GYRO_Data[1] %d\r\n",_wGyroData[1]);
+                TracerInfo( "GYRO_Data[2] %d\r\n",_wGyroData[2]);                  
+
+                TracerInfo( "MAG_Data[0] %d\r\n",s_tMagRaw.AXIS_X);
+                TracerInfo( "MAG_Data[1] %d\r\n",s_tMagRaw.AXIS_Y);
+                TracerInfo( "MAG_Data[2] %d\r\n",s_tMagRaw.AXIS_Z);                  
+            }
+#endif
             memcpy( &_stSwmimingData.acc_data,_wAccelData,sizeof(_wAccelData));
             memcpy( &_stSwmimingData.gyro_data,_wGyroData,sizeof(_wGyroData));
             _stSwmimingData.type= ACC_SENSOR | GYRO_SENSOR;
@@ -2319,6 +2337,7 @@ static void _sensor_algorithm_swimming_proc(void)
 }
 
 //void _DumpSensorRegisterMap(void); //test
+
 
 void _sensor_accel_gyro_on_change(void)
 {
@@ -2703,6 +2722,13 @@ void CC_SYS_FactoryReset_Handler(void)
     {        
         liftarm_close();     // default disable liftarm
     }
+
+    if(0 == CC_BLE_Cmd_GetSwimmingEN())
+    {
+        CC_VENUS_AccelTimerStop();
+        CC_VENUS_AccelTimerReset();
+        CC_VENUS_AccelTimerFifoModeStart();
+    }    
 #endif
 
     //Longsit
@@ -2896,6 +2922,12 @@ bool _app_scheduler(void)
                  }    
              }
 
+            if(0 == CC_BLE_Cmd_GetSwimmingEN())
+            {
+                CC_VENUS_AccelTimerStop();
+                CC_VENUS_AccelTimerReset();
+                CC_VENUS_AccelTimerFifoModeStart();
+            }                 
 
          }   
 
@@ -3333,6 +3365,8 @@ void venus_ready_to_bootloader(void)
 }
 
 
+
+
 /*
  * VENUS MAIN FUNCTION
  ****************************************************************************************
@@ -3366,7 +3400,6 @@ int venus_main(void)
 #endif
 
 
-    GLOBAL_INT_START();
     venus_platform_init();
 
     venus_app_init();
@@ -3395,6 +3428,10 @@ int venus_main(void)
         #endif
                 
                 //CC_ChargePPR_PinStatInit();
+
+#ifdef FORCE_HRS_TEST_EN
+                CC_HRM_PostHeartRateStrapModeEvent(1);
+#endif        
                 s_tVenusCB.eSystemPwrState = eSysStateNormal;
                 break;
 

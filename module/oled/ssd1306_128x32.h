@@ -10,6 +10,12 @@ void ssd1306_DrawWhite(void);
 
 void ssd1306_DrawPixel6x8(uint8_t x, uint8_t y,uint8_t ch[]);
 void ssd1306_DrawPixel8x16(uint8_t x, uint8_t y,uint8_t ch[]);
+void ssd1306_DrawPixel8x16_Thin(uint8_t x, uint8_t y, uint8_t ch[]);
+void ssd1306_DrawPixel8x16(uint8_t x, uint8_t y, uint8_t ch[]);
+void ssd1306_DrawPixel2x24(uint8_t x, uint8_t y, uint8_t ch[]);
+void ssd1306_DrawPixel8x36(uint8_t x, uint8_t y, uint8_t ch[]);
+
+
 
 void ssd1306_DrawFrameBuffer(uint8_t *fb, uint32_t size, uint8_t x, uint8_t y);
 void ssd1306_DrawBitmap(uint8_t x0, uint8_t y0,uint8_t x1, uint8_t y1,uint8_t BMP[]);

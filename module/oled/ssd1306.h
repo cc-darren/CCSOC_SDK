@@ -39,6 +39,9 @@
 #define oled_DrawWhite()                              ssd1306_DrawWhite()
 #define oled_DrawPixel6x8(x,y,buf)                    ssd1306_DrawPixel6x8(x,y,buf)
 #define oled_DrawPixel8x16(x,y,buf)                   ssd1306_DrawPixel8x16(x,y,buf)
+#define oled_DrawPixel8x16_Thin(x,y,buf)              ssd1306_DrawPixel8x16_Thin(x,y,buf)
+#define oled_DrawPixel2x24(x,y,buf)                   ssd1306_DrawPixel2x24(x,y,buf)
+#define oled_DrawPixel8x36(x,y,buf)                   ssd1306_DrawPixel8x36(x,y,buf)
 #define oled_DrawFrameBuffer(fb,size,x,y)             ssd1306_DrawFrameBuffer(fb,size,x,y)
 #define oled_DrawBitmap(x0,y0,x1,y1,bmp)              ssd1306_DrawBitmap(x0,y0,x1,y1,bmp)
 

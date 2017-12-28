@@ -468,6 +468,8 @@ Declaration of static Global Variables & Functions
 
 #define FORCE_LIFTARM_TEST_EN   // for test
 //#define FORCE_SWIM_TEST_EN   // for test
+//#define FORCE_HRS_TEST_EN   // for test
+
 
 //-----------------------------------
 //  _bState : 1  , Init form system reboot

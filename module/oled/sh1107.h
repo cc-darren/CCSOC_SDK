@@ -39,6 +39,9 @@
 #define oled_DrawWhite()                              sh1107_DrawWhite()
 #define oled_DrawPixel6x8(x,y,buf)                    sh1107_DrawPixel6x8(x,y,buf)
 #define oled_DrawPixel8x16(x,y,buf)                   sh1107_DrawPixel8x16(x,y,buf)
+#define oled_DrawPixel8x16_Thin(x,y,buf)              sh1107_DrawPixel8x16_Thin(x,y,buf)
+#define oled_DrawPixel2x24(x,y,buf)                   sh1107_DrawPixel2x24(x,y,buf)
+#define oled_DrawPixel8x36(x,y,buf)                   sh1107_DrawPixel8x36(x,y,buf)
 #define oled_DrawFrameBuffer(fb,size,x,y)             sh1107_DrawFrameBuffer(fb,size,x,y)
 #define oled_DrawBitmap(x0,y0,x1,y1,bmp)              sh1107_DrawBitmap(x0,y0,x1,y1,bmp)
 

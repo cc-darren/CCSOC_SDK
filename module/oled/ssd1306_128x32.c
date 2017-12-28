@@ -84,40 +84,113 @@ void ssd1306_DrawBlack(void)
     }
 }
 
-void ssd1306_DrawPixel6x8(uint8_t x, uint8_t y,uint8_t ch[])
-{
-    uint8_t c=0,i=0,j=0;
 
+void ssd1306_DrawPixel6x8(uint8_t x, uint8_t y, uint8_t ch[])
+{
+    unsigned char c=0,i=0,j=0;   
+    
     while (ch[j]!='\0')
     {
         c =ch[j]-32;
-        if(x>126){x=0;y++;}
-        ssd1306_SetPosition(x-1,y);
-        for(i=0;i<6;i++)
-            ssd1306_SendData(F6x8[c][i]);
+        if(x>100){x=0;y++;}
+        ssd1306_SetPosition(x-1,y);    
+        for(i=0;i<6;i++)     
+        ssd1306_SendData(F6x8[c][i]);  
         x+=6;
         j++;
-    }
+    }      
 }
 
-void ssd1306_DrawPixel8x16(uint8_t x, uint8_t y,uint8_t ch[])
+
+
+void ssd1306_DrawPixel8x16_Thin(uint8_t x, uint8_t y, uint8_t ch[])
 {
     uint8_t c=0,i=0,j=0;
-
+    
     while (ch[j]!='\0')
     {
-        c =ch[j]-32;
-        if(x>120){x=0;y++;}
-        ssd1306_SetPosition(x-1,y);
-        for(i=0;i<8;i++)
-            ssd1306_SendData(FONT_8x16[c*16+i]);
-        ssd1306_SetPosition(x-1,y+1);
-        for(i=0;i<8;i++)
-            ssd1306_SendData(FONT_8x16[c*16+i+8]);
+        c =ch[j]-32;       
+        ssd1306_SetPosition(x,y);
+        for(i=0;i<8;i++)     
+            ssd1306_SendData(FONT_8x16_THIN[c*16+i]);
+        ssd1306_SetPosition(x,y+1); 
+        for(i=0;i<8;i++)     
+            ssd1306_SendData(FONT_8x16_THIN[c*16+i+8]);  
         x+=8;
         j++;
-    }
+   }
 }
+
+//
+
+void ssd1306_DrawPixel8x16(uint8_t x, uint8_t y, uint8_t ch[])
+{
+    uint8_t c=0,i=0,j=0;
+    
+    while (ch[j]!='\0')
+    {
+        c =ch[j]-32;       
+        ssd1306_SetPosition(x,y);
+        for(i=0;i<8;i++)     
+            ssd1306_SendData(FONT_8x16[c*16+i]);
+        ssd1306_SetPosition(x,y+1); 
+        for(i=0;i<8;i++)     
+            ssd1306_SendData(FONT_8x16[c*16+i+8]);  
+        x+=8;
+        j++;
+   }
+}
+
+//
+void ssd1306_DrawPixel2x24(uint8_t x, uint8_t y, uint8_t ch[])
+{
+    uint8_t c=0,i=0,j=0;
+    
+    while (ch[j]!='\0')
+    {    
+        c =ch[j]-32;        
+        ssd1306_SetPosition(x,y);    
+        for(i=0;i<12;i++)     
+            ssd1306_SendData(FONT_12x24[c*36+i]);
+        ssd1306_SetPosition(x,y+1);    
+        for(i=0;i<12;i++)     
+          ssd1306_SendData(FONT_12x24[c*36+12+i]);  
+        ssd1306_SetPosition(x,y+2);    
+        for(i=0;i<12;i++)     
+          ssd1306_SendData(FONT_12x24[c*36+24+i]);          
+        x+=12;
+        j++;
+    }     
+}
+
+void ssd1306_DrawPixel8x36(uint8_t x, uint8_t y, uint8_t ch[])
+{
+    unsigned char c=0,i=0,j=0;
+
+    while (ch[j]!='\0')
+    {    
+        c = ch[j]-32;  
+
+        ssd1306_SetPosition(x,y);    
+        for(i=0;i<18;i++)     
+            ssd1306_SendData(FONT_18x36[c*90+i]);
+        ssd1306_SetPosition(x,y+1);    
+        for(i=0;i<18;i++)     
+          ssd1306_SendData(FONT_18x36[c*90+18+i]);  
+        ssd1306_SetPosition(x,y+2);    
+        for(i=0;i<18;i++)     
+          ssd1306_SendData(FONT_18x36[c*90+36+i]);          
+        ssd1306_SetPosition(x,y+3);    
+        for(i=0;i<18;i++)     
+          ssd1306_SendData(FONT_18x36[c*90+54+i]); 
+        ssd1306_SetPosition(x,y+4);    
+        for(i=0;i<18;i++)     
+          ssd1306_SendData(FONT_18x36[c*90+72+i]);         
+        x+=18;
+        j++;
+    }     
+}
+
 
 void ssd1306_DrawBitmap(uint8_t x0, uint8_t y0,uint8_t x1, uint8_t y1,uint8_t BMP[])
 {

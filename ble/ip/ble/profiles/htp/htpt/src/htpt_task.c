@@ -808,13 +808,6 @@ static int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
                             {
                                 TracerInfo("Dis EN Incoming call = %d\r\n",param->value[2]);    
                                 CC_BLE_Cmd_SetNotificaitonState(eCALLDISABLE, eNOTIFYCALL);
-
-                                if(0 == CC_BLE_Cmd_GetSwimmingEN())
-                                {
-                                    CC_VENUS_AccelTimerStop();
-                                    CC_VENUS_AccelTimerReset();
-                                    CC_VENUS_AccelTimerFifoModeStart();
-                                }
                             }
                             else if (eCALLENABLE == param->value[2])  
                             {

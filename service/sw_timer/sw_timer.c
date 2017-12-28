@@ -379,7 +379,7 @@ static void timer_timeouts_check(void)
         timer_node_t *  p_previous_timer;
         uint32_t        ticks_elapsed;
         uint32_t        ticks_expired;
-
+                      
         // Initialize actual elapsed ticks being consumed to 0.
         ticks_expired = 0;
 
