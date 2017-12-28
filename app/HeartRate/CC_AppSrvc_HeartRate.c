@@ -229,12 +229,12 @@ void CC_AppSrv_HR_ResetLimited(uint8_t _bAge)
 
 void CC_AppSrv_HR_StartSystemTick(void)
 {
-    APP_ERROR_CHECK(app_timer_start(s_tAppSrvHR_Timer_SystemTick, APP_TIMER_TICKS(1, APP_TIMER_PRESCALER), NULL));
+    app_timer_start(s_tAppSrvHR_Timer_SystemTick, APP_TIMER_TICKS(1, APP_TIMER_PRESCALER), NULL);
 }
 
 void CC_AppSrv_HR_StopSystemTick(void)
 {
-    APP_ERROR_CHECK(app_timer_stop(s_tAppSrvHR_Timer_SystemTick));
+    app_timer_stop(s_tAppSrvHR_Timer_SystemTick);
 }
 
 void CC_AppSrv_HR_Set24HrPeriod(uint32_t dwPeriodicMeasurementTime_ms, uint32_t dwOneMeasurementMaxTime_ms)
