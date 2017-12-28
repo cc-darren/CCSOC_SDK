@@ -57,7 +57,7 @@ __WEAK bool nrf_dfu_enter_check(void)
     if (s_dfu_settings.enter_buttonless_dfu == 1)
     {
         s_dfu_settings.enter_buttonless_dfu = 0;
-        APP_ERROR_CHECK(nrf_dfu_settings_write(NULL));
+        nrf_dfu_settings_write(NULL);
         return true;
     }
     return false;

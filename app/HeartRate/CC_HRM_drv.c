@@ -472,6 +472,9 @@ static void pah8002_task(void)
     #endif
 #endif 
             _pah8002_data.time = pah8002_update_timestamp();
+
+            //TracerInfo("time: %d\r\n",_pah8002_data.time);
+
             _pah8002_data.touch_flag = pah8002_get_touch_flag_ppg_mode(); ; 
 
             //TracerInfo("sys_tick	%d\r\n", _pah8002_data.time); 

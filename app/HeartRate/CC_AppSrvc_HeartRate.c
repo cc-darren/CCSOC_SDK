@@ -350,8 +350,8 @@ void CC_AppSrv_HR_Stop24HR(void)
         _AppSrv_HR_Reset();
     }
 #endif
-    APP_ERROR_CHECK(app_timer_stop(s_tAppSrvHR_Timer_24HR_PeriodicMeasurement));
-    APP_ERROR_CHECK(app_timer_stop(s_tAppSrvHR_Timer_24HR_OneMeasurement     ));
+    app_timer_stop(s_tAppSrvHR_Timer_24HR_PeriodicMeasurement);
+    app_timer_stop(s_tAppSrvHR_Timer_24HR_OneMeasurement     );
 
     s_tAppSrvHrCB.e24HrState = E_APPSRV_HRM_ST_INACTIVE;
 }
@@ -403,7 +403,7 @@ void CC_AppSrv_HR_DataReport(int16_t nHrData, int16_t nTrustLevel)
 
         if (s_tAppSrvHrCB.b24HrDataCount >= APPSRV_24HR_EXPECTED_DATA_MEASUREMENT_COUNT)
         {
-            APP_ERROR_CHECK(app_timer_stop(s_tAppSrvHR_Timer_24HR_OneMeasurement));
+            app_timer_stop(s_tAppSrvHR_Timer_24HR_OneMeasurement);
 
             CC_AppSrv_24HR_Handler_ToOneMeasurement();
         }
@@ -441,11 +441,11 @@ void CC_AppSrv_24HR_Handler_ToPeriodicMeasurement(void)
 #endif
     s_tAppSrvHrCB.e24HrState = E_APPSRV_HRM_ST_IN_MEASUREMENT;
 
-    APP_ERROR_CHECK(app_timer_start(s_tAppSrvHR_Timer_24HR_OneMeasurement,
-                                    APP_TIMER_TICKS(s_tAppSrvHrCB.dwOneMeasurementMaxTime, APP_TIMER_PRESCALER), NULL));
+    app_timer_start(s_tAppSrvHR_Timer_24HR_OneMeasurement,
+                                    APP_TIMER_TICKS(s_tAppSrvHrCB.dwOneMeasurementMaxTime, APP_TIMER_PRESCALER), NULL);
 
-    APP_ERROR_CHECK(app_timer_start(s_tAppSrvHR_Timer_24HR_PeriodicMeasurement,
-                                    APP_TIMER_TICKS(s_tAppSrvHrCB.dwPeriodicMeasurementTime, APP_TIMER_PRESCALER), NULL));
+    app_timer_start(s_tAppSrvHR_Timer_24HR_PeriodicMeasurement,
+                                    APP_TIMER_TICKS(s_tAppSrvHrCB.dwPeriodicMeasurementTime, APP_TIMER_PRESCALER), NULL);
 }
 
 bool CC_AppSrv_HR_IsSingleHrEnabled(void)

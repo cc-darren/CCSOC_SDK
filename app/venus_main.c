@@ -93,7 +93,7 @@
 // STANDBY TIMER ===============================
 APP_TIMER_DEF(s_tVenusTimerAccel);     // disable this timer to unify standby timers
 APP_TIMER_DEF(s_tVenusTimerDataTime);    // TBD: should rename like standby-base-timer
-APP_TIMER_DEF(s_tVenusTimerDiffTime); // for test
+//APP_TIMER_DEF(s_tVenusTimerDiffTime); // for test
 
 // FUNCTION TIMER ===============================
 APP_TIMER_DEF(s_tTouchDebounceTime);
@@ -1734,7 +1734,7 @@ static void app_multiple_timer_init(void)
 }
 
 
-
+#if 0
 static uint32_t systime_ms = 0;
 static void System_time_handler(void * pvContext)
 {
@@ -1755,7 +1755,7 @@ uint32_t Get_system_time_ms(void)
 {
     return systime_ms;
 }
-
+#endif
 
 static void application_timers_start(void)
 {
@@ -1775,7 +1775,7 @@ static void application_timers_start(void)
 
     app_timer_start(s_tVenusTimerDataTime, APP_TIMER_TICKS(DATETIME_CNT,APP_TIMER_PRESCALER), NULL);
 
-#if 1 //test time diff
+#if 0 //test time diff
 
     app_timer_create(&s_tVenusTimerDiffTime,
                      APP_TIMER_MODE_REPEATED,
@@ -3399,14 +3399,16 @@ int venus_main(void)
     
 #endif
 
-#ifdef DB_EN
-    CC_DB_Init(DB_INIT_FROM_SYSTEM);
-#endif
+
     venus_platform_init();
 
     venus_app_init();
 
     application_timers_start();
+
+#ifdef DB_EN
+    CC_DB_Init(DB_INIT_FROM_SYSTEM);
+#endif
     
     s_tVenusCB.bAvg_BatLevel = 100;
 
