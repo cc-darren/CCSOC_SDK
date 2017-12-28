@@ -219,18 +219,18 @@ extern "C" {
 #define RTC_ALM_SEC_REG             (RTC_ADDR_BASE + 0x0000001c)
 #define RTC_ALM_MIN_REG             (RTC_ADDR_BASE + 0x00000020)
 #define RTC_ALM_HRS_REG             (RTC_ADDR_BASE + 0x00000024)
-#define RTC_ALM_DOM_REG             (RTC_ADDR_BASE + 0x00000028)
+#define RTC_ALM_DAY_REG             (RTC_ADDR_BASE + 0x00000028)
 #define RTC_ALM_MON_REG             (RTC_ADDR_BASE + 0x0000002c)
 
 #define RTC_ALM2_SEC_REG            (RTC_ADDR_BASE + 0x00000030)
 #define RTC_ALM2_MIN_REG            (RTC_ADDR_BASE + 0x00000034)
 #define RTC_ALM2_HRS_REG            (RTC_ADDR_BASE + 0x00000038)
-#define RTC_ALM2_DOM_REG            (RTC_ADDR_BASE + 0x0000003c)
+#define RTC_ALM2_DAY_REG            (RTC_ADDR_BASE + 0x0000003c)
 #define RTC_ALM2_MON_REG            (RTC_ADDR_BASE + 0x00000040)
 
-#define RTC_CTRLA_REG               (RTC_ADDR_BASE + 0x00000044)
-#define RTC_CTRLB_REG               (RTC_ADDR_BASE + 0x00000048)
-#define RTC_CTRLC_REG               (RTC_ADDR_BASE + 0x00000050)
+#define RTC_CTRL_REG                (RTC_ADDR_BASE + 0x00000044)
+#define RTC_FCAB_REG                (RTC_ADDR_BASE + 0x00000048)
+#define RTC_INTR_REG                (RTC_ADDR_BASE + 0x00000050)
 
 // CCU
 #define CCU_INTR_REG                (CCU_ADDR_BASE + 0x00000000)
