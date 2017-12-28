@@ -132,7 +132,7 @@ static void _DB_Save_Hrm_Data(int16_t nHrData, int16_t nTrustLevel)
 void Hrm_SysTick_Handler(void * pvContext)
 {
     UNUSED_PARAMETER(pvContext);
-    s_tAppSrvHrCB.dwSysTick++;
+    s_tAppSrvHrCB.dwSysTick+=2;
 }
 
 uint32_t Hrm_get_sys_tick(void)
@@ -229,7 +229,7 @@ void CC_AppSrv_HR_ResetLimited(uint8_t _bAge)
 
 void CC_AppSrv_HR_StartSystemTick(void)
 {
-    app_timer_start(s_tAppSrvHR_Timer_SystemTick, APP_TIMER_TICKS(1, APP_TIMER_PRESCALER), NULL);
+    app_timer_start(s_tAppSrvHR_Timer_SystemTick, APP_TIMER_TICKS(2, APP_TIMER_PRESCALER), NULL);
 }
 
 void CC_AppSrv_HR_StopSystemTick(void)

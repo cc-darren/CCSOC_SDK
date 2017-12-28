@@ -3399,16 +3399,16 @@ int venus_main(void)
     
 #endif
 
-
+#ifdef DB_EN
+    CC_DB_Init(DB_INIT_FROM_SYSTEM);
+#endif
     venus_platform_init();
 
     venus_app_init();
 
     application_timers_start();
 
-#ifdef DB_EN
-    CC_DB_Init(DB_INIT_FROM_SYSTEM);
-#endif
+
     
     s_tVenusCB.bAvg_BatLevel = 100;
 
