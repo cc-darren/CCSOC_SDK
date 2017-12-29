@@ -23,6 +23,7 @@
 #define GENERALTIME_PAGEIDLE                             5000
 #define GENERALTIME_HRMPROG                             25000
 #define GENERALTIME_INCOMMING                          30000
+#define GENERALTIME_TURN_OFF_OLED_NOW               10
 
 
 extern void CC_VENUS_OLEDWakUpTimeOutTimerStart(uint16_t _wdata);
@@ -548,8 +549,11 @@ static void _PageMgr_PageSwitch(S_VenusEvent *_stEvent)
         case eEvent_HRM_TIMEOUT:
                 s_tPage.eNowPage= eMMI_HRMTIMEOUT_PAGE;
             break;
-        case eEvent_LIFTARM:
+        case eEvent_LIFTARM_UP:
                 s_tPage.eNowPage= eMMI_CLOCK_PAGE;
+            break;
+        case eEvent_LIFTARM_DOWN:
+                s_tPage.eNowPage= eMMI_LIFTARM_DOWN_OLEDOFF;
             break;
         case eEvent_LONGSIT:
                 s_tPage.eNowPage= eMMI_LONGSIT_PAGE;
@@ -622,7 +626,10 @@ static void _PageMgr_PageRelatedAct(void)
          break;
     }
 
-    CC_VENUS_OLEDGeneralOutTimerStart(GENERALTIME_PAGESWITCH);             
+    if (eMMI_LIFTARM_DOWN_OLEDOFF == s_tPage.eNowPage)
+        CC_VENUS_OLEDGeneralOutTimerStart(GENERALTIME_TURN_OFF_OLED_NOW);
+    else
+        CC_VENUS_OLEDGeneralOutTimerStart(GENERALTIME_PAGESWITCH);             
 }
 
 static void _PageMgr_UpdateEvent(void)
@@ -652,15 +659,24 @@ void CC_PageMgr_Init(void)
 }
 
 bool _PageMgr_IgnoreEvent(uint32_t dwEventCode)
-{
+{    
+
     if(eEvent_None == dwEventCode)
         return false;
 
     if ( eSysStateLowPwr == CC_GetBatteryPwrState())
     {
+        
         if((eEvent_TOUCH== dwEventCode) || 
             (eEvent_LOWPOWER == dwEventCode)||
-            (eEvent_CHARGINGIN== dwEventCode))
+           (eEvent_CHARGINGIN== dwEventCode) ||
+        //Jason, add
+           (eEvent_HR_WARNING_HIHG== dwEventCode) ||
+           (eEvent_HR_WARNING_LOW== dwEventCode) ||
+           (eEvent_FACTORY_RESET_START== dwEventCode) ||
+           (eEvent_FACTORY_RESET_DONE== dwEventCode) ||
+           (eEvent_FACTORY_RESET_STOP == dwEventCode)||
+           (eEvent_LIFTARM_DOWN== dwEventCode))
             return (false);
         else
             return (true);
@@ -678,7 +694,13 @@ bool _PageMgr_IgnoreEvent(uint32_t dwEventCode)
              && (eEvent_CHARGINGIN            != dwEventCode)
              && (eEvent_CHARGINGOUT           != dwEventCode)
              && (eEvent_CHARGINGFULL        != dwEventCode)
-             && (eEvent_ALARM                   != dwEventCode)) // Jason, [VNS-91] define muilt event on Charging in or Charging Full
+             && (eEvent_ALARM                   != dwEventCode)
+             && (eEvent_PAIR_PASSKEY          != dwEventCode)
+             && (eEvent_PAIR_SUCCESS          != dwEventCode)
+             && (eEvent_PAIR_FAIL             != dwEventCode)
+             && (eEvent_FACTORY_RESET_START!= dwEventCode)
+             &&(eEvent_FACTORY_RESET_DONE!= dwEventCode)
+             &&(eEvent_FACTORY_RESET_STOP != dwEventCode)) // Jason, [VNS-91] define muilt event on Charging in or Charging Full
          {
              return (true);
          }
@@ -689,13 +711,27 @@ bool _PageMgr_IgnoreEvent(uint32_t dwEventCode)
             return true;        
     case eMMI_HRM_HRS_ACTIVATED_PAGE:
     case eMMI_HRM_HRS_DATA_PAGE:
-         if ((eEvent_TOUCH == dwEventCode) || (eEvent_SWIM_CONFIRM_OFF == dwEventCode))
+         if (   (eEvent_TOUCH            == dwEventCode) 
+             || (eEvent_SWIM_CONFIRM_OFF == dwEventCode)
+             || (eEvent_LIFTARM_DOWN == dwEventCode))
              return (true);
+
+         if ((eEvent_PAIR_PASSKEY== dwEventCode) || 
+             (eEvent_PAIR_SUCCESS== dwEventCode) ||
+             (eEvent_PAIR_FAIL== dwEventCode))         
+             return (false);
 
          if ((eEvent_ALARM == dwEventCode) || 
             (eEvent_INCOMMINGCALL_ON == dwEventCode) ||
             (eEvent_INCOMMINGSMS == dwEventCode)||
-            (eEvent_LONGSIT== dwEventCode))
+            (eEvent_LONGSIT== dwEventCode)||
+#ifdef PED_GOAL
+            (eEvent_PED_GOAL_ACHIEVE== dwEventCode)||
+            (eEvent_SWIMMING_GOAL_ACHIEVE== dwEventCode)||
+#endif
+            //Jason, add
+            (eEvent_HR_WARNING_HIHG== dwEventCode)||
+            (eEvent_HR_WARNING_LOW== dwEventCode))
          {
             TracerInfo("_PageMgr_IgnoreEvent Handle Notification Event\r\n");
             g_bIs_Notification_beResume = true;
@@ -708,11 +744,66 @@ bool _PageMgr_IgnoreEvent(uint32_t dwEventCode)
      case eMMI_INCOMMING_SMS_PAGE:
           if (eEvent_HRM_DATA== dwEventCode) 
              return (true);
-
+            break;
+        //Jason, add
+        case eMMI_HR_WARNING_HIGH:
+        case eMMI_HR_WARNING_LOW:
+            if ((eEvent_TOUCH != dwEventCode)
+             && (eEvent_CHARGINGIN != dwEventCode)
+             && (eEvent_CHARGINGOUT != dwEventCode)
+             && (eEvent_CHARGINGFULL != dwEventCode)
+            && (eEvent_HEARTRATESTRAPMODE_OFF != dwEventCode)
+            && (eEvent_FACTORY_RESET_START!= dwEventCode)
+            && (eEvent_FACTORY_RESET_STOP!= dwEventCode)
+            && (eEvent_FACTORY_RESET_DONE!= dwEventCode)
+            && (eEvent_PAIR_PASSKEY!= dwEventCode)
+            && (eEvent_PAIR_SUCCESS!= dwEventCode)
+            && (eEvent_PAIR_FAIL!= dwEventCode))
+                return (true);
          break;
+     case eMMI_PAIR_PASSKEY:
+            if((eEvent_TOUCH == dwEventCode)
+              || (eEvent_LOWPOWER == dwEventCode)
+              || (eEvent_SWIM_ON == dwEventCode)
+              || (eEvent_SWIM_OFF == dwEventCode)
+              || (eEvent_CHARGINGIN == dwEventCode)
+              || (eEvent_CHARGINGOUT== dwEventCode)
+              || (eEvent_CHARGINGFULL== dwEventCode)
+              || (eEvent_HRM_DATA == dwEventCode)
+              || (eEvent_HRM_TIMEOUT== dwEventCode)
+              || (eEvent_HEARTRATESTRAPMODE_ON== dwEventCode)
+              || (eEvent_HEARTRATESTRAPMODE_OFF== dwEventCode)
+              || (eEvent_LIFTARM_UP== dwEventCode)
+              || (eEvent_LONGSIT== dwEventCode)
+              || (eEvent_INCOMMINGCALL_ON== dwEventCode)
+              || (eEvent_INCOMMINGCALL_OFF== dwEventCode)
+              || (eEvent_INCOMMINGSMS== dwEventCode)
+              || (eEvent_ALARM== dwEventCode)
+              || (eEvent_HR_WARNING_HIHG== dwEventCode)
+              || (eEvent_HR_WARNING_LOW== dwEventCode)
+#ifdef PED_GOAL
+              || (eEvent_PED_GOAL_ACHIEVE== dwEventCode)
+              || (eEvent_SWIMMING_GOAL_ACHIEVE== dwEventCode)
+#endif
+              || (eEvent_FACTORY_RESET_START == dwEventCode)
+              || (eEvent_FACTORY_RESET_DONE == dwEventCode)
+              || (eEvent_FACTORY_RESET_STOP == dwEventCode)
+              || (eEvent_LIFTARM_DOWN== dwEventCode))
+
+                return (true);
+         break;
+      case eMMI_FACTORY_RESET_DONE:
+      case eMMI_FACTORY_RESET_STOP:
+      {
+        if( (eEvent_TOUCH == dwEventCode)
+            ||(eEvent_LIFTARM_DOWN== dwEventCode))
+            return (true);
+        break;
+      }
     }
 
     return (false);
+
 }
 
 void CC_PageMgr_Proc(S_VenusEvent *_stEvent)
@@ -761,6 +852,8 @@ void CC_PageMgr_Proc(S_VenusEvent *_stEvent)
                  CC_VENUS_OLEDGeneralOutTimerStart(GENERALTIME_HRMPROG);
              else if (eMMI_INCOMMING_CALL_PAGE==s_tPage.eNowPage)
                  CC_VENUS_OLEDGeneralOutTimerStart(GENERALTIME_INCOMMING);
+             else if (eMMI_LIFTARM_DOWN_OLEDOFF==s_tPage.eNowPage)
+                 CC_VENUS_OLEDGeneralOutTimerStart(GENERALTIME_TURN_OFF_OLED_NOW);             
              else
                  CC_VENUS_OLEDGeneralOutTimerStart(GENERALTIME_PAGEIDLE);
 

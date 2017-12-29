@@ -329,7 +329,7 @@ void CC_Dsp_Srv_HrmData(uint16_t _wHrmData)
     oled_DrawBlack();
     sprintf(strbuf, "%d",  _wHrmData);
     _OLED_Display_CharLen_Calculation(_wHrmData, &_bX, &_bY);
-    oled_DrawPixel4x38(LCD_X_OFFSET + _bX, 0, strbuf);     
+    oled_DrawPixel4x38(LCD_X_OFFSET + _bX, 0, (uint8_t*)strbuf);     
 }
 
 extern uint32_t CC_Get_SwimmingLapCount(void);

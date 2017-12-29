@@ -88,6 +88,96 @@
 #define VENUS_EVENT_IS_ON(EventID)           (    s_tVenusCB.taEvent[EventID].bCount         )
 // VENUS CONTROL BLOCK & DEFINITION =========================================
 
+// VENUS CONTROL BLOCK & DEFINITION =========================================
+enum
+{
+    E_VENUS_EVENT_SENSOR_DATA_READY_ACCEL = 0,
+    E_VENUS_EVENT_SENSOR_DATA_READY_MAG,
+    E_VENUS_EVENT_SENSOR_DATA_READY_GYRO,
+    E_VENUS_EVENT_SENSOR_DATA_READY,
+
+    E_VENUS_EVENT_HRM,
+    E_VENUS_EVENT_HRM_TIMEOUT,
+    E_VENUS_EVENT_HRM_SERVICE_24HR_START,
+    E_VENUS_EVENT_HRM_SERVICE_24HR_STOP,
+    E_VENUS_EVENT_HRM_SERVICE_24HR_TO_ONE_MEASUREMENT,
+    E_VENUS_EVENT_HRM_SERVICE_24HR_TO_PERIODIC_MEASUREMENT,
+    E_VENUS_EVENT_HRM_SERVICE_RESUME,
+    E_VENUS_EVENT_HRM_SERVICE_HR_LOCK,
+    E_VENUS_EVENT_HRM_SERVICE_HR_UNLOCK,
+    E_VENUS_EVENT_HRM_SERVICE_HR_ALERT_OUT_OF_RANGE,
+
+    E_VENUS_EVENT_OLED_UPDATE,
+    E_VENUS_EVENT_OLED_UPDATE_LOWPOWER, //verify
+    E_VENUS_EVENT_OLED_UPDATE_TOUCH,
+    E_VENUS_EVENT_OLED_UPDATE_SWIM_ON,
+    E_VENUS_EVENT_OLED_UPDATE_SWIM_OFF,
+    E_VENUS_EVENT_OLED_UPDATE_SWIM_CONFIRM_ON,
+    E_VENUS_EVENT_OLED_UPDATE_SWIM_CONFIRM_OFF,
+    E_VENUS_EVENT_OLED_UPDATE_CHARGEIN,
+    E_VENUS_EVENT_OLED_UPDATE_CHARGEOUT,
+    E_VENUS_EVENT_OLED_UPDATE_CHARGEFULL,
+    E_VENUS_EVENT_OLED_UPDATE_HRM_DATA,
+    E_VENUS_EVENT_OLED_UPDATE_HRM_TIMEOUT,
+    E_VENUS_EVENT_OLED_UPDATE_HRM_HEARTRATESTRAPMODE_ON,
+    E_VENUS_EVENT_OLED_UPDATE_HRM_HEARTRATESTRAPMODE_OFF,
+    E_VENUS_EVENT_OLED_UPDATE_LIFTARM_UP,
+    E_VENUS_EVENT_OLED_UPDATE_LIFTARM_DOWN,
+    E_VENUS_EVENT_OLED_UPDATE_LONGSIT,
+    E_VENUS_EVENT_OLED_UPDATE_INCOMMINGCALL_ON,
+    E_VENUS_EVENT_OLED_UPDATE_INCOMMINGCALL_OFF,
+    E_VENUS_EVENT_OLED_UPDATE_INCOMMINGSMS,
+    E_VENUS_EVENT_OLED_UPDATE_ALARM,
+    E_VENUS_EVENT_OLED_UPDATE_PAIR_SUCCESS,
+    E_VENUS_EVENT_OLED_UPDATE_PAIR_PASSKEY,
+    E_VENUS_EVENT_OLED_UPDATE_PAIR_FAIL,
+    E_VENUS_EVENT_OLED_UPDATE_PEDGOALACHIEVED,
+    E_VENUS_EVENT_OLED_UPDATE_SWIMMINGGOALACHIEVED,
+    
+    E_VENUS_EVENT_OLED_WAKEUP,
+    E_VENUS_EVENT_OLED_SLEEP,
+    E_VENUS_EVENT_OLED_DSPSRV,
+    E_VENUS_EVENT_PWM_VIBSRV,
+
+    E_VENUS_EVENT_TOUCH_INT,
+    E_VENUS_EVENT_LONG_TOUCH_INT,
+
+    E_VENUS_EVENT_BLE_NOTIFY_TO,
+
+    E_VENUS_EVENT_CHARGING_INT,
+    
+    E_VENUS_EVENT_CHARGING_FULL,
+        
+    E_VENUS_EVENT_DATETIMEFLUSH,
+
+    E_VENUS_EVENT_LONGSITEVENT,
+
+    E_VENUS_EVENT_BATTERYINDICATION_CHARGE_IN,
+    E_VENUS_EVENT_BATTERYLIFE,
+    E_VENUS_EVENT_BATTERYLIFE_CHARGEOUT,
+
+    E_VENUS_EVENT_LONGSIT_LAUNCH_HRM_TO_CHECK_WEAR,
+    E_VENUS_EVENT_LONGSIT_LAUNCH_1MIN_TO_MONITOR_MOTION,
+#ifdef FACTORY_RESET
+    E_VENUS_EVENT_OLED_UPDATE_FACTORYRESET_START,
+    E_VENUS_EVENT_OLED_UPDATE_FACTORYRESET_STOP,
+    E_VENUS_EVENT_FACTORY_RESET_START,
+    E_VENUS_EVENT_OLED_UPDATE_FACTORYRESET_DONE,
+    
+#endif
+    
+#ifdef BatteryLog_EN
+    E_VENUS_EVENT_BATTERYLIFE_LOG_SAVE,
+#endif
+
+#ifdef LOG_SLEEP_MONITOR_RAW_DATA
+    E_VENUS_EVENT_SET_SLEEP_MONITOR_RAW_LOG,
+#endif
+
+    E_VENUS_EVENT_DUMMY_END
+};
+
+
 
 // App timer definition:
 // STANDBY TIMER ===============================
@@ -268,6 +358,8 @@ AxesRaw_t s_tMagRaw;
 #ifdef DB_EN
 static db_pedometer_t m_db_pedo;
 #endif
+eLiftarm_Mode g_bLiftArm_State;
+
 /*
 static CC_Ble_Ped_Info_T _sPedInfo = {0xF1,0,0};
 static CC_Ble_Hrm_Info_T _sHrmInfo = {0xF2,0,0};
@@ -1051,8 +1143,11 @@ static void cc_toolBox_PWM_Vib_Service_timeout(void * p_context)
 
 void CC_VENUS_AccelTimerFifoModeStart(void)
 {
-    //if(0x01 == CC_BLE_Cmd_GetLiftArmStatus())
+#ifdef FORCE_LIFTARM_TEST_EN    
     if(1)   // force to enable lift arm
+#else
+    if(0x01 == CC_BLE_Cmd_GetLiftArmStatus())
+#endif        
         app_timer_start(s_tVenusTimerAccel, APP_TIMER_TICKS(ACCEL_FIFO_MODE_SHORT_INTERVAL, APP_TIMER_PRESCALER), NULL);
     else
         app_timer_start(s_tVenusTimerAccel, APP_TIMER_TICKS(ACCEL_FIFO_MODE_LONG_INTERVAL, APP_TIMER_PRESCALER), NULL);
@@ -2066,26 +2161,21 @@ static void _sensor_algorithm_liftarm_proc()
             
             liftarm_process( input,&_GestureOut, &_WinStatus);
 
-#if 0 // test app loop time                                               
-            TracerInfo("%d\r\n", Get_system_time_ms() - old_tick);                                                                                      
-#endif
-
-
             if (1 == _WinStatus) 
             {
-                if (1 == _GestureOut || 2 == _GestureOut)       /**< 1: up, 2: down */
+                if ( (eLiftarm_Up == (eLiftarm_Mode)_GestureOut)
+                    || (eLiftarm_Down == (eLiftarm_Mode) _GestureOut))       /**< 1: up, 2: down */
                 {
-                    if (1 == _GestureOut)
+                    if (eLiftarm_Up == (eLiftarm_Mode)_GestureOut)
                     {
                         if (!CC_PageMgr_IsOLEDActive() && !CC_PageMgr_IsBlockingOLED())
                         {
-                            TracerInfo("Lift Arm!\r\n");
                             CC_PageMgr_ActiveOLED();
-                            
-                            VENUS_EVENT_ON(E_VENUS_EVENT_OLED_UPDATE, eEvent_LIFTARM);
+                            VENUS_EVENT_ON(E_VENUS_EVENT_OLED_UPDATE_LIFTARM_UP, eEvent_LIFTARM_UP);
+							g_bLiftArm_State = (eLiftarm_Mode)_GestureOut;
                         }
+
                     }
-                    /*
                     else if (( eLiftarm_Down == (eLiftarm_Mode) _GestureOut )
                              && ( eLiftarm_Up == g_bLiftArm_State)) // have liftarm up than have liftarm down
                     {
@@ -2095,9 +2185,10 @@ static void _sensor_algorithm_liftarm_proc()
                             g_bLiftArm_State = (eLiftarm_Mode)_GestureOut;
                         }
                     }
-                    */
                 }
             }
+
+
         }               
         //_cTmp^=1;
     }    
@@ -2805,6 +2896,32 @@ bool _app_scheduler(void)
         _bScheduleOperating =true;
     }
 #endif
+
+    if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_OLED_UPDATE_LIFTARM_UP) )
+    {
+        if (CC_PageMgr_IsBlockingOLED())
+        {
+            //NRF_LOG_INFO(" OLED IS BLOCKING \r\n");
+        }
+        else
+        {
+            if (CC_PageMgr_ActiveOLED())
+            {                    
+                CC_PageMgr_Proc(&s_tVenusCB.taEvent[E_VENUS_EVENT_OLED_UPDATE_LIFTARM_UP]);
+    
+                VENUS_EVENT_OFF(E_VENUS_EVENT_OLED_UPDATE_LIFTARM_UP);
+                _bScheduleOperating =true;
+            }
+        }
+    }
+    
+    if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_OLED_UPDATE_LIFTARM_DOWN) )
+    {
+        CC_PageMgr_Proc(&s_tVenusCB.taEvent[E_VENUS_EVENT_OLED_UPDATE_LIFTARM_DOWN]);
+        VENUS_EVENT_OFF(E_VENUS_EVENT_OLED_UPDATE_LIFTARM_DOWN);
+        _bScheduleOperating =true;
+    }
+
 
     if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_OLED_UPDATE) )
     {
