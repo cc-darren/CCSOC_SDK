@@ -42,11 +42,13 @@
 #define oled_DrawPixel8x16_Thin(x,y,buf)              ssd1306_DrawPixel8x16_Thin(x,y,buf)
 #define oled_DrawPixel2x24(x,y,buf)                   ssd1306_DrawPixel2x24(x,y,buf)
 #define oled_DrawPixel8x36(x,y,buf)                   ssd1306_DrawPixel8x36(x,y,buf)
+#define oled_DrawPixel2x32(x,y,buf)                   ssd1306_DrawPixel2x32(x,y,buf)
+#define oled_DrawPixel4x38(x,y,buf)                   ssd1306_DrawPixe14x38(x,y,buf)
 #define oled_DrawFrameBuffer(fb,size,x,y)             ssd1306_DrawFrameBuffer(fb,size,x,y)
 #define oled_DrawBitmap(x0,y0,x1,y1,bmp)              ssd1306_DrawBitmap(x0,y0,x1,y1,bmp)
 
 #define oled_SendData(bByte)                          ssd1306_SendData(bByte)
-#define oled_SetPosition(x,y)                       ssd1306_SetPosition(x,y)
+#define oled_SetPosition(x,y)                         ssd1306_SetPosition(x,y)
 #define oled_SetPwrCtrlHigh()                         ssd1306_SetPwrCtlHigh()
 #define oled_SetPwrCtrlLow()                          ssd1306_SetPwrCtlLow()
 

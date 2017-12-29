@@ -251,7 +251,9 @@ typedef struct
 //volatile uint8_t  *p_llm_le_event_mask = (volatile uint8_t *) 0x20000680;
 
 //char deviceName[10] = {'V','N','S','_'};
-char deviceName[10] = {'Z','E','U','S'};
+//char deviceName[10] = {'Z','S','_'};
+char deviceName[10] = {'Z','S','_','1','3','3','4','8'}; // for test
+
 S_VenusCB    s_tVenusCB;
 extern uint8_t g_GyroEnable;
 static short _wGyroData[3]  = { 0 };
@@ -919,6 +921,11 @@ void CC_MainGet_Stride_LengthSetting(uint8_t *_pbStride, uint8_t *_pbUnit)
 {
     *_pbStride = s_tVenusCB.stGeneralInfo.cStride_Lenght;
     *_pbUnit = s_tVenusCB.stUnitInfo.cUnitLength;
+}
+
+uint32_t CC_MainGet_Calorie(void)
+{
+    return s_tVenusCB.dwTotalCalorie;
 }
 
 void CC_MainGet_SwimmingInfo(eSWIM_LEN_SET_t *_bPoolSize, uint32_t *_dwSwimLen)
@@ -2078,6 +2085,17 @@ static void _sensor_algorithm_liftarm_proc()
                             VENUS_EVENT_ON(E_VENUS_EVENT_OLED_UPDATE, eEvent_LIFTARM);
                         }
                     }
+                    /*
+                    else if (( eLiftarm_Down == (eLiftarm_Mode) _GestureOut )
+                             && ( eLiftarm_Up == g_bLiftArm_State)) // have liftarm up than have liftarm down
+                    {
+                        if (CC_PageMgr_IsOLEDActive())
+                        {
+                            VENUS_EVENT_ON(E_VENUS_EVENT_OLED_UPDATE_LIFTARM_DOWN, eEvent_LIFTARM_DOWN);
+                            g_bLiftArm_State = (eLiftarm_Mode)_GestureOut;
+                        }
+                    }
+                    */
                 }
             }
         }               
@@ -2454,6 +2472,7 @@ void _sensor_accel_gyro_on_change(void)
                         {
                                 s_tVenusCB.dwPedWalkCount = s_tVenusCB.dwPedWalkCount + ( _dwPedTotalStepCount - s_tVenusCB.dwPedTotalStepCount );
                                 s_tVenusCB.dwWalkCalorie = CC_CalorieBurnCalStepV2(s_tVenusCB.dwPedWalkCount, 1,ePedo_Walk);
+                               
 
                                 if(0x00 == s_tVenusCB.stPedRecordData_Walk.enabled)
                                 { 
@@ -2524,6 +2543,9 @@ void _sensor_accel_gyro_on_change(void)
 #endif
                         s_tVenusCB.dwPedTotalStepCount = _dwPedTotalStepCount;
                         s_tVenusCB.dwTotalCalorie = s_tVenusCB.dwWalkCalorie + s_tVenusCB.dwRunCalorie;
+
+
+                        TracerInfo("calorie %d\r\n", s_tVenusCB.dwTotalCalorie);
 
                     } 
 

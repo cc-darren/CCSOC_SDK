@@ -683,12 +683,22 @@ typedef enum
     ePedo_Run  = 0x02,
 }ePedo_State_t;
 
+
+typedef enum
+{
+    eLiftarm_None =0,
+    eLiftarm_Up = 1,
+    eLiftarm_Down,
+}eLiftarm_Mode;
+
 typedef struct
 {
     uint8_t    bCount;
     uint8_t    baPadding[2];
     uint32_t  dwData;
 }   S_VenusEvent;
+
+
 
 #define CHARGE_MAX_USERS 8
 typedef void (*charge_cb_t)(eDEV_CHARGE_STATE_t eState);

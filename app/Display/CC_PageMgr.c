@@ -37,7 +37,7 @@ extern void CC_SetHrmClosePageEvent(void);
 extern void CC_MainGet_CurrentTime(app_date_time_t *_stCurTime);
 extern uint32_t CC_MainGet_PedCnt(void);
 extern void CC_MainGet_Stride_LengthSetting(uint8_t *_pbStride, uint8_t *_pbUnit);
-//extern uint32_t CC_MainGet_Calorie(void);
+extern uint32_t CC_MainGet_Calorie(void);
 extern void CC_MainGet_SwimmingInfo(eSWIM_LEN_SET_t *_bPoolSize, uint32_t *_dwSwimLen);
 extern uint8_t CC_MainGet_BatteryCapacity(void);
 extern uint16_t CC_MainGet_BatteryAdcLevel(void);
@@ -169,7 +169,7 @@ void _PageMgr_DrawPath(eMMI_Page_t _PageIndex)
         case eMMI_HRMDATA_PAGE:
              {    
                  uint16_t _wHrmData = CC_MainGet_HrmData();
- 
+
                  CC_Dsp_Srv_HrmData(_wHrmData);
                  if (eMMI_HRM_HRS_DATA_PAGE != _PageIndex)
                      CC_Vib_Srv_Icon(_PageIndex);                  
@@ -252,7 +252,7 @@ void _PageMgr_DrawPathData(eMMI_Page_t _PageIndex)
         case eMMI_PEDO_PAGE:
         {
             uint32_t _dwData;
-            _dwData =CC_MainGet_PedCnt();
+            _dwData =CC_MainGet_PedCnt();                 
             CC_Dsp_Srv_PedCnt(_dwData);   
         }    
             break;
@@ -271,13 +271,14 @@ void _PageMgr_DrawPathData(eMMI_Page_t _PageIndex)
             uint32_t _dwData = CC_MainGet_PedCnt();
             uint8_t _bStrideLen = 0;
             uint8_t _bUnitSetting = 0;
-            CC_MainGet_Stride_LengthSetting(&_bStrideLen,&_bUnitSetting);
+            CC_MainGet_Stride_LengthSetting(&_bStrideLen,&_bUnitSetting);					
             CC_Dsp_Srv_PedDistance(_dwData,_bStrideLen,_bUnitSetting);
         }    
             break;
         case eMMI_CAL_PAGE:
         {    
             uint32_t _dwCalo = CC_MainGet_Calorie();
+     
             CC_Dsp_Srv_PedCalorie(_dwCalo);
         }    
             break;

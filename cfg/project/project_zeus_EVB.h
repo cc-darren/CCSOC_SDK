@@ -439,7 +439,7 @@ Declaration of static Global Variables & Functions
 
 
 
-#define DEVICE_MODEL "ZEUS"
+#define DEVICE_MODEL "Z E U S"
 #define VENUS_HW_VERSION "v0.000.001"
 #define VENUS_FW_VERSION "v0.000.001" 
 
@@ -695,6 +695,13 @@ typedef struct
     uint32_t  dwData;
 }   S_VenusEvent;
 
+typedef enum
+{
+    eLiftarm_None =0,
+    eLiftarm_Up = 1,
+    eLiftarm_Down,
+}eLiftarm_Mode;
+
 #define CHARGE_MAX_USERS 8
 typedef void (*charge_cb_t)(eDEV_CHARGE_STATE_t eState);
 
@@ -854,6 +861,8 @@ typedef struct
     uint8_t cTotalNum;
     CC_Ble_Clock_Set_T cAlarmTime[4];
 }CC_Ble_Clock_Alarm_T;
+
+
 
 
 #if 0

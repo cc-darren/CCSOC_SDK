@@ -28,7 +28,7 @@
 
 
 // Calorie for temporarily
-#define CC_MainGet_Calorie()        0x00
+//#define CC_MainGet_Calorie()        0x00
 
 // Pedo for temporarily
 //#define CC_MainGet_PedCnt()         100

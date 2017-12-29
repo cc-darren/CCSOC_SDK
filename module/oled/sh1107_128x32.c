@@ -164,6 +164,33 @@ void sh1107_DrawPixel2x24(uint8_t x, uint8_t y, uint8_t ch[])
     }     
 }
 
+void sh1107_DrawPixel2x32(uint8_t x, uint8_t y, uint8_t ch[])
+{
+    uint8_t c=0,i=0,j=0;
+    
+    while (ch[j]!='\0')
+    {    
+        c =ch[j]-32;        
+        sh1107_SetPosition(x,y);    
+        for(i=0;i<12;i++)     
+            sh1107_SendData(FONT_12x32[c*48+i]);
+        sh1107_SetPosition(x,y+1);    
+        for(i=0;i<12;i++)     
+          sh1107_SendData(FONT_12x32[c*48+12+i]);  
+        sh1107_SetPosition(x,y+2);    
+        for(i=0;i<12;i++)     
+          sh1107_SendData(FONT_12x32[c*48+24+i]);          
+
+        sh1107_SetPosition(x,y+3);    
+        for(i=0;i<12;i++)     
+          sh1107_SendData(FONT_12x32[c*48+36+i]);          
+
+        x+=12;
+        j++;
+    }     
+}
+
+
 void sh1107_DrawPixel8x36(uint8_t x, uint8_t y, uint8_t ch[])
 {
     unsigned char c=0,i=0,j=0;
@@ -192,6 +219,34 @@ void sh1107_DrawPixel8x36(uint8_t x, uint8_t y, uint8_t ch[])
     }     
 }
 
+void sh1107_DrawPixe14x38(uint8_t x, uint8_t y, uint8_t ch[])
+{
+    unsigned char c=0,i=0,j=0;
+
+    while (ch[j]!='\0')
+    {    
+        c = ch[j]-0x20; // start from " " space.  
+
+        sh1107_SetPosition(x,y);    
+        for(i=0;i<14;i++)     
+            sh1107_SendData(FONT_14x38[c*70+i]);
+        sh1107_SetPosition(x,y+1);    
+        for(i=0;i<14;i++)     
+          sh1107_SendData(FONT_14x38[c*70+14+i]);  
+        sh1107_SetPosition(x,y+2);    
+        for(i=0;i<14;i++)     
+          sh1107_SendData(FONT_14x38[c*70+28+i]);          
+        sh1107_SetPosition(x,y+3);    
+        for(i=0;i<14;i++)     
+          sh1107_SendData(FONT_14x38[c*70+42+i]); 
+        sh1107_SetPosition(x,y+4);    
+        for(i=0;i<14;i++)     
+          sh1107_SendData(FONT_14x38[c*70+56+i]); 
+
+        x+=14;
+        j++;
+    }     
+}
 
 void sh1107_DrawBitmap(uint8_t x0, uint8_t y0,uint8_t x1, uint8_t y1,uint8_t BMP[])
 {
@@ -210,3 +265,4 @@ void sh1107_DrawBitmap(uint8_t x0, uint8_t y0,uint8_t x1, uint8_t y1,uint8_t BMP
         }
     }
 }
+

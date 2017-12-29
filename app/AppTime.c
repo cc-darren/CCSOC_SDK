@@ -165,7 +165,7 @@ void app_Time_Init(void)
   if (1 != m_SystemTime.inited )
   {
     memset(&m_SystemTime,0x00,sizeof(m_SystemTime));
-    time_set_ymd(&m_SystemTime.systime, 2017,APP_MON_JUN,29,10,00,00,APP_WEEK_THURSDAY);
+    time_set_ymd(&m_SystemTime.systime, 2017,APP_MON_DEC,25,10,00,00,APP_WEEK_MONDAY);
 
     m_SystemTime.inited     = 1;
   }

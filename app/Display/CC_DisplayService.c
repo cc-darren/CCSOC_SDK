@@ -17,7 +17,6 @@
 #define oled_DrawPixel8x16_Thin  oled_DrawPixel6x8
 #endif
 
-#define OLED_P14x38Str  oled_DrawPixel8x16
 
 extern void CC_VENUS_OLEDDisplayServiceTimerStart(uint16_t _wdata);
 extern void CC_VENUS_OLEDDisplayServiceTimerReset(void);
@@ -217,10 +216,9 @@ void CC_Dsp_Srv_Init(void)
 {
 //    TracerInfo(" CC_Dsp_Srv_Init \r\n");
 
-    uint8_t x = 0;
-    x = (LCD_SIZE_X - 8*5)/2;
-    oled_DrawPixel8x16(LCD_X_OFFSET + x + 2,1,DEVICE_MODEL);
-
+//    uint8_t x = 0;
+//    x = (LCD_SIZE_X - 8*5)/2;
+    oled_DrawPixel8x16(LCD_X_OFFSET+6,1,DEVICE_MODEL);      
 }
 //extern uint8_t CC_SleepMonitor_GetSleepState(void);
 extern uint32_t CC_GetSleepAlgorithmReport_State(void);
@@ -268,7 +266,8 @@ void CC_Dsp_Srv_PresentTime(app_date_time_t _mCurTime, uint8_t _Format)
         _index++;
     }
 
-    pDisplayTime[_index++] = ' ';
+   // pDisplayTime[_index++] = ' ';
+
     if (_mCurTime.dayofweek == APP_WEEK_SUNDAY)
         strncpy((char*)&pDisplayTime[_index],"SUN",3);
     else if  (_mCurTime.dayofweek == APP_WEEK_MONDAY)
@@ -304,9 +303,20 @@ void CC_Dsp_Srv_PedCnt(uint32_t _dwData)
     if (_bY == 2)
         oled_DrawPixel8x16(LCD_X_OFFSET + _bX, _bY, (uint8_t*)strbuf);    
     else if  (_bY == 1)
-        oled_DrawPixel2x24(LCD_X_OFFSET + _bX, _bY, (uint8_t*)strbuf);            
+    {
+        //if(_dwData >= 100000)
+        if(_dwData >= 10000)
+        {
+             oled_DrawPixel2x32(LCD_X_OFFSET + _bX, _bY, (uint8_t*)strbuf); 
+        }
+        else
+        {
+            _bX = (LCD_SIZE_X - 14*5)/2;  
+            oled_DrawPixel4x38(LCD_X_OFFSET + _bX, 0, (uint8_t*)strbuf);            
+        }    
+    }
     else       
-        oled_DrawPixel8x36(LCD_X_OFFSET + _bX, _bY, (uint8_t*)strbuf);   
+        oled_DrawPixel4x38(LCD_X_OFFSET + _bX, _bY, (uint8_t*)strbuf);    
 
 }
 
@@ -319,7 +329,7 @@ void CC_Dsp_Srv_HrmData(uint16_t _wHrmData)
     oled_DrawBlack();
     sprintf(strbuf, "%d",  _wHrmData);
     _OLED_Display_CharLen_Calculation(_wHrmData, &_bX, &_bY);
-    oled_DrawPixel8x36(LCD_X_OFFSET + _bX, 0, (uint8_t*)strbuf);    
+    oled_DrawPixel4x38(LCD_X_OFFSET + _bX, 0, strbuf);     
 }
 
 extern uint32_t CC_Get_SwimmingLapCount(void);
@@ -416,7 +426,7 @@ void CC_Dsp_Srv_BatteryLife(uint8_t _bBatCap)
     sprintf(strbuf, "%d",  _bBatCap);
     oled_DrawBlack();
     _OLED_Display_CharLen_Calculation(_bBatCap, &_bX, &_bY);
-    oled_DrawPixel8x36(LCD_X_OFFSET, 0, (uint8_t*)strbuf);       
+    oled_DrawPixel4x38(LCD_X_OFFSET + _bX, 0, (uint8_t*)strbuf);       
 
 }
 
@@ -437,32 +447,105 @@ void CC_Dsp_Srv_BatteryLevel(uint16_t _wAdcLevel)
 
 void CC_Dsp_Srv_PedDistance(uint32_t _dwData, uint8_t _bStrideLen, uint8_t _bUnitSetting)
 {
+
     char strbuf[16] = {0};
     double _fpTmpDist = 0;
       //avg step length is 65~70 cm
     oled_DrawBlack();
     _fpTmpDist = ((float)(_dwData*_bStrideLen)/100) / 1000 ;
+
     if (_bUnitSetting ==0)
     {
         sprintf(strbuf,"%2.1f",_fpTmpDist);       
-        oled_DrawPixel2x24(LCD_X_OFFSET, 2, (uint8_t*)strbuf);
-        oled_DrawPixel2x24(LCD_X_OFFSET + 36, 2, "km");        
-        //oled_DrawPixel2x24(LCD_X_OFFSET + 10, 2, (uint8_t*)strbuf);
-        //oled_DrawPixel2x24(LCD_X_OFFSET + 46, 2, "km");
+
+        if (_fpTmpDist <10.0f)
+        {
+            //OLED_P12x24Str(LCD_X_OFFSET + 10, 2, strbuf);
+            oled_DrawPixel2x32(LCD_X_OFFSET, 1, (uint8_t*)strbuf);
+            oled_DrawPixel2x24(LCD_X_OFFSET + 38, 2, "km");
+        }
+        else if (_fpTmpDist <100.0f)
+        {
+            //OLED_P12x24Str(LCD_X_OFFSET , 2, strbuf);  
+            //oled_DrawPixel2x32(LCD_X_OFFSET , 1, (uint8_t*)strbuf);  
+            oled_DrawPixel8x16(LCD_X_OFFSET + 6, 2, (uint8_t*)strbuf); 
+            oled_DrawPixel8x16(LCD_X_OFFSET + 46, 2, "km");
+        }
+        else if (_fpTmpDist <1000.0f)
+        {
+            oled_DrawPixel8x16(LCD_X_OFFSET +10, 2, (uint8_t*)strbuf);  
+            oled_DrawPixel8x16(LCD_X_OFFSET + 56, 2, "km");
+        }    
+        else
+        {
+            oled_DrawPixel8x16(LCD_X_OFFSET +6, 2, (uint8_t*)strbuf);  
+            oled_DrawPixel8x16(LCD_X_OFFSET + 56, 2, "km");
+        }    
     }
     else
     {
         _fpTmpDist = _fpTmpDist * 0.62137;
         sprintf(strbuf,"%2.1f",_fpTmpDist);       
-        oled_DrawPixel2x24(LCD_X_OFFSET, 2, (uint8_t*)strbuf);
-        oled_DrawPixel2x24(LCD_X_OFFSET + 36, 2, "km");          
-        //oled_DrawPixel2x24(LCD_X_OFFSET + 10, 2, (uint8_t*)strbuf);
-        //oled_DrawPixel2x24(LCD_X_OFFSET + 46, 2, "mi");
+
+        if (_fpTmpDist <10.0f)
+        {
+            //OLED_P12x24Str(LCD_X_OFFSET + 10, 2, strbuf);
+            oled_DrawPixel2x32(LCD_X_OFFSET , 1,(uint8_t*)strbuf);  
+            oled_DrawPixel2x24(LCD_X_OFFSET + 38, 2, "mi");
+        }
+        else if (_fpTmpDist <100.0f)
+        {
+            //OLED_P12x24Str(LCD_X_OFFSET , 2, strbuf);  
+            oled_DrawPixel8x16(LCD_X_OFFSET + 6 , 1, (uint8_t*)strbuf);  
+            oled_DrawPixel8x16(LCD_X_OFFSET + 48, 2, "mi");
+        }
+        else if (_fpTmpDist <1000.0f)
+        {
+            oled_DrawPixel8x16(LCD_X_OFFSET +10, 2, (uint8_t*)strbuf);  
+            oled_DrawPixel8x16(LCD_X_OFFSET + 56, 2, "mi");
+        }    
+        else
+        {
+            //oled_DrawPixel8x16(LCD_X_OFFSET , 2, (uint8_t*)strbuf);  
+            //oled_DrawPixel8x16(LCD_X_OFFSET + 50, 2, "mi");
+            oled_DrawPixel8x16_Thin(LCD_X_OFFSET +6, 2, (uint8_t*)strbuf);  
+            oled_DrawPixel8x16_Thin(LCD_X_OFFSET + 56, 2, "mi");            
+        } 
     }   
+    
 }
 
 void CC_Dsp_Srv_PedCalorie(uint32_t _dwCalo)
-{
+{   
+
+
+    char strbuf[16] = {0};
+    uint8_t _bX = 0;
+    uint8_t _bY = 0;
+    oled_DrawBlack();  
+    
+    sprintf(strbuf, "%d", _dwCalo);
+    
+    _OLED_Display_CharLen_Calculation(_dwCalo, &_bX, &_bY);
+    if (_dwCalo <1000)
+    {
+        //OLED_P12x24Str(LCD_X_OFFSET + _bX, 2, strbuf);
+        oled_DrawPixel2x32(LCD_X_OFFSET + _bX, 1, (uint8_t*)strbuf);
+        oled_DrawPixel2x24(LCD_X_OFFSET + 48, 2, "K");
+    }        
+    else if(_dwCalo <10000)
+    {
+        oled_DrawPixel2x24(LCD_X_OFFSET + _bX, 2, (uint8_t*)strbuf);
+        oled_DrawPixel2x24(LCD_X_OFFSET + 52, 2, "K");
+    }
+    else
+    {
+        oled_DrawPixel8x16(LCD_X_OFFSET + _bX, 2, (uint8_t*)strbuf);
+        oled_DrawPixel8x16(LCD_X_OFFSET + 48, 2, "K");
+        //oled_DrawPixel8x16(LCD_X_OFFSET + 58, 2, "K");
+    }    
+
+#if 0
     char strbuf[16] = {0};
     uint8_t _bX = 0;
     uint8_t _bY = 0;
@@ -472,6 +555,7 @@ void CC_Dsp_Srv_PedCalorie(uint32_t _dwCalo)
 
     oled_DrawPixel2x24(LCD_X_OFFSET + _bX, 2, (uint8_t*)strbuf);
     oled_DrawPixel2x24(LCD_X_OFFSET + 40, 2, "K");    
+#endif    
 }
 
 extern uint32_t CC_Get_SwimmingLapCount(void);
@@ -484,22 +568,53 @@ void CC_Dsp_Srv_SwimgDistance(eSWIM_LEN_SET_t _bPoolSize, uint32_t _dwSwimLen)
     uint8_t _bX = 0;
     uint8_t _bY = 0;
     oled_DrawBlack();                    
+
     sprintf(strbuf,"%d",_dwSwimLen);
-
     _OLED_Display_CharLen_Calculation(_dwSwimLen, &_bX, &_bY);
-    oled_DrawPixel2x24(LCD_X_OFFSET + _bX, 2, (uint8_t*)strbuf);  
 
 
-    if ((_bPoolSize != eSWIM_25YD )&& (_bPoolSize != eSWIM_25YD ) )
+
+    if ((_bPoolSize == eSWIM_25YD ) || (_bPoolSize == eSWIM_33_33YD ) )
     {           
-        oled_DrawPixel2x24(LCD_X_OFFSET + 44, 2, "m");
+        if (_dwSwimLen <100)
+        {
+            //OLED_P12x24Str(LCD_X_OFFSET + _bX, 2, strbuf);  
+            oled_DrawPixel2x32(LCD_X_OFFSET + _bX, 1, (uint8_t*)strbuf);  
+            oled_DrawPixel2x24(LCD_X_OFFSET + 38, 2, "yd");
+        }
+        else if (_dwSwimLen < 1000)
+        {
+            //OLED_P12x24Str(LCD_X_OFFSET + _bX-4, 2, strbuf);  
+            oled_DrawPixel2x32(LCD_X_OFFSET + _bX-4, 1,(uint8_t*) strbuf);  
+            oled_DrawPixel2x24(LCD_X_OFFSET + 38, 2, "yd");
+        }
+        else if (_dwSwimLen < 10000)
+        {
+            //OLED_P12x24Str(LCD_X_OFFSET + _bX-8, 2, strbuf);  
+            oled_DrawPixel2x32(LCD_X_OFFSET + _bX-8, 1,(uint8_t*) strbuf);  
+            oled_DrawPixel2x24(LCD_X_OFFSET + 38, 2, "yd");
+        }
+        else
+        {
+            oled_DrawPixel8x16(LCD_X_OFFSET + _bX, 2,(uint8_t*) strbuf);   
+            oled_DrawPixel8x16(LCD_X_OFFSET + 46, 2, "yd");
+        }    
     }
     else
     {
-        oled_DrawPixel2x24(LCD_X_OFFSET + 38, 2, "yd");        
-    }  
+        if ( _dwSwimLen<10000)
+        {
+            //OLED_P12x24Str(LCD_X_OFFSET + _bX, 2, strbuf);
+            oled_DrawPixel2x32(LCD_X_OFFSET + _bX, 1,(uint8_t*) strbuf);
+            oled_DrawPixel2x24(LCD_X_OFFSET + 48, 2, "m");
+        }
+        else
+        {
+            oled_DrawPixel8x16(LCD_X_OFFSET + _bX, 2,(uint8_t*) strbuf);
+            oled_DrawPixel8x16(LCD_X_OFFSET + 48, 2, "m");
+        } 
+    }    
 
-        
 }
 
 void CC_Dsp_Srv_CharingIn(uint8_t _bBatCap)
