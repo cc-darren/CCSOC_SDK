@@ -2516,10 +2516,15 @@ void _sensor_accel_gyro_on_change(void)
                 for(int i = 0; i < fifo_len; i++)
                 {
                     int k = 3*i;
-
-                   _wAccelData[0] = (wacc_data[k] / 4); // x->y 
-                   _wAccelData[1] = (wacc_data[k+1] / 4); //y ->-x 
+#ifdef SWAP_ACC_DIRECTION_EN
+                   _wAccelData[0] = (wacc_data[k+1] / 4); 
+                   _wAccelData[1] = 0-(wacc_data[k] / 4);
                    _wAccelData[2] = (wacc_data[k+2] / 4);
+#else
+                   _wAccelData[0] = (wacc_data[k] / 4); 
+                   _wAccelData[1] = (wacc_data[k+1] / 4); 
+                   _wAccelData[2] = (wacc_data[k+2] / 4);
+#endif                   
                      _sensor_algorithm_liftarm_proc();    
 
 
@@ -2529,17 +2534,22 @@ void _sensor_accel_gyro_on_change(void)
 
                     //TracerInfo( "GYRO_Data[0] %d\r\n",wgyro_data[0]);
                     //TracerInfo( "GYRO_Data[1] %d\r\n",wgyro_data[1]);
-                    //TracerInfo( "GYRO_Data[2] %d\r\n",wgyro_data[2]);   t
+                    //TracerInfo( "GYRO_Data[2] %d\r\n",wgyro_data[2]);   
 
             
                     uint32_t       _dwPedTotalStepCount = 0;
                     signed char    _cPedState = ePedo_Stop;                     
-
+#ifdef SWAP_ACC_DIRECTION_EN
+                    _wAccelData[0] = (wacc_data[k] / 4); 
+                    _wAccelData[1] = (wacc_data[k+1] / 4); 
+                    _wAccelData[2] = (wacc_data[k+2] / 4);
+#else
                     // Made same with Apollo axis
-                    // x -> to ground, so x shift to y, y shit to -x 
                     _wAccelData[0] = 0-(wacc_data[k+1] / 4); // x->y 
                     _wAccelData[1] = (wacc_data[k] / 4); //y ->-x 
                     _wAccelData[2] = (wacc_data[k+2] / 4);
+                    // x -> to ground, so x shift to y, y shit to -x 
+#endif
 
 #if 0 // test app loop time           
                      
@@ -3609,6 +3619,10 @@ int venus_main(void)
                 #endif
         
         }
+
+        
+        __WFE();
+
     }
 }
 

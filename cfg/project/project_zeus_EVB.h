@@ -465,6 +465,8 @@ Declaration of static Global Variables & Functions
 #define HRM_INT_PIN         9
 #define HRM_RST_PIN         15
 
+#define SWAP_ACC_DIRECTION_EN
+
 #define FORCE_LIFTARM_TEST_EN   // for test
 //#define FORCE_SWIM_TEST_EN   // for test
 //#define FORCE_HRS_TEST_EN   // for test
