@@ -384,9 +384,9 @@ void CC_LSM6DSX_Fifo_Update_Data(void)
             
             LSM6DS3_ACC_Get_Acceleration(mems_data, FIFO_EN); // 1 sample => x,y,z            
 
-            //TracerInfo("mems_x: 0x%02x\r\n", mems_data[0]);
-            //TracerInfo("mems_y: 0x%02x\r\n", mems_data[1]);
-            //TracerInfo("mems_z: 0x%02x\r\n", mems_data[2]);       
+            //TracerInfo("gyro_x: 0x%02x\r\n", mems_data[0]);
+            //TracerInfo("gyro_y: 0x%02x\r\n", mems_data[1]);
+            //TracerInfo("gyro_z: 0x%02x\r\n", mems_data[2]);       
 
 
             for(uint8_t handle = 0; handle < E_APP_SRV_ID_TOTAL; handle++)
@@ -423,11 +423,11 @@ void CC_LSM6DSX_Fifo_Update_Data(void)
             
             LSM6DS3_ACC_Get_Acceleration(mems_data, FIFO_EN); // 1 sample => x,y,z
         
-/*
-                TracerInfo("mems_x: 0x%02x\r\n", mems_data[0]);
-                TracerInfo("mems_y: 0x%02x\r\n", mems_data[1]);
-                TracerInfo("mems_z: 0x%02x\r\n", mems_data[2]);                
-*/
+
+                //TracerInfo("acc_x: 0x%02x\r\n", mems_data[0]);
+                //TracerInfo("acc_y: 0x%02x\r\n", mems_data[1]);
+               // TracerInfo("acc_z: 0x%02x\r\n", mems_data[2]);                
+
             
             for(uint8_t handle = 0; handle < E_APP_SRV_ID_TOTAL; handle++)
             {

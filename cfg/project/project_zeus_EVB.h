@@ -472,6 +472,10 @@ Declaration of static Global Variables & Functions
 //#define FORCE_HRS_TEST_EN   // for test
  
 //#define APP_SERV_MGR_EN        // for new service/sensor manager
+#ifdef APP_SERV_MGR_EN
+#define SM_TEST_EN
+//#define SRV_MGR_TEST_EN
+#endif
 
 //-----------------------------------
 //  _bState : 1  , Init form system reboot
@@ -485,6 +489,7 @@ Declaration of static Global Variables & Functions
 
 typedef enum 
 {
+	
     eSysStateInit=1,
     eSysStateNormal,
     eSysStateLowPwr,
