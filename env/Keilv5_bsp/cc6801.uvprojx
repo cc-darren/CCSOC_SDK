@@ -332,7 +332,7 @@
             <v6Lto>0</v6Lto>
             <v6WtE>0</v6WtE>
             <VariousControls>
-              <MiscControls>--no_inline --no_multifile -DMSC_CLOCK</MiscControls>
+              <MiscControls></MiscControls>
               <Define>FPGA</Define>
               <Undefine></Undefine>
               <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app\Display;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\module\adc;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\service\tracer;..\..\service\fds;..\..\service\fstorage;..\..\service\experimental_section_vars</IncludePath>
@@ -1845,7 +1845,7 @@
             <v6Lto>0</v6Lto>
             <v6WtE>0</v6WtE>
             <VariousControls>
-              <MiscControls>--no_inline --no_multifile -DMSC_CLOCK</MiscControls>
+              <MiscControls></MiscControls>
               <Define>EVB</Define>
               <Undefine></Undefine>
               <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app\Display;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\module\adc;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\service\tracer;..\..\service\fds;..\..\service\fstorage;..\..\service\experimental_section_vars</IncludePath>

@@ -4,7 +4,7 @@
  *      *** Do not modify ! ***
  *
  * Project: 'cc6801' 
- * Target:  'EVB_M4f' 
+ * Target:  'EVB_M0p' 
  */
 
 #ifndef RTE_COMPONENTS_H
@@ -14,7 +14,7 @@
 /*
  * Define the Device Header File: 
  */
-#define CMSIS_device_header "ARMCM4_FP.h"
+#define CMSIS_device_header "ARMCM0plus.h"
 
 
 #endif /* RTE_COMPONENTS_H */
