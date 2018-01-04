@@ -13,6 +13,7 @@
 #include "CC_HRM_drv.h"
 #include "error.h"
 #include "tracer.h"
+#include "clock.h"
 
 
 E_Sensor_Manager_Status  g_sen_srvc_st[E_SEN_ID_TOTAL];
@@ -237,7 +238,7 @@ static E_Sensor_Error_Code CC_Sensor_Manager_GetData(E_Sensor_Type SensorType, E
 
     if(E_SEN_ERROR_NONE != (error_code =sm_itfs->getdata(UserID, pSampleData, pDataSzInBytes)))
     {
-        TracerInfo("get ppg fail: %d\r\n", error_code);  
+        //TracerInfo("get ppg fail: %d\r\n", error_code);  
         return E_SEN_ERROR_GET_DATA_FAIL;
     }
 
@@ -619,7 +620,7 @@ E_Sensor_Error_Code CC_SenMgr_Mag_GetData(E_App_Srv_ID user_id, int16_t *pdata, 
 void SM_Test(void)
 {
 
-    tracer("SM_Test\r\n");
+    TracerInfo("SM_Test\r\n");
     E_Sensor_Error_Code ret_code;
 
 
@@ -649,7 +650,7 @@ void SM_Test(void)
 
     #define TEST_CASE_ROUND_NB  10
 
-    tracer("[SM_TC-1] Start:\r\n");
+    TracerInfo("[SM_TC-1] Start:\r\n");
 
     T_Accel_Gyro_Settings hrm_settings =
     {
@@ -665,27 +666,27 @@ void SM_Test(void)
 
     for(uint8_t round = 0; round < TEST_CASE_ROUND_NB; round++)
     {
-        tracer("[SM_TC-1]: Test Round: %d\r\n", round);
+        TracerInfo("[SM_TC-1]: Test Round: %d\r\n", round);
 
 
-        tracer("[SM_TC-1]: CC_Sensor_Manager_Init()\r\n");
+        TracerInfo("[SM_TC-1]: CC_Sensor_Manager_Init()\r\n");
         if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Init(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_HRM)))
         {
-            tracer("[SM_TC-1]: CC_Sensor_Manager_Init fail!\r\n");
+            TracerInfo("[SM_TC-1]: CC_Sensor_Manager_Init fail!\r\n");
 
         }    
 
-        tracer("[SM_TC-1]: CC_Sensor_Manager_Configure()\r\n");
+        TracerInfo("[SM_TC-1]: CC_Sensor_Manager_Configure()\r\n");
         if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Configure(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_HRM, &hrm_settings)))
         {
-            tracer("[SM_TC-1]: CC_Sensor_Manager_Configure fail!\r\n");
+            TracerInfo("[SM_TC-1]: CC_Sensor_Manager_Configure fail!\r\n");
         }
 
 
-        tracer("[SM_TC-1]: CC_Sensor_Manager_Start()\r\n");
+        TracerInfo("[SM_TC-1]: CC_Sensor_Manager_Start()\r\n");
         if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Start(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_HRM)))
         {
-            tracer("[SM_TC-1]: CC_Sensor_Manager_Start fail!\r\n");
+            TracerInfo("[SM_TC-1]: CC_Sensor_Manager_Start fail!\r\n");
         }    
 
         get_data_size = 0;
@@ -698,7 +699,7 @@ void SM_Test(void)
         {
             if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_HRM, &hrm_fifo_data, &hrm_fifo_sz)))
             {
-                tracer("[SM_TC-1]: CC_Sensor_Manager_GetData(HRM) fail!\r\n");
+                TracerInfo("[SM_TC-1]: CC_Sensor_Manager_GetData(HRM) fail!\r\n");
                 
             }
 
@@ -706,15 +707,15 @@ void SM_Test(void)
             for(uint16_t i = 0; i < hrm_fifo_sz.accel_SzInBytes/sizeof(int16_t); i+=3)
             {
                 if((hrm_fifo_sz.accel_SzInBytes/2) < 3)
-                     tracer("[SM_TC-1]: Error Size: %d\r\n", hrm_fifo_sz.accel_SzInBytes);
+                     TracerInfo("[SM_TC-1]: Error Size: %d\r\n", hrm_fifo_sz.accel_SzInBytes);
             
-                tracer("[SM_TC-1]: hrm_accel_X: %d\r\n", hrm_fifo_data.p_accel_data[i]);
-                tracer("[SM_TC-1]: hrm_accel_Y: %d\r\n", hrm_fifo_data.p_accel_data[i+1]);
-                tracer("[SM_TC-1]: hrm_accel_Z: %d\r\n", hrm_fifo_data.p_accel_data[i+2]);        
+                TracerInfo("[SM_TC-1]: hrm_accel_X: %d\r\n", hrm_fifo_data.p_accel_data[i]);
+                TracerInfo("[SM_TC-1]: hrm_accel_Y: %d\r\n", hrm_fifo_data.p_accel_data[i+1]);
+                TracerInfo("[SM_TC-1]: hrm_accel_Z: %d\r\n", hrm_fifo_data.p_accel_data[i+2]);        
             }
 
             if(0 != hrm_fifo_sz.gyro_SzInBytes)
-                tracer("[SM_TC-1]: Gyro Data should not get here!! size: %d\r\n", hrm_fifo_sz.gyro_SzInBytes);
+                TracerInfo("[SM_TC-1]: Gyro Data should not get here!! size: %d\r\n", hrm_fifo_sz.gyro_SzInBytes);
 
 
             get_data_size += hrm_fifo_sz.accel_SzInBytes;
@@ -724,7 +725,7 @@ void SM_Test(void)
             {
                 static uint32_t old_tick = 0;
 
-                tracer("[SM_TC-1]: nb: %d, tick_diff: %d\r\n", get_data_size, Hrm_get_sys_tick() - old_tick);
+                TracerInfo("[SM_TC-1]: nb: %d, tick_diff: %d\r\n", get_data_size, Hrm_get_sys_tick() - old_tick);
 
                 old_tick = Hrm_get_sys_tick();
 
@@ -740,23 +741,23 @@ void SM_Test(void)
         }
 
 
-        tracer("[SM_TC-1]: HRM get Accel data done.\r\n");
+        TracerInfo("[SM_TC-1]: HRM get Accel data done.\r\n");
 
-        tracer("[SM_TC-1]: CC_Sensor_Manager_Shutdown()\r\n");
+        TracerInfo("[SM_TC-1]: CC_Sensor_Manager_Shutdown()\r\n");
         if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Shutdown(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_HRM)))
         {
-            tracer("[SM_TC-1]: CC_Sensor_Manager_Shutdown fail!\r\n");
+            TracerInfo("[SM_TC-1]: CC_Sensor_Manager_Shutdown fail!\r\n");
         }
 
 
         if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_HRM, &hrm_fifo_data, &hrm_fifo_sz)))
         {
-            tracer("[SM_TC-1]: CC_Sensor_Manager_GetData() don't get any data after shutdown.\r\n");
+            TracerInfo("[SM_TC-1]: CC_Sensor_Manager_GetData() don't get any data after shutdown.\r\n");
                 
         }
         else
         {
-            tracer("[SM_TC-1]: Accel Data should not get here!! size: %d\r\n", hrm_fifo_sz.accel_SzInBytes);
+            TracerInfo("[SM_TC-1]: Accel Data should not get here!! size: %d\r\n", hrm_fifo_sz.accel_SzInBytes);
         }
 
         
@@ -764,7 +765,7 @@ void SM_Test(void)
 
     }
     
-    tracer("[SM_TC-1]: SM Test Case 1 pass!\r\n");
+    TracerInfo("[SM_TC-1]: SM Test Case 1 pass!\r\n");
 
     
     
@@ -776,7 +777,7 @@ void SM_Test(void)
 
     #define TEST_CASE_ROUND_NB  10
 
-    tracer("[SM_TC-2] Start:\r\n");
+    TracerInfo("[SM_TC-2] Start:\r\n");
 
     T_Accel_Gyro_Settings pedo_settings =
     {
@@ -792,29 +793,29 @@ void SM_Test(void)
 
     for(uint8_t round = 0; round < TEST_CASE_ROUND_NB; round++)
     {
-        tracer("[SM_TC-2]: Test Round: %d\r\n", round);
+        TracerInfo("[SM_TC-2]: Test Round: %d\r\n", round);
 
 
-        tracer("[SM_TC-2]: CC_Sensor_Manager_Init()\r\n");
+        TracerInfo("[SM_TC-2]: CC_Sensor_Manager_Init()\r\n");
         if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Init(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO)))
         {
-            tracer("[SM_TC-2]: CC_Sensor_Manager_Init fail!\r\n");
+            TracerInfo("[SM_TC-2]: CC_Sensor_Manager_Init fail!\r\n");
 
         }    
 
-        tracer("[SM_TC-2]: CC_Sensor_Manager_Configure()\r\n");
+        TracerInfo("[SM_TC-2]: CC_Sensor_Manager_Configure()\r\n");
         if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Configure(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO, &pedo_settings)))
         {
-            tracer("[SM_TC-2]: CC_Sensor_Manager_Configure fail!\r\n");
+            TracerInfo("[SM_TC-2]: CC_Sensor_Manager_Configure fail!\r\n");
         }
 
         Acc_Gyro_Dump_All_Settings();
 
 
-        tracer("[SM_TC-2]: CC_Sensor_Manager_Start()\r\n");
+        TracerInfo("[SM_TC-2]: CC_Sensor_Manager_Start()\r\n");
         if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Start(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO)))
         {
-            tracer("[SM_TC-2]: CC_Sensor_Manager_Start fail!\r\n");
+            TracerInfo("[SM_TC-2]: CC_Sensor_Manager_Start fail!\r\n");
         }    
 
         get_data_size = 0;
@@ -828,7 +829,7 @@ void SM_Test(void)
         {
             if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO, &pedo_fifo_data, &pedo_fifo_sz)))
             {
-                tracer("[SM_TC-2]: CC_Sensor_Manager_GetData fail!\r\n");
+                TracerInfo("[SM_TC-2]: CC_Sensor_Manager_GetData fail!\r\n");
                 
             }
 
@@ -836,15 +837,15 @@ void SM_Test(void)
             for(uint16_t i = 0; i < pedo_fifo_sz.gyro_SzInBytes/sizeof(int16_t); i+=3)
             {
                 if((pedo_fifo_sz.gyro_SzInBytes/2) < 3)
-                     tracer("[SM_TC-2]: Error Size: %d\r\n", pedo_fifo_sz.gyro_SzInBytes);
+                     TracerInfo("[SM_TC-2]: Error Size: %d\r\n", pedo_fifo_sz.gyro_SzInBytes);
             
-                tracer("[SM_TC-2]: pedo_gyro_X: %d\r\n", pedo_fifo_data.p_gyro_data[i]);
-                tracer("[SM_TC-2]: pedo_gyro_Y: %d\r\n", pedo_fifo_data.p_gyro_data[i+1]);
-                tracer("[SM_TC-2]: pedo_gyro_Z: %d\r\n", pedo_fifo_data.p_gyro_data[i+2]);        
+                TracerInfo("[SM_TC-2]: pedo_gyro_X: %d\r\n", pedo_fifo_data.p_gyro_data[i]);
+                TracerInfo("[SM_TC-2]: pedo_gyro_Y: %d\r\n", pedo_fifo_data.p_gyro_data[i+1]);
+                TracerInfo("[SM_TC-2]: pedo_gyro_Z: %d\r\n", pedo_fifo_data.p_gyro_data[i+2]);        
             }
 
             if(0 != pedo_fifo_sz.accel_SzInBytes)
-                tracer("[SM_TC-2]: Gyro Data should not get here!! size: %d\r\n", pedo_fifo_sz.accel_SzInBytes);
+                TracerInfo("[SM_TC-2]: Gyro Data should not get here!! size: %d\r\n", pedo_fifo_sz.accel_SzInBytes);
 
 
             get_data_size += pedo_fifo_sz.gyro_SzInBytes;
@@ -854,7 +855,7 @@ void SM_Test(void)
             {
                 static uint32_t old_tick = 0;
 
-                tracer("[SM_TC-2]: nb: %d, tick_diff: %d\r\n", get_data_size, Hrm_get_sys_tick() - old_tick);
+                TracerInfo("[SM_TC-2]: nb: %d, tick_diff: %d\r\n", get_data_size, Hrm_get_sys_tick() - old_tick);
 
                 old_tick = Hrm_get_sys_tick();
 
@@ -870,23 +871,23 @@ void SM_Test(void)
         }
 
 
-        tracer("[SM_TC-2]: PEDO get Gyro data done.\r\n");
+        TracerInfo("[SM_TC-2]: PEDO get Gyro data done.\r\n");
 
-        tracer("[SM_TC-2]: CC_Sensor_Manager_Shutdown()\r\n");
+        TracerInfo("[SM_TC-2]: CC_Sensor_Manager_Shutdown()\r\n");
         if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Shutdown(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO)))
         {
-            tracer("[SM_TC-2]: CC_Sensor_Manager_Shutdown fail!\r\n");
+            TracerInfo("[SM_TC-2]: CC_Sensor_Manager_Shutdown fail!\r\n");
         }
 
 
         if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO, &pedo_fifo_data, &pedo_fifo_sz)))
         {
-            tracer("[SM_TC-2]: CC_Sensor_Manager_GetData() don't get any data after shutdown.\r\n");
+            TracerInfo("[SM_TC-2]: CC_Sensor_Manager_GetData() don't get any data after shutdown.\r\n");
                 
         }
         else
         {
-            tracer("[SM_TC-2]: Gyro Data should not get here!! size: %d\r\n", pedo_fifo_sz.gyro_SzInBytes);
+            TracerInfo("[SM_TC-2]: Gyro Data should not get here!! size: %d\r\n", pedo_fifo_sz.gyro_SzInBytes);
         }
 
         
@@ -894,7 +895,7 @@ void SM_Test(void)
 
     }
 
-    tracer("[SM_TC-2]: SM Test Case 2 pass!\r\n");
+    TracerInfo("[SM_TC-2]: SM Test Case 2 pass!\r\n");
 
     
     
@@ -906,7 +907,7 @@ void SM_Test(void)
     
     #define TEST_CASE_ROUND_NB  10
     
-        tracer("[SM_TC-3] Start:\r\n");
+        TracerInfo("[SM_TC-3] Start:\r\n");
     
         AxesRaw_t mag_data;
         uint16_t mag_size = 0;    
@@ -917,10 +918,10 @@ void SM_Test(void)
     
         for(uint8_t round = 0; round < TEST_CASE_ROUND_NB; round++)
         {
-            tracer("[SM_TC-3]: Test Round: %d\r\n", round);
+            TracerInfo("[SM_TC-3]: Test Round: %d\r\n", round);
     
     
-            tracer("[SM_TC-3]: CC_Sensor_Manager_Init()\r\n");
+            TracerInfo("[SM_TC-3]: CC_Sensor_Manager_Init()\r\n");
             if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Init(E_SEN_TYPE_AK09912_MAG, E_APP_SRV_ID_SWIM)))
             {
                 TracerInfo("[SM_TC-3]: CC_Sensor_Manager_Init fail!\r\n");
@@ -976,23 +977,23 @@ void SM_Test(void)
             }
     
     
-            tracer("[SM_TC-3]: Swim get Mag data done.\r\n");
+            TracerInfo("[SM_TC-3]: Swim get Mag data done.\r\n");
     
-            tracer("[SM_TC-3]: CC_Sensor_Manager_Shutdown()\r\n");
+            TracerInfo("[SM_TC-3]: CC_Sensor_Manager_Shutdown()\r\n");
             if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Shutdown(E_SEN_TYPE_AK09912_MAG, E_APP_SRV_ID_SWIM)))
             {
-                tracer("[SM_TC-3]: CC_Sensor_Manager_Shutdown fail!\r\n");
+                TracerInfo("[SM_TC-3]: CC_Sensor_Manager_Shutdown fail!\r\n");
             }
     
     
             if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_AK09912_MAG, E_APP_SRV_ID_SWIM, &mag_data, &mag_size)))
             {
-                tracer("[SM_TC-3]: CC_Sensor_Manager_GetData() don't get any data after shutdown.\r\n");
+                TracerInfo("[SM_TC-3]: CC_Sensor_Manager_GetData() don't get any data after shutdown.\r\n");
                     
             }
             else
             {
-                tracer("[SM_TC-3]: Gyro Data should not get here!! size: %d\r\n", mag_size);
+                TracerInfo("[SM_TC-3]: Gyro Data should not get here!! size: %d\r\n", mag_size);
             }
     
             
@@ -1000,7 +1001,7 @@ void SM_Test(void)
     
         }
     
-        tracer("[SM_TC-3]: SM Test Case 3 pass!\r\n");
+        TracerInfo("[SM_TC-3]: SM Test Case 3 pass!\r\n");
     
         
         
@@ -1024,10 +1025,10 @@ void SM_Test(void)
 
         for(uint8_t round = 0; round < TEST_CASE_ROUND_NB; round++)
         {
-            tracer("[SM_TC-4]: Test Round: %d\r\n", round);
+            TracerInfo("[SM_TC-4]: Test Round: %d\r\n", round);
     
     
-            tracer("[SM_TC-4]: CC_Sensor_Manager_Init()\r\n");
+            TracerInfo("[SM_TC-4]: CC_Sensor_Manager_Init()\r\n");
             if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Init(E_SEN_TYPE_Pah8002_PPG, E_APP_SRV_ID_HRM)))
             {
                 TracerInfo("[SM_TC-4]: CC_Sensor_Manager_Init fail!\r\n");
@@ -1084,23 +1085,23 @@ void SM_Test(void)
             }
     
     
-            tracer("[SM_TC-4]: HRM get PPG data done.\r\n");
+            TracerInfo("[SM_TC-4]: HRM get PPG data done.\r\n");
     
-            tracer("[SM_TC-4]: CC_Sensor_Manager_Shutdown()\r\n");
+            TracerInfo("[SM_TC-4]: CC_Sensor_Manager_Shutdown()\r\n");
             if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Shutdown(E_SEN_TYPE_Pah8002_PPG, E_APP_SRV_ID_HRM)))
             {
-                tracer("[SM_TC-4]: CC_Sensor_Manager_Shutdown fail!\r\n");
+                TracerInfo("[SM_TC-4]: CC_Sensor_Manager_Shutdown fail!\r\n");
             }
     
     
             if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_Pah8002_PPG, E_APP_SRV_ID_HRM, &hrm_ppg_data, &hrm_ppg_size)))
             {
-                tracer("[SM_TC-4]: CC_Sensor_Manager_GetData() don't get any data after shutdown.\r\n");
+                TracerInfo("[SM_TC-4]: CC_Sensor_Manager_GetData() don't get any data after shutdown.\r\n");
                     
             }
             else
             {
-                tracer("[SM_TC-4]: Gyro Data should not get here!! size: %d\r\n", hrm_ppg_size);
+                TracerInfo("[SM_TC-4]: Gyro Data should not get here!! size: %d\r\n", hrm_ppg_size);
             }
     
             
@@ -1108,7 +1109,7 @@ void SM_Test(void)
     
         }
     
-        tracer("[SM_TC-4]: SM Test Case 4 pass!\r\n");
+        TracerInfo("[SM_TC-4]: SM Test Case 4 pass!\r\n");
     
         
         
@@ -1121,7 +1122,7 @@ void SM_Test(void)
 
     #define TEST_CASE_ROUND_NB  10
 
-    tracer("[SM_TC-5] Start:\r\n");
+    TracerInfo("[SM_TC-5] Start:\r\n");
 
     T_Accel_Gyro_Settings pedo_settings =
     {
@@ -1141,29 +1142,29 @@ void SM_Test(void)
 
     for(uint8_t round = 0; round < TEST_CASE_ROUND_NB; round++)
     {
-        tracer("[SM_TC-5]: Test Round: %d\r\n", round);
+        TracerInfo("[SM_TC-5]: Test Round: %d\r\n", round);
 
 
-        tracer("[SM_TC-5]: CC_Sensor_Manager_Init()\r\n");
+        TracerInfo("[SM_TC-5]: CC_Sensor_Manager_Init()\r\n");
         if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Init(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO)))
         {
-            tracer("[SM_TC-5]: CC_Sensor_Manager_Init fail!\r\n");
+            TracerInfo("[SM_TC-5]: CC_Sensor_Manager_Init fail!\r\n");
 
         }    
 
-        tracer("[SM_TC-5]: CC_Sensor_Manager_Configure()\r\n");
+        TracerInfo("[SM_TC-5]: CC_Sensor_Manager_Configure()\r\n");
         if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Configure(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO, &pedo_settings)))
         {
-            tracer("[SM_TC-5]: CC_Sensor_Manager_Configure fail!\r\n");
+            TracerInfo("[SM_TC-5]: CC_Sensor_Manager_Configure fail!\r\n");
         }
 
         Acc_Gyro_Dump_All_Settings();
 
 
-        tracer("[SM_TC-5]: CC_Sensor_Manager_Start()\r\n");
+        TracerInfo("[SM_TC-5]: CC_Sensor_Manager_Start()\r\n");
         if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Start(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO)))
         {
-            tracer("[SM_TC-5]: CC_Sensor_Manager_Start fail!\r\n");
+            TracerInfo("[SM_TC-5]: CC_Sensor_Manager_Start fail!\r\n");
         }    
 
         get_data_size = 0;
@@ -1173,7 +1174,7 @@ void SM_Test(void)
         {
             if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO, &pedo_fifo_data, &pedo_fifo_sz)))
             {
-                tracer("[SM_TC-5]: CC_Sensor_Manager_GetData fail!\r\n");
+                TracerInfo("[SM_TC-5]: CC_Sensor_Manager_GetData fail!\r\n");
                 
             }
 
@@ -1181,22 +1182,22 @@ void SM_Test(void)
             for(uint16_t i = 0; i < pedo_fifo_sz.accel_SzInBytes/sizeof(int16_t); i+=3)
             {
                 if((pedo_fifo_sz.accel_SzInBytes/2) < 3)
-                     tracer("[SM_TC-5]: Error Size: %d\r\n", pedo_fifo_sz.accel_SzInBytes);
+                     TracerInfo("[SM_TC-5]: Error Size: %d\r\n", pedo_fifo_sz.accel_SzInBytes);
             
-                tracer("[SM_TC-5]: pedo_accel_X: %d\r\n", pedo_fifo_data.p_accel_data[i]);
-                tracer("[SM_TC-5]: pedo_accel_Y: %d\r\n", pedo_fifo_data.p_accel_data[i+1]);
-                tracer("[SM_TC-5]: pedo_accel_Z: %d\r\n", pedo_fifo_data.p_accel_data[i+2]);        
+                TracerInfo("[SM_TC-5]: pedo_accel_X: %d\r\n", pedo_fifo_data.p_accel_data[i]);
+                TracerInfo("[SM_TC-5]: pedo_accel_Y: %d\r\n", pedo_fifo_data.p_accel_data[i+1]);
+                TracerInfo("[SM_TC-5]: pedo_accel_Z: %d\r\n", pedo_fifo_data.p_accel_data[i+2]);        
             }
 
             
             for(uint16_t i = 0; i < pedo_fifo_sz.gyro_SzInBytes/sizeof(int16_t); i+=3)
             {
                 if((pedo_fifo_sz.gyro_SzInBytes/2) < 3)
-                     tracer("[SM_TC-5]: Error Size: %d\r\n", pedo_fifo_sz.gyro_SzInBytes);
+                     TracerInfo("[SM_TC-5]: Error Size: %d\r\n", pedo_fifo_sz.gyro_SzInBytes);
             
-                tracer("[SM_TC-5]: pedo_gyro_X: %d\r\n", pedo_fifo_data.p_gyro_data[i]);
-                tracer("[SM_TC-5]: pedo_gyro_Y: %d\r\n", pedo_fifo_data.p_gyro_data[i+1]);
-                tracer("[SM_TC-5]: pedo_gyro_Z: %d\r\n", pedo_fifo_data.p_gyro_data[i+2]);        
+                TracerInfo("[SM_TC-5]: pedo_gyro_X: %d\r\n", pedo_fifo_data.p_gyro_data[i]);
+                TracerInfo("[SM_TC-5]: pedo_gyro_Y: %d\r\n", pedo_fifo_data.p_gyro_data[i+1]);
+                TracerInfo("[SM_TC-5]: pedo_gyro_Z: %d\r\n", pedo_fifo_data.p_gyro_data[i+2]);        
             }
 
 
@@ -1210,23 +1211,23 @@ void SM_Test(void)
         }
 
 
-        tracer("[SM_TC-5]: PEDO get Gyro data done.\r\n");
+        TracerInfo("[SM_TC-5]: PEDO get Gyro data done.\r\n");
 
-        tracer("[SM_TC-5]: CC_Sensor_Manager_Shutdown()\r\n");
+        TracerInfo("[SM_TC-5]: CC_Sensor_Manager_Shutdown()\r\n");
         if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Shutdown(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO)))
         {
-            tracer("[SM_TC-5]: CC_Sensor_Manager_Shutdown fail!\r\n");
+            TracerInfo("[SM_TC-5]: CC_Sensor_Manager_Shutdown fail!\r\n");
         }
 
 
         if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO, &pedo_fifo_data, &pedo_fifo_sz)))
         {
-            tracer("[SM_TC-5]: CC_Sensor_Manager_GetData() don't get any data after shutdown.\r\n");
+            TracerInfo("[SM_TC-5]: CC_Sensor_Manager_GetData() don't get any data after shutdown.\r\n");
                 
         }
         else
         {
-            tracer("[SM_TC-5]: Gyro Data should not get here!! size: %d\r\n", pedo_fifo_sz.gyro_SzInBytes);
+            TracerInfo("[SM_TC-5]: Gyro Data should not get here!! size: %d\r\n", pedo_fifo_sz.gyro_SzInBytes);
         }
 
         
@@ -1234,7 +1235,7 @@ void SM_Test(void)
 
     }
 
-    tracer("[SM_TC-5]: SM Test Case 5 pass!\r\n");
+    TracerInfo("[SM_TC-5]: SM Test Case 5 pass!\r\n");
 
     
     

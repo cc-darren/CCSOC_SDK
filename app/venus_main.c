@@ -3548,6 +3548,7 @@ int venus_main(void)
     
 #endif
 
+
 #ifdef DB_EN
     CC_DB_Init(DB_INIT_FROM_SYSTEM);
 #endif

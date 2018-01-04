@@ -10,12 +10,12 @@
 
 
 
-#define SRV_MGR_TEST_EN
+
 #ifdef SRV_MGR_TEST_EN
 //    #define SRV_MGR_TEST_CASE_1     // pedo test    
-//    #define SRV_MGR_TEST_CASE_2     // hrm test    
+    #define SRV_MGR_TEST_CASE_2     // hrm test    
 //    #define SRV_MGR_TEST_CASE_3     // swimming test    
-    #define SRV_MGR_TEST_CASE_4     // suspend/resume test    
+//    #define SRV_MGR_TEST_CASE_4     // suspend/resume test    
 
 #endif
 

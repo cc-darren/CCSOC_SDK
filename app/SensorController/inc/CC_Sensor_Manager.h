@@ -10,12 +10,11 @@
 #include "CC_AppSrvc_Manager.h"
 
 
-//#define SM_TEST_EN
 #ifdef SM_TEST_EN
 //#define SM_TEST_CASE_1      // Test access Accel, need to make sure No Gyro data output
-    #ifdef SM_TEST_CASE_1
+    //#ifdef SM_TEST_CASE_1
     //#define SM_TEST_CASE_1_1   // verify fifo time in const number
-    #endif
+   // #endif
 
 //#define SM_TEST_CASE_2      // Test access Gyro, need to make sure No Accel data output
     #ifdef SM_TEST_CASE_2

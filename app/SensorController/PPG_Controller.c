@@ -25,7 +25,8 @@ static bool pah8002_cmp_ppg_checksum(uint32_t * ppg_data, uint8_t *cks)
     uint32_t cks_rx = *((uint32_t *)cks) ; 
     uint32_t i ; 
     
-    for(i = 1; i < HEART_RATE_MODE_SAMPLES_PER_READ; i++) 
+    //for(i = 1; i < HEART_RATE_MODE_SAMPLES_PER_READ; i++) 
+    for(i = 1; i < HEART_RATE_MODE_SAMPLES_PER_READ/4; i++) // only for 60 Bytes
     { 
         cks_cal = cks_cal ^ (*(s+i)) ; 
     } 
@@ -85,7 +86,7 @@ E_PPG_Manager_Status PPG_Controller_Start(E_App_Srv_ID UserID)
 E_PPG_Manager_Status PPG_Controller_GetData(E_App_Srv_ID UserID, void* pSampleData, void *pDataSzInBytes)
 {
     E_PPG_Manager_Status ret = E_PPG_SUCCESS;
-    //static uint8_t pah8002_ppg_data[HEART_RATE_MODE_SAMPLES_PER_READ * 4] ;
+    static uint8_t pah8002_ppg_data[HEART_RATE_MODE_SAMPLES_PER_READ * 4] ; // for test!!!!
 	//uint16_t* pdataBytes = (uint16_t*) pDataSzInBytes;
 	uint8_t cks[4];
     uint8_t int_req = 0; 
@@ -111,17 +112,21 @@ E_PPG_Manager_Status PPG_Controller_GetData(E_App_Srv_ID UserID, void* pSampleDa
 
     if((int_req & 0x01) != 0) // check fifo interrupt
     {   
-     
-          pah8002_write_reg(0x7f, 0x03);
-          pah8002_burst_read_reg(0, pSampleData, HEART_RATE_MODE_SAMPLES_PER_READ*4);
-          
-          pah8002_write_reg(0x7f, 0x02);
-          pah8002_burst_read_reg(0x80, cks, 4);
-          
+        
+          for(uint8_t i = 0; i < 4; i++)
+          {
+               pah8002_write_reg(0x7f, 0x03);
+               pah8002_burst_read_reg((i*HEART_RATE_MODE_SAMPLES_PER_READ), ((uint8_t*)pSampleData + i*HEART_RATE_MODE_SAMPLES_PER_READ), HEART_RATE_MODE_SAMPLES_PER_READ);
+            
+               pah8002_write_reg(0x7f, 0x02);
+               pah8002_burst_read_reg(0x80, cks, 4);
+            
+               pah8002_cmp_ppg_checksum((uint32_t*)((uint8_t*)pSampleData + i*HEART_RATE_MODE_SAMPLES_PER_READ), cks);
+          }
+
           pah8002_write_reg(0x75, 0x01);
           pah8002_write_reg(0x75, 0x00);
           
-          pah8002_cmp_ppg_checksum((uint32_t*)pSampleData, cks);
 
           //*pdataBytes = HEART_RATE_MODE_SAMPLES_PER_READ*4;
           *(uint16_t*) pDataSzInBytes = HEART_RATE_MODE_SAMPLES_PER_READ*4;
