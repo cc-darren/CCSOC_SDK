@@ -64,6 +64,10 @@
 #include "app_ota.h"                 // OTA Application Definitions
 #endif //(BLE_APP_OTA)
 
+#if (BLE_APP_CCPS)
+#include "app_ccps.h"
+#endif
+
 #if (DISPLAY_SUPPORT)
 #include "app_display.h"             // Application Display Definition
 #endif //(DISPLAY_SUPPORT)
@@ -195,6 +199,10 @@ enum appm_svc_list
 #if (BLE_APP_OTA)
     APPM_SVC_OTAT,
 #endif //(BLE_APP_HID)
+#if (BLE_APP_CCPS)
+    APPM_SVC_CCPS,
+#endif
+
 
     APPM_SVC_LIST_STOP,
 };
@@ -230,6 +238,9 @@ static const appm_add_svc_func_t appm_add_svc_func_list[APPM_SVC_LIST_STOP] =
     #if (BLE_APP_OTA)
     (appm_add_svc_func_t)app_ota_add_otas,
     #endif //(BLE_APP_HID)    
+    #if (BLE_APP_CCPS)
+    (appm_add_svc_func_t)app_ccps_add_ccpss,
+    #endif
 };
 #endif
 
@@ -374,6 +385,10 @@ void appm_init()
     // OTA
     app_ota_init();
     #endif //(BLE_APP_OTA)    
+
+    #if (BLE_APP_CCPS)
+    app_ccps_init();
+    #endif
 }
 
 bool appm_add_svc(void)

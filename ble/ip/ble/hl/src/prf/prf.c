@@ -222,7 +222,11 @@ extern const struct prf_task_cbs* udsc_prf_itf_get(void);
 
 #if (BLE_OTA_TARGET)
 extern const struct prf_task_cbs* otat_prf_itf_get(void);
-#endif //(BLE_UDS_SERVER)
+#endif //(BLE_OTA_SERVER)
+
+#if (BLE_CCPS_SERVER)
+extern const struct prf_task_cbs* ccps_prf_itf_get(void);
+#endif //(BLE_CCPS_SERVER)
 
 /*
  * TYPE DEFINITIONS
@@ -544,6 +548,14 @@ static const struct prf_task_cbs * prf_itf_get(uint16_t task_id)
             prf_cbs = otat_prf_itf_get();
             break;
         #endif //(BLE_OTA_TARGET)
+
+        #if (BLE_CCPS_SERVER)
+        case TASK_ID_CCPS:
+            prf_cbs = ccps_prf_itf_get();
+            break;
+        #endif //(BLE_CCPS_SERVER)
+
+        
         default: /* Nothing to do */ break;
     }
 

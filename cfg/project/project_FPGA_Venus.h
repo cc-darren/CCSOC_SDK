@@ -444,7 +444,7 @@ Declaration of static Global Variables & Functions
 #define VENUS_HW_VERSION "v0.000.001"
 #define VENUS_FW_VERSION "v0.000.001" 
 
-//#define CFG_APP_CODE_ONLY
+#define CFG_APP_CODE_ONLY
 
 
 #ifndef CFG_APP_CODE_ONLY 
@@ -914,6 +914,8 @@ typedef struct
 #define CFG_PRF_DISS
 //#define CFG_PRF_CSCPS
 #define CFG_PRF_OTA
+#define CFG_PRF_CCPS
+
 
 #define CFG_APP
 #define CFG_APP_HT
@@ -921,6 +923,7 @@ typedef struct
 #define CFG_APP_DIS    1
 //#define CFG_APP_CSCS    1
 #define CFG_APP_OTA
+#define CFG_APP_CCPS
 
 #define CFG_EXT_DB
 //#define CFG_DBG

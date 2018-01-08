@@ -69,6 +69,11 @@
 #include "otat_task.h"
 #endif //(BLE_APP_OTA)
 
+#if (BLE_APP_CCPS)
+#include "app_ccps.h"               // CCPS Module Definition
+#include "ccps_task.h"
+#endif //(BLE_APP_OTA)
+
 #if (DISPLAY_SUPPORT)
 #include "app_display.h"          // Application Display Definition
 #endif //(DISPLAY_SUPPORT)
@@ -680,6 +685,14 @@ static int appm_msg_handler(ke_msg_id_t const msgid,
         {
             // Call the OTA Module
             msg_pol = appm_get_handler(&app_ota_table_handler, msgid, param, src_id);
+        } break;
+#endif //(BLE_APP_HT)
+
+#if (BLE_APP_CCPS)
+        case (TASK_ID_CCPS):
+        {
+            // Call the CCPS Module
+            msg_pol = appm_get_handler(&app_ccps_table_handler, msgid, param, src_id);
         } break;
 #endif //(BLE_APP_HT)
 
