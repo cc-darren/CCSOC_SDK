@@ -349,6 +349,13 @@
 #define BLE_OTA_TARGET          0
 #endif
 
+#if defined(CFG_PRF_CCPS)
+#define BLE_CCPS_SERVER          1
+#else
+#define BLE_CCPS_SERVER          0
+#endif
+
+
 /// BLE_CLIENT_PRF indicates if at least one client profile is present
 #if (BLE_PROX_MONITOR || BLE_FINDME_LOCATOR || BLE_HT_COLLECTOR || BLE_BP_COLLECTOR \
         || BLE_HR_COLLECTOR || BLE_DIS_CLIENT || BLE_TIP_CLIENT || BLE_SP_CLIENT \
@@ -367,7 +374,7 @@
         || BLE_BATT_SERVER || BLE_HID_DEVICE || BLE_GL_SENSOR || BLE_RSC_SENSOR  \
         || BLE_CSC_SENSOR || BLE_CP_SENSOR || BLE_LN_SENSOR || BLE_AN_SERVER \
         || BLE_PAS_SERVER || BLE_IPS_SERVER || BLE_ENV_SERVER || BLE_WSC_SERVER \
-        || BLE_UDS_SERVER || BLE_BCS_SERVER || BLE_OTA_TARGET)
+        || BLE_UDS_SERVER || BLE_BCS_SERVER || BLE_OTA_TARGET||BLE_CCPS_SERVER)
 #define BLE_SERVER_PRF          1
 #else
 #define BLE_SERVER_PRF          0
@@ -486,6 +493,8 @@
 #define BLE_CLIENT_PRF              0
 /// OTA Server
 #define BLE_OTA_TARGET              0
+/// CloudChip Proprietary Services
+#define BLE_CCPS_SERVER             0
 #endif //(BLE_OBSERVER || BLE_BROADCASTER)
 
 

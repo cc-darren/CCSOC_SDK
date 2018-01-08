@@ -90,6 +90,14 @@
 #endif // defined(CFG_APP_HT)
 
 
+/// CCPS
+#if defined(CFG_APP_CCPS)
+#define BLE_APP_CCPS           1
+#else // defined(CFG_APP_CCPS)
+#define BLE_APP_CCPS           0
+#endif // defined(CFG_APP_CCPS)
+
+
 /// @} rwapp_config
 
 #endif /* _RWAPP_CONFIG_H_ */
