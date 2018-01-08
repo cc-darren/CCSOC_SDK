@@ -56,6 +56,8 @@
 #include "CC_DB.h"
 #include "jump_table.h"
 
+#include "scheduler.h"
+#include "svc_mgr.h"
 
 #define APP_TIMER_PRESCALER        0
 #define APP_TIMER_OP_QUEUE_SIZE    4
@@ -544,6 +546,7 @@ void CC_VENUS_Lock_SwimOff_TimerStart(void)
     app_timer_start(s_tLockSwimOffTimer, APP_TIMER_TICKS(LOCK_SWIM_OFF_TIMEOUT_INTERVAL,APP_TIMER_PRESCALER), NULL);
 }
 
+#if 0
 void CC_HRM_Post24HrModeEvent(uint8_t bSwitch)
 {
     if (bSwitch)
@@ -555,7 +558,7 @@ void CC_HRM_Post24HrModeEvent(uint8_t bSwitch)
         VENUS_EVENT_ON(E_VENUS_EVENT_HRM_SERVICE_24HR_STOP, eEvent_None);
     }
 }
-
+#endif
 
 #if 1 //BAT_CHG_EN
 uint8_t CC_GetLowPowerState(void)
@@ -847,6 +850,7 @@ void CC_MainSet_HrmDataFlag(uint8_t _bHrmReadyFlag)
     s_tVenusCB.chrmDataReady_Flag= _bHrmReadyFlag;
 }
 
+#if 0
 void CC_HRM_Post24HHR_TO_OneMeasurement(void)
 {
     VENUS_EVENT_ON(E_VENUS_EVENT_HRM_SERVICE_24HR_TO_ONE_MEASUREMENT, eEvent_None);
@@ -874,6 +878,7 @@ void CC_HRM_PostHeartRateStrapModeEvent(uint8_t bSwitch)
             VENUS_EVENT_ON(E_VENUS_EVENT_OLED_UPDATE, eEvent_HEARTRATESTRAPMODE_OFF);
     }
 }
+#endif
 
 
 void CC_SwimOffUnlockHrm(void)
@@ -3495,6 +3500,10 @@ void venus_app_init(void)
     app_multiple_timer_init();
 
     app_Time_Init();
+
+    APP_SCHED_Init();
+    APP_SVCMGR_Init();
+
     s_tVenusCB.stSysCurTime = app_getSysTime();
 #ifdef HRM_EN
     CC_AppSrv_HR_Init();
@@ -3600,6 +3609,7 @@ int venus_main(void)
 
             
                 _app_scheduler();
+                APP_SCHED_RunScheduler();
 #if 0 // test app loop time
                 diff_time = Get_system_time_ms() - old_tick;
                 

@@ -39,6 +39,9 @@
 #include "project.h"
 #include "tracer.h"
 #include "CC_DB_Structure.h"
+
+#include "svc_mgr.h"
+
 /*
  * FUNCTION DEFINITIONS
  ****************************************************************************************
@@ -73,8 +76,8 @@ void CC_VENUS_RscTimerStart(uint32_t interval_ms);
 void CC_VENUS_RscTimerStop(void);
 void CC_VENUS_Lock_SwimOff_TimerStart(void);
 void CC_VENUS_Lock_SwimOff_TimerStop(void);
-void CC_HRM_Post24HrModeEvent(uint8_t bSwitch);
-void CC_HRM_PostHeartRateStrapModeEvent(uint8_t bSwitch);
+//void CC_HRM_Post24HrModeEvent(uint8_t bSwitch);
+//void CC_HRM_PostHeartRateStrapModeEvent(uint8_t bSwitch);
 void CC_Swim_OLED_Update(uint8_t _bSwitch);
 void CC_VENUS_AccelTimerStop(void);
 void CC_VENUS_AccelTimerReset(void);
@@ -192,7 +195,8 @@ void CC_BLE_Cmd_SetNotificaitonState(uint8_t state, uint8_t index)
     {
         if (_cBleCmd_NotifySetting_HeartRateStrapMode != ((eStete_t) state))
         {
-            CC_HRM_PostHeartRateStrapModeEvent(state);
+            //CC_HRM_PostHeartRateStrapModeEvent(state);
+            APP_SVCMGR_PostEvent_HrRequest(E_APP_SVC_HR_MODE_STRAP, state);
 
             _cBleCmd_NotifySetting_HeartRateStrapMode = ((eStete_t) state);
         }
@@ -201,7 +205,8 @@ void CC_BLE_Cmd_SetNotificaitonState(uint8_t state, uint8_t index)
     {
         if (_cBleCmd_NotifySetting_24HHeartRateMode != ((eStete_t) state))
         {
-            CC_HRM_Post24HrModeEvent(state);
+            //CC_HRM_Post24HrModeEvent(state);
+            APP_SVCMGR_PostEvent_HrRequest(E_APP_SVC_HR_MODE_24HR, state);
 
             _cBleCmd_NotifySetting_24HHeartRateMode = ((eStete_t) state);
         }
@@ -222,8 +227,10 @@ void CC_BLE_Cmd_SetHrSetting(db_sys_hr_setting_t *ptHrSetting)
     _cBleCmd_NotifySetting_HeartRateStrapMode = ptHrSetting->eIsHrsEnabled;
     _cBleCmd_NotifySetting_24HHeartRateMode   = ptHrSetting->eIs24HrEnabled;
 
-    CC_HRM_PostHeartRateStrapModeEvent(_cBleCmd_NotifySetting_HeartRateStrapMode);
-    CC_HRM_Post24HrModeEvent(_cBleCmd_NotifySetting_24HHeartRateMode);
+    //CC_HRM_PostHeartRateStrapModeEvent(_cBleCmd_NotifySetting_HeartRateStrapMode);
+    //CC_HRM_Post24HrModeEvent(_cBleCmd_NotifySetting_24HHeartRateMode);
+    APP_SVCMGR_PostEvent_HrRequest(E_APP_SVC_HR_MODE_STRAP, _cBleCmd_NotifySetting_HeartRateStrapMode);
+    APP_SVCMGR_PostEvent_HrRequest(E_APP_SVC_HR_MODE_24HR , _cBleCmd_NotifySetting_24HHeartRateMode  );
 }
 
 void CC_BLE_Cmd_GetNotifySetting(db_sys_notify_enabled_t *notify_setting)

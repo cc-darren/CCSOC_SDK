@@ -10,6 +10,9 @@
 #include "CC_AppSrvc_HeartRate.h"
 #include "sw_timer.h"
 #include "tracer.h"
+
+#include "svc_mgr.h"
+
 #ifdef DB_EN
 #include "fds.h"
 #include "cc_db_structure.h"
@@ -75,8 +78,8 @@ typedef struct
     uint32_t             dwSysTick;
 
 }   S_AppSrv_HR_CB;
-/********************************************
-**************
+
+/**********************************************************
  *** VARIABLE
  **********************************************************/
 S_AppSrv_HR_CB    s_tAppSrvHrCB;
@@ -94,9 +97,9 @@ APP_TIMER_DEF(s_tAppSrvHR_Timer_SystemTick);
 // RSCS for temporarily
 #define CC_BLE_Cme_Get_HeartRateStrapMode()   eDisable
 
-extern void CC_HRM_Post24HHR_TO_OneMeasurement(void);
-extern void CC_HRM_Post24HHR_TO_PeriodicMeasurement(void);
-extern void CC_HRM_PostHeartRateStrapModeEvent(uint8_t bSwitch);
+//extern void CC_HRM_Post24HHR_TO_OneMeasurement(void);
+//extern void CC_HRM_Post24HHR_TO_PeriodicMeasurement(void);
+//extern void CC_HRM_PostHeartRateStrapModeEvent(uint8_t bSwitch);
 
 extern void CC_MainGet_CurrentTime(app_date_time_t *_stCurTime);
 extern void CC_MainSet_HrmData(uint8_t _bHrmData);
@@ -147,7 +150,8 @@ static void _TO_24HR_PeriodicMeasurement(void * pvContext)
 
     s_tAppSrvHrCB.e24HrState = E_APPSRV_HRM_ST_IN_MEASUREMENT;
 
-    CC_HRM_Post24HHR_TO_PeriodicMeasurement();
+    //CC_HRM_Post24HHR_TO_PeriodicMeasurement();
+    APP_SVCMGR_PostEvent_HrTimeout(E_APP_SVC_HR_TIMER_24HR_PERIODIC_MEASUREMENT);
 }
 
 
@@ -155,7 +159,8 @@ static void _TO_24HR_OneMeasurement(void * pvContext)
 {
     UNUSED_PARAMETER(pvContext);
 
-    CC_HRM_Post24HHR_TO_OneMeasurement();
+    //CC_HRM_Post24HHR_TO_OneMeasurement();
+    APP_SVCMGR_PostEvent_HrTimeout(E_APP_SVC_HR_TIMER_24HR_ONE_MEASUREMENT);
 }
 
 static void _AppSrv_HR_Reset(void)
@@ -174,10 +179,11 @@ static void _AppSrv_HR_Charge_Evt_CB(eDEV_CHARGE_STATE_t eState)
     }
     else if (eDEVICE_CHARGE_OUT== eState)
     {
-        //eAlgoProcState = eStartToService;
         if ( eEnable == CC_BLE_Cme_Get_HeartRateStrapMode())
-            CC_HRM_PostHeartRateStrapModeEvent(eEnable);
-        
+        {
+            //CC_HRM_PostHeartRateStrapModeEvent(eEnable);
+            APP_SVCMGR_PostEvent_HrRequest(E_APP_SVC_HR_MODE_STRAP, eEnable);
+        }
     }
     else
     {
@@ -207,22 +213,16 @@ void CC_AppSrv_HR_Init(void)
 
 void CC_AppSrv_HR_SetLimited(uint8_t _bRestingHrMax,uint8_t bRestingHrMin,uint8_t bExerciseHrMax,uint8_t bExerciseHrMin)
 {
-  
-    s_tAppSrvHrCB.bRestingHrMax = _bRestingHrMax;
-    s_tAppSrvHrCB.bRestingHrMin = bRestingHrMin;
-    s_tAppSrvHrCB.bExerciseHrMax= bExerciseHrMax;
-    s_tAppSrvHrCB.bExerciseHrMin= bExerciseHrMin;
-    TracerInfo("bRestingHrMax = %d\r\n",_bRestingHrMax);
-    TracerInfo("bRestingHrMin = %d\r\n",bRestingHrMin);
-    TracerInfo("bExerciseHrMax = %d\r\n",bExerciseHrMax);
-    TracerInfo("bExerciseHrMin = %d\r\n",bExerciseHrMin);     
+    s_tAppSrvHrCB.bRestingHrMax  = _bRestingHrMax;
+    s_tAppSrvHrCB.bRestingHrMin  = bRestingHrMin;
+    s_tAppSrvHrCB.bExerciseHrMax = bExerciseHrMax;
+    s_tAppSrvHrCB.bExerciseHrMin = bExerciseHrMin;
 }
 
 void CC_AppSrv_HR_ResetLimited(uint8_t _bAge)
 {
-
-    s_tAppSrvHrCB.bRestingHrMax = APPSRV_HRM_DEFAULT_RESTING_MAX;
-    s_tAppSrvHrCB.bRestingHrMin = APPSRV_HRM_DEFAULT_RESTING_MIN;
+    s_tAppSrvHrCB.bRestingHrMax  = APPSRV_HRM_DEFAULT_RESTING_MAX;
+    s_tAppSrvHrCB.bRestingHrMin  = APPSRV_HRM_DEFAULT_RESTING_MIN;
     s_tAppSrvHrCB.bExerciseHrMax = APPSRV_HRM_DEFAULT_EXERCISE_MAX(_bAge);
     s_tAppSrvHrCB.bExerciseHrMin = APPSRV_HRM_DEFAULT_EXERCISE_MIN(_bAge);
 }

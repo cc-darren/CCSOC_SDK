@@ -72,12 +72,12 @@ extern void    APP_SCHED_RegEventHandler(E_AppSched_ModuleID    eModuleID,
  *     <in> ptAppEvent: a pointer to the struct where below info. specified,
  *            .eModuleID    : ID of the dest. module to handle this event
  *            .bEventID     : ID of the event, defined by each module
- *            .wDataByteSize: Size of data counted in bytes
+ *            .wDataByteSize: Byte-size of allocated buffer for additional data
  *            .vpData       : An pointer to allocated buf, where data is stored
  * [HIGHLIGHT]
- *     1. If no addtional data, wDataByteSize must be zero,
- *        and vpData must be NULL without allocating memory.
- *     2. The allocated memory can be released ONLY by APP SCHEDULER.
+ *     1. If no addtional data, wDataByteSize must be zero.
+ *     2. vpData can be used as 4-byte additional data.
+ *     3. The allocated memory can be released ONLY by APP SCHEDULER.
  * [RETURN  ]
  *     The return code to specify the result of event post, listed below.
  ******************************************************************************/
