@@ -76,8 +76,8 @@ extern void    APP_SCHED_RegEventHandler(E_AppSched_ModuleID    eModuleID,
  *            .vpData       : An pointer to allocated buf, where data is stored
  * [HIGHLIGHT]
  *     1. If no addtional data, wDataByteSize must be zero.
- *     2. vpData can be used as 4-byte additional data.
- *     3. The allocated memory can be released ONLY by APP SCHEDULER.
+ *        And vpData can be used as 1/2/4-byte additional data.
+ *     2. The allocated memory can be released by APP SCHEDULER ONLY!
  * [RETURN  ]
  *     The return code to specify the result of event post, listed below.
  ******************************************************************************/
