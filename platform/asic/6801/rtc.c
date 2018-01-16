@@ -408,7 +408,7 @@ T_Alarm cc6801_AlarmGetTime(E_RTCALARMSupported EAlarmNum)
 uint32_t  cc6801_AlarmSetTime(E_RTCALARMSupported EAlarmNum,T_Alarm tAlarm)
 {
     uint32_t errcode;
-    uint32_t dwTmp;
+//    uint32_t dwTmp;
     uint32_t dwAddr;
 
     errcode = CheckAlarm(&tAlarm);

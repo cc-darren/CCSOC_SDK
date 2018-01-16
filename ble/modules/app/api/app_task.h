@@ -94,7 +94,43 @@ enum appm_msg
     #if (BLE_APP_OTA)
     /// Timer used to refresh the OTA measurement value
     APP_OTA_MEAS_INTV_TIMER,
-    #endif //(BLE_APP_OTA)    
+    #endif //(BLE_APP_OTA)  
+
+#ifdef SW_TIMER_BY_KERNEL
+    APP_SW_TIMER_0_TIMER,
+    APP_SW_TIMER_1_TIMER,    
+    APP_SW_TIMER_2_TIMER,    
+    APP_SW_TIMER_3_TIMER,    
+    APP_SW_TIMER_4_TIMER,    
+    APP_SW_TIMER_5_TIMER,
+    APP_SW_TIMER_6_TIMER,    
+    APP_SW_TIMER_7_TIMER,    
+    APP_SW_TIMER_8_TIMER,    
+    APP_SW_TIMER_9_TIMER,    
+    APP_SW_TIMER_10_TIMER,
+    APP_SW_TIMER_11_TIMER,    
+    APP_SW_TIMER_12_TIMER,    
+    APP_SW_TIMER_13_TIMER,    
+    APP_SW_TIMER_14_TIMER,    
+    APP_SW_TIMER_15_TIMER,
+    APP_SW_TIMER_16_TIMER,
+    APP_SW_TIMER_17_TIMER,    
+    APP_SW_TIMER_18_TIMER,    
+    APP_SW_TIMER_19_TIMER,    
+    APP_SW_TIMER_20_TIMER,    
+    APP_SW_TIMER_21_TIMER,
+    APP_SW_TIMER_22_TIMER,    
+    APP_SW_TIMER_23_TIMER,    
+    APP_SW_TIMER_24_TIMER,    
+    APP_SW_TIMER_25_TIMER,    
+    APP_SW_TIMER_26_TIMER,
+    APP_SW_TIMER_27_TIMER,    
+    APP_SW_TIMER_28_TIMER,    
+    APP_SW_TIMER_29_TIMER,    
+    APP_SW_TIMER_30_TIMER,    
+    APP_SW_TIMER_31_TIMER,    
+#endif
+
 };
 
 

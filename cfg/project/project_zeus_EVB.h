@@ -471,11 +471,13 @@ Declaration of static Global Variables & Functions
 //#define FORCE_SWIM_TEST_EN   // for test
 //#define FORCE_HRS_TEST_EN   // for test
  
-//#define APP_SERV_MGR_EN        // for new service/sensor manager
+#define APP_SERV_MGR_EN        // for new service/sensor manager
 #ifdef APP_SERV_MGR_EN
-#define SM_TEST_EN
+//#define SM_TEST_EN
 //#define SRV_MGR_TEST_EN
 #endif
+
+#define SW_TIMER_BY_KERNEL  // min timer: 10ms
 
 //-----------------------------------
 //  _bState : 1  , Init form system reboot
@@ -908,7 +910,7 @@ typedef struct
 #define CFG_BLE    1
 
 // <h> BLE IP ARCH CONFIGURATION
-//#define CFG_BLE_APP
+#define CFG_BLE_APP
 
 //==========================================================
 // <q> EMB   - BLE Embedded Sub-block
@@ -952,6 +954,7 @@ typedef struct
 #define CFG_PRF_DISS
 //#define CFG_PRF_CSCPS
 #define CFG_PRF_OTA
+#define CFG_PRF_CCPS
 
 #define CFG_APP
 #define CFG_APP_HT
@@ -959,6 +962,8 @@ typedef struct
 #define CFG_APP_DIS    1
 //#define CFG_APP_CSCS    1
 #define CFG_APP_OTA
+#define CFG_APP_CCPS
+
 
 #define CFG_EXT_DB
 //#define CFG_DBG

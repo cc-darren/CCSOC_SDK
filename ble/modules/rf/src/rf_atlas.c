@@ -793,8 +793,8 @@ static int8_t rf_rssi_convert (uint8_t rssi_reg)
     return(RssidBm);
 }
 
-#define REG_WRITE(addr, data)    *((uint32_t *) addr) = data
-#define REG_READ(addr, data)     data = *((uint32_t *) addr)
+#define REG_WRITE(addr, data)    *((volatile uint32_t *) addr) = data
+#define REG_READ(addr, data)     data = *((volatile uint32_t *) addr)
 
 static void _spi_go(void)
 {

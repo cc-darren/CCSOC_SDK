@@ -10,6 +10,7 @@
 #include "PPG_Controller.h"
 #include "CC_HRM_drv.h"
 //#include "pah8002_comm.h"
+#include "ppg_pah8002.h"
 #include "pah8002_api_c.h"
 //#include "CC_drv_gpio.h"
 
@@ -53,16 +54,17 @@ E_PPG_Manager_Status PPG_Controller_Init(void)
     pah8002_twi_init(); 
     
     drvi_GpioWrite(HRM_RST_PIN, 1);     //power on hrm   
+
+    drvi_EnableIrq(HRM_INT_PIN);
     
     if(MSG_SUCCESS == pah8002_sensor_init())
-        return E_PPG_ERROR_INIT_FAIL;
-
-   
+        return E_PPG_ERROR_INIT_FAIL;   
+  
     return ret;
 }
 
 
-E_PPG_Manager_Status PPG_Controller_Configure(E_App_Srv_ID UserID, void *Params)
+E_PPG_Manager_Status PPG_Controller_Configure(E_Sensor_User_ID UserID, void *Params)
 {
     E_PPG_Manager_Status ret = E_PPG_SUCCESS;
 
@@ -73,7 +75,7 @@ E_PPG_Manager_Status PPG_Controller_Configure(E_App_Srv_ID UserID, void *Params)
 
 
 
-E_PPG_Manager_Status PPG_Controller_Start(E_App_Srv_ID UserID)
+E_PPG_Manager_Status PPG_Controller_Start(E_Sensor_User_ID UserID)
 {
     E_PPG_Manager_Status ret = E_PPG_SUCCESS;
 
@@ -83,11 +85,9 @@ E_PPG_Manager_Status PPG_Controller_Start(E_App_Srv_ID UserID)
 }
 
 
-E_PPG_Manager_Status PPG_Controller_GetData(E_App_Srv_ID UserID, void* pSampleData, void *pDataSzInBytes)
+E_PPG_Manager_Status PPG_Controller_GetData(E_Sensor_User_ID UserID, void* pSampleData, void *pDataSzInBytes)
 {
     E_PPG_Manager_Status ret = E_PPG_SUCCESS;
-    static uint8_t pah8002_ppg_data[HEART_RATE_MODE_SAMPLES_PER_READ * 4] ; // for test!!!!
-	//uint16_t* pdataBytes = (uint16_t*) pDataSzInBytes;
 	uint8_t cks[4];
     uint8_t int_req = 0; 
 
@@ -139,7 +139,7 @@ E_PPG_Manager_Status PPG_Controller_GetData(E_App_Srv_ID UserID, void* pSampleDa
 }
 
 
-E_PPG_Manager_Status PPG_Controller_Shutdown(E_App_Srv_ID UserID, bool power_off)
+E_PPG_Manager_Status PPG_Controller_Shutdown(E_Sensor_User_ID UserID, bool power_off)
 {
     E_PPG_Manager_Status ret = E_PPG_SUCCESS;
 
@@ -147,9 +147,11 @@ E_PPG_Manager_Status PPG_Controller_Shutdown(E_App_Srv_ID UserID, bool power_off
     {        
         pah8002_sensor_deinit();
         
-         drvi_GpioWrite(HRM_RST_PIN, 0);
+        drvi_GpioWrite(HRM_RST_PIN, 0);
         
-        pah8002_twi_deinit();
+        drvi_DisableIrq(HRM_INT_PIN);
+        
+        pah8002_twi_deinit();                          
 
     }
     

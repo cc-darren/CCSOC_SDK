@@ -78,6 +78,10 @@
 #include "app_display.h"          // Application Display Definition
 #endif //(DISPLAY_SUPPORT)
 
+#ifdef SW_TIMER_BY_KERNEL
+#include "sw_timer.h"
+#include "tracer.h"
+#endif
 /*
  * LOCAL FUNCTION DEFINITIONS
  ****************************************************************************************
@@ -249,6 +253,11 @@ static int gapm_cmp_evt_handler(ke_msg_id_t const msgid,
 
                 // No more service to add, start advertising
                 appm_start_advertising();
+
+#if 0 // RW Gross Timer Test by Samuel
+                ke_timer_set(APP_TIMER_TEST_TIMER, TASK_APP, (uint16_t)1); // 10ms
+#endif
+                
             }
         }
         break;
@@ -717,6 +726,81 @@ static int appm_msg_handler(ke_msg_id_t const msgid,
     return (msg_pol);
 }
 
+
+
+
+#if 0 // RW Gross Timer Test by Samuel
+#include "tracer.h"
+
+static int app_timer_handler(ke_msg_id_t const msgid,
+                                   void const *param,
+                                   ke_task_id_t const dest_id,
+                                   ke_task_id_t const src_id)
+{
+    
+    static uint32_t timer_cnt = 0;
+
+    static bool gpio_toggle = 0;
+
+    gpio_toggle ^= 1;
+    drvi_GpioWrite(GPIO_PIN_38, gpio_toggle);
+
+    // Clear the previous timer
+    ke_timer_clear(APP_TIMER_TEST_TIMER, TASK_APP);
+    // Create a new timer with the received measurement interval
+    ke_timer_set(APP_TIMER_TEST_TIMER, TASK_APP, 1); // 10 ms
+            
+//    TracerInfo("timer_cnt: %d\r\n", ++timer_cnt);
+
+    return (KE_MSG_CONSUMED);
+}
+#endif
+
+
+#ifdef SW_TIMER_BY_KERNEL
+
+static int app_timer_handler(ke_msg_id_t const msgid,
+                                   void const *param,
+                                   ke_task_id_t const dest_id,
+                                   ke_task_id_t const src_id)
+{
+
+    uint8_t id = msgid & 0xFF;
+
+    if(id >= (APP_SW_TIMER_0_TIMER & 0xFF))
+        id -= (APP_SW_TIMER_0_TIMER & 0xFF);
+    else
+    {
+        TracerInfo("app_timer_0_handler => ERR ID: 0x%x\r\n", msgid);
+        return (KE_MSG_CONSUMED);
+    }
+
+
+    //drvi_GpioWrite(GPIO_PIN_38, 1);
+
+    if(NULL != m_timer_node[id].p_timeout_handler)
+    {
+        void * p_context;
+        m_timer_node[id].p_timeout_handler(p_context);
+    }
+
+    if(APP_TIMER_MODE_REPEATED == m_timer_node[id].mode)
+    {
+
+        ke_timer_clear((APP_SW_TIMER_0_TIMER + id), TASK_APP);
+
+        ke_timer_set((APP_SW_TIMER_0_TIMER + id), TASK_APP, m_timer_node[id].periodic_interval); // 10 ms
+    }
+
+    //drvi_GpioWrite(GPIO_PIN_38, 0);
+
+    return (KE_MSG_CONSUMED);
+}
+                            
+
+                                   
+#endif                             
+
 /*
  * GLOBAL VARIABLES DEFINITION
  ****************************************************************************************
@@ -738,6 +822,42 @@ const struct ke_msg_handler appm_default_state[] =
     {GAPC_CMP_EVT,              (ke_msg_func_t)gapc_cmp_evt_handler},
     {GAPC_DISCONNECT_IND,       (ke_msg_func_t)gapc_disconnect_ind_handler},
     {GAPM_PROFILE_ADDED_IND,    (ke_msg_func_t)gapm_profile_added_ind_handler},
+
+#ifdef SW_TIMER_BY_KERNEL
+    {APP_SW_TIMER_0_TIMER,      (ke_msg_func_t)app_timer_handler},        
+    {APP_SW_TIMER_1_TIMER,      (ke_msg_func_t)app_timer_handler},
+    {APP_SW_TIMER_2_TIMER,      (ke_msg_func_t)app_timer_handler},
+    {APP_SW_TIMER_3_TIMER,      (ke_msg_func_t)app_timer_handler},
+    {APP_SW_TIMER_4_TIMER,      (ke_msg_func_t)app_timer_handler},
+    {APP_SW_TIMER_5_TIMER,      (ke_msg_func_t)app_timer_handler},
+    {APP_SW_TIMER_6_TIMER,      (ke_msg_func_t)app_timer_handler},
+    {APP_SW_TIMER_7_TIMER,      (ke_msg_func_t)app_timer_handler},
+    {APP_SW_TIMER_8_TIMER,      (ke_msg_func_t)app_timer_handler},
+    {APP_SW_TIMER_9_TIMER,      (ke_msg_func_t)app_timer_handler},
+    {APP_SW_TIMER_10_TIMER,      (ke_msg_func_t)app_timer_handler},
+    {APP_SW_TIMER_11_TIMER,      (ke_msg_func_t)app_timer_handler},
+    {APP_SW_TIMER_12_TIMER,      (ke_msg_func_t)app_timer_handler},
+    {APP_SW_TIMER_13_TIMER,      (ke_msg_func_t)app_timer_handler},
+    {APP_SW_TIMER_14_TIMER,      (ke_msg_func_t)app_timer_handler},
+    {APP_SW_TIMER_15_TIMER,      (ke_msg_func_t)app_timer_handler},    
+    {APP_SW_TIMER_16_TIMER,      (ke_msg_func_t)app_timer_handler},        
+    {APP_SW_TIMER_17_TIMER,      (ke_msg_func_t)app_timer_handler},
+    {APP_SW_TIMER_18_TIMER,      (ke_msg_func_t)app_timer_handler},
+    {APP_SW_TIMER_19_TIMER,      (ke_msg_func_t)app_timer_handler},
+    {APP_SW_TIMER_20_TIMER,      (ke_msg_func_t)app_timer_handler},
+    {APP_SW_TIMER_21_TIMER,      (ke_msg_func_t)app_timer_handler},
+    {APP_SW_TIMER_22_TIMER,      (ke_msg_func_t)app_timer_handler},
+    {APP_SW_TIMER_23_TIMER,      (ke_msg_func_t)app_timer_handler},
+    {APP_SW_TIMER_24_TIMER,      (ke_msg_func_t)app_timer_handler},
+    {APP_SW_TIMER_25_TIMER,      (ke_msg_func_t)app_timer_handler},
+    {APP_SW_TIMER_26_TIMER,      (ke_msg_func_t)app_timer_handler},
+    {APP_SW_TIMER_27_TIMER,      (ke_msg_func_t)app_timer_handler},
+    {APP_SW_TIMER_28_TIMER,      (ke_msg_func_t)app_timer_handler},
+    {APP_SW_TIMER_29_TIMER,      (ke_msg_func_t)app_timer_handler},
+    {APP_SW_TIMER_30_TIMER,      (ke_msg_func_t)app_timer_handler},
+    {APP_SW_TIMER_31_TIMER,      (ke_msg_func_t)app_timer_handler},             
+
+#endif
 };
 
 /* Specifies the message handlers that are common to all states. */

@@ -30,7 +30,6 @@
 #include "cc_algo_event.h"
 #include "cc_vib_service.h"
 #include "acc_lsm6ds3.h"
-#include "gyr_lsm6ds3.h"
 #include "mag_ak09912.h"
 #include "CC_SleepMonitor_Service.h"
 #include "clock.h"
@@ -56,9 +55,18 @@
 #include "CC_DB.h"
 #include "jump_table.h"
 #include "app_ccps.h"
+#include "Acc_Gyro_Controller.h"
 
 #include "scheduler.h"
-#include "svc_mgr.h"
+//#include "svc_mgr.h"
+#ifdef APP_SERV_MGR_EN  
+#include "CC_AppSrvc_Manager.h"
+#include "CC_Sensor_Manager.h"
+#endif
+#ifdef SW_TIMER_BY_KERNEL
+#include "app_task.h"
+#endif
+
 
 #define APP_TIMER_PRESCALER        0
 #define APP_TIMER_OP_QUEUE_SIZE    4
@@ -353,8 +361,10 @@ static short _wGyroData[3]  = { 0 };
 static short _wAccelData[3]  = { 0 };
 float g_fSleepCalSeconds =0;
 uint8_t g_bSleepEnCnt = 0;
+#ifndef APP_SERV_MGR_EN  // not defined
 s_SensorData_t s_tAcc;
 s_SensorData_t s_tGyro;
+#endif
 S_TMagBuf_t s_tMagDataBuf;  
 AxesRaw_t s_tMagRaw;
 //static uint8_t g_bMagEnCnt = 0;
@@ -547,7 +557,7 @@ void CC_VENUS_Lock_SwimOff_TimerStart(void)
     app_timer_start(s_tLockSwimOffTimer, APP_TIMER_TICKS(LOCK_SWIM_OFF_TIMEOUT_INTERVAL,APP_TIMER_PRESCALER), NULL);
 }
 
-#if 0
+#ifndef APP_SERV_MGR_EN // not defined 
 void CC_HRM_Post24HrModeEvent(uint8_t bSwitch)
 {
     if (bSwitch)
@@ -851,7 +861,7 @@ void CC_MainSet_HrmDataFlag(uint8_t _bHrmReadyFlag)
     s_tVenusCB.chrmDataReady_Flag= _bHrmReadyFlag;
 }
 
-#if 0
+#ifndef APP_SERV_MGR_EN
 void CC_HRM_Post24HHR_TO_OneMeasurement(void)
 {
     VENUS_EVENT_ON(E_VENUS_EVENT_HRM_SERVICE_24HR_TO_ONE_MEASUREMENT, eEvent_None);
@@ -1053,8 +1063,10 @@ void TOUCH_int_handler(void) // no implement parameter
     {    
         if (s_tVenusCB.cTouchDebounceFlag == 0)
         {
-            _TouchDebounce_Handler(50);
+            _TouchDebounce_Handler(50); // comment for test by Samuel
+
             s_tVenusCB.cTouchDebounceFlag = 1;                   
+        
         }
 #ifdef LONGTOUCH_SWIM_SWITCH_EN
         _LongTouchTrigger_Handler(100);
@@ -1794,11 +1806,13 @@ eHrmOp_State CC_GetHrmStatus(void)
 static void app_multiple_timer_init(void)
 {
 
+#ifndef SW_TIMER_BY_KERNEL  // not defined
+
     // Initialize timer module.
     APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, false);
+#endif
 
-
-     app_timer_create(&m_battery_timer_id,
+    app_timer_create(&m_battery_timer_id,
                       APP_TIMER_MODE_REPEATED,
                       battery_level_meas_timeout_handler);
 
@@ -2116,7 +2130,7 @@ uint32_t CC_MainGet_PedCnt(void)
     return s_tVenusCB.dwPedTotalStepCount;
 }
 
-
+#ifndef APP_SERV_MGR_EN    // not defined
 static void _sensor_power_down_gryo(void)
 {
     LSM6DS3_ACC_GYRO_GetRawGyroData16(NULL, (i16_t *) _wGyroData);          
@@ -2132,6 +2146,7 @@ static void _sensor_power_down_mag(void)
     //nrf_gpio_cfg_input(AKM_I2C_CLK,NRF_GPIO_PIN_PULLUP);   
     //nrf_gpio_cfg_input(15,NRF_GPIO_PIN_NOPULL);
 }
+#endif
 
 #ifdef PEDO_EN
 static void _sensor_algorithm_liftarm_proc()
@@ -2219,23 +2234,58 @@ static void _sensor_algorithm_swimming_proc(void)
 {   
 
     raw_sensor_event _stSwmimingData;
-    int16_t wacc_data[FIFO_DEPTH_T/2];    
-    int16_t wgyro_data[FIFO_DEPTH_T/2];
+    static int16_t wacc_data[FIFO_DEPTH_T];    // offer double memory space
+    static int16_t wgyro_data[FIFO_DEPTH_T];   // offer double memory space
 
     //static uint32_t old_time = 0;
     //static uint32_t curr_time = 0;
     //TracerInfo("_sensor_algorithm_swimming_proc \r\n");
 
-    uint16_t fifo_len;
+    uint32_t fifo_total_samples = 0;
+    
+
+#ifdef APP_SERV_MGR_EN	
+    static uint32_t fifo_acc_index = 0;
+    static uint32_t fifo_gyro_index = 0;
+    uint32_t size_in_bytes;    
+    uint32_t dummy_size;
+    
+    if(E_SEN_ERROR_NONE == CC_SenMgr_Acc_GetData(E_SEN_USER_ID_SWIM, &wacc_data[fifo_acc_index], &size_in_bytes))
+    {
+        fifo_acc_index += size_in_bytes/2; // to 16bits data
+    }
+    else
+        TracerInfo("CC_SenMgr_Acc_GetData fail!\r\n");
+
+
+    //TracerInfo("pGyro_addr0: 0x%x\r\n", &wgyro_data[fifo_gyro_index]);
+
+    if(E_SEN_ERROR_NONE == CC_SenMgr_Gyro_GetData(E_SEN_USER_ID_SWIM, &wgyro_data[fifo_gyro_index], &size_in_bytes))
+    {   
+        fifo_gyro_index += size_in_bytes/2; // to 16bits data
+    }
+    else
+        TracerInfo("CC_SenMgr_Gyro_GetData fail!\r\n");
+
+
+    fifo_total_samples = fifo_acc_index/3; // xyz to 1 samples
+
+    if(E_SEN_ERROR_NONE != CC_SenMgr_Mag_GetData(E_SEN_USER_ID_SWIM, (int16_t*)&s_tMagRaw, &dummy_size))
+        TracerInfo("CC_SenMgr_Mag_GetData fail!\r\n");
+    
+#else
+
     
     CC_LSM6DSX_Fifo_Update_Data();                
     
-    fifo_len = CC_LSM6DSX_Fifo_Get_Accel_UnRead_Samples(MEMS_FIFO_USER_SWIM);       
+    fifo_total_samples = CC_LSM6DSX_Fifo_Get_Accel_UnRead_Samples(MEMS_FIFO_USER_SWIM);       
 
     //TracerInfo("swim_len: %d\r\n", fifo_len);
 
-
     AKM_Data_Get(); 
+#endif
+
+    
     if ((s_tMagRaw.AXIS_X == 0) &&
         (s_tMagRaw.AXIS_Y == 0) &&
         (s_tMagRaw.AXIS_Z == 0))
@@ -2253,11 +2303,15 @@ static void _sensor_algorithm_swimming_proc(void)
     }
            
 
-    if(fifo_len >= 260) // 260 samples(x,y,z) @5sec
-    {    
-    
-        memcpy(wacc_data, s_tAcc.wbuf, (fifo_len*3*2));   // *3 => x,y,z; *2 => 16bits
-        memcpy(wgyro_data, s_tGyro.wbuf, (fifo_len*3*2)); // *3 => x,y,z; *2 => 16bits   
+    if(fifo_total_samples >= 260) // 260 samples(x,y,z) @5sec
+    {
+
+#ifdef APP_SERV_MGR_EN 
+        fifo_acc_index = fifo_gyro_index = 0;  
+
+#else
+        memcpy(wacc_data, s_tAcc.wbuf, (fifo_total_samples*3*2));   // *3 => x,y,z; *2 => 16bits
+        memcpy(wgyro_data, s_tGyro.wbuf, (fifo_total_samples*3*2)); // *3 => x,y,z; *2 => 16bits   
 
          //curr_time = Hrm_get_sys_tick();
          //TracerInfo("diff_time: %d\r\n", curr_time - old_time);
@@ -2267,14 +2321,17 @@ static void _sensor_algorithm_swimming_proc(void)
          //old_time = curr_time;
 
          //old_time = Hrm_get_sys_tick();
-#ifndef APP_SERV_MGR_EN // not defined         
+      
         CC_LSM6DSX_Fifo_Accel_Read_Done(MEMS_FIFO_USER_SWIM);
         CC_LSM6DSX_Fifo_Gyro_Read_Done(MEMS_FIFO_USER_SWIM);        
+
 #endif
-        //fifo_len /= 3;
-        
-        for(int i = 0; i < fifo_len; i++)
+
+
+        for(int i = 0; i < fifo_total_samples; i++)
         {
+
+        
              int k = 3*i;
         
              _wAccelData[0] = wacc_data[k]; 
@@ -2456,6 +2513,7 @@ static void _sensor_algorithm_swimming_proc(void)
 
 void _sensor_accel_gyro_on_change(void)
 {
+
     s_tVenusCB.cSwimmingEn = CC_BLE_Cmd_GetSwimmingEN();
     
     if ( 0== s_tVenusCB.cSwimmingEn) 
@@ -2466,7 +2524,9 @@ void _sensor_accel_gyro_on_change(void)
             CC_VENUS_AccelTimerStop();
             CC_VENUS_AccelTimerReset();
 
-#ifndef APP_SERV_MGR_EN		// not defined			
+#ifdef APP_SERV_MGR_EN		
+            APP_SVCMGR_PostEvent_PedoRequest(ENABLE);
+#else
             CC_LSM6DSX_Fifo_Accel_UnRegister(MEMS_FIFO_USER_SWIM);
             CC_LSM6DSX_Fifo_Gyro_UnRegister(MEMS_FIFO_USER_SWIM); 
             CC_LSM6DSX_FifoDisable(E_LSM6DSX_FIFO_CONTROL_ACCEL_GYRO);
@@ -2475,9 +2535,11 @@ void _sensor_accel_gyro_on_change(void)
             //CC_LSM6DSX_FifoEnable(E_LSM6DSX_FIFO_CONTROL_ACCEL_GYRO);  // test by Samuel!!!
             CC_LSM6DSX_Fifo_Accel_Register(MEMS_FIFO_USER_PEDO, s_tAcc.wbuf, (FIFO_DEPTH_T/2));
             //CC_LSM6DSX_Fifo_Gyro_Register(MEMS_FIFO_USER_PEDO, s_tGyro.wbuf, (FIFO_DEPTH_T/2));//test
-#endif            
+
             _sensor_power_down_gryo();
-            _sensor_power_down_mag();
+            _sensor_power_down_mag();            
+#endif            
+
             g_GyroEnable = 0;
             //_CC_DB_Save_SwimmingEnd();
             //_DumpSensorRegisterMap(); //test!!!
@@ -2487,14 +2549,27 @@ void _sensor_accel_gyro_on_change(void)
         else
         {
 
-                uint16_t fifo_len;
+                uint32_t fifo_len;
                 int16_t wacc_data[FIFO_DEPTH_T/2];
                 //int16_t wgyro_data[FIFO_DEPTH_T/2];                
                 //static uint32_t old_tick = 0;
 
+#ifdef APP_SERV_MGR_EN	
+                uint32_t size_in_bytes; 
+
+                if(E_SEN_ERROR_NONE != CC_SenMgr_Acc_GetData(E_SEN_USER_ID_PEDO, wacc_data, &size_in_bytes))
+                    TracerInfo("CC_SenMgr_Acc_GetData fail!\r\n");
+
+                fifo_len = size_in_bytes/(2*3); // to 16bits xyz => sampls numbers
+
+                
+               // TracerInfo("size_in_bytes: %d\r\n", size_in_bytes);
+#else
                 CC_LSM6DSX_Fifo_Update_Data();                
 
                 fifo_len = CC_LSM6DSX_Fifo_Get_Accel_UnRead_Samples(MEMS_FIFO_USER_PEDO);	                
+
+                //TracerInfo("fifo_len: %d\r\n", fifo_len);
 
                 //TracerInfo("Acc_fifo_len: %d, time_diff: %d\r\n", fifo_len, Get_system_time_ms() - old_tick);
                 //fifo_len = CC_LSM6DSX_Fifo_Get_Gyro_UnRead_Samples(MEMS_FIFO_USER_PEDO);         // test      
@@ -2507,7 +2582,7 @@ void _sensor_accel_gyro_on_change(void)
                 memcpy(wacc_data, s_tAcc.wbuf, (fifo_len*3*2));  // *3 => x,y,z; *2 => 16bits
 
                 //memcpy(wgyro_data, s_tGyro.wbuf, (fifo_len*3*2));  // test
-#ifndef APP_SERV_MGR_EN		// not defined		
+
                 CC_LSM6DSX_Fifo_Accel_Read_Done(MEMS_FIFO_USER_PEDO);
 
                 //CC_LSM6DSX_Fifo_Gyro_Read_Done(MEMS_FIFO_USER_PEDO); //test
@@ -2519,9 +2594,9 @@ void _sensor_accel_gyro_on_change(void)
                    // return;
 
 
-                for(int i = 0; i < fifo_len; i++)
+                for(uint16_t i = 0; i < fifo_len; i++)
                 {
-                    int k = 3*i;
+                    uint16_t k = 3*i;
 #ifdef SWAP_ACC_DIRECTION_EN
                    _wAccelData[0] = (wacc_data[k+1] / 4); 
                    _wAccelData[1] = 0-(wacc_data[k] / 4);
@@ -2534,13 +2609,13 @@ void _sensor_accel_gyro_on_change(void)
                      _sensor_algorithm_liftarm_proc();    
 
 
-                    //TracerInfo( "ACC_Data[0] %d\r\n",wacc_data[0]);
-                    //TracerInfo( "ACC_Data[1] %d\r\n",wacc_data[1]);
-                    //TracerInfo( "ACC_Data[2] %d\r\n",wacc_data[2]);   
+                    //TracerInfo( "ACC_Data[0] %d\r\n",wacc_data[k]);
+                    //TracerInfo( "ACC_Data[1] %d\r\n",wacc_data[k+1]);
+                    //TracerInfo( "ACC_Data[2] %d\r\n",wacc_data[k+2]);   
 
-                    //TracerInfo( "GYRO_Data[0] %d\r\n",wgyro_data[0]);
-                    //TracerInfo( "GYRO_Data[1] %d\r\n",wgyro_data[1]);
-                    //TracerInfo( "GYRO_Data[2] %d\r\n",wgyro_data[2]);   
+                    //TracerInfo( "GYRO_Data[0] %d\r\n",wgyro_data[k]);
+                    //TracerInfo( "GYRO_Data[1] %d\r\n",wgyro_data[k+1]);
+                    //TracerInfo( "GYRO_Data[2] %d\r\n",wgyro_data[k+2]);   
 
             
                     uint32_t       _dwPedTotalStepCount = 0;
@@ -2700,7 +2775,12 @@ void _sensor_accel_gyro_on_change(void)
         {
                 CC_VENUS_AccelTimerStop();
                 CC_VENUS_AccelTimerReset();
-#ifndef APP_SERV_MGR_EN // not defined
+#ifdef APP_SERV_MGR_EN 
+                APP_SVCMGR_PostEvent_PedoRequest(DISABLE);
+
+                APP_SVCMGR_PostEvent_SwimRequest(ENABLE);
+                
+#else
                 CC_LSM6DSX_Fifo_Accel_UnRegister(MEMS_FIFO_USER_PEDO);
                 CC_LSM6DSX_FifoDisable(E_LSM6DSX_FIFO_CONTROL_ACCEL_GYRO);
                 CC_LSM6DSX_FifoEnable(E_LSM6DSX_FIFO_CONTROL_ACCEL_GYRO);
@@ -3504,8 +3584,9 @@ void venus_app_init(void)
     app_Time_Init();
 
     APP_SCHED_Init();
+#ifdef APP_SERV_MGR_EN    
     APP_SVCMGR_Init();
-
+#endif
     s_tVenusCB.stSysCurTime = app_getSysTime();
 #ifdef HRM_EN
     CC_AppSrv_HR_Init();
@@ -3556,21 +3637,32 @@ int venus_main(void)
     rwip_init(error);
 
     GLOBAL_INT_START();
-    
+
+#ifdef SW_TIMER_BY_KERNEL
+    while(APPM_ADVERTISING != ke_state_get(TASK_APP))    
+    {
+        rwip_schedule();
+    }
+#endif    
 #endif
 
+
+#ifdef SM_TEST_EN
+    SM_Test();
+#endif
+
+
+    venus_platform_init();
 
 #ifdef DB_EN
     CC_DB_Init(DB_INIT_FROM_SYSTEM);
 #endif
-    venus_platform_init();
 
     venus_app_init();
 
     application_timers_start();
 
-
-    
+        
     s_tVenusCB.bAvg_BatLevel = 100;
 
     s_tVenusCB.eSystemPwrState = eSysStateInit;
