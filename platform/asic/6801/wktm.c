@@ -37,12 +37,14 @@ static T_wktmPort  g_taWktm[WKTM_TOTAL];
 
 void WKTM0_IRQHandler(void)
 {
+    //drvi_GpioWrite(GPIO_PIN_38, 1);
     regWKTM0->bf.intSts = 1;    // clear interrupt
     
     if(NULL != g_taWktm[WKTM_0].fpCallback)
     {
         g_taWktm[WKTM_0].fpCallback((void*)NULL);
     }
+    //drvi_GpioWrite(GPIO_PIN_38, 0);
 }
 
 void WKTM1_IRQHandler(void)

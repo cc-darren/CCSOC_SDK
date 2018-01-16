@@ -34,7 +34,7 @@ E_Mag_Manager_Status Mag_Controller_Init(void)
 }
 
 
-E_Mag_Manager_Status Mag_Controller_Configure(E_App_Srv_ID UserID, void *Params)
+E_Mag_Manager_Status Mag_Controller_Configure(E_Sensor_User_ID UserID, void *Params)
 {
     E_Mag_Manager_Status ret = E_MAG_SUCCESS;
 
@@ -45,7 +45,7 @@ E_Mag_Manager_Status Mag_Controller_Configure(E_App_Srv_ID UserID, void *Params)
 
 
 
-E_Mag_Manager_Status Mag_Controller_Start(E_App_Srv_ID UserID)
+E_Mag_Manager_Status Mag_Controller_Start(E_Sensor_User_ID UserID)
 {
     E_Mag_Manager_Status ret = E_MAG_SUCCESS;
 
@@ -55,7 +55,7 @@ E_Mag_Manager_Status Mag_Controller_Start(E_App_Srv_ID UserID)
 }
 
 
-E_Mag_Manager_Status Mag_Controller_GetData(E_App_Srv_ID UserID, void* pSampleData, void *pDataSzInBytes)
+E_Mag_Manager_Status Mag_Controller_GetData(E_Sensor_User_ID UserID, void* pSampleData, void *pDataSzInBytes)
 {
     E_Mag_Manager_Status ret = E_MAG_SUCCESS;
 	  uint16_t* pdataBytes = (uint16_t*) pDataSzInBytes;
@@ -77,7 +77,7 @@ E_Mag_Manager_Status Mag_Controller_GetData(E_App_Srv_ID UserID, void* pSampleDa
 }
 
 
-E_Mag_Manager_Status Mag_Controller_Shutdown(E_App_Srv_ID UserID, bool power_off)
+E_Mag_Manager_Status Mag_Controller_Shutdown(E_Sensor_User_ID UserID, bool power_off)
 {
     E_Mag_Manager_Status ret = E_MAG_SUCCESS;
 

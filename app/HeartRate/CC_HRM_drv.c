@@ -14,6 +14,9 @@
 #include "CC_AppSrvc_HeartRate.h"
 #include "clock.h"
 #include "tracer.h"
+#ifdef APP_SERV_MGR_EN
+#include "CC_Sensor_Manager.h"
+#endif
 
 #ifdef HRM_EN
 
@@ -237,7 +240,9 @@ bool pah8002_sensor_init(void)
         hrm_mems_enabled = true;
     
 	#ifdef FIFO_MODE_EN		
+        #ifndef APP_SERV_MGR_EN  // not defined
             CC_LSM6DSX_Fifo_Accel_Register(MEMS_FIFO_USER_HRM, _mems_data, MEMS_SAMPLES_PER_READ);
+        #endif
 	#else
             hrm_mems_index = 0;
 	#endif
@@ -434,17 +439,25 @@ static void pah8002_task(void)
 
     #ifdef FIFO_MODE_EN	
 
-            
+        #ifdef APP_SERV_MGR_EN	
+            uint32_t  size_in_bytes;
+
+            if(E_SEN_ERROR_NONE != CC_SenMgr_Acc_GetData(E_SEN_USER_ID_HRM, _pah8002_data.mems_data, &size_in_bytes))
+                 TracerInfo("CC_SenMgr_Acc_GetData fail!\r\n");
+
+            _pah8002_data.nf_mems = size_in_bytes/(2*3);
+
+            TracerInfo("nf_mems: %d\r\n", _pah8002_data.nf_mems);
+                
+        #else    
             _pah8002_data.nf_mems = CC_LSM6DSX_Fifo_Get_Accel_UnRead_Samples(MEMS_FIFO_USER_HRM);
 
             memcpy(_pah8002_data.mems_data, _mems_data, (_pah8002_data.nf_mems*2));
 
+            CC_LSM6DSX_Fifo_Accel_Read_Done(MEMS_FIFO_USER_HRM);
+        #endif
             //for(uint8_t i=0; i< (_pah8002_data.nf_mems);i++)
                 //TracerInfo("mems(%f)\r\n", _mems_data[i]); 
-
-#ifndef APP_SERV_MGR_EN // not defined            
-            CC_LSM6DSX_Fifo_Accel_Read_Done(MEMS_FIFO_USER_HRM);
-#endif
 
 #ifdef FORCE_HRS_TEST_EN
 

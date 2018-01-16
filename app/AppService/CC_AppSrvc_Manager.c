@@ -1,5 +1,549 @@
 #ifdef APP_SERV_MGR_EN
 
+
+/******************************************************************************
+*  Copyright 2017, CloudChip, Inc.
+*  ---------------------------------------------------------------------------
+*  Statement:
+*  ----------
+*  This software is protected by Copyright and the information contained
+*  herein is confidential. The software may not be copied and the information
+*  contained herein may not be used or disclosed except with the written
+*  permission of CloudChip, Inc. (C) 2017
+******************************************************************************/
+
+/******************************************************************************
+*  Filename:
+*  ---------
+*  CC_AppSrvc_Manager.c
+*
+*  Project:
+*  --------
+*  cc6801
+*
+*  Description:
+*  ------------
+*  Service Manager, taking care of,
+*      (1) Manage clash among multiple services
+*      (2) Service dispatch while service requests are upder different threads
+*      (3) Provide running/suspended services
+*
+*  Author:
+*  -------
+*  CloudChip
+*
+*===========================================================================/
+*  20171129 LOUIS initial version
+******************************************************************************/
+
+/******************************************************************************
+ * INCLUDE FILE
+ ******************************************************************************/
+#include <stdbool.h>
+#include <stdint.h>
+#include <string.h>
+
+#include "project.h"
+#include "CC_Sensor_Manager.h"
+#include "CC_AppSrvc_Manager.h"
+#include "CC_AppSrvc_HeartRate.h"
+#include "error.h"
+#include "tracer.h"
+#include "scheduler.h"
+#include "clock.h"
+#include "tracer.h"
+
+/******************************************************************************
+ * DEFINITION / CONSTANT / ENUM / TYPE
+ ******************************************************************************/
+
+#define IS_SRV_ACTIVED(type)  ((E_APP_SRV_ST_ACTIVE == b_app_srv_state[type]) ? true : false)
+#define IS_SRV_SUSPENDED(type)  ((E_APP_SRV_ST_SUSPEND == b_app_srv_state[type]) ? true : false)
+
+typedef enum
+{
+//    E_APP_SRV_ID_HRM = 0,
+    E_APP_SRV_ID_PEDO = 0,
+    E_APP_SRV_ID_SWIM,
+    E_APP_SRV_ID_SINGLE_HR,
+    E_APP_SRV_ID_24HR_HR,    
+    E_APP_SRV_ID_HRS,    
+
+    E_APP_SRV_ID_TOTAL,
+}E_App_Srv_ID;
+   
+
+typedef enum
+{
+    E_APP_SRV_ST_IDLE = 0,            
+    E_APP_SRV_ST_ACTIVE,
+    E_APP_SRV_ST_SUSPEND,    
+        
+}E_App_Srv_State;
+
+typedef struct
+{
+    E_AppSvcHrMode    eHrMode;
+    uint8_t           bSwitch;
+    uint8_t           baPadding[2];
+}   S_AppSvcEvtHrReq;
+
+typedef struct
+{
+    E_AppSvcHrTimerID    eTimerID;
+    uint8_t              baPadding[3];
+}   S_AppSvcEvtTimeout;
+
+typedef struct
+{
+    uint8_t           bSwitch;
+    uint8_t           baPadding[3];
+}   S_AppSvcEvtPedoReq;
+
+typedef struct
+{
+    uint8_t           bSwitch;
+    uint8_t           baPadding[3];
+}   S_AppSvcEvtSwimReq;
+
+/******************************************************************************
+ * EXTERNAL FUNCTION
+ ******************************************************************************/
+
+/******************************************************************************
+ *  VARIABLE
+ ******************************************************************************/
+ static E_App_Srv_State b_app_srv_state[E_APP_SRV_ID_TOTAL];
+
+
+ /******************************************************************************
+ * [FUNCTION] AppSrv_Suspend
+ *     Indicate one of the service to enter suspend mode.
+ * [ARGUMENT] 
+ *     <in> id: identifier for registered from service manager
+ * [RETURN  ] E_App_Srv_Err_Code.
+ ******************************************************************************/
+ static E_App_Srv_Err_Code AppSrv_Suspend(E_App_Srv_ID id)
+ {
+ 
+     E_App_Srv_Err_Code ret_code = E_APP_SRV_ERR_NONE;
+ 
+     b_app_srv_state[id] = E_APP_SRV_ST_SUSPEND;
+ 
+     switch(id)
+     {
+#if 0        
+         case E_APP_SRV_ID_HRM:
+             CC_SenMgr_Stop_HRM();
+             break;
+#endif         
+         case E_APP_SRV_ID_PEDO:            
+             CC_SenMgr_Stop_Pedometer();
+             break;
+         case E_APP_SRV_ID_SWIM:            
+             CC_SenMgr_Stop_Swim();
+             break;
+         default:
+             ret_code = E_APP_SRV_ERR_TYPE;
+             break;
+     }
+    
+ 
+     return ret_code; 
+ }
+ 
+
+ /******************************************************************************
+ * [FUNCTION] AppSrv_Resume
+ *     Judge which suspended service sholud be resumed
+ * [ARGUMENT] 
+ *     <in> id: identifier for registered from service manager
+ * [RETURN  ] E_App_Srv_Err_Code.
+ ******************************************************************************/
+ static E_App_Srv_Err_Code AppSrv_Resume(void)
+ {
+ 
+     E_App_Srv_Err_Code ret_code = E_APP_SRV_ERR_NONE;
+ 
+#ifdef SRV_MGR_TEST_CASE_4
+     if(IS_SRV_SUSPENDED(E_APP_SRV_ID_SWIM))
+     {
+         TracerInfo("CC_AppSrv_Sensor_Resume: %d\r\n", (E_APP_SRV_ID_SWIM));
+         if(E_SEN_ERROR_NONE == CC_SenMgr_Start_Swim())            
+             b_app_srv_state[E_APP_SRV_ID_HRM] = E_APP_SRV_ST_ACTIVE;        
+         else
+             ret_code = E_APP_SRV_ERR_RESUME_FAIL;
+     }      
+ 
+#endif
+ 
+     return ret_code; 
+ }
+
+
+
+/******************************************************************************
+* [FUNCTION] CC_AppSrv_Manager_Start
+*     Invoke the corresponding function to enable service, and return error code
+*     if any services clash with each other. If not return error, 
+*     use b_app_srv_state to record service state: idle, active, suspended.
+* [ARGUMENT] 
+*     <in> id: identifier for registered from service manager
+* [RETURN  ] E_App_Srv_Err_Code.
+******************************************************************************/ 
+E_App_Srv_Err_Code   CC_AppSrv_Manager_Start(E_App_Srv_ID id)
+{
+    E_App_Srv_Err_Code ret_code = E_APP_SRV_ERR_NONE;
+    
+    switch(id)
+    {
+#if 0        
+        case E_APP_SRV_ID_HRM:
+
+            if(IS_SRV_ACTIVED(E_APP_SRV_ID_SWIM))
+                return E_APP_SRV_ERR_CONFLICT;
+
+            if(E_SEN_ERROR_NONE != CC_SenMgr_Start_HRM())
+                return E_APP_SRV_ERR_START_FAIL;
+
+            break;
+#endif            
+        case E_APP_SRV_ID_PEDO:            
+            
+#if 0 // not used resume here           
+            if(IS_SRV_ACTIVED(E_APP_SRV_ID_SWIM))
+                AppSrv_Suspend(E_APP_SRV_ID_SWIM);
+#endif
+            if(IS_SRV_ACTIVED(E_APP_SRV_ID_SWIM))
+                return E_APP_SRV_ERR_CONFLICT;
+
+            if(E_SEN_ERROR_NONE != CC_SenMgr_Start_Pedometer())
+                return E_APP_SRV_ERR_START_FAIL;
+            
+            break;
+            
+        case E_APP_SRV_ID_SWIM:  // the highest priority!          
+#if 0
+            if(IS_SRV_ACTIVED(E_APP_SRV_ID_HRM))
+                AppSrv_Suspend(E_APP_SRV_ID_HRM);
+
+            if(IS_SRV_ACTIVED(E_APP_SRV_ID_PEDO))
+                AppSrv_Suspend(E_APP_SRV_ID_PEDO);
+#endif
+
+            if(IS_SRV_ACTIVED(E_APP_SRV_ID_SINGLE_HR)
+                || IS_SRV_ACTIVED(E_APP_SRV_ID_24HR_HR)
+                || IS_SRV_ACTIVED(E_APP_SRV_ID_HRS)
+                || IS_SRV_ACTIVED(E_APP_SRV_ID_PEDO))
+                return E_APP_SRV_ERR_CONFLICT;
+
+            if(E_SEN_ERROR_NONE != CC_SenMgr_Start_Swim())
+                return E_APP_SRV_ERR_START_FAIL;
+            
+            break;
+
+        case E_APP_SRV_ID_SINGLE_HR:            
+
+            if(IS_SRV_ACTIVED(E_APP_SRV_ID_24HR_HR) 
+                || IS_SRV_ACTIVED(E_APP_SRV_ID_HRS)
+                || IS_SRV_ACTIVED(E_APP_SRV_ID_SWIM))
+                return E_APP_SRV_ERR_CONFLICT;
+            
+            CC_AppSrv_HR_StartSingleHR();
+            
+            break;
+
+        case E_APP_SRV_ID_24HR_HR:            
+            
+            if(IS_SRV_ACTIVED(E_APP_SRV_ID_SINGLE_HR) 
+                || IS_SRV_ACTIVED(E_APP_SRV_ID_HRS)
+                || IS_SRV_ACTIVED(E_APP_SRV_ID_SWIM))
+                return E_APP_SRV_ERR_CONFLICT;
+        
+            CC_AppSrv_HR_Start24HR();
+            
+            break;
+
+        case E_APP_SRV_ID_HRS:            
+            
+            if(IS_SRV_ACTIVED(E_APP_SRV_ID_SINGLE_HR) 
+                || IS_SRV_ACTIVED(E_APP_SRV_ID_24HR_HR)
+                || IS_SRV_ACTIVED(E_APP_SRV_ID_SWIM))
+                return E_APP_SRV_ERR_CONFLICT;
+        
+            CC_AppSrv_HR_StartHRS();
+            
+            break;
+        
+        default:
+            ret_code = E_APP_SRV_ERR_TYPE;
+            break;
+    }
+
+
+    b_app_srv_state[id] = E_APP_SRV_ST_ACTIVE;
+
+
+    return ret_code;
+}
+
+
+
+/******************************************************************************
+* [FUNCTION] CC_AppSrv_Manager_Stop
+*     Invoke the corresponding function to disable service. At the end of function,
+*     use b_app_srv_state to reset service state to idle.
+* [ARGUMENT] 
+*     <in> id: identifier for registered from service manager
+* [RETURN  ] E_App_Srv_Err_Code.
+******************************************************************************/ 
+E_App_Srv_Err_Code   CC_AppSrv_Manager_Stop(E_App_Srv_ID id)
+{
+
+    E_App_Srv_Err_Code ret_code = E_APP_SRV_ERR_NONE;
+
+    //TracerInfo("CC_AppSrv_Manager_Stop: %d!\r\n", id);
+
+    switch(id)
+    {
+#if 0        
+        case E_APP_SRV_ID_HRM:            
+            
+            if(E_SEN_ERROR_NONE != CC_SenMgr_Stop_HRM())
+               return E_APP_SRV_ERR_STOP_FAIL;             
+            
+            break;            
+#endif            
+        case E_APP_SRV_ID_PEDO:            
+            
+            if(E_SEN_ERROR_NONE != CC_SenMgr_Stop_Pedometer())
+               return E_APP_SRV_ERR_STOP_FAIL;             
+            
+            break;
+            
+        case E_APP_SRV_ID_SWIM:            
+            
+            if(E_SEN_ERROR_NONE != CC_SenMgr_Stop_Swim())
+               return E_APP_SRV_ERR_STOP_FAIL;           
+            
+            break;
+
+        case E_APP_SRV_ID_SINGLE_HR:            
+            CC_AppSrv_HR_StopSingleHR();
+            break;
+
+        case E_APP_SRV_ID_24HR_HR:            
+            CC_AppSrv_HR_Stop24HR();
+            break;
+
+        case E_APP_SRV_ID_HRS:            
+            CC_AppSrv_HR_StopHRS();
+            break;
+        
+        default:
+            
+            ret_code = E_APP_SRV_ERR_TYPE;
+            
+            break;
+    }
+
+
+
+    b_app_srv_state[id] = E_APP_SRV_ST_IDLE;
+
+    AppSrv_Resume();
+
+    return ret_code;
+}
+
+
+
+/******************************************************************************
+* [FUNCTION] APP_SVCMGR_EventHandler
+*     Provide a space to handle all the service requests that need to execute 
+*     in the main thread
+* [ARGUMENT] 
+*     <in> ptAppEvent: a pointer to the struct where below info. specified,
+*            .eModuleID    : ID of the dest. module to handle this event
+*            .bEventID     : ID of the event, defined by each module
+*            .wDataByteSize: Byte-size of allocated buffer for additional data
+*            .vpData       : An pointer to allocated buf, where data is stored
+* [RETURN  ] None.
+******************************************************************************/ 
+
+void   APP_SVCMGR_EventHandler(S_AppSchedEvent *tEvent)
+{
+    TracerInfo(  "[APP_SVCMGR_EventHandler] event: %d, argv: 0x%08X\r\n"
+               , tEvent->bEventID
+               , ((uint32_t) tEvent->vpData)                            );
+
+
+    switch (tEvent->bEventID)
+    {
+        
+         case E_APP_SVC_EVENT_HRM_SERVICE_REQUEST:
+         {
+             S_AppSvcEvtHrReq   *_ptReq = ((S_AppSvcEvtHrReq *) &tEvent->vpData);
+
+             if (E_APP_SVC_HR_MODE_SINGLE_SHOT == _ptReq->eHrMode)
+             {
+                 if (0 == _ptReq->bSwitch)
+                    CC_AppSrv_Manager_Stop(E_APP_SRV_ID_SINGLE_HR);
+                 else
+                    CC_AppSrv_Manager_Start(E_APP_SRV_ID_SINGLE_HR);
+             }
+             else if (E_APP_SVC_HR_MODE_STRAP == _ptReq->eHrMode)
+             {
+                 if (0 == _ptReq->bSwitch)
+                    CC_AppSrv_Manager_Stop(E_APP_SRV_ID_HRS);
+                 else
+                    CC_AppSrv_Manager_Start(E_APP_SRV_ID_HRS);
+             }
+             else //if (E_APP_SVC_HR_MODE_24HR == _ptReq->eHrMode)
+             {
+                 if (0 == _ptReq->bSwitch)
+                    CC_AppSrv_Manager_Stop(E_APP_SRV_ID_24HR_HR);
+                 else
+                    CC_AppSrv_Manager_Start(E_APP_SRV_ID_24HR_HR);
+             }
+
+             break;
+         }
+         
+         case E_APP_SVC_EVENT_HRM_TIMEOUT:
+         {
+             S_AppSvcEvtTimeout   *_peTimeout = ((S_AppSvcEvtTimeout *) &tEvent->vpData);
+
+             if (E_APP_SVC_HR_TIMER_24HR_ONE_MEASUREMENT == _peTimeout->eTimerID)
+                 CC_AppSrv_24HR_Handler_ToOneMeasurement();
+             else //if (E_APP_SVC_HR_TIMER_24HR_ONE_MEASUREMENT == *_peTimerID)
+                 CC_AppSrv_24HR_Handler_ToPeriodicMeasurement();
+
+             break;
+         }
+         
+         case E_APP_SVC_EVENT_PEDO_SERVICE_REQEST:
+         {
+            S_AppSvcEvtPedoReq  *_ptReq = ((S_AppSvcEvtPedoReq *) &tEvent->vpData);
+    
+            if (0 == _ptReq->bSwitch)
+                CC_AppSrv_Manager_Stop(E_APP_SRV_ID_PEDO);
+            else
+                CC_AppSrv_Manager_Start(E_APP_SRV_ID_PEDO);
+            
+            break;
+         }
+         
+         case E_APP_SVC_EVENT_SWIM_SERVICE_REQEST:
+         {
+            S_AppSvcEvtSwimReq  *_ptReq = ((S_AppSvcEvtSwimReq *) &tEvent->vpData);
+    
+            if (0 == _ptReq->bSwitch)
+                CC_AppSrv_Manager_Stop(E_APP_SRV_ID_SWIM);
+            else
+                CC_AppSrv_Manager_Start(E_APP_SRV_ID_SWIM);
+            
+            break;            
+         }
+    }
+}
+
+
+
+/******************************************************************************
+ * FUNCTION > APP_SVCMGR_Init
+ ******************************************************************************/
+E_App_Srv_Err_Code   APP_SVCMGR_Init(void)
+{
+    E_App_Srv_Err_Code ret_code = E_APP_SRV_ERR_NONE;
+    
+    for(uint8_t i = 0; i < E_APP_SRV_ID_TOTAL; i++)
+    {
+        b_app_srv_state[i] = E_APP_SRV_ST_IDLE;
+    
+    }
+
+    APP_SCHED_RegEventHandler(E_APP_SCHED_MODID_SERVICE_MGR, APP_SVCMGR_EventHandler);
+
+    return ret_code;
+}
+
+/******************************************************************************
+ * FUNCTION > APP_SVCMGR_PostEvent_HrRequest
+ ******************************************************************************/
+void    APP_SVCMGR_PostEvent_HrRequest(E_AppSvcHrMode eMode, uint8_t bSwitch)
+{
+    S_AppSchedEvent     _tEvent;
+    S_AppSvcEvtHrReq   *_ptReq = ((S_AppSvcEvtHrReq *) &_tEvent.vpData);
+        
+    _tEvent.eModuleID     = E_APP_SCHED_MODID_SERVICE_MGR;
+    _tEvent.bEventID      = E_APP_SVC_EVENT_HRM_SERVICE_REQUEST;
+    _tEvent.wDataByteSize = 0;
+
+    _ptReq->eHrMode = eMode;
+    _ptReq->bSwitch = bSwitch;
+    
+    APP_SCHED_PostEvent(&_tEvent);
+}
+
+/******************************************************************************
+ * FUNCTION > APP_SVCMGR_PostEvent_HrTimeout
+ ******************************************************************************/
+void    APP_SVCMGR_PostEvent_HrTimeout(E_AppSvcHrTimerID eTimerID)
+{
+    S_AppSchedEvent       _tEvent;
+    S_AppSvcEvtTimeout   *_ptTimerout = ((S_AppSvcEvtTimeout *) &_tEvent.vpData);
+
+    _tEvent.eModuleID     = E_APP_SCHED_MODID_SERVICE_MGR;
+    _tEvent.bEventID      = E_APP_SVC_EVENT_HRM_TIMEOUT;
+    _tEvent.wDataByteSize = 0;
+
+    _ptTimerout->eTimerID = eTimerID;
+    
+    APP_SCHED_PostEvent(&_tEvent);
+}
+
+
+/******************************************************************************
+ * FUNCTION > APP_SVCMGR_PostEvent_PedoRequest
+ ******************************************************************************/
+void    APP_SVCMGR_PostEvent_PedoRequest(uint8_t bSwitch)
+{
+    S_AppSchedEvent     _tEvent;
+    S_AppSvcEvtPedoReq   *_ptReq = ((S_AppSvcEvtPedoReq *) &_tEvent.vpData);
+        
+    _tEvent.eModuleID     = E_APP_SCHED_MODID_SERVICE_MGR;
+    _tEvent.bEventID      = E_APP_SVC_EVENT_PEDO_SERVICE_REQEST;
+    _tEvent.wDataByteSize = 0;
+
+    _ptReq->bSwitch = bSwitch;
+    
+    APP_SCHED_PostEvent(&_tEvent);
+}
+
+/******************************************************************************
+ * FUNCTION > APP_SVCMGR_PostEvent_SwimRequest
+ ******************************************************************************/
+void    APP_SVCMGR_PostEvent_SwimRequest(uint8_t bSwitch)
+{
+    S_AppSchedEvent     _tEvent;
+    S_AppSvcEvtSwimReq   *_ptReq = ((S_AppSvcEvtSwimReq *) &_tEvent.vpData);
+        
+    _tEvent.eModuleID     = E_APP_SCHED_MODID_SERVICE_MGR;
+    _tEvent.bEventID      = E_APP_SVC_EVENT_SWIM_SERVICE_REQEST;
+    _tEvent.wDataByteSize = 0;
+
+    _ptReq->bSwitch = bSwitch;
+    
+    APP_SCHED_PostEvent(&_tEvent);
+}
+
+
+
+
+#if 0
+
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
@@ -258,7 +802,7 @@ E_App_Srv_Err_Code CC_AppSrv_Manager_Stop(E_App_Srv_ID type)
 }
 
 
-
+#endif
 
 
 
@@ -268,7 +812,7 @@ E_App_Srv_Err_Code CC_AppSrv_Manager_Stop(E_App_Srv_ID type)
 
 
 
-void CC_AppSrv_Sensor_Test(void)
+void APP_SVCMGR_Test(void)
 {
     int16_t hrm_acc_data[MEMS_FIFO_SIZE];
     uint32_t hrm_acc_size = 0;

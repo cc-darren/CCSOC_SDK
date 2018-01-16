@@ -11,7 +11,10 @@
 #include "sw_timer.h"
 #include "tracer.h"
 
-#include "svc_mgr.h"
+//#include "svc_mgr.h"
+  
+#include "CC_Sensor_Manager.h"
+
 
 #ifdef DB_EN
 #include "fds.h"
@@ -106,6 +109,7 @@ extern void CC_MainSet_HrmData(uint8_t _bHrmData);
 extern void CC_MainSet_HrmDataFlag(uint8_t _bHrmReadyFlag);
 extern void CC_SetHrmDisplayHrmDataPageEvent(void);
 extern uint8_t CC_Charge_Register(charge_cb_t cb);
+extern void CC_SetHrmStatus(eHrmOp_State _eState);
 
 
 /**********************************************************
@@ -150,8 +154,11 @@ static void _TO_24HR_PeriodicMeasurement(void * pvContext)
 
     s_tAppSrvHrCB.e24HrState = E_APPSRV_HRM_ST_IN_MEASUREMENT;
 
-    //CC_HRM_Post24HHR_TO_PeriodicMeasurement();
+#ifdef	APP_SERV_MGR_EN    
     APP_SVCMGR_PostEvent_HrTimeout(E_APP_SVC_HR_TIMER_24HR_PERIODIC_MEASUREMENT);
+#else
+	CC_HRM_Post24HHR_TO_PeriodicMeasurement();
+#endif	
 }
 
 
@@ -159,8 +166,11 @@ static void _TO_24HR_OneMeasurement(void * pvContext)
 {
     UNUSED_PARAMETER(pvContext);
 
-    //CC_HRM_Post24HHR_TO_OneMeasurement();
+#ifdef	APP_SERV_MGR_EN     
     APP_SVCMGR_PostEvent_HrTimeout(E_APP_SVC_HR_TIMER_24HR_ONE_MEASUREMENT);
+#else
+	CC_HRM_Post24HHR_TO_OneMeasurement();
+#endif
 }
 
 static void _AppSrv_HR_Reset(void)
@@ -181,8 +191,11 @@ static void _AppSrv_HR_Charge_Evt_CB(eDEV_CHARGE_STATE_t eState)
     {
         if ( eEnable == CC_BLE_Cme_Get_HeartRateStrapMode())
         {
-            //CC_HRM_PostHeartRateStrapModeEvent(eEnable);
+#ifdef	APP_SERV_MGR_EN  					            
             APP_SVCMGR_PostEvent_HrRequest(E_APP_SVC_HR_MODE_STRAP, eEnable);
+#else
+            CC_HRM_PostHeartRateStrapModeEvent(eEnable);
+#endif					
         }
     }
     else
@@ -260,8 +273,18 @@ void CC_AppSrv_HR_StartSingleHR(void)
 #ifdef HRM_EN
     if (false == s_tAppSrvHrCB.bIsAppLocked)
     {
+    #ifdef APP_SERV_MGR_EN        
+        if (E_SEN_ERROR_NONE == CC_SenMgr_Start_HRM())
+        {
+            CC_AppSrv_HR_StartSystemTick();
+
+            CC_SetHrmStatus(eHRM_On); 
+    #else
         if (true == CC_HRM_PPG_INIT())
+        {
+    #endif            
             _AppSrv_HR_Reset();
+        }
     }
 #endif
     s_tAppSrvHrCB.eSingleHrState = E_APPSRV_HRM_ST_IN_MEASUREMENT;
@@ -277,7 +300,17 @@ void CC_AppSrv_HR_StopSingleHR(void)
     if ((E_APPSRV_HRM_ST_IN_MEASUREMENT != s_tAppSrvHrCB.eHrsState) && (E_APPSRV_HRM_ST_IN_MEASUREMENT != s_tAppSrvHrCB.e24HrState))
     {
 #ifdef HRM_EN        
+    #ifdef APP_SERV_MGR_EN
+
+        CC_SetHrmStatus(eHRM_Off);      
+
+        CC_AppSrv_HR_StopSystemTick();
+    
+        CC_SenMgr_Stop_HRM();
+        
+    #else
         CC_HRM_PPG_DEINIT();
+    #endif
 #endif        
         _AppSrv_HR_Reset();
     }
@@ -294,8 +327,18 @@ void CC_AppSrv_HR_StartHRS(void)
 #ifdef HRM_EN
     if (false == s_tAppSrvHrCB.bIsAppLocked)
     {
+    #ifdef APP_SERV_MGR_EN        
+        if (E_SEN_ERROR_NONE == CC_SenMgr_Start_HRM())
+        {
+            CC_AppSrv_HR_StartSystemTick();
+
+            CC_SetHrmStatus(eHRM_On);             
+    #else        
         if (true == CC_HRM_PPG_INIT())
+        {
+    #endif            
             _AppSrv_HR_Reset();
+        }
     }
 #endif
     s_tAppSrvHrCB.eHrsState = E_APPSRV_HRM_ST_IN_MEASUREMENT;
@@ -310,7 +353,16 @@ void CC_AppSrv_HR_StopHRS(void)
 #ifdef HRM_EN
     if ((E_APPSRV_HRM_ST_IN_MEASUREMENT != s_tAppSrvHrCB.eSingleHrState) && (E_APPSRV_HRM_ST_IN_MEASUREMENT != s_tAppSrvHrCB.e24HrState))
     {
+    #ifdef APP_SERV_MGR_EN
+
+        CC_SetHrmStatus(eHRM_Off);      
+
+        CC_AppSrv_HR_StopSystemTick();
+    
+        CC_SenMgr_Stop_HRM();
+    #else        
         CC_HRM_PPG_DEINIT();
+    #endif
         _AppSrv_HR_Reset();
     }
 #endif
@@ -346,8 +398,18 @@ void CC_AppSrv_HR_Stop24HR(void)
 #ifdef HRM_EN
     if ((E_APPSRV_HRM_ST_IN_MEASUREMENT != s_tAppSrvHrCB.eSingleHrState) && (E_APPSRV_HRM_ST_IN_MEASUREMENT != s_tAppSrvHrCB.eHrsState))
     {
-        CC_HRM_PPG_DEINIT();
-        _AppSrv_HR_Reset();
+        #ifdef APP_SERV_MGR_EN
+
+            CC_SetHrmStatus(eHRM_Off);      
+
+            CC_AppSrv_HR_StopSystemTick();
+        
+            CC_SenMgr_Stop_HRM();
+        #else         
+            CC_HRM_PPG_DEINIT();
+        #endif
+
+            _AppSrv_HR_Reset();
     }
 #endif
     app_timer_stop(s_tAppSrvHR_Timer_24HR_PeriodicMeasurement);
@@ -400,7 +462,7 @@ void CC_AppSrv_HR_DataReport(int16_t nHrData, int16_t nTrustLevel)
         CC_MainSet_HrmDataFlag(true);
 
         s_tAppSrvHrCB.b24HrDataCount++;
-
+  
         if (s_tAppSrvHrCB.b24HrDataCount >= APPSRV_24HR_EXPECTED_DATA_MEASUREMENT_COUNT)
         {
             app_timer_stop(s_tAppSrvHR_Timer_24HR_OneMeasurement);
@@ -419,8 +481,20 @@ void CC_AppSrv_24HR_Handler_ToOneMeasurement(void)
 #ifdef HRM_EN
     if ((E_APPSRV_HRM_ST_IN_MEASUREMENT != s_tAppSrvHrCB.eSingleHrState) && (E_APPSRV_HRM_ST_IN_MEASUREMENT != s_tAppSrvHrCB.eHrsState))
     {
-        CC_HRM_PPG_DEINIT();
-        _AppSrv_HR_Reset();
+ 
+        #ifdef APP_SERV_MGR_EN
+
+            CC_SetHrmStatus(eHRM_Off);      
+
+            CC_AppSrv_HR_StopSystemTick();
+        
+            CC_SenMgr_Stop_HRM();
+        #else 
+        
+            CC_HRM_PPG_DEINIT();
+        #endif
+        
+            _AppSrv_HR_Reset();
     }
 #endif
     s_tAppSrvHrCB.e24HrState = E_APPSRV_HRM_ST_HALFTIME_BREAK;
@@ -435,8 +509,20 @@ void CC_AppSrv_24HR_Handler_ToPeriodicMeasurement(void)
 #ifdef HRM_EN
     if (false == s_tAppSrvHrCB.bIsAppLocked)
     {
-        if (true == CC_HRM_PPG_INIT())
-            _AppSrv_HR_Reset();
+        #ifdef APP_SERV_MGR_EN
+            if (E_SEN_ERROR_NONE == CC_SenMgr_Start_HRM())
+            {
+                CC_AppSrv_HR_StartSystemTick();
+
+                CC_SetHrmStatus(eHRM_On); 
+        #else
+                
+            if (true == CC_HRM_PPG_INIT())
+            {
+        #endif            
+                _AppSrv_HR_Reset();
+            }
+        
     }
 #endif
     s_tAppSrvHrCB.e24HrState = E_APPSRV_HRM_ST_IN_MEASUREMENT;
@@ -482,7 +568,17 @@ void CC_AppSrv_HR_SetAppLockHrm(bool bIsAppLocked)
     if (true == s_tAppSrvHrCB.bIsAppLocked)
     {
 #ifdef HRM_EN        
-        CC_HRM_PPG_DEINIT();
+    #ifdef APP_SERV_MGR_EN
+        
+            CC_SetHrmStatus(eHRM_Off);      
+        
+            CC_AppSrv_HR_StopSystemTick();
+        
+            CC_SenMgr_Stop_HRM();
+    #else 
+
+            CC_HRM_PPG_DEINIT();
+    #endif
         _AppSrv_HR_Reset();
 #endif        
     }
@@ -492,9 +588,21 @@ void CC_AppSrv_HR_SetAppLockHrm(bool bIsAppLocked)
             || (E_APPSRV_HRM_ST_IN_MEASUREMENT == s_tAppSrvHrCB.eHrsState     )
             || (E_APPSRV_HRM_ST_IN_MEASUREMENT == s_tAppSrvHrCB.e24HrState    ))
         {
-#ifdef HRM_EN            
-            if (true == CC_HRM_PPG_INIT())
-                _AppSrv_HR_Reset();
+#ifdef HRM_EN      
+            #ifdef APP_SERV_MGR_EN
+                if (E_SEN_ERROR_NONE == CC_SenMgr_Start_HRM())
+                {
+                    CC_AppSrv_HR_StartSystemTick();
+            
+                    CC_SetHrmStatus(eHRM_On); 
+            #else
+
+                if (true == CC_HRM_PPG_INIT())
+                {
+            #endif
+                    _AppSrv_HR_Reset();
+
+                }
 #endif            
         }
     }

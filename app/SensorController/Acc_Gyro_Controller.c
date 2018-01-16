@@ -29,13 +29,13 @@ typedef struct
 
 
 
-static T_Accel_Gyro_Settings g_Accel_Gyro_Settings[E_APP_SRV_ID_TOTAL];
+static T_Accel_Gyro_Settings g_Accel_Gyro_Settings[E_SEN_USER_ID_TOTAL];
 
 
 //////////////////// LSM6DSX Data Dispatch  /////////////////////////////////////////
 
 static CC_Lsm6dsx_Fifo_Configure_t Lsm6dsx_Fifo_Config; 
-CC_LSM6DSX_Fifo_Handle_t S_Lsm6dsx_Fifo_Handle[E_APP_SRV_ID_TOTAL];
+CC_LSM6DSX_Fifo_Handle_t S_Lsm6dsx_Fifo_Handle[E_SEN_USER_ID_TOTAL];
 
 
 
@@ -389,7 +389,7 @@ void CC_LSM6DSX_Fifo_Update_Data(void)
             //TracerInfo("gyro_z: 0x%02x\r\n", mems_data[2]);       
 
 
-            for(uint8_t handle = 0; handle < E_APP_SRV_ID_TOTAL; handle++)
+            for(uint8_t handle = 0; handle < E_SEN_USER_ID_TOTAL; handle++)
             {
                 if(S_Lsm6dsx_Fifo_Handle[handle].Gyro.isRegistered)
                 {
@@ -424,12 +424,12 @@ void CC_LSM6DSX_Fifo_Update_Data(void)
             LSM6DS3_ACC_Get_Acceleration(mems_data, FIFO_EN); // 1 sample => x,y,z
         
 
-                //TracerInfo("acc_x: 0x%02x\r\n", mems_data[0]);
-                //TracerInfo("acc_y: 0x%02x\r\n", mems_data[1]);
-               // TracerInfo("acc_z: 0x%02x\r\n", mems_data[2]);                
+            //TracerInfo("acc_x: 0x%02x\r\n", mems_data[0]);
+            //TracerInfo("acc_y: 0x%02x\r\n", mems_data[1]);
+            //TracerInfo("acc_z: 0x%02x\r\n", mems_data[2]);                
 
             
-            for(uint8_t handle = 0; handle < E_APP_SRV_ID_TOTAL; handle++)
+            for(uint8_t handle = 0; handle < E_SEN_USER_ID_TOTAL; handle++)
             {
                 if(S_Lsm6dsx_Fifo_Handle[handle].Accel.isRegistered)
                 {
@@ -473,7 +473,7 @@ static E_Accel_Gyro_Access_Mode JudgeAccelGyroAccessMode(void)
     E_Accel_Gyro_Access_Mode final_select_mode = E_ACC_GYRO_MODE_NOT_CONFIG;
 
 
-    for(i = 0; i < E_APP_SRV_ID_TOTAL; i++)
+    for(i = 0; i < E_SEN_USER_ID_TOTAL; i++)
     {
         curr_mode = g_Accel_Gyro_Settings[i].AccessMode;
 
@@ -514,7 +514,7 @@ static E_LSM6DSX_FIFO_TARGET_DEVICE JudgeAccelGyroFifoControlTarget(void)
     E_LSM6DSX_FIFO_TARGET_DEVICE curr_target;
     E_LSM6DSX_FIFO_TARGET_DEVICE final_select_target = E_LSM6DSX_FIFO_CONTROL_NONE; 
 
-    for(i = 0; i < E_APP_SRV_ID_TOTAL; i++)
+    for(i = 0; i < E_SEN_USER_ID_TOTAL; i++)
     {
 
         if(E_ACC_GYRO_MODE_FIFO != g_Accel_Gyro_Settings[i].AccessMode)
@@ -562,7 +562,7 @@ static LSM6DS3_ACC_GYRO_ODR_FIFO_t JudgeAccelGyroFifo_ODR(void) // Find the larg
     LSM6DS3_ACC_GYRO_ODR_FIFO_t final_select_odr = LSM6DS3_ACC_GYRO_ODR_FIFO_10Hz;
         
 
-    for(i = 0; i < E_APP_SRV_ID_TOTAL; i++)
+    for(i = 0; i < E_SEN_USER_ID_TOTAL; i++)
     {
         
          if(E_ACC_GYRO_MODE_FIFO != g_Accel_Gyro_Settings[i].AccessMode)
@@ -618,7 +618,7 @@ void Acc_Gyro_Dump_All_Settings(void)
     TracerInfo("SampleCount: %d\r\n", Lsm6dsx_Fifo_Config.SampleCount);
 
 
-    for(uint8_t i = 0; i < E_APP_SRV_ID_TOTAL; i++)
+    for(uint8_t i = 0; i < E_SEN_USER_ID_TOTAL; i++)
     {
         TracerInfo("====== User ID: %d  =======\r\n", i);
 
@@ -663,7 +663,7 @@ E_Accel_Gyro_Manager_Status Acc_Gyro_Controller_Init(void)
 }
 
 
-E_Accel_Gyro_Manager_Status Acc_Gyro_Controller_Configure(E_App_Srv_ID UserID, void *Params)
+E_Accel_Gyro_Manager_Status Acc_Gyro_Controller_Configure(E_Sensor_User_ID UserID, void *Params)
 {
     E_Accel_Gyro_Manager_Status ret = E_ACC_GYRO_SUCCESS;
     T_Accel_Gyro_Settings *myParams = (T_Accel_Gyro_Settings*)Params;
@@ -719,13 +719,14 @@ E_Accel_Gyro_Manager_Status Acc_Gyro_Controller_Configure(E_App_Srv_ID UserID, v
     return ret;
 }
 
-E_Accel_Gyro_Manager_Status Acc_Gyro_Controller_Start(E_App_Srv_ID UserID)
+E_Accel_Gyro_Manager_Status Acc_Gyro_Controller_Start(E_Sensor_User_ID UserID)
 {
     E_Accel_Gyro_Manager_Status ret = E_ACC_GYRO_SUCCESS;
     
     if(CC_LSM6DSX_Fifo_Is_Configured())
     {
         CC_LSM6DSX_FifoDisable(E_LSM6DSX_FIFO_CONTROL_ACCEL_GYRO); // disable all
+        
         CC_LSM6DSX_FifoEnable();
                         
     }
@@ -735,7 +736,8 @@ E_Accel_Gyro_Manager_Status Acc_Gyro_Controller_Start(E_App_Srv_ID UserID)
         if((LSM6DS3_POLL_SINGLE_MODE_ACCEL == g_Accel_Gyro_Settings[UserID].PollTarget))
                 //&& (false == CC_LSM6DSX_Check_Accel_ON()))
         {
-            CC_LSM6DSX_AccelPowerON((LSM6DS3_ACC_GYRO_ODR_XL_t)g_Accel_Gyro_Settings[UserID].S_Accel.PollSet.Odr);
+           
+            CC_LSM6DSX_AccelPowerON((LSM6DS3_ACC_GYRO_ODR_XL_t)g_Accel_Gyro_Settings[UserID].S_Accel.PollSet.Odr);     
         }
         else if((LSM6DS3_POLL_SINGLE_MODE_GYRO == g_Accel_Gyro_Settings[UserID].PollTarget))
                 //&& (false == CC_LSM6DSX_Check_Gyro_ON()))
@@ -746,7 +748,7 @@ E_Accel_Gyro_Manager_Status Acc_Gyro_Controller_Start(E_App_Srv_ID UserID)
                 //&& (false == CC_LSM6DSX_Check_Accel_ON())
                 //&& (false == CC_LSM6DSX_Check_Gyro_ON()))
         {
-        
+               
             CC_LSM6DSX_AccelPowerON((LSM6DS3_ACC_GYRO_ODR_XL_t)g_Accel_Gyro_Settings[UserID].S_Accel.PollSet.Odr);
             CC_LSM6DSX_GyroPowerON ((LSM6DS3_ACC_GYRO_ODR_G_t)g_Accel_Gyro_Settings[UserID].S_Gyro.PollSet.Odr);
         }
@@ -757,7 +759,7 @@ E_Accel_Gyro_Manager_Status Acc_Gyro_Controller_Start(E_App_Srv_ID UserID)
     return ret;
 }
 
-E_Accel_Gyro_Manager_Status Acc_Gyro_Controller_GetData(E_App_Srv_ID UserID, void* pSampleData, void *pDataSzInBytes)
+E_Accel_Gyro_Manager_Status Acc_Gyro_Controller_GetData(E_Sensor_User_ID UserID, void* pSampleData, void *pDataSzInBytes)
 {
     E_Accel_Gyro_Manager_Status ret = E_ACC_GYRO_SUCCESS;
     E_Accel_Gyro_Access_Mode access_mode;
@@ -784,8 +786,9 @@ E_Accel_Gyro_Manager_Status Acc_Gyro_Controller_GetData(E_App_Srv_ID UserID, voi
         CC_LSM6DSX_Fifo_Update_Data();
 
         fifo_target = g_Accel_Gyro_Settings[UserID].FifoTarget;//CC_LSM6DSX_Fifo_Get_Control_Target();
+
         
-        if((E_LSM6DSX_FIFO_CONTROL_ACCEL == fifo_target)
+        if( (E_LSM6DSX_FIFO_CONTROL_ACCEL == fifo_target)
             || (E_LSM6DSX_FIFO_CONTROL_ACCEL_GYRO == fifo_target))
         {
 
@@ -802,6 +805,14 @@ E_Accel_Gyro_Manager_Status Acc_Gyro_Controller_GetData(E_App_Srv_ID UserID, voi
                 CC_LSM6DSX_Fifo_Accel_Read_Done(UserID);
 
                 //TracerInfo("Get acc sample(%d): %d\r\n", UserID, accel_nSamples);
+                /*
+                TracerInfo("Get acc sample[0]: %d\r\n", fifo_data->p_accel_data[0]);
+                TracerInfo("Get acc sample[1]: %d\r\n", fifo_data->p_accel_data[1]);
+                TracerInfo("Get acc sample[2]: %d\r\n", fifo_data->p_accel_data[2]); 
+                TracerInfo("Get acc sample[3]: %d\r\n", fifo_data->p_accel_data[3]);
+                TracerInfo("Get acc sample[4]: %d\r\n", fifo_data->p_accel_data[4]);
+                TracerInfo("Get acc sample[5]: %d\r\n", fifo_data->p_accel_data[5]);                 
+                */
             }
         }
             
@@ -811,6 +822,9 @@ E_Accel_Gyro_Manager_Status Acc_Gyro_Controller_GetData(E_App_Srv_ID UserID, voi
 
             if(NULL != fifo_data->p_gyro_data)
             {
+                //TracerInfo("pGyro_addr3: 0x%x\r\n", fifo_data->p_gyro_data);
+
+            
                 gyro_nSamples = CC_LSM6DSX_Fifo_Get_Gyro_UnRead_Samples(UserID);    
 
                 fifo_SzInBytes->gyro_SzInBytes = (gyro_nSamples * 3 * 2); //16bits x,y,z
@@ -822,6 +836,10 @@ E_Accel_Gyro_Manager_Status Acc_Gyro_Controller_GetData(E_App_Srv_ID UserID, voi
                 CC_LSM6DSX_Fifo_Gyro_Read_Done(UserID);
 
                 //TracerInfo("Get gyro sample(%d): %d\r\n", UserID, gyro_nSamples);
+                //TracerInfo("Get gyro sample[0]: %d\r\n", g_Accel_Gyro_Settings[UserID].S_Gyro.FifoSet.iSampleData[0]);
+                //TracerInfo("Get gyro sample[1]: %d\r\n", g_Accel_Gyro_Settings[UserID].S_Gyro.FifoSet.iSampleData[1]);
+                //TracerInfo("Get gyro sample[2]: %d\r\n", g_Accel_Gyro_Settings[UserID].S_Gyro.FifoSet.iSampleData[2]);                
+
             }           
 
         }
@@ -844,15 +862,15 @@ E_Accel_Gyro_Manager_Status Acc_Gyro_Controller_GetData(E_App_Srv_ID UserID, voi
 
 
 
-E_Accel_Gyro_Manager_Status Acc_Gyro_Controller_Shutdown(E_App_Srv_ID UserID, bool power_off)
+E_Accel_Gyro_Manager_Status Acc_Gyro_Controller_Shutdown(E_Sensor_User_ID UserID, bool power_off)
 {
     E_Accel_Gyro_Manager_Status ret = E_ACC_GYRO_SUCCESS;
     
     //CC_LSM6DSX_Fifo_Reset();  
 
-    if(E_APP_SRV_ID_TOTAL == UserID)
+    if(E_SEN_USER_ID_TOTAL == UserID)
     { 
-        for(uint8_t i = 0; i < E_APP_SRV_ID_TOTAL; i++)
+        for(uint8_t i = 0; i < E_SEN_USER_ID_TOTAL; i++)
         {
             CC_LSM6DSX_Fifo_Accel_UnRegister(i);
             CC_LSM6DSX_Fifo_Gyro_UnRegister(i);

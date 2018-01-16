@@ -6,7 +6,7 @@
 #define _ACC_GYRO_CONTROLLER_
 
 #include "error.h"
-#include "CC_AppSrvc_Manager.h"
+#include "CC_Sensor_Manager.h"
 #include "acc_lsm6ds3.h"
 
 typedef enum
@@ -41,7 +41,7 @@ typedef enum
 
 typedef struct 
 {
-    uint32_t nFifoDepth;    // max number of Bytes 
+    uint16_t nFifoDepth;    // max number in 16bits
     LSM6DS3_ACC_GYRO_ODR_FIFO_t Odr;
     int16_t *iSampleData;   // data buffer 
     
@@ -124,10 +124,10 @@ typedef struct
 
 
 E_Accel_Gyro_Manager_Status Acc_Gyro_Controller_Init(void);
-E_Accel_Gyro_Manager_Status Acc_Gyro_Controller_Configure(E_App_Srv_ID UserID, void *Params);
-E_Accel_Gyro_Manager_Status Acc_Gyro_Controller_Start(E_App_Srv_ID UserID);
-E_Accel_Gyro_Manager_Status Acc_Gyro_Controller_GetData(E_App_Srv_ID UserID, void* pSampleData, void *pDataSzInBytes);
-E_Accel_Gyro_Manager_Status Acc_Gyro_Controller_Shutdown(E_App_Srv_ID UserID, bool power_off);
+E_Accel_Gyro_Manager_Status Acc_Gyro_Controller_Configure(E_Sensor_User_ID UserID, void *Params);
+E_Accel_Gyro_Manager_Status Acc_Gyro_Controller_Start(E_Sensor_User_ID UserID);
+E_Accel_Gyro_Manager_Status Acc_Gyro_Controller_GetData(E_Sensor_User_ID UserID, void* pSampleData, void *pDataSzInBytes);
+E_Accel_Gyro_Manager_Status Acc_Gyro_Controller_Shutdown(E_Sensor_User_ID UserID, bool power_off);
 const struct sensor_manager_itfs* acc_gyro_sm_itf_get(void);
 
 

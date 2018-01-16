@@ -16,7 +16,7 @@
     //#define SM_TEST_CASE_1_1   // verify fifo time in const number
    // #endif
 
-//#define SM_TEST_CASE_2      // Test access Gyro, need to make sure No Accel data output
+#define SM_TEST_CASE_2      // Test access Gyro, need to make sure No Accel data output
     #ifdef SM_TEST_CASE_2
     //#define SM_TEST_CASE_2_1    // verify fifo time in const number
     #endif
@@ -31,7 +31,7 @@
 
 #endif
 
-#define MEMS_FIFO_SIZE   100// 100 for test because of no enough memory, 300 => formal number  
+#define MEMS_FIFO_SIZE   (FIFO_DEPTH_T/2)
 
 
 struct sensor_params
@@ -40,16 +40,16 @@ struct sensor_params
     uint8_t  param[];
 };
 
-/*
+
 typedef enum
 {
-    E_APP_SRV_ID_HRM              = 0,
-    E_APP_SRV_ID_PEDO             = 1,
-    E_APP_SRV_ID_SWIM             = 2,
+    E_SEN_USER_ID_HRM              = 0,
+    E_SEN_USER_ID_PEDO             = 1,
+    E_SEN_USER_ID_SWIM             = 2,
 
-    E_APP_SRV_ID_TOTAL,    
-}E_APP_SRV_ID;
-*/
+    E_SEN_USER_ID_TOTAL,    
+}   E_Sensor_User_ID;
+
 
 typedef enum
 {
@@ -57,7 +57,7 @@ typedef enum
     E_SEN_ST_INIT,
     E_SEN_ST_CONFIG,
     E_SEN_ST_START,
-}E_Sensor_Manager_Status;
+}   E_Sensor_Manager_Status;
 
 
 
@@ -77,7 +77,7 @@ typedef enum
     E_SEN_ERROR_INVALID_USER_ID,
     E_SEN_ERROR_INVALID_SENSOR_ID,
         
-}E_Sensor_Error_Code;
+}   E_Sensor_Error_Code;
 
 
 
@@ -88,16 +88,16 @@ typedef enum
     E_SEN_TYPE_AK09912_MAG,
 
     E_SEN_ID_TOTAL,
-}E_Sensor_Type;
+}   E_Sensor_Type;
 
 
 
 
 typedef uint8_t (*sensor_init_fnct)    (void);
-typedef uint8_t (*sensor_configure_fnct)    (E_App_Srv_ID UserID, void *Settings);
-typedef uint8_t (*sensor_start_fnct)    (E_App_Srv_ID UserID);
-typedef uint8_t (*sensor_getdata_fnct)    (E_App_Srv_ID UserID, void* pSampleData, void *pDataSzInBytes);
-typedef uint8_t (*sensor_shutdown_fnct)    (E_App_Srv_ID UserID, bool power_off);
+typedef uint8_t (*sensor_configure_fnct)    (E_Sensor_User_ID UserID, void *Settings);
+typedef uint8_t (*sensor_start_fnct)    (E_Sensor_User_ID UserID);
+typedef uint8_t (*sensor_getdata_fnct)    (E_Sensor_User_ID UserID, void* pSampleData, void *pDataSzInBytes);
+typedef uint8_t (*sensor_shutdown_fnct)    (E_Sensor_User_ID UserID, bool power_off);
 
 
 
@@ -128,10 +128,10 @@ E_Sensor_Error_Code CC_SenMgr_Start_Swim(void);
 E_Sensor_Error_Code CC_SenMgr_Stop_Swim(void);
 
 
-E_Sensor_Error_Code CC_SenMgr_PPG_GetData(E_App_Srv_ID user_id, uint32_t *pdata, uint32_t *psize);
-E_Sensor_Error_Code CC_SenMgr_Acc_GetData(E_App_Srv_ID user_id, int16_t *pdata, uint32_t *psize);
-E_Sensor_Error_Code CC_SenMgr_Gyro_GetData(E_App_Srv_ID user_id, int16_t *pdata, uint32_t *psize);
-E_Sensor_Error_Code CC_SenMgr_Mag_GetData(E_App_Srv_ID user_id, int16_t *pdata, uint32_t *psize);
+E_Sensor_Error_Code CC_SenMgr_PPG_GetData(E_Sensor_User_ID user_id, uint32_t *pdata, uint32_t *psize);
+E_Sensor_Error_Code CC_SenMgr_Acc_GetData(E_Sensor_User_ID user_id, int16_t *pdata, uint32_t *psize);
+E_Sensor_Error_Code CC_SenMgr_Gyro_GetData(E_Sensor_User_ID user_id, int16_t *pdata, uint32_t *psize);
+E_Sensor_Error_Code CC_SenMgr_Mag_GetData(E_Sensor_User_ID user_id, int16_t *pdata, uint32_t *psize);
 
 
 

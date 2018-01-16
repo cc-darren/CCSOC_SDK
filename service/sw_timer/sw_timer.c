@@ -14,6 +14,10 @@
 #include "project.h"
 #include <stdlib.h>
 
+#ifdef SW_TIMER_BY_KERNEL
+#include "ke_timer.h"
+#include "app_task.h"
+#endif
 //#define RTC1_IRQ_PRI            APP_IRQ_PRIORITY_LOW                        /**< Priority of the RTC1 interrupt (used for checking for timeouts and executing timeout handlers). */
 //#define SWI_IRQ_PRI             APP_IRQ_PRIORITY_LOW                        /**< Priority of the SWI  interrupt (used for updating the timer list). */
 
@@ -41,6 +45,9 @@
 //#endif
 
 /**@brief Timer node type. The nodes will be used form a linked list of running timers. */
+
+#ifndef SW_TIMER_BY_KERNEL // not defined
+
 typedef struct
 {
     uint32_t                    ticks_to_expire;                            /**< Number of ticks from previous timer interrupt to timer expiry. */
@@ -54,7 +61,9 @@ typedef struct
     void *                      next;                                       /**< Pointer to the next node. */
 } timer_node_t;
 
+
 STATIC_ASSERT(sizeof(timer_node_t) == APP_TIMER_NODE_SIZE);
+
 
 /**@brief Set of available timer operation types. */
 typedef enum
@@ -129,10 +138,19 @@ static app_timer_evt_schedule_func_t m_evt_schedule_func;                       
 static bool                          m_hw_running;                            /**< Boolean indicating if HW is running. */
 static bool                          m_hw_reset;                              /**< Boolean indicating if HW counter has been reset due to last timer removed from timer list during the timer list handling. */
 
+#endif
+
+#ifdef SW_TIMER_BY_KERNEL
+uint16_t                      m_timer_id;
+timer_node_t                  m_timer_node[APP_TIMER_TOTOAL_NUM];
+#endif
+
 /*************************************************************************/
 /************* Start HW timer Interface functions ************************/
 /******** Below functions are the interface between HW and SW ************/
 /*************************************************************************/
+
+#ifndef SW_TIMER_BY_KERNEL  // not defined
 
 static void hw_init(uint32_t prescaler)
 {
@@ -212,6 +230,7 @@ static __INLINE void hw_compare0_set(uint32_t value)
 /*************************************************************************/
 /************* Start SW timer functions **********************************/
 /*************************************************************************/
+
 
 
 /**@brief Function for computing the difference between two HW counter values.
@@ -815,6 +834,8 @@ static timer_user_op_t * user_op_alloc(timer_user_t * p_user, uint8_t * p_last_i
 }
 
 
+
+
 /**@brief Function for scheduling a Timer Start operation.
  *
  * @param[in]  user_id           Id of user calling this function.
@@ -999,6 +1020,40 @@ uint32_t app_timer_init(uint32_t                      prescaler,
     return CC_SUCCESS;
 }
 
+#endif
+
+
+#ifdef SW_TIMER_BY_KERNEL
+uint32_t app_timer_create(uint16_t *      p_timer_id,
+                            app_timer_mode_t            mode,
+                            app_timer_timeout_handler_t timeout_handler)
+{
+
+    if (timeout_handler == NULL)
+    {
+        return CC_ERROR_INVALID_PARAM;
+    }
+    if (p_timer_id == NULL)
+    {
+        return CC_ERROR_INVALID_PARAM;
+    }
+
+    if(0xFFFF == *p_timer_id)
+    {
+        if(m_timer_id < (APP_TIMER_NODE_SIZE-1))
+            *p_timer_id = m_timer_id++;
+        else
+            return CC_ERROR_INVALID_PARAM;
+    }
+
+    m_timer_node[*p_timer_id].mode = mode;
+    m_timer_node[*p_timer_id].p_timeout_handler = timeout_handler;
+    m_timer_node[*p_timer_id].periodic_interval = 0;
+
+    return CC_SUCCESS;
+}
+
+#else
 
 uint32_t app_timer_create(app_timer_id_t const *      p_timer_id,
                           app_timer_mode_t            mode,
@@ -1057,12 +1112,57 @@ static timer_user_id_t user_id_get(void)
 
     return ret;
 }
+#endif
 
 
+#ifdef SW_TIMER_BY_KERNEL
+
+uint32_t app_timer_start(uint16_t timer_id, uint32_t timeout_ticks, void * p_context)
+{
+
+
+    if (timer_id == 0xFFFF)
+    {
+        return CC_ERROR_INVALID_STATE;
+    }
+    if (timeout_ticks < 10)  // minimux = 10 ms
+    {
+        return CC_ERROR_INVALID_PARAM;
+    }
+    if (m_timer_node[timer_id].p_timeout_handler == NULL)
+    {
+        return CC_ERROR_INVALID_STATE;
+    }
+
+//    if(timeout_ticks > 10)
+        m_timer_node[timer_id].periodic_interval = timeout_ticks/10;
+//    else
+//        m_timer_node[timer_id].periodic_interval = 1;
+
+    ke_timer_clear((APP_SW_TIMER_0_TIMER + timer_id), TASK_APP);
+
+    ke_timer_set((APP_SW_TIMER_0_TIMER + timer_id), TASK_APP, (uint16_t) m_timer_node[timer_id].periodic_interval); 
+
+    return CC_SUCCESS;
+}
+
+
+uint32_t app_timer_stop(uint16_t timer_id)
+{
+
+    ke_timer_clear((timer_id + APP_SW_TIMER_0_TIMER), TASK_APP);
+
+    return CC_SUCCESS;
+}
+
+
+#else
 uint32_t app_timer_start(app_timer_id_t timer_id, uint32_t timeout_ticks, void * p_context)
 {
     uint32_t timeout_periodic;
     timer_node_t * p_node = (timer_node_t*)timer_id;
+
+    //TracerInfo("time id: %d, time tick: %d\r\n", timer_id, timeout_ticks);
 
     // Check state and parameters
     if (mp_users == NULL)
@@ -1085,13 +1185,15 @@ uint32_t app_timer_start(app_timer_id_t timer_id, uint32_t timeout_ticks, void *
     // Schedule timer start operation
     timeout_periodic = (p_node->mode == APP_TIMER_MODE_REPEATED) ? timeout_ticks : 0;
 
+
+
+
     return timer_start_op_schedule(user_id_get(),
                                    p_node,
                                    timeout_ticks,
                                    timeout_periodic,
                                    p_context);
 }
-
 
 uint32_t app_timer_stop(app_timer_id_t timer_id)
 {
@@ -1110,6 +1212,10 @@ uint32_t app_timer_stop(app_timer_id_t timer_id)
     // Schedule timer stop operation
     return timer_stop_op_schedule(user_id_get(), p_node);
 }
+
+
+
+
 
 
 uint32_t app_timer_stop_all(void)
@@ -1138,3 +1244,4 @@ uint32_t app_timer_cnt_diff_compute(uint32_t   ticks_to,
     return CC_SUCCESS;
 }
 
+#endif                                    

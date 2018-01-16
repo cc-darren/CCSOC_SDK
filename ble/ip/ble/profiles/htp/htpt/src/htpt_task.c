@@ -40,7 +40,10 @@
 #include "tracer.h"
 #include "CC_DB_Structure.h"
 
-#include "svc_mgr.h"
+//#include "svc_mgr.h"
+#ifdef APP_SERV_MGR_EN  
+#include "CC_Sensor_Manager.h"
+#endif
 
 /*
  * FUNCTION DEFINITIONS
@@ -195,9 +198,11 @@ void CC_BLE_Cmd_SetNotificaitonState(uint8_t state, uint8_t index)
     {
         if (_cBleCmd_NotifySetting_HeartRateStrapMode != ((eStete_t) state))
         {
-            //CC_HRM_PostHeartRateStrapModeEvent(state);
+#ifdef	APP_SERV_MGR_EN				            
             APP_SVCMGR_PostEvent_HrRequest(E_APP_SVC_HR_MODE_STRAP, state);
-
+#else
+            CC_HRM_PostHeartRateStrapModeEvent(state);
+#endif					
             _cBleCmd_NotifySetting_HeartRateStrapMode = ((eStete_t) state);
         }
     }
@@ -205,9 +210,11 @@ void CC_BLE_Cmd_SetNotificaitonState(uint8_t state, uint8_t index)
     {
         if (_cBleCmd_NotifySetting_24HHeartRateMode != ((eStete_t) state))
         {
-            //CC_HRM_Post24HrModeEvent(state);
+#ifdef	APP_SERV_MGR_EN						            
             APP_SVCMGR_PostEvent_HrRequest(E_APP_SVC_HR_MODE_24HR, state);
-
+#else
+            CC_HRM_Post24HrModeEvent(state);
+#endif					
             _cBleCmd_NotifySetting_24HHeartRateMode = ((eStete_t) state);
         }
     }
@@ -227,10 +234,13 @@ void CC_BLE_Cmd_SetHrSetting(db_sys_hr_setting_t *ptHrSetting)
     _cBleCmd_NotifySetting_HeartRateStrapMode = ptHrSetting->eIsHrsEnabled;
     _cBleCmd_NotifySetting_24HHeartRateMode   = ptHrSetting->eIs24HrEnabled;
 
-    //CC_HRM_PostHeartRateStrapModeEvent(_cBleCmd_NotifySetting_HeartRateStrapMode);
-    //CC_HRM_Post24HrModeEvent(_cBleCmd_NotifySetting_24HHeartRateMode);
+#ifdef APP_SERV_MGR_EN	    
     APP_SVCMGR_PostEvent_HrRequest(E_APP_SVC_HR_MODE_STRAP, _cBleCmd_NotifySetting_HeartRateStrapMode);
     APP_SVCMGR_PostEvent_HrRequest(E_APP_SVC_HR_MODE_24HR , _cBleCmd_NotifySetting_24HHeartRateMode  );
+#else
+    CC_HRM_PostHeartRateStrapModeEvent(_cBleCmd_NotifySetting_HeartRateStrapMode);
+    CC_HRM_Post24HrModeEvent(_cBleCmd_NotifySetting_24HHeartRateMode);
+#endif	
 }
 
 void CC_BLE_Cmd_GetNotifySetting(db_sys_notify_enabled_t *notify_setting)

@@ -60,6 +60,10 @@
 #define APP_TIMER_USER_SIZE          8                          /**< Size of app_timer.timer_user_t (only for use inside APP_TIMER_BUF_SIZE()). */
 #define APP_TIMER_INT_LEVELS         3                          /**< Number of interrupt levels from where timer operations may be initiated (only for use inside APP_TIMER_BUF_SIZE()). */
 
+#ifdef SW_TIMER_BY_KERNEL
+#define APP_TIMER_TOTOAL_NUM        32
+#endif
+
 /**@brief Compute number of bytes required to hold the application timer data structures.
  *
  * @param[in]  OP_QUEUE_SIZE   Size of queues holding timer operations that are pending execution.
@@ -95,8 +99,16 @@
  *
  * @return     Number of timer ticks.
  */
+
+#ifdef SW_TIMER_BY_KERNEL
+
+#define APP_TIMER_TICKS(MS, PRESCALER)      (MS)
+
+#else
+
 #define APP_TIMER_TICKS(MS, PRESCALER)\
             ((uint32_t)ROUNDED_DIV((MS) * (uint64_t)APP_TIMER_CLOCK_FREQ, ((PRESCALER) + 1) * 1000))
+#endif
 
 typedef struct app_timer_t { uint32_t data[CEIL_DIV(APP_TIMER_NODE_SIZE, sizeof(uint32_t))]; } app_timer_t;
 
@@ -104,22 +116,6 @@ typedef struct app_timer_t { uint32_t data[CEIL_DIV(APP_TIMER_NODE_SIZE, sizeof(
  * Never declare a variable of this type, but use the macro @ref APP_TIMER_DEF instead.*/
 typedef app_timer_t * app_timer_id_t;
 
-/**
- * @brief Create a timer identifier and statically allocate memory for the timer.
- *
- * @param timer_id Name of the timer identifier variable that will be used to control the timer.
- */
-#define APP_TIMER_DEF(timer_id)                                  \
-    static app_timer_t timer_id##_data = { {0} };                  \
-    static const app_timer_id_t timer_id = &timer_id##_data
-
-
-/**@brief Application time-out handler type. */
-typedef void (*app_timer_timeout_handler_t)(void * p_context);
-
-/**@brief Type of function for passing events from the timer module to the scheduler. */
-typedef uint32_t (*app_timer_evt_schedule_func_t) (app_timer_timeout_handler_t timeout_handler,
-                                                   void *                      p_context);
 
 /**@brief Timer modes. */
 typedef enum
@@ -127,6 +123,48 @@ typedef enum
     APP_TIMER_MODE_SINGLE_SHOT,                 /**< The timer will expire only once. */
     APP_TIMER_MODE_REPEATED                     /**< The timer will restart each time it expires. */
 } app_timer_mode_t;
+
+
+
+/**@brief Application time-out handler type. */
+typedef void (*app_timer_timeout_handler_t)(void * p_context);
+
+/**@brief Type of function for passing events from the timer module to the scheduler. */
+typedef uint32_t (*app_timer_evt_schedule_func_t) (app_timer_timeout_handler_t timeout_handler,
+
+void *                      p_context);/**
+ * @brief Create a timer identifier and statically allocate memory for the timer.
+ *
+ * @param timer_id Name of the timer identifier variable that will be used to control the timer.
+ */
+
+
+
+#ifdef SW_TIMER_BY_KERNEL
+
+typedef struct
+{
+    uint32_t                    periodic_interval;                    /**< Timer period (for repeating timers). */
+    app_timer_mode_t            mode;                                       /**< Timer mode. */
+    app_timer_timeout_handler_t p_timeout_handler;                          /**< Pointer to function to be executed when the timer expires. */
+} timer_node_t;
+
+
+extern uint16_t                      m_timer_id;
+extern timer_node_t                  m_timer_node[APP_TIMER_TOTOAL_NUM];
+
+
+#define APP_TIMER_DEF(timer_id)   static uint16_t timer_id = 0xFFFF
+            
+
+#else
+#define APP_TIMER_DEF(timer_id)                                  \
+    static app_timer_t timer_id##_data = { {0} };                  \
+    static const app_timer_id_t timer_id = &timer_id##_data
+
+#endif
+
+
 
 /**@brief Initialize the application timer module.
  *
@@ -211,10 +249,16 @@ uint32_t app_timer_init(uint32_t                      prescaler,
  * @attention The FreeRTOS and RTX app_timer implementation does not allow app_timer_create to
  *       be called on the previously initialized instance.
  */
-uint32_t app_timer_create(app_timer_id_t const *      p_timer_id,
+#ifdef SW_TIMER_BY_KERNEL
+uint32_t app_timer_create(uint16_t *      p_timer_id,
                           app_timer_mode_t            mode,
                           app_timer_timeout_handler_t timeout_handler);
 
+#else
+uint32_t app_timer_create(app_timer_id_t const *      p_timer_id,
+                          app_timer_mode_t            mode,
+                          app_timer_timeout_handler_t timeout_handler);
+#endif
 /**@brief Function for starting a timer.
  *
  * @param[in]       timer_id      Timer identifier.
@@ -235,8 +279,15 @@ uint32_t app_timer_create(app_timer_id_t const *      p_timer_id,
  * @note When calling this method on a timer that is already running, the second start operation
  *       is ignored.
  */
+#ifdef SW_TIMER_BY_KERNEL
+
+uint32_t app_timer_start(uint16_t timer_id, uint32_t timeout_ticks, void * p_context);
+
+#else
+
 uint32_t app_timer_start(app_timer_id_t timer_id, uint32_t timeout_ticks, void * p_context);
 
+#endif
 /**@brief Function for stopping the specified timer.
  *
  * @param[in]  timer_id                  Timer identifier.
@@ -247,8 +298,15 @@ uint32_t app_timer_start(app_timer_id_t timer_id, uint32_t timeout_ticks, void *
  *                                       has not been created.
  * @retval     NRF_ERROR_NO_MEM          If the timer operations queue was full.
  */
+
+#ifdef SW_TIMER_BY_KERNEL
+
+uint32_t app_timer_stop(uint16_t timer_id);
+
+#else
 uint32_t app_timer_stop(app_timer_id_t timer_id);
 
+#endif
 /**@brief Function for stopping all running timers.
  *
  * @retval     CC_SUCCESS               If all timers were successfully stopped.

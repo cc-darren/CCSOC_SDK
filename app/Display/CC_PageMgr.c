@@ -16,6 +16,9 @@
 #include "appTime.h"
 #include "cc_db.h"
 #include "tracer.h"
+#ifdef APP_SERV_MGR_EN
+#include "CC_AppSrvc_Manager.h"
+#endif
 
 
 #define GENERALTIME_TURN_ON_OFF_OLED             100
@@ -325,7 +328,11 @@ static void _PageMgr_PageDestroy(eMMI_Page_t _Page, S_VenusEvent *_stEvent)
     if (eEvent_HRM_DATA != _stEvent->dwData)
     {
         if ((eMMI_HRM_PAGE == _Page) || (eMMI_HRMDATA_PAGE == _Page))
+#ifdef APP_SERV_MGR_EN					
+            APP_SVCMGR_PostEvent_HrRequest(E_APP_SVC_HR_MODE_SINGLE_SHOT, DISABLE);
+#else				
             CC_AppSrv_HR_StopSingleHR();
+#endif				
     }
     
     if (_Page == eMMI_DEVICE_INFO_PAGE)
@@ -600,29 +607,56 @@ static void _PageMgr_PageRelatedAct(void)
     switch (s_tPage.eNowPage)
     {
     case eMMI_HRM_PAGE:
+        
+#ifdef APP_SERV_MGR_EN         
+         APP_SVCMGR_PostEvent_HrRequest(E_APP_SVC_HR_MODE_SINGLE_SHOT, ENABLE);
+#else
          CC_AppSrv_HR_StartSingleHR();
+#endif
          break;
 
     case eMMI_HRMDATA_PAGE:
+         
+#ifdef APP_SERV_MGR_EN 
+         APP_SVCMGR_PostEvent_HrRequest(E_APP_SVC_HR_MODE_SINGLE_SHOT, DISABLE);
+#else
          CC_AppSrv_HR_StopSingleHR();
+#endif
          break;
 
     case eMMI_HRM_HRS_INIT_PAGE:
+
+#ifdef APP_SERV_MGR_EN     
+         APP_SVCMGR_PostEvent_HrRequest(E_APP_SVC_HR_MODE_STRAP , ENABLE);    
+#else
          CC_AppSrv_HR_StartHRS();
+#endif
 
          s_tPage.eNowPage = eMMI_HRM_HRS_ACTIVATED_PAGE;
          s_tPage.ePrePage = eMMI_HRM_HRS_ACTIVATED_PAGE;
          break;
 
     case eMMI_HRM_HRS_DEACTIVATED_PAGE:
+
+#ifdef APP_SERV_MGR_EN         
+         APP_SVCMGR_PostEvent_HrRequest(E_APP_SVC_HR_MODE_STRAP, DISABLE);
+#else
          CC_AppSrv_HR_StopHRS();
+#endif
          break;
 
     case eMMI_CHARGING_IN_PAGE:
     case eMMI_LOWPOWER:
+
+#ifdef APP_SERV_MGR_EN         
+         APP_SVCMGR_PostEvent_HrRequest(E_APP_SVC_HR_MODE_SINGLE_SHOT, DISABLE);
+         APP_SVCMGR_PostEvent_HrRequest(E_APP_SVC_HR_MODE_STRAP, DISABLE);
+         APP_SVCMGR_PostEvent_HrRequest(E_APP_SVC_HR_MODE_24HR, DISABLE);
+ #else
          CC_AppSrv_HR_StopSingleHR();
          CC_AppSrv_HR_StopHRS();
          CC_AppSrv_HR_Stop24HR();
+#endif         
          break;
     }
 

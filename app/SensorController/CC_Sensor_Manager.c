@@ -17,7 +17,7 @@
 
 
 E_Sensor_Manager_Status  g_sen_srvc_st[E_SEN_ID_TOTAL];
-bool g_sen_srvc_in_use[E_SEN_ID_TOTAL][E_APP_SRV_ID_TOTAL];
+bool g_sen_srvc_in_use[E_SEN_ID_TOTAL][E_SEN_USER_ID_TOTAL];
 
 int16_t hrm_acc_tmpbuf[MEMS_FIFO_SIZE];
 int16_t hrm_acc_data[MEMS_FIFO_SIZE];
@@ -60,19 +60,19 @@ static void SM_Set_Sensor_Status(E_Sensor_Type SensorType, E_Sensor_Manager_Stat
     g_sen_srvc_st[SensorType] = status;
 }
 
-static void SM_Set_Sensor_isUsed(E_Sensor_Type SensorType, E_App_Srv_ID UserID)
+static void SM_Set_Sensor_isUsed(E_Sensor_Type SensorType, E_Sensor_User_ID UserID)
 {
     g_sen_srvc_in_use[SensorType][UserID] = true;
 }
 
-static void SM_Clr_Sensor_isUsed(E_Sensor_Type SensorType, E_App_Srv_ID UserID)
+static void SM_Clr_Sensor_isUsed(E_Sensor_Type SensorType, E_Sensor_User_ID UserID)
 {
     g_sen_srvc_in_use[SensorType][UserID] = false;
 }
 
 static bool SM_Check_Sensor_isUsed(E_Sensor_Type SensorType)
 {
-    for(uint8_t user_id = 0; user_id < E_APP_SRV_ID_TOTAL; user_id++)
+    for(uint8_t user_id = 0; user_id < E_SEN_USER_ID_TOTAL; user_id++)
     {
         if(true == g_sen_srvc_in_use[SensorType][user_id])
             return true;
@@ -94,7 +94,7 @@ void CC_AppSrv_Service_Init(void)
 
 
 
-static E_Sensor_Error_Code CC_Sensor_Manager_Init(E_Sensor_Type SensorType, E_App_Srv_ID UserID)
+static E_Sensor_Error_Code CC_Sensor_Manager_Init(E_Sensor_Type SensorType, E_Sensor_User_ID UserID)
 {
 
     E_Sensor_Error_Code ret = E_SEN_ERROR_NONE;
@@ -133,13 +133,13 @@ static E_Sensor_Error_Code CC_Sensor_Manager_Init(E_Sensor_Type SensorType, E_Ap
 
 
 
-static E_Sensor_Error_Code CC_Sensor_Manager_Configure(E_Sensor_Type SensorType, E_App_Srv_ID UserID, void *Settings)
+static E_Sensor_Error_Code CC_Sensor_Manager_Configure(E_Sensor_Type SensorType, E_Sensor_User_ID UserID, void *Settings)
 {
     E_Sensor_Error_Code ret = E_SEN_ERROR_NONE;
     const struct sensor_manager_itfs *sm_itfs = sm_itf_get(SensorType);
     E_Sensor_Manager_Status srvc_st = g_sen_srvc_st[SensorType];
 
-    if(E_APP_SRV_ID_TOTAL <= UserID)
+    if(E_SEN_USER_ID_TOTAL <= UserID)
         return E_SEN_ERROR_INVALID_USER_ID;
 
     if(E_SEN_ID_TOTAL <= SensorType)
@@ -172,14 +172,14 @@ static E_Sensor_Error_Code CC_Sensor_Manager_Configure(E_Sensor_Type SensorType,
 
 
 
-static E_Sensor_Error_Code CC_Sensor_Manager_Start(E_Sensor_Type SensorType, E_App_Srv_ID UserID)
+static E_Sensor_Error_Code CC_Sensor_Manager_Start(E_Sensor_Type SensorType, E_Sensor_User_ID UserID)
 {
 
     E_Sensor_Error_Code ret = E_SEN_ERROR_NONE;
     const struct sensor_manager_itfs *sm_itfs = sm_itf_get(SensorType);
     E_Sensor_Manager_Status srvc_st = g_sen_srvc_st[SensorType];
 
-    if(E_APP_SRV_ID_TOTAL <= UserID)
+    if(E_SEN_USER_ID_TOTAL <= UserID)
         return E_SEN_ERROR_INVALID_USER_ID;
 
     if(E_SEN_ID_TOTAL <= SensorType)
@@ -209,20 +209,20 @@ static E_Sensor_Error_Code CC_Sensor_Manager_Start(E_Sensor_Type SensorType, E_A
 }
 
 
-static E_Sensor_Error_Code CC_Sensor_Manager_GetData(E_Sensor_Type SensorType, E_App_Srv_ID UserID, void* pSampleData, void *pDataSzInBytes)
+static E_Sensor_Error_Code CC_Sensor_Manager_GetData(E_Sensor_Type SensorType, E_Sensor_User_ID UserID, void* pSampleData, void *pDataSzInBytes)
 {
 
     E_Sensor_Error_Code ret = E_SEN_ERROR_NONE;
     const struct sensor_manager_itfs *sm_itfs = sm_itf_get(SensorType);
     E_Sensor_Manager_Status srvc_st = g_sen_srvc_st[SensorType];
 
-    if(E_APP_SRV_ID_TOTAL <= UserID)
+    if(E_SEN_USER_ID_TOTAL <= UserID) 
         return E_SEN_ERROR_INVALID_USER_ID;
 
     if(E_SEN_ID_TOTAL <= SensorType)
         return E_SEN_ERROR_INVALID_SENSOR_ID;    
-
-
+     
+ 
     switch(srvc_st)
     {
         case E_SEN_ST_IDLE:
@@ -234,9 +234,9 @@ static E_Sensor_Error_Code CC_Sensor_Manager_GetData(E_Sensor_Type SensorType, E
     }
 
 
-    E_Sensor_Error_Code error_code;
+    //E_Sensor_Error_Code error_code;
 
-    if(E_SEN_ERROR_NONE != (error_code =sm_itfs->getdata(UserID, pSampleData, pDataSzInBytes)))
+    if(E_SEN_ERROR_NONE != (E_Sensor_Error_Code) sm_itfs->getdata(UserID, pSampleData, pDataSzInBytes))
     {
         //TracerInfo("get ppg fail: %d\r\n", error_code);  
         return E_SEN_ERROR_GET_DATA_FAIL;
@@ -246,12 +246,12 @@ static E_Sensor_Error_Code CC_Sensor_Manager_GetData(E_Sensor_Type SensorType, E
 }
 
 
-static E_Sensor_Error_Code CC_Sensor_Manager_Shutdown(E_Sensor_Type SensorType, E_App_Srv_ID UserID)
+static E_Sensor_Error_Code CC_Sensor_Manager_Shutdown(E_Sensor_Type SensorType, E_Sensor_User_ID UserID)
 {
     E_Sensor_Error_Code ret = E_SEN_ERROR_NONE;
     const struct sensor_manager_itfs *sm_itfs = sm_itf_get(SensorType);
 
-    if(E_APP_SRV_ID_TOTAL <= UserID)
+    if(E_SEN_USER_ID_TOTAL <= UserID)
         return E_SEN_ERROR_INVALID_USER_ID;
 
     if(E_SEN_ID_TOTAL <= SensorType)
@@ -288,19 +288,19 @@ E_Sensor_Error_Code CC_SenMgr_Start_HRM(void)
 
     // PPG:
     // Init:    
-    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Init(E_SEN_TYPE_Pah8002_PPG, E_APP_SRV_ID_HRM)))
+    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Init(E_SEN_TYPE_Pah8002_PPG, E_SEN_USER_ID_HRM)))
     {
         return ret_code;
     }
 
     // Configuration:    
-    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Configure(E_SEN_TYPE_Pah8002_PPG, E_APP_SRV_ID_HRM, NULL)))
+    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Configure(E_SEN_TYPE_Pah8002_PPG, E_SEN_USER_ID_HRM, NULL)))
     {
         return ret_code;        
     }
         
     // Start:
-    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Start(E_SEN_TYPE_Pah8002_PPG, E_APP_SRV_ID_HRM)))
+    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Start(E_SEN_TYPE_Pah8002_PPG, E_SEN_USER_ID_HRM)))
     {
         return ret_code;        
     } 
@@ -320,19 +320,19 @@ E_Sensor_Error_Code CC_SenMgr_Start_HRM(void)
     acc_gyro_settings.S_Accel.FifoSet.iSampleData = hrm_acc_tmpbuf;     // todo: using HEAP!!
     
     // Init:    
-    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Init(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_HRM)))
+    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Init(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_HRM)))
     {
         return ret_code;
     }
 
     // Configuration:    
-    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Configure(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_HRM, &acc_gyro_settings)))
+    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Configure(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_HRM, &acc_gyro_settings)))
     {
         return ret_code;        
     }
         
     // Start:
-    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Start(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_HRM)))
+    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Start(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_HRM)))
     {
         return ret_code;        
     }        
@@ -346,14 +346,14 @@ E_Sensor_Error_Code CC_SenMgr_Stop_HRM(void)
     
     // Shutdown:
     // PPG
-    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Shutdown(E_SEN_TYPE_Pah8002_PPG, E_APP_SRV_ID_HRM)))
+    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Shutdown(E_SEN_TYPE_Pah8002_PPG, E_SEN_USER_ID_HRM)))
     {
         return ret_code;
     }
 
     
     // Acc
-    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Shutdown(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_HRM)))
+    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Shutdown(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_HRM)))
     {
         return ret_code;
     }
@@ -378,7 +378,7 @@ E_Sensor_Error_Code CC_SenMgr_Start_Pedometer(void)
     acc_gyro_settings.FifoTarget = E_LSM6DSX_FIFO_CONTROL_ACCEL,        // fifo for Accel only
 
     // Accel settings:
-    acc_gyro_settings.S_Accel.FifoSet.nFifoDepth = MEMS_FIFO_SIZE,           // fifo size: 300
+    acc_gyro_settings.S_Accel.FifoSet.nFifoDepth = MEMS_FIFO_SIZE,           
     acc_gyro_settings.S_Accel.FifoSet.Odr = LSM6DS3_ACC_GYRO_ODR_FIFO_50Hz,  // 50 Hz
     acc_gyro_settings.S_Accel.FifoSet.iSampleData = pedo_acc_tmpbuf;        // todo: using HEAP!
 #if 0
@@ -390,19 +390,19 @@ E_Sensor_Error_Code CC_SenMgr_Start_Pedometer(void)
 #endif
 
     // Init:    
-    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Init(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO)))
+    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Init(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_PEDO)))
     {
         return ret_code;
     }
 
     // Configuration:       
-    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Configure(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO, &acc_gyro_settings)))
+    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Configure(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_PEDO, &acc_gyro_settings)))
     {
         return ret_code;
     }
 
     // Start:
-    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Start(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO)))
+    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Start(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_PEDO)))
     {
         return ret_code;
     }        
@@ -418,7 +418,7 @@ E_Sensor_Error_Code CC_SenMgr_Stop_Pedometer(void)
     
     E_Sensor_Error_Code ret_code = E_SEN_ERROR_NONE;
     // Shutdown:    
-    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Shutdown(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO)))
+    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Shutdown(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_PEDO)))
     {
         return ret_code;
     }     
@@ -442,19 +442,19 @@ E_Sensor_Error_Code CC_SenMgr_Start_Swim(void)
 
     
     // Init:    
-    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Init(E_SEN_TYPE_AK09912_MAG, E_APP_SRV_ID_SWIM)))
+    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Init(E_SEN_TYPE_AK09912_MAG, E_SEN_USER_ID_SWIM)))
     {
         return ret_code;
     }
 
     // Configuration:       
-    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Configure(E_SEN_TYPE_AK09912_MAG, E_APP_SRV_ID_SWIM, &mag_settings)))
+    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Configure(E_SEN_TYPE_AK09912_MAG, E_SEN_USER_ID_SWIM, &mag_settings)))
     {
         return ret_code;
     }
 
     // Start:
-    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Start(E_SEN_TYPE_AK09912_MAG, E_APP_SRV_ID_SWIM)))
+    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Start(E_SEN_TYPE_AK09912_MAG, E_SEN_USER_ID_SWIM)))
     {
         return ret_code;
     }       
@@ -470,30 +470,30 @@ E_Sensor_Error_Code CC_SenMgr_Start_Swim(void)
     acc_gyro_settings.FifoTarget = E_LSM6DSX_FIFO_CONTROL_ACCEL_GYRO,        // fifo for Accel/Gyro
 
     // Accel settings:
-    acc_gyro_settings.S_Accel.FifoSet.nFifoDepth = MEMS_FIFO_SIZE,           // fifo size: 300
+    acc_gyro_settings.S_Accel.FifoSet.nFifoDepth = MEMS_FIFO_SIZE,           
     acc_gyro_settings.S_Accel.FifoSet.Odr = LSM6DS3_ACC_GYRO_ODR_FIFO_50Hz,  // 50 Hz
     acc_gyro_settings.S_Accel.FifoSet.iSampleData = swim_acc_tmpbuf;        // todo: using HEAP!
 
     // Gyro settings:
-    acc_gyro_settings.S_Gyro.FifoSet.nFifoDepth = MEMS_FIFO_SIZE,            // fifo size: 100
+    acc_gyro_settings.S_Gyro.FifoSet.nFifoDepth = MEMS_FIFO_SIZE,            
     acc_gyro_settings.S_Gyro.FifoSet.Odr = LSM6DS3_ACC_GYRO_ODR_FIFO_50Hz,   // 50 Hz
 
     acc_gyro_settings.S_Gyro.FifoSet.iSampleData = swim_gyro_tmpbuf;        // todo: using HEAP!
     
 
-    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Init(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_SWIM)))
+    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Init(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_SWIM)))
     {
         return ret_code;
     }
 
 
-    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Configure(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_SWIM, &acc_gyro_settings)))
+    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Configure(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_SWIM, &acc_gyro_settings)))
     {
         return ret_code;
     }
 
 
-    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Start(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_SWIM)))
+    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Start(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_SWIM)))
     {
         return ret_code;
     }       
@@ -509,16 +509,16 @@ E_Sensor_Error_Code CC_SenMgr_Stop_Swim(void)
     E_Sensor_Error_Code ret_code = E_SEN_ERROR_NONE;
 
     // Mag
-    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Shutdown(E_SEN_TYPE_AK09912_MAG, E_APP_SRV_ID_SWIM)))
+    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Shutdown(E_SEN_TYPE_AK09912_MAG, E_SEN_USER_ID_SWIM)))
     {
-        return E_APP_SRV_ERR_STOP_FAIL;
+        return ret_code;
     }  
     
 
     // Acc
-    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Shutdown(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_SWIM)))   
+    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Shutdown(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_SWIM)))   
     {
-        return E_APP_SRV_ERR_STOP_FAIL;
+        return ret_code;
     }     
 
     return ret_code;
@@ -532,14 +532,14 @@ E_Sensor_Error_Code CC_SenMgr_Stop_Swim(void)
 
 
 // Get Data:
-E_Sensor_Error_Code CC_SenMgr_PPG_GetData(E_App_Srv_ID user_id, uint32_t *pdata, uint32_t *psize)
+E_Sensor_Error_Code CC_SenMgr_PPG_GetData(E_Sensor_User_ID user_id, uint32_t *pdata, uint32_t *psize)
 {
 
     return CC_Sensor_Manager_GetData(E_SEN_TYPE_Pah8002_PPG, user_id, pdata, psize);
 }
 
 
-E_Sensor_Error_Code CC_SenMgr_Acc_GetData(E_App_Srv_ID user_id, int16_t *pdata, uint32_t *psize)
+E_Sensor_Error_Code CC_SenMgr_Acc_GetData(E_Sensor_User_ID user_id, int16_t *pdata, uint32_t *psize)
 {
     E_Sensor_Error_Code ret_code = E_SEN_ERROR_NONE;
     T_Accel_Gyro_Fifo_Data  pfifoData;
@@ -561,29 +561,42 @@ E_Sensor_Error_Code CC_SenMgr_Acc_GetData(E_App_Srv_ID user_id, int16_t *pdata, 
 }
 
 
-E_Sensor_Error_Code CC_SenMgr_Gyro_GetData(E_App_Srv_ID user_id, int16_t *pdata, uint32_t *psize)
+E_Sensor_Error_Code CC_SenMgr_Gyro_GetData(E_Sensor_User_ID user_id, int16_t *pdata, uint32_t *psize)
 {
     E_Sensor_Error_Code ret_code = E_SEN_ERROR_NONE;
     T_Accel_Gyro_Fifo_Data  pfifoData;
     T_Accel_Gyro_Fifo_Data_Bytes pfifoSz;
 
 
+    //TracerInfo("pGyro_addr1: 0x%x\r\n", pdata);
+
     pfifoData.p_accel_data = NULL;
     pfifoData.p_gyro_data = pdata;
 
+
+    //TracerInfo("pGyro_addr2: 0x%x\r\n", pfifoData.p_gyro_data);
 
     if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, user_id, &pfifoData, &pfifoSz)))
     {
         return ret_code;       
     }   
 
-    *psize = pfifoSz.gyro_SzInBytes;   
+/*
+            TracerInfo("Get Gyro[0]: %d\r\n", pfifoData.p_gyro_data[0]);
+            TracerInfo("Get Gyro[1]: %d\r\n", pfifoData.p_gyro_data[1]);
+            TracerInfo("Get Gyro[2]: %d\r\n", pfifoData.p_gyro_data[2]);
+            TracerInfo("Get pGyro[0]: %d\r\n", pdata[0]);
+            TracerInfo("Get pGyro[1]: %d\r\n", pdata[1]);
+            TracerInfo("Get pGyro[2]: %d\r\n", pdata[2]);
+*/
+
+    *psize = pfifoSz.gyro_SzInBytes;      
 
     return ret_code;
 }
 
 
-E_Sensor_Error_Code CC_SenMgr_Mag_GetData(E_App_Srv_ID user_id, int16_t *pdata, uint32_t *psize)
+E_Sensor_Error_Code CC_SenMgr_Mag_GetData(E_Sensor_User_ID user_id, int16_t *pdata, uint32_t *psize)
 {
     E_Sensor_Error_Code ret_code = E_SEN_ERROR_NONE;
 
@@ -638,6 +651,8 @@ void SM_Test(void)
     T_Accel_Gyro_Fifo_Data  pedo_fifo_data;
     T_Accel_Gyro_Fifo_Data_Bytes pedo_fifo_sz;
 
+    uint32_t fifo_size = 0;
+
     uint32_t get_data_size = 0;
 
 
@@ -670,21 +685,21 @@ void SM_Test(void)
 
 
         TracerInfo("[SM_TC-1]: CC_Sensor_Manager_Init()\r\n");
-        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Init(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_HRM)))
+        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Init(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_HRM)))
         {
             TracerInfo("[SM_TC-1]: CC_Sensor_Manager_Init fail!\r\n");
 
         }    
 
         TracerInfo("[SM_TC-1]: CC_Sensor_Manager_Configure()\r\n");
-        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Configure(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_HRM, &hrm_settings)))
+        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Configure(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_HRM, &hrm_settings)))
         {
             TracerInfo("[SM_TC-1]: CC_Sensor_Manager_Configure fail!\r\n");
         }
 
 
         TracerInfo("[SM_TC-1]: CC_Sensor_Manager_Start()\r\n");
-        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Start(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_HRM)))
+        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Start(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_HRM)))
         {
             TracerInfo("[SM_TC-1]: CC_Sensor_Manager_Start fail!\r\n");
         }    
@@ -697,25 +712,26 @@ void SM_Test(void)
         while(get_data_size < MEMS_FIFO_SIZE)
 #endif            
         {
-            if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_HRM, &hrm_fifo_data, &hrm_fifo_sz)))
+            //if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_HRM, &hrm_fifo_data, &hrm_fifo_sz)))
+            if(E_APP_SRV_ERR_NONE == CC_SenMgr_Acc_GetData(E_SEN_USER_ID_HRM, hrm_fifo_data, &fifo_size))
             {
                 TracerInfo("[SM_TC-1]: CC_Sensor_Manager_GetData(HRM) fail!\r\n");
                 
             }
 
             
-            for(uint16_t i = 0; i < hrm_fifo_sz.accel_SzInBytes/sizeof(int16_t); i+=3)
+            for(uint16_t i = 0; i < fifo_size/sizeof(int16_t); i+=3)
             {
                 if((hrm_fifo_sz.accel_SzInBytes/2) < 3)
-                     TracerInfo("[SM_TC-1]: Error Size: %d\r\n", hrm_fifo_sz.accel_SzInBytes);
+                     TracerInfo("[SM_TC-1]: Error Size: %d\r\n", fifo_size);
             
                 TracerInfo("[SM_TC-1]: hrm_accel_X: %d\r\n", hrm_fifo_data.p_accel_data[i]);
                 TracerInfo("[SM_TC-1]: hrm_accel_Y: %d\r\n", hrm_fifo_data.p_accel_data[i+1]);
                 TracerInfo("[SM_TC-1]: hrm_accel_Z: %d\r\n", hrm_fifo_data.p_accel_data[i+2]);        
             }
 
-            if(0 != hrm_fifo_sz.gyro_SzInBytes)
-                TracerInfo("[SM_TC-1]: Gyro Data should not get here!! size: %d\r\n", hrm_fifo_sz.gyro_SzInBytes);
+            if(0 != fifo_size)
+                TracerInfo("[SM_TC-1]: Gyro Data should not get here!! size: %d\r\n", fifo_size);
 
 
             get_data_size += hrm_fifo_sz.accel_SzInBytes;
@@ -744,20 +760,21 @@ void SM_Test(void)
         TracerInfo("[SM_TC-1]: HRM get Accel data done.\r\n");
 
         TracerInfo("[SM_TC-1]: CC_Sensor_Manager_Shutdown()\r\n");
-        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Shutdown(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_HRM)))
+        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Shutdown(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_HRM)))
         {
             TracerInfo("[SM_TC-1]: CC_Sensor_Manager_Shutdown fail!\r\n");
         }
 
 
-        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_HRM, &hrm_fifo_data, &hrm_fifo_sz)))
+        //if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_HRM, &hrm_fifo_data, &hrm_fifo_sz)))
+        if(E_APP_SRV_ERR_NONE == CC_SenMgr_Acc_GetData(E_SEN_USER_ID_HRM, hrm_fifo_data, &fifo_size))
         {
             TracerInfo("[SM_TC-1]: CC_Sensor_Manager_GetData() don't get any data after shutdown.\r\n");
                 
         }
         else
         {
-            TracerInfo("[SM_TC-1]: Accel Data should not get here!! size: %d\r\n", hrm_fifo_sz.accel_SzInBytes);
+            TracerInfo("[SM_TC-1]: Accel Data should not get here!! size: %d\r\n", fifo_size);
         }
 
         
@@ -797,14 +814,14 @@ void SM_Test(void)
 
 
         TracerInfo("[SM_TC-2]: CC_Sensor_Manager_Init()\r\n");
-        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Init(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO)))
+        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Init(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_PEDO)))
         {
             TracerInfo("[SM_TC-2]: CC_Sensor_Manager_Init fail!\r\n");
 
         }    
 
         TracerInfo("[SM_TC-2]: CC_Sensor_Manager_Configure()\r\n");
-        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Configure(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO, &pedo_settings)))
+        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Configure(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_PEDO, &pedo_settings)))
         {
             TracerInfo("[SM_TC-2]: CC_Sensor_Manager_Configure fail!\r\n");
         }
@@ -813,7 +830,7 @@ void SM_Test(void)
 
 
         TracerInfo("[SM_TC-2]: CC_Sensor_Manager_Start()\r\n");
-        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Start(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO)))
+        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Start(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_PEDO)))
         {
             TracerInfo("[SM_TC-2]: CC_Sensor_Manager_Start fail!\r\n");
         }    
@@ -827,7 +844,8 @@ void SM_Test(void)
         while(get_data_size < MEMS_FIFO_SIZE)
 #endif
         {
-            if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO, &pedo_fifo_data, &pedo_fifo_sz)))
+            if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_PEDO, &pedo_fifo_data, &pedo_fifo_sz)))
+            //if(E_APP_SRV_ERR_NONE == CC_SenMgr_Gyro_GetData(E_SEN_USER_ID_PEDO, &pedo_fifo_data, &fifo_size))
             {
                 TracerInfo("[SM_TC-2]: CC_Sensor_Manager_GetData fail!\r\n");
                 
@@ -844,11 +862,11 @@ void SM_Test(void)
                 TracerInfo("[SM_TC-2]: pedo_gyro_Z: %d\r\n", pedo_fifo_data.p_gyro_data[i+2]);        
             }
 
-            if(0 != pedo_fifo_sz.accel_SzInBytes)
-                TracerInfo("[SM_TC-2]: Gyro Data should not get here!! size: %d\r\n", pedo_fifo_sz.accel_SzInBytes);
+            if(0 != fifo_size)
+                TracerInfo("[SM_TC-2]: Gyro Data should not get here!! size: %d\r\n", fifo_size);
 
 
-            get_data_size += pedo_fifo_sz.gyro_SzInBytes;
+            get_data_size += fifo_size;
             
 #ifdef SM_TEST_CASE_2_1
             if(get_data_size >= 100)
@@ -874,20 +892,21 @@ void SM_Test(void)
         TracerInfo("[SM_TC-2]: PEDO get Gyro data done.\r\n");
 
         TracerInfo("[SM_TC-2]: CC_Sensor_Manager_Shutdown()\r\n");
-        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Shutdown(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO)))
+        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Shutdown(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_PEDO)))
         {
             TracerInfo("[SM_TC-2]: CC_Sensor_Manager_Shutdown fail!\r\n");
         }
 
 
-        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO, &pedo_fifo_data, &pedo_fifo_sz)))
+        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_PEDO, &pedo_fifo_data, &pedo_fifo_sz)))
+        //if(E_APP_SRV_ERR_NONE == CC_SenMgr_Gyro_GetData(E_SEN_USER_ID_PEDO, &pedo_fifo_data, &fifo_size))
         {
             TracerInfo("[SM_TC-2]: CC_Sensor_Manager_GetData() don't get any data after shutdown.\r\n");
                 
         }
         else
         {
-            TracerInfo("[SM_TC-2]: Gyro Data should not get here!! size: %d\r\n", pedo_fifo_sz.gyro_SzInBytes);
+            TracerInfo("[SM_TC-2]: Gyro Data should not get here!! size: %d\r\n", fifo_size);
         }
 
         
@@ -922,14 +941,14 @@ void SM_Test(void)
     
     
             TracerInfo("[SM_TC-3]: CC_Sensor_Manager_Init()\r\n");
-            if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Init(E_SEN_TYPE_AK09912_MAG, E_APP_SRV_ID_SWIM)))
+            if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Init(E_SEN_TYPE_AK09912_MAG, E_SEN_USER_ID_SWIM)))
             {
                 TracerInfo("[SM_TC-3]: CC_Sensor_Manager_Init fail!\r\n");
             
             }
 
     
-            if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Configure(E_SEN_TYPE_AK09912_MAG, E_APP_SRV_ID_SWIM, &mag_settings)))
+            if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Configure(E_SEN_TYPE_AK09912_MAG, E_SEN_USER_ID_SWIM, &mag_settings)))
             {
                 TracerInfo("[SM_TC-3]: CC_Sensor_Manager_Configure fail!\r\n");
             }
@@ -937,7 +956,7 @@ void SM_Test(void)
     
             //Acc_Gyro_Dump_All_Settings();
     
-            if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Start(E_SEN_TYPE_AK09912_MAG, E_APP_SRV_ID_SWIM)))
+            if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Start(E_SEN_TYPE_AK09912_MAG, E_SEN_USER_ID_SWIM)))
             {
                 TracerInfo("[SM_TC-3]: CC_Sensor_Manager_Start fail!\r\n");
             }     
@@ -948,7 +967,8 @@ void SM_Test(void)
             while(get_data_size < MEMS_FIFO_SIZE)
             {
 
-                if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_AK09912_MAG, E_APP_SRV_ID_SWIM, &mag_data, &mag_size)))
+                //if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_AK09912_MAG, E_SEN_USER_ID_SWIM, &mag_data, &mag_size)))
+                if(E_SEN_ERROR_NONE != (ret_code = CC_SenMgr_Mag_GetData(E_SEN_USER_ID_SWIM, &mag_data, &fifo_size)))
                 {
                     TracerInfo("[SM_TC-3]: CC_Sensor_Manager_GetData fail!\r\n");
                 }  
@@ -956,7 +976,7 @@ void SM_Test(void)
 
                 if(mag_size != 6)
                 {
-                    TracerInfo("Error Size: %d\r\n", mag_size);
+                    TracerInfo("Error Size: %d\r\n", fifo_size);
                 }
                 else
                 {
@@ -980,20 +1000,21 @@ void SM_Test(void)
             TracerInfo("[SM_TC-3]: Swim get Mag data done.\r\n");
     
             TracerInfo("[SM_TC-3]: CC_Sensor_Manager_Shutdown()\r\n");
-            if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Shutdown(E_SEN_TYPE_AK09912_MAG, E_APP_SRV_ID_SWIM)))
+            if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Shutdown(E_SEN_TYPE_AK09912_MAG, E_SEN_USER_ID_SWIM)))
             {
                 TracerInfo("[SM_TC-3]: CC_Sensor_Manager_Shutdown fail!\r\n");
             }
     
     
-            if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_AK09912_MAG, E_APP_SRV_ID_SWIM, &mag_data, &mag_size)))
+            //if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_AK09912_MAG, E_SEN_USER_ID_SWIM, &mag_data, &mag_size)))
+            if(E_SEN_ERROR_NONE != (ret_code = CC_SenMgr_Mag_GetData(E_SEN_USER_ID_SWIM, &mag_data, &fifo_size)))
             {
                 TracerInfo("[SM_TC-3]: CC_Sensor_Manager_GetData() don't get any data after shutdown.\r\n");
                     
             }
             else
             {
-                TracerInfo("[SM_TC-3]: Gyro Data should not get here!! size: %d\r\n", mag_size);
+                TracerInfo("[SM_TC-3]: Gyro Data should not get here!! size: %d\r\n", fifo_size);
             }
     
             
@@ -1029,14 +1050,14 @@ void SM_Test(void)
     
     
             TracerInfo("[SM_TC-4]: CC_Sensor_Manager_Init()\r\n");
-            if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Init(E_SEN_TYPE_Pah8002_PPG, E_APP_SRV_ID_HRM)))
+            if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Init(E_SEN_TYPE_Pah8002_PPG, E_SEN_USER_ID_HRM)))
             {
                 TracerInfo("[SM_TC-4]: CC_Sensor_Manager_Init fail!\r\n");
             
             }
             
             
-            if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Configure(E_SEN_TYPE_Pah8002_PPG, E_APP_SRV_ID_HRM, NULL)))
+            if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Configure(E_SEN_TYPE_Pah8002_PPG, E_SEN_USER_ID_HRM, NULL)))
             {
                 TracerInfo("[SM_TC-4]: CC_Sensor_Manager_Configure fail!\r\n");
             }
@@ -1044,7 +1065,7 @@ void SM_Test(void)
             
             //Acc_Gyro_Dump_All_Settings();
             
-            if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Start(E_SEN_TYPE_Pah8002_PPG, E_APP_SRV_ID_HRM)))
+            if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Start(E_SEN_TYPE_Pah8002_PPG, E_SEN_USER_ID_HRM)))
             {
                 TracerInfo("[SM_TC-4]: CC_Sensor_Manager_Start fail!\r\n");
             }   
@@ -1055,13 +1076,13 @@ void SM_Test(void)
             while(get_data_size < MEMS_FIFO_SIZE)
             {
 
-                if(E_APP_SRV_ERR_NONE == CC_SenMgr_PPG_GetData(E_APP_SRV_ID_HRM, hrm_ppg_data, &hrm_ppg_size))
+                if(E_APP_SRV_ERR_NONE == CC_SenMgr_PPG_GetData(E_SEN_USER_ID_HRM, hrm_ppg_data, &fifo_size))
                 {
-                    if(0x00 != hrm_ppg_size)
+                    if(0x00 != fifo_size)
                     {
                         TracerInfo("hrm_acc_data:\r\n");        
 
-                        for(uint16_t i = 0; i < hrm_ppg_size/sizeof(uint32_t); i+=3)
+                        for(uint16_t i = 0; i < fifo_size/sizeof(uint32_t); i+=3)
                         {
                             TracerInfo("hrm_ppg_ch1: %d\r\n", hrm_ppg_data[i]);        
                             TracerInfo("hrm_ppg_ch2: %d\r\n", hrm_ppg_data[i+1]);
@@ -1088,20 +1109,21 @@ void SM_Test(void)
             TracerInfo("[SM_TC-4]: HRM get PPG data done.\r\n");
     
             TracerInfo("[SM_TC-4]: CC_Sensor_Manager_Shutdown()\r\n");
-            if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Shutdown(E_SEN_TYPE_Pah8002_PPG, E_APP_SRV_ID_HRM)))
+            if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Shutdown(E_SEN_TYPE_Pah8002_PPG, E_SEN_USER_ID_HRM)))
             {
                 TracerInfo("[SM_TC-4]: CC_Sensor_Manager_Shutdown fail!\r\n");
             }
     
     
-            if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_Pah8002_PPG, E_APP_SRV_ID_HRM, &hrm_ppg_data, &hrm_ppg_size)))
+            //if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_Pah8002_PPG, E_SEN_USER_ID_HRM, &hrm_ppg_data, &hrm_ppg_size)))
+            if(E_APP_SRV_ERR_NONE == CC_SenMgr_PPG_GetData(E_SEN_USER_ID_HRM, hrm_ppg_data, &fifo_size))
             {
                 TracerInfo("[SM_TC-4]: CC_Sensor_Manager_GetData() don't get any data after shutdown.\r\n");
                     
             }
             else
             {
-                TracerInfo("[SM_TC-4]: Gyro Data should not get here!! size: %d\r\n", hrm_ppg_size);
+                TracerInfo("[SM_TC-4]: Gyro Data should not get here!! size: %d\r\n", fifo_size);
             }
     
             
@@ -1146,14 +1168,14 @@ void SM_Test(void)
 
 
         TracerInfo("[SM_TC-5]: CC_Sensor_Manager_Init()\r\n");
-        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Init(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO)))
+        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Init(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_PEDO)))
         {
             TracerInfo("[SM_TC-5]: CC_Sensor_Manager_Init fail!\r\n");
 
         }    
 
         TracerInfo("[SM_TC-5]: CC_Sensor_Manager_Configure()\r\n");
-        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Configure(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO, &pedo_settings)))
+        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Configure(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_PEDO, &pedo_settings)))
         {
             TracerInfo("[SM_TC-5]: CC_Sensor_Manager_Configure fail!\r\n");
         }
@@ -1162,7 +1184,7 @@ void SM_Test(void)
 
 
         TracerInfo("[SM_TC-5]: CC_Sensor_Manager_Start()\r\n");
-        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Start(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO)))
+        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Start(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_PEDO)))
         {
             TracerInfo("[SM_TC-5]: CC_Sensor_Manager_Start fail!\r\n");
         }    
@@ -1172,7 +1194,8 @@ void SM_Test(void)
         
         while(get_data_size < MEMS_FIFO_SIZE)
         {
-            if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO, &pedo_fifo_data, &pedo_fifo_sz)))
+            //if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_PEDO, &pedo_fifo_data, &pedo_fifo_sz)))
+            if(E_APP_SRV_ERR_NONE == CC_SenMgr_PPG_GetData(E_SEN_USER_ID_PEDO, &pedo_fifo_data, &pedo_fifo_sz))
             {
                 TracerInfo("[SM_TC-5]: CC_Sensor_Manager_GetData fail!\r\n");
                 
@@ -1214,13 +1237,14 @@ void SM_Test(void)
         TracerInfo("[SM_TC-5]: PEDO get Gyro data done.\r\n");
 
         TracerInfo("[SM_TC-5]: CC_Sensor_Manager_Shutdown()\r\n");
-        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Shutdown(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO)))
+        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Shutdown(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_PEDO)))
         {
             TracerInfo("[SM_TC-5]: CC_Sensor_Manager_Shutdown fail!\r\n");
         }
 
 
-        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO, &pedo_fifo_data, &pedo_fifo_sz)))
+        //if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_PEDO, &pedo_fifo_data, &pedo_fifo_sz)))
+        if(E_APP_SRV_ERR_NONE == CC_SenMgr_PPG_GetData(E_SEN_USER_ID_PEDO, &pedo_fifo_data, &pedo_fifo_sz))
         {
             TracerInfo("[SM_TC-5]: CC_Sensor_Manager_GetData() don't get any data after shutdown.\r\n");
                 
@@ -1281,14 +1305,14 @@ void SM_Test(void)
         
 
     // Init:    
-    //if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Init(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_HRM)))
-    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Init(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO)))
+    //if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Init(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_HRM)))
+    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Init(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_PEDO)))
     {
         TracerInfo("CC_Sensor_Manager_Init fail!\r\n");
 
     }
 
-    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Init(E_SEN_TYPE_AK09912_MAG, E_APP_SRV_ID_SWIM)))
+    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Init(E_SEN_TYPE_AK09912_MAG, E_SEN_USER_ID_SWIM)))
     {
         TracerInfo("CC_Sensor_Manager_Init fail!\r\n");
 
@@ -1297,18 +1321,18 @@ void SM_Test(void)
 
     // Configuration:
 /*    
-    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Configure(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_HRM, &hrm_settings)))
+    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Configure(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_HRM, &hrm_settings)))
     {
         TracerInfo("CC_Sensor_Manager_Configure fail!\r\n");
     }
  */   
-    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Configure(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO, &pedo_settings)))
+    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Configure(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_PEDO, &pedo_settings)))
     {
         TracerInfo("CC_Sensor_Manager_Configure fail!\r\n");
     }
 
 
-    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Configure(E_SEN_TYPE_AK09912_MAG, E_APP_SRV_ID_SWIM, &mag_settings)))
+    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Configure(E_SEN_TYPE_AK09912_MAG, E_SEN_USER_ID_SWIM, &mag_settings)))
     {
         TracerInfo("CC_Sensor_Manager_Configure fail!\r\n");
     }
@@ -1318,12 +1342,12 @@ void SM_Test(void)
 
 
     // Start:
-    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Start(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO)))
+    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Start(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_PEDO)))
     {
         TracerInfo("CC_Sensor_Manager_Start fail!\r\n");
     }        
 
-    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Start(E_SEN_TYPE_AK09912_MAG, E_APP_SRV_ID_SWIM)))
+    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Start(E_SEN_TYPE_AK09912_MAG, E_SEN_USER_ID_SWIM)))
     {
         TracerInfo("CC_Sensor_Manager_Start fail!\r\n");
     }   
@@ -1337,22 +1361,22 @@ void SM_Test(void)
     {
 #if 1 // mode 1:
 /*
-        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_HRM, &hrm_fifo_data, &hrm_fifo_sz)))
+        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_HRM, &hrm_fifo_data, &hrm_fifo_sz)))
         {
             TracerInfo("CC_Sensor_Manager_GetData(HRM) fail!\r\n");
         }
 */        
-        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO, &pedo_fifo_data, &pedo_fifo_sz)))
+        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_PEDO, &pedo_fifo_data, &pedo_fifo_sz)))
         {
             TracerInfo("CC_Sensor_Manager_GetData(PEDO) fail!\r\n");
         }        
 #else  // mode 2:
-        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_HRM, NULL, &hrm_fifo_sz)))
+        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_HRM, NULL, &hrm_fifo_sz)))
         {
             TracerInfo("CC_Sensor_Manager_GetData(HRM) fail!\r\n");
         }
         
-        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO, NULL, &pedo_fifo_sz)))
+        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_PEDO, NULL, &pedo_fifo_sz)))
         {
             TracerInfo("CC_Sensor_Manager_GetData(PEDO) fail!\r\n");
         }                
@@ -1406,7 +1430,7 @@ void SM_Test(void)
 
 
 
-        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_AK09912_MAG, E_APP_SRV_ID_SWIM, &mag_data, &mag_size)))
+        if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_GetData(E_SEN_TYPE_AK09912_MAG, E_SEN_USER_ID_SWIM, &mag_data, &mag_size)))
         {
             TracerInfo("CC_Sensor_Manager_GetData(SWIM) fail!\r\n");
         }  
@@ -1441,12 +1465,12 @@ void SM_Test(void)
 
 
     // Shutdown:
-    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Shutdown(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_HRM)))
+    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Shutdown(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_HRM)))
     {
         TracerInfo("CC_Sensor_Manager_Shutdown(HRM) fail!\r\n");
     }
     
-    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Shutdown(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_APP_SRV_ID_PEDO)))    
+    if(E_SEN_ERROR_NONE != (ret_code = CC_Sensor_Manager_Shutdown(E_SEN_TYPE_LSM6DS3_ACCEL_GYRO, E_SEN_USER_ID_PEDO)))    
     {
         TracerInfo("CC_Sensor_Manager_Shutdown(PEDO) fail!\r\n");
     }        
