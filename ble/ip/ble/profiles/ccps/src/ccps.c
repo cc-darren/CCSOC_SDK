@@ -55,7 +55,7 @@ const struct attm_desc_128 ccps_att_db_128[CCPS_IDX_NB] =
     // CCPS Report Characteristic Declaration
     [CCPS_IDX_REPORT_CHAR]              =   {ATT_DECL_CHARACTERISTIC_128, PERM(RD, ENABLE), 0, 0},
     // CCPS Report Characteristic Value
-    [CCPS_IDX_REPORT_VAL]               =   {ATT_CHAR_USER_DEFINED_CCPS_128, PERM(NTF, ENABLE)|PERM(WRITE_REQ, ENABLE), PERM(RI, ENABLE)| PERM(UUID_LEN, UUID_128), CCPS_REPORT_MAX_LEN},
+    [CCPS_IDX_REPORT_VAL]               =   {ATT_CHAR_USER_DEFINED_CCPS_128, PERM(NTF, ENABLE)|PERM(IND, ENABLE)|PERM(WRITE_REQ, ENABLE), PERM(RI, ENABLE)| PERM(UUID_LEN, UUID_128), CCPS_REPORT_MAX_LEN},
     // CCPS Report Characteristic - Client Characteristic Configuration Descriptor
     [CCPS_IDX_REPORT_NTF_CFG]           =   {ATT_DESC_CLIENT_CHAR_CFG_128, PERM(RD, ENABLE)|PERM(WRITE_REQ, ENABLE), 0, 0},
 };
@@ -77,11 +77,14 @@ static uint8_t ccps_init(struct prf_task_env* env, uint16_t* start_hdl, uint16_t
     uint8_t status = ATT_ERR_NO_ERROR;
 
     cfg_flag = ccps_compute_att_table(params->features);
-    
+    /*
     status = attm_svc_create_db_128(start_hdl, BLE_CCPS_BASE_UUID_128, (uint8_t *)&cfg_flag, 
                CCPS_IDX_NB, NULL, env->task,  &ccps_att_db_128[0],
                (sec_lvl & (PERM_MASK_SVC_DIS)) | PERM(SVC_MI, DISABLE) | PERM(SVC_MI, DISABLE)| PERM(SVC_UUID_LEN, UUID_128));
-
+    */
+     status = attm_svc_create_db_128(start_hdl, BLE_CCPS_BASE_UUID_128, (uint8_t *)&cfg_flag, 
+               CCPS_IDX_NB, NULL, env->task,  &ccps_att_db_128[0],
+               (sec_lvl & (PERM_MASK_SVC_DIS)) | PERM(SVC_MI, DISABLE) | PERM(SVC_UUID_LEN, UUID_128));
 
     
     if( status == ATT_ERR_NO_ERROR )
@@ -322,13 +325,15 @@ uint8_t ccps_update_ntf_ind_cfg(uint8_t conidx, uint8_t cfg, uint16_t valid_val,
 {
     struct ccps_env_tag* ccps_env = PRF_ENV_GET(CCPS, ccps);
     uint8_t status = GAP_ERR_NO_ERROR;
-
+/*
     if((value != valid_val) && (value != PRF_CLI_STOP_NTFIND))
     {
         status = PRF_APP_ERROR;
 
     }
-    else if (value == valid_val)
+    else 
+*/    
+    if (value == valid_val)
     {
         ccps_env->ntf_ind_cfg[conidx] |= cfg;
     }
@@ -383,7 +388,7 @@ uint16_t ccps_att_hdl_get(struct ccps_env_tag* ccps_env, uint8_t att_idx)
 
 uint8_t ccps_att_idx_get(struct ccps_env_tag* ccps_env, uint16_t handle)
 {
-    uint16_t handle_ref = ccps_env->shdl; // hangle of start
+    uint16_t handle_ref = ccps_env->shdl; // handle of start
     uint8_t att_idx = ATT_INVALID_IDX;
 
     do

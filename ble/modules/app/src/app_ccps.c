@@ -65,13 +65,22 @@ struct app_ccps_env_tag app_ccps_env;
  ****************************************************************************************
  */
 
+/**
+ ****************************************************************************************
+ * @brief Notify user defined data
+ *
+ * @param[in] tx_data    Pointer to the data that would be sent by notifiction packets
+ * @param[in] length     Length of the data
+ * @return If the message was consumed or not.
+ ****************************************************************************************
+ */
 void app_ccps_notify_send(uint8_t *tx_data, uint8_t length)
 {
     // Allocate the CCPS_TEMP_SEND_REQ message
-    struct ccps_notify_send_req * req = KE_MSG_ALLOC(CCPS_CTRL_PT_SEND_NOTIFY,
+    struct ccps_ntf_ind_send_req * req = KE_MSG_ALLOC(CCPS_CTRL_PT_SEND_NOTIFY,
                                                     prf_get_task_from_id(TASK_ID_CCPS),
                                                     TASK_APP,
-                                                    ccps_notify_send_req);
+                                                    ccps_ntf_ind_send_req);
 
 
     req->lenth = length;
@@ -80,6 +89,33 @@ void app_ccps_notify_send(uint8_t *tx_data, uint8_t length)
 
     ke_msg_send(req);
 }
+
+
+/**
+ ****************************************************************************************
+ * @brief Indicate user defined data
+ *
+ * @param[in] tx_data    Pointer to the data that would be sent by indication packets
+ * @param[in] length     Length of the data
+ * @return If the message was consumed or not.
+ ****************************************************************************************
+ */
+void app_ccps_indicate_send(uint8_t *tx_data, uint8_t length)
+{
+    // Allocate the CCPS_TEMP_SEND_REQ message
+    struct ccps_ntf_ind_send_req * req = KE_MSG_ALLOC(CCPS_CTRL_PT_SEND_INDICATE,
+                                                    prf_get_task_from_id(TASK_ID_CCPS),
+                                                    TASK_APP,
+                                                    ccps_ntf_ind_send_req);
+
+
+    req->lenth = length;
+    memcpy(req->eArray, tx_data, length);
+                                             
+
+    ke_msg_send(req);
+}
+
 
 #if (DISPLAY_SUPPORT)
 static void app_ccps_update_type_string(uint8_t temp_type)

@@ -97,7 +97,7 @@ void app_ccps_init(void);
 
 /**
  ****************************************************************************************
- * @brief Add a Health Thermometer instance in the DB
+ * @brief Add a CCPS instance in the DB
  ****************************************************************************************
  */
 void app_ccps_add_ccpss(void);
@@ -144,6 +144,7 @@ void app_ccps_temp_type_dec(void);
  */
 //void app_ccps_notify_send(uint8_t *tx_data);
 void app_ccps_notify_send(uint8_t *tx_data, uint8_t length);
+void app_ccps_indicate_send(uint8_t *tx_data, uint8_t length);
 void app_ccps_ctrl_pt_write(struct gattc_write_req_ind const * param);
 void app_ccps_pkt_write_cmd(struct gattc_write_req_ind const * param);
 

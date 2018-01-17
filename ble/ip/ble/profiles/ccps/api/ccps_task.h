@@ -51,7 +51,8 @@ enum ccps_msg_id
 
     /// Send
     CCPS_PACKET_SEND_CMD,
-    CCPS_CTRL_PT_SEND_NOTIFY,    
+    CCPS_CTRL_PT_SEND_NOTIFY,
+    CCPS_CTRL_PT_SEND_INDICATE,
 
     /// Inform APP that Indication Configuration has been changed - use to update bond data
     CCPS_CFG_INDNTF_IND,
@@ -73,6 +74,9 @@ enum ccps_ntf_ind_cfg
 {
     /// REPORT notification enabled
     CCPS_CFG_REPORT_NTF    = (1 << 0),
+    
+    /// REPORT indication enabled
+    CCPS_CFG_REPORT_IND    = (1 << 1),
 };
 
 
@@ -122,7 +126,7 @@ struct ccps_period_meas_send_req
     
 };
 */
-struct ccps_notify_send_req
+struct ccps_ntf_ind_send_req
 {
     uint8_t     lenth;
     uint8_t     eArray[20];

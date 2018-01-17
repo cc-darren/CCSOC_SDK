@@ -3118,8 +3118,8 @@ bool _app_scheduler(void)
         static uint8_t tx_notify_data[20];
         tx_notify_data[0] += 0x01;
         tx_notify_data[19] += 0x02;
-        //app_ota_notify_send(tx_notify_data); // test by Samuel
         app_ccps_notify_send(tx_notify_data, 20); // test by Samuel
+        app_ccps_indicate_send(tx_notify_data, 20); // test by Samuel
 #endif
    
          s_tVenusCB.stSysCurTime = app_Time_Proc(1); //1 second

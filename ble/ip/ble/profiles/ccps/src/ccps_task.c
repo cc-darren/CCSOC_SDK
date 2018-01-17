@@ -165,7 +165,7 @@ static int ccps_temp_send_req_handler(ke_msg_id_t const msgid,
 
 
 static int ccps_notify_send_req_handler(ke_msg_id_t const msgid,
-                                      struct ccps_notify_send_req const *param,
+                                      struct ccps_ntf_ind_send_req const *param,
                                       ke_task_id_t const dest_id,
                                       ke_task_id_t const src_id)
 {
@@ -218,6 +218,54 @@ static int ccps_notify_send_req_handler(ke_msg_id_t const msgid,
 
     return (msg_status);
 }
+
+
+static int ccps_indicate_send_req_handler(ke_msg_id_t const msgid,
+                                      struct ccps_ntf_ind_send_req const *param,
+                                      ke_task_id_t const dest_id,
+                                      ke_task_id_t const src_id)
+{
+    // Status
+    int msg_status = KE_MSG_SAVED;
+    uint8_t state = ke_state_get(dest_id);
+
+    // check state of the task
+    if(state == CCPS_IDLE)
+    {
+        // Get the address of the environment
+        struct ccps_env_tag *ccps_env = PRF_ENV_GET(CCPS, ccps);
+
+        {
+            // allocate operation to execute
+            ccps_env->operation    = (struct ccps_op *) ke_malloc(sizeof(struct ccps_op) + CCPS_NOTIFY_SEND_MAX_LEN, KE_MEM_ATT_DB);
+
+            // Initialize operation parameters
+            ccps_env->operation->cursor  = 0;
+            ccps_env->operation->dest_id = src_id;
+            ccps_env->operation->conidx  = GAP_INVALID_CONIDX;
+            ccps_env->operation->op      = CCPS_CFG_REPORT_IND;
+            ccps_env->operation->handle  = CCPS_HANDLE(CCPS_IDX_REPORT_VAL);
+            ccps_env->operation->length  = param->lenth;//sizeof(struct ccps_notify_send_req);
+
+            memcpy(ccps_env->operation->data, param->eArray, param->lenth);
+
+            //Pack the temperature measurement value
+            //ccps_env->operation->length  = ccps_pack_temp_value(&(ccps_env->operation->data[0]), param->temp_meas);
+
+            // put task in a busy state
+            ke_state_set(dest_id, CCPS_BUSY);
+
+            // execute operation
+            ccps_exe_operation();
+        }
+
+        msg_status = KE_MSG_CONSUMED;
+    }
+
+    return (msg_status);
+}
+
+
 
 #if 0
 static int ccps_period_meas_send_req_handler(ke_msg_id_t const msgid,
@@ -483,8 +531,6 @@ static int gattc_att_info_req_ind_handler(ke_msg_id_t const msgid,
  * @return If the message was consumed or not.
  ****************************************************************************************
  */
- // write notification enabled handler 
- extern uint8_t test_flag;
 static int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
                                       struct gattc_write_req_ind const *param,
                                       ke_task_id_t const dest_id,
@@ -532,7 +578,9 @@ static int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
 
          case CCPS_IDX_REPORT_NTF_CFG:
          {
-                status = ccps_update_ntf_ind_cfg(conidx, CCPS_CFG_REPORT_NTF, PRF_CLI_START_NTF, co_read16p(param->value));
+             status = ccps_update_ntf_ind_cfg(conidx, CCPS_CFG_REPORT_NTF, PRF_CLI_START_NTF, co_read16p(param->value));
+             status = ccps_update_ntf_ind_cfg(conidx, CCPS_CFG_REPORT_IND, PRF_CLI_START_IND, co_read16p(param->value));
+
          }break;
 
 
@@ -567,6 +615,7 @@ static int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
  * @return If the message was consumed or not.
  ****************************************************************************************
  */
+ #include "tracer.h"
 static int gattc_read_req_ind_handler(ke_msg_id_t const msgid, struct gattc_write_req_ind const *param,
                                       ke_task_id_t const dest_id, ke_task_id_t const src_id)
 {
@@ -584,8 +633,18 @@ static int gattc_read_req_ind_handler(ke_msg_id_t const msgid, struct gattc_writ
 
         case CCPS_IDX_REPORT_NTF_CFG:
         {
+            uint16_t ntf_ind_cfg = 0;
+            
             value_size = CCPS_IND_NTF_CFG_MAX_LEN;
-            co_write16p(value, ((ccps_env->ntf_ind_cfg[conidx] & CCPS_CFG_REPORT_NTF) != 0) ? PRF_CLI_START_NTF : PRF_CLI_STOP_NTFIND);
+
+            if((ccps_env->ntf_ind_cfg[conidx] & CCPS_CFG_REPORT_NTF) != 0)
+                ntf_ind_cfg |= PRF_CLI_START_NTF;
+
+            if((ccps_env->ntf_ind_cfg[conidx] & CCPS_CFG_REPORT_IND) != 0)
+                ntf_ind_cfg |= PRF_CLI_START_IND;
+
+            co_write16p(value, ntf_ind_cfg);            
+            //co_write16p(value, ((ccps_env->ntf_ind_cfg[conidx] & CCPS_CFG_REPORT_NTF) != 0) ? PRF_CLI_START_NTF : PRF_CLI_STOP_NTFIND);
 
         }break;
 
@@ -703,7 +762,8 @@ const struct ke_msg_handler ccps_default_state[] =
     {GATTC_READ_REQ_IND,         (ke_msg_func_t) gattc_read_req_ind_handler},     // sent from remote
     {GATTC_CMP_EVT,              (ke_msg_func_t) gattc_cmp_evt_handler},
 
-    {CCPS_CTRL_PT_SEND_NOTIFY,         (ke_msg_func_t) ccps_notify_send_req_handler}, // sent from local
+    {CCPS_CTRL_PT_SEND_NOTIFY,   (ke_msg_func_t) ccps_notify_send_req_handler}, // sent from local
+    {CCPS_CTRL_PT_SEND_INDICATE, (ke_msg_func_t) ccps_indicate_send_req_handler},
 };
 
 

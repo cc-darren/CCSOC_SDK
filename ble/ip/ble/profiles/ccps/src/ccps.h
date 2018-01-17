@@ -16,9 +16,9 @@
 
 /**
  ****************************************************************************************
- * @addtogroup CCPS Health Thermometer Profile Thermometer
- * @ingroup HTP
- * @brief Health Thermometer Profile Thermometer
+ * @addtogroup CCPS  Profile Thermometer
+ * @ingroup CCPS
+ * @brief CCPS Profile 
  *
  * An actual thermometer device does not exist on current platform, so measurement values
  * that would come from a driver are replaced by simple counters sent at certain intervals
@@ -71,7 +71,7 @@
  * DEFINES
  ****************************************************************************************
  */
-///Maximum number of Health thermometer task instances
+///Maximum number of CCPS task instances
 #define CCPS_IDX_MAX    (1)
 
 #define CCPS_NOTIFY_SEND_MAX_LEN              (20)
@@ -145,7 +145,7 @@ struct ccps_op
 };
 
 
-///Health Thermometer Profile Thermometer Environment Variable
+///CCPS Profile Environment Variable
 struct ccps_env_tag
 {
     /// profile environment
