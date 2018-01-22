@@ -1812,6 +1812,7 @@ static void app_multiple_timer_init(void)
     APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, false);
 #endif
 
+    
     app_timer_create(&m_battery_timer_id,
                       APP_TIMER_MODE_REPEATED,
                       battery_level_meas_timeout_handler);
@@ -2518,7 +2519,7 @@ void _sensor_accel_gyro_on_change(void)
 {
 
     s_tVenusCB.cSwimmingEn = CC_BLE_Cmd_GetSwimmingEN();
-    
+
     if ( 0== s_tVenusCB.cSwimmingEn) 
     {
 
@@ -2827,11 +2828,13 @@ void CC_SYS_FactroyReset_Setting(void)
 //    CC_BLE_Cmd_SetSwimmingEN(0);
     s_tVenusCB.cSwimmingEn = CC_BLE_Cmd_GetSwimmingEN();
 
+#if 0 // it should be open here, but it can make re-connection fail?
     if (CC_AppSrv_HR_IsHrmWorking())
     {
         
         if (CC_AppSrv_HR_IsSingleHrEnabled())
             CC_AppSrv_HR_StopSingleHR();
+        
         if (CC_AppSrv_HR_IsHrsEnabled())
         {
             CC_BLE_Cmd_SetNotificaitonState(eDisable,eNOTIFY_SETTING_HEARTRATESTRAP_MODE);
@@ -2841,11 +2844,14 @@ void CC_SYS_FactroyReset_Setting(void)
         {
             CC_BLE_Cmd_SetNotificaitonState(eDisable,eNOTIFY_SETTING_24HHEARTRATE_MODE);
             CC_AppSrv_HR_Stop24HR();
-        }    
+        }
+        
     }
-
+#endif
     
 }
+
+
 void CC_SYS_FactoryReset_Handler(void)
 {
 #ifdef DB_EN    
@@ -2956,7 +2962,7 @@ bool _app_scheduler(void)
 
     bool _bScheduleOperating = false;
 
-    
+
     if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_SENSOR_DATA_READY_ACCEL))
     {
           VENUS_EVENT_OFF(E_VENUS_EVENT_SENSOR_DATA_READY_ACCEL);
@@ -2974,6 +2980,7 @@ bool _app_scheduler(void)
           }
           _bScheduleOperating =true;
     }
+
 
 #ifdef HRM_EN
     if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_HRM))
@@ -2995,6 +3002,7 @@ bool _app_scheduler(void)
         _bScheduleOperating =true;
     }
 #endif
+
 
     if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_OLED_UPDATE_LIFTARM_UP) )
     {
@@ -3067,7 +3075,7 @@ bool _app_scheduler(void)
         _bScheduleOperating =true;
         
     }
-    
+
     if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_OLED_SLEEP) )
     {
         TracerInfo(" OLED IS E_VENUS_EVENT_OLED_SLEEP \r\n");
