@@ -200,7 +200,7 @@ fs_ret_t nrf_dfu_flash_erase(uint32_t const * p_dest, uint32_t num_pages, dfu_fl
             TracerInfo("Invalid address\r\n");
             return FS_ERR_UNALIGNED_ADDR;
         }
-
+        
         uint16_t first_page = ((uint32_t)p_dest / CODE_PAGE_SIZE);
         do
         {

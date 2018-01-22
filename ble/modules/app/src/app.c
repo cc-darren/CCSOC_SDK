@@ -80,6 +80,8 @@
 #include "nvds.h"                    // NVDS Definitions
 #endif //(NVDS_SUPPORT)
 
+#include "co_utils.h"
+#include "reg_access.h"
 /*
  * DEFINES
  ****************************************************************************************
@@ -92,7 +94,7 @@
 // HID Mouse
 #define DEVICE_NAME        "Hid Mouse"
 #else
-#define DEVICE_NAME        "RW DEVICE"
+#define DEVICE_NAME        "CloudChip DEVICE"
 #endif
 
 #define DEVICE_NAME_SIZE    sizeof(DEVICE_NAME)
@@ -217,7 +219,6 @@ static const struct ke_task_desc TASK_DESC_APP = {NULL, &appm_default_handler,
                                                   appm_state, APPM_STATE_MAX, APP_IDX_MAX};
 
 /// List of functions used to create the database
-#if 1 // open define by Chiu
 static const appm_add_svc_func_t appm_add_svc_func_list[APPM_SVC_LIST_STOP] =
 {
     #if (BLE_APP_HT)
@@ -242,7 +243,7 @@ static const appm_add_svc_func_t appm_add_svc_func_list[APPM_SVC_LIST_STOP] =
     (appm_add_svc_func_t)app_ccps_add_ccpss,
     #endif
 };
-#endif
+
 
 /*
  * GLOBAL VARIABLE DEFINITIONS
@@ -253,6 +254,9 @@ static const appm_add_svc_func_t appm_add_svc_func_list[APPM_SVC_LIST_STOP] =
 struct app_env_tag app_env;
 
 volatile uint8_t  *p_llm_le_event_mask = (volatile uint8_t *) 0x20000680;
+
+
+uint8_t PUBLIC_BD_ADDR[BD_ADDR_LEN] = {0x66,0x48,0xF6,0x11,0x07,0x77};
 
 /*
  * Local VARIABLE DEFINITIONS
@@ -393,7 +397,6 @@ void appm_init()
 
 bool appm_add_svc(void)
 {
-#if 1 // open define by Chiu
     // Indicate if more services need to be added in the database
     bool more_svc = false;
 
@@ -411,9 +414,6 @@ bool appm_add_svc(void)
     }
 
     return more_svc;
-#else
-    return true;
-#endif
 }
 
 void appm_disconnect(void)
@@ -472,6 +472,17 @@ void app_wait_for_reset_ble(void)
 }
 
 
+
+void appm_set_bdaddr(uint8_t *bd_addr)
+{
+    REG_BLE_WR(0x40004024, co_read32p(bd_addr));
+    REG_BLE_WR(0x40004028, co_read16p((bd_addr+4)));
+
+    memcpy((uint8_t *) 0x2000069D, bd_addr, BD_ADDR_LEN);
+
+}
+
+
 /**
  ****************************************************************************************
  * Advertising Functions
@@ -483,6 +494,9 @@ void appm_start_advertising(void)
     // Check if the advertising procedure is already is progress
     if (ke_state_get(TASK_APP) == APPM_READY)
     {
+
+        appm_set_bdaddr(PUBLIC_BD_ADDR);
+    
         #if defined(BLE_APP_AM0)
         am0_app_start_advertising();
         #else

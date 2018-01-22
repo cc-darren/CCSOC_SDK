@@ -55,7 +55,8 @@ const struct attm_desc_128 ccps_att_db_128[CCPS_IDX_NB] =
     // CCPS Report Characteristic Declaration
     [CCPS_IDX_REPORT_CHAR]              =   {ATT_DECL_CHARACTERISTIC_128, PERM(RD, ENABLE), 0, 0},
     // CCPS Report Characteristic Value
-    [CCPS_IDX_REPORT_VAL]               =   {ATT_CHAR_USER_DEFINED_CCPS_128, PERM(NTF, ENABLE)|PERM(IND, ENABLE)|PERM(WRITE_REQ, ENABLE), PERM(RI, ENABLE)| PERM(UUID_LEN, UUID_128), CCPS_REPORT_MAX_LEN},
+    [CCPS_IDX_REPORT_VAL]               =   {ATT_CHAR_USER_DEFINED_CCPS_128, PERM(NTF, ENABLE)|PERM(IND, ENABLE)|PERM(WRITE_REQ, ENABLE)|PERM(RD, ENABLE), 
+                                                                             PERM(RI, ENABLE)| PERM(UUID_LEN, UUID_128), CCPS_REPORT_MAX_LEN},
     // CCPS Report Characteristic - Client Characteristic Configuration Descriptor
     [CCPS_IDX_REPORT_NTF_CFG]           =   {ATT_DESC_CLIENT_CHAR_CFG_128, PERM(RD, ENABLE)|PERM(WRITE_REQ, ENABLE), 0, 0},
 };
@@ -77,11 +78,7 @@ static uint8_t ccps_init(struct prf_task_env* env, uint16_t* start_hdl, uint16_t
     uint8_t status = ATT_ERR_NO_ERROR;
 
     cfg_flag = ccps_compute_att_table(params->features);
-    /*
-    status = attm_svc_create_db_128(start_hdl, BLE_CCPS_BASE_UUID_128, (uint8_t *)&cfg_flag, 
-               CCPS_IDX_NB, NULL, env->task,  &ccps_att_db_128[0],
-               (sec_lvl & (PERM_MASK_SVC_DIS)) | PERM(SVC_MI, DISABLE) | PERM(SVC_MI, DISABLE)| PERM(SVC_UUID_LEN, UUID_128));
-    */
+
      status = attm_svc_create_db_128(start_hdl, BLE_CCPS_BASE_UUID_128, (uint8_t *)&cfg_flag, 
                CCPS_IDX_NB, NULL, env->task,  &ccps_att_db_128[0],
                (sec_lvl & (PERM_MASK_SVC_DIS)) | PERM(SVC_MI, DISABLE) | PERM(SVC_UUID_LEN, UUID_128));
@@ -109,36 +106,10 @@ static uint8_t ccps_init(struct prf_task_env* env, uint16_t* start_hdl, uint16_t
 
         //Save features on the environment
         ccps_env->features      = params->features;
-//        ccps_env->meas_intv     = params->meas_intv;
-//        ccps_env->meas_intv_min = params->valid_range_min;
-//        ccps_env->meas_intv_max = params->valid_range_max;
-//        ccps_env->temp_type     = params->temp_type;
+
         ccps_env->operation     = NULL;
         memset(ccps_env->ntf_ind_cfg, 0 , sizeof(ccps_env->ntf_ind_cfg));
-#if 0 // remarked by Samuel
-        // Update measurement interval permissions
-        if (CCPS_IS_FEATURE_SUPPORTED(params->features, CCPS_MEAS_INTV_CHAR_SUP))
-        {
-            uint16_t perm = PERM(RD, ENABLE);
 
-            //Check if Measurement Interval Char. supports indications
-            if (CCPS_IS_FEATURE_SUPPORTED(params->features, CCPS_MEAS_INTV_IND_SUP))
-            {
-                perm |= PERM(IND, ENABLE);
-            }
-
-            //Check if Measurement Interval Char. is writable
-
-            perm |= PERM(WRITE_REQ, ENABLE); // modified by Samuel
-            /*
-            if (CCPS_IS_FEATURE_SUPPORTED(params->features, CCPS_MEAS_INTV_WR_SUP))
-            {
-                perm |= PERM(WP, UNAUTH)|PERM(WRITE_REQ, ENABLE);
-            }
-            */
-            attm_att_set_permission(CCPS_HANDLE(HTS_IDX_MEAS_INTV_VAL), perm, 0);
-        }
-#endif
         // service is ready, go into an Idle state
         ke_state_set(env->task, CCPS_IDLE);
     }
@@ -215,52 +186,11 @@ const struct prf_task_cbs ccps_itf =
 uint8_t ccps_get_valid_rge_offset(uint16_t features)
 {
     uint8_t offset = 0;
-/*
-    if (CCPS_IS_FEATURE_SUPPORTED(features, CCPS_MEAS_INTV_WR_SUP))
-    {
-        offset += 1;
 
-        if (CCPS_IS_FEATURE_SUPPORTED(features, CCPS_MEAS_INTV_IND_SUP))
-        {
-            offset += 1;
-        }
-    }
-*/
     return offset;
 }
-#if 0
-uint8_t ccps_pack_temp_value(uint8_t *packed_temp, struct htp_temp_meas temp_meas)
-{
-    uint8_t cursor = 0;
-/*
-    *(packed_temp + cursor) = temp_meas.flags;
-    cursor += 1;
 
-    co_write32p(packed_temp + cursor, temp_meas.temp);
-    cursor += 4;
 
-    //Time Flag Set
-    if ((temp_meas.flags & HTP_FLAG_TIME) == HTP_FLAG_TIME)
-    {
-        cursor += prf_pack_date_time(packed_temp + cursor, &(temp_meas.time_stamp));
-    }
-
-    //Type flag set
-    if ((temp_meas.flags & HTP_FLAG_TYPE) == HTP_FLAG_TYPE)
-    {
-        *(packed_temp + cursor) = temp_meas.type;
-        cursor += 1;
-    }
-
-    //Clear unused packet data
-    if(cursor < CCPS_TEMP_MEAS_MAX_LEN)
-    {
-        memset(packed_temp + cursor, 0, (CCPS_TEMP_MEAS_MAX_LEN - cursor));
-    }
-*/
-    return cursor;
-}
-#endif
 void ccps_exe_operation(void)
 {
     struct ccps_env_tag* ccps_env = PRF_ENV_GET(CCPS, ccps);
@@ -299,19 +229,6 @@ void ccps_exe_operation(void)
     // check if operation is finished
     if(finished)
     {
-   /*
-        // do not send response if operation has been locally requested
-        if(ccps_env->operation->dest_id != prf_src_task_get(&ccps_env->prf_env, 0))
-        {
-            // send response to requester
-            struct ccps_meas_intv_upd_rsp * rsp =
-                    KE_MSG_ALLOC(((ccps_env->operation->op == CCPS_CFG_REPORT_NTF) ? CCPS_MEAS_INTV_UPD_RSP : CCPS_TEMP_SEND_RSP),
-                                 ccps_env->operation->dest_id, prf_src_task_get(&ccps_env->prf_env, 0),
-                                 ccps_meas_intv_upd_rsp);
-            rsp->status = GAP_ERR_NO_ERROR;
-            ke_msg_send(rsp);
-        }
-*/
         // free operation
         ke_free(ccps_env->operation);
         ccps_env->operation = NULL;
@@ -325,14 +242,7 @@ uint8_t ccps_update_ntf_ind_cfg(uint8_t conidx, uint8_t cfg, uint16_t valid_val,
 {
     struct ccps_env_tag* ccps_env = PRF_ENV_GET(CCPS, ccps);
     uint8_t status = GAP_ERR_NO_ERROR;
-/*
-    if((value != valid_val) && (value != PRF_CLI_STOP_NTFIND))
-    {
-        status = PRF_APP_ERROR;
 
-    }
-    else 
-*/    
     if (value == valid_val)
     {
         ccps_env->ntf_ind_cfg[conidx] |= cfg;

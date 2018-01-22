@@ -46,31 +46,19 @@
 extern struct app_env_tag app_env;
 
 /// CloudChip Proprietary Services application environment structure
+/*
 struct app_ccps_env_tag
 {
-    /// Measurement interval
-    uint16_t ccpst_meas_intv;
 
-    /// Temperature value
-    uint32_t temp_value;
-    /// Temperature step
-    uint32_t temp_step;
-    /// Temperature type
-    uint8_t temp_meas_type;
-    /// Temperature type string
-    char temp_type_string[16];
-
-    /// Measurement interval timer enable
-    bool timer_enable;
 };
-
+*/
 /*
  * GLOBAL VARIABLES DECLARATIONS
  ****************************************************************************************
  */
 
 /// CloudChip Proprietary Service Application environment
-extern struct app_ccps_env_tag app_ccps_env;
+//extern struct app_ccps_env_tag app_ccps_env;
 
 /// Table of message handlers
 extern const struct ke_state_handler app_ccps_table_handler;
@@ -83,14 +71,14 @@ extern const struct ke_state_handler app_ccps_table_handler;
 /**
  ****************************************************************************************
  *
- * Health Thermometer Application Functions
+ * CloudChip Proprietary Services Functions
  *
  ****************************************************************************************
  */
 
 /**
  ****************************************************************************************
- * @brief Initialize Health Thermometer Application
+ * @brief Initialize CCPS Application
  ****************************************************************************************
  */
 void app_ccps_init(void);
@@ -104,50 +92,53 @@ void app_ccps_add_ccpss(void);
 
 /**
  ****************************************************************************************
- * @brief Stop the interval measurement timer if used
- ****************************************************************************************
- */
-void app_ccps_stop_timer (void);
-
-/**
- ****************************************************************************************
  * @brief Enable the CloudChip Proprietary Services profile
  ****************************************************************************************
  */
 void app_ccps_enable_prf(uint8_t);
 
-/**
- ****************************************************************************************
- * @brief Increase temp_value by temp_step
- ****************************************************************************************
- */
-void app_ccps_temp_inc(void);
+
 
 /**
  ****************************************************************************************
- * @brief Decrease temp_value by temp_step
+ * @brief Notify user defined data
+ *
+ * @param[in] tx_data    Pointer to the data that would be sent by notifiction packets
+ * @param[in] length     Length of the data
+ * @return If the message was consumed or not.
  ****************************************************************************************
  */
-void app_ccps_temp_dec(void);
-
-/**
- ****************************************************************************************
- * @brief Decrease temp_type by 1
- ****************************************************************************************
- */
-void app_ccps_temp_type_dec(void);
-
-/**
- ****************************************************************************************
- * @brief Increase temp_type by 1
- ****************************************************************************************
- */
-//void app_ccps_notify_send(uint8_t *tx_data);
 void app_ccps_notify_send(uint8_t *tx_data, uint8_t length);
-void app_ccps_indicate_send(uint8_t *tx_data, uint8_t length);
-void app_ccps_ctrl_pt_write(struct gattc_write_req_ind const * param);
-void app_ccps_pkt_write_cmd(struct gattc_write_req_ind const * param);
 
+/**
+ ****************************************************************************************
+ * @brief Indicate user defined data
+ *
+ * @param[in] tx_data    Pointer to the data that would be sent by indication packets
+ * @param[in] length     Length of the data
+ * @return If the message was consumed or not.
+ ****************************************************************************************
+ */
+void app_ccps_indicate_send(uint8_t *tx_data, uint8_t length);
+
+
+/**
+ ****************************************************************************************
+ * @brief Read Response via "Report characteristic"
+ *
+ * @param[in] tx_data    Pointer to the data that would be sent by read response packets
+ * @param[in] length     Length of the data
+ * @return If the message was consumed or not.
+ ****************************************************************************************
+ */
+void ccps_packet_send_reply_handler(uint8_t *tx_data, uint8_t *length);
+
+/**
+ ****************************************************************************************
+ * @brief CCPS Sample Code
+ ****************************************************************************************
+ */
+void app_ccps_test_code(void);
 
 
 

@@ -129,15 +129,23 @@ struct ccps_period_meas_send_req
 struct ccps_ntf_ind_send_req
 {
     uint8_t     lenth;
+#ifdef CFG_DLE_EN    
+    uint8_t     eArray[244];
+#else
     uint8_t     eArray[20];
+#endif
 };
 
 
 struct ccps_packet_send_cmd
 {
-    //uint8_t     conidx;
+
     uint16_t    length;
-    uint8_t  value[50];
+#ifdef CFG_DLE_EN   
+    uint8_t     value[244];
+#else
+    uint8_t     value[20];
+#endif    
 };
 
 /// Parameters of the @ref CCPS_CFG_INDNTF_IND message

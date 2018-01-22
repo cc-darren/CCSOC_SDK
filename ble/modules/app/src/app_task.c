@@ -216,8 +216,9 @@ static int gapm_cmp_evt_handler(ke_msg_id_t const msgid,
                 // Set the device role - Peripheral
                 cmd->role      = GAP_ROLE_PERIPHERAL;
                 // Set Data length parameters
-                cmd->sugg_max_tx_octets = BLE_MIN_OCTETS;
-                cmd->sugg_max_tx_time   = BLE_MIN_TIME;
+                cmd->sugg_max_tx_octets = BLE_MAX_OCTETS;
+                cmd->sugg_max_tx_time   = BLE_MAX_TIME;
+                cmd->max_mtu = BLE_MAX_OCTETS; 
                 // Do not support secure connections
                 cmd->pairing_mode = GAPM_PAIRING_LEGACY;
                 #if (BLE_APP_HID)

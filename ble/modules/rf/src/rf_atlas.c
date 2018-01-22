@@ -895,7 +895,7 @@ void _Radio55nmPmuInit(void)
  ****************************************************************************************
  **/
 
-//uint8_t rand_array[1000];
+uint32_t rand_array[250];
 
 void rf_init(struct rwip_rf_api *api)
 {
@@ -929,29 +929,54 @@ void rf_init(struct rwip_rf_api *api)
   // Detect the RF version
   icy_version = rf_atl_reg_rd(0xFF);
 
+
 #if 0 //test
-  rf_atl_reg_wr(0xC0, 0x00);
-
-
-  for(uint16_t i =0; i < 500; i++)
-  {
-        if((rf_atl_reg_rd(0xC9) & 0x04) == 0x04)
-        {
-            uint8_t len =   rf_atl_reg_rd(0xC7);      
-    
-            for(uint8_t k = 0; k < len; k++)
-                rand_array[i++] = rf_atl_reg_rd(0xC3);
-        }
-  }
+  
+      // enable FSM Rx
+      rf_atl_reg_wr(0xC0, 0x01);
+      uint16_t i = 0;
+      uint32_t st;
+  
+      while(1) 
+      {
+            if(((st = rf_atl_reg_rd(0xC9)) & 0x04) == 0x04)  // IRQ received
+            {
+                uint8_t len =   rf_atl_reg_rd(0xC7);      
+        
+                for(uint8_t k = 0; k < len; k++)
+                    rand_array[i++] = rf_atl_reg_rd(0xCA);
+  
+                rf_atl_reg_wr(0xC0, 0x00);
+                rf_atl_reg_wr(0xC0, 0x01);
+            }         
+  
+      }
+  
   /*
-  rssi_val[0] = rf_atl_reg_rd(0xC3);
-  rssi_val[1] = rf_atl_reg_rd(0xC3);
-  rssi_val[2] = rf_atl_reg_rd(0xC3);
-  rssi_val[3] = rf_atl_reg_rd(0xC3);
-  rssi_val[4] = rf_atl_reg_rd(0xC3);
-  rssi_val[5] = rf_atl_reg_rd(0xC3);
-*/
+      rf_atl_reg_wr(0xC0, 0x00);
+    
+    
+      for(uint16_t i =0; i < 250; i++)
+      {
+           // if((rf_atl_reg_rd(0xC9) & 0x04) == 0x04)
+            {
+             //   uint8_t len =   rf_atl_reg_rd(0xC7);      
+        
+               // for(uint8_t k = 0; k < len; k++)
+                    rand_array[i++] = rf_atl_reg_rd(0xCA);
+            }
+      }
+  */    
+      /*
+      rssi_val[0] = rf_atl_reg_rd(0xC3);
+      rssi_val[1] = rf_atl_reg_rd(0xC3);
+      rssi_val[2] = rf_atl_reg_rd(0xC3);
+      rssi_val[3] = rf_atl_reg_rd(0xC3);
+      rssi_val[4] = rf_atl_reg_rd(0xC3);
+      rssi_val[5] = rf_atl_reg_rd(0xC3);
+    */
 #endif
+
 
   // Select proper sub-version of IcyTRx Radio Controller / Need BLE Core xls update 1st
   switch(icy_version)
@@ -1519,6 +1544,8 @@ void rf_init(struct rwip_rf_api *api)
   RF_ICTRX_EM_BLE_WR(rssiptr+0x2, 0xCA01);
   RF_ICTRX_EM_BLE_WR(rssiptr+0x4, 0x0000);
   RF_ICTRX_EM_BLE_WR(rssiptr+0x6, 0x0000);
+
+
 
 };
 ///@} RF_ATLAS

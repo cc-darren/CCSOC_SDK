@@ -906,6 +906,9 @@ typedef struct
 // Sec 12: BLE config settings
 ******************************************************************************/
 
+#define CFG_DLE_EN
+
+
 //BLE is always supported
 #define CFG_BLE    1
 

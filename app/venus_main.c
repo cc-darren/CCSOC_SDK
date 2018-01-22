@@ -1879,6 +1879,7 @@ uint32_t Get_system_time_ms(void)
 }
 #endif
 
+
 static void application_timers_start(void)
 {
     //uint32_t err_code;
@@ -1905,7 +1906,9 @@ static void application_timers_start(void)
 
     app_timer_start(s_tVenusTimerDiffTime, APP_TIMER_TICKS(20, APP_TIMER_PRESCALER), NULL); // test by Samuel
 #endif
-                          
+
+
+
 }
 
 static void CC_CalorieInfoSetting(void)
@@ -3114,13 +3117,6 @@ bool _app_scheduler(void)
 
     if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_DATETIMEFLUSH) )
     {
-#if 0 // for test   
-        static uint8_t tx_notify_data[20];
-        tx_notify_data[0] += 0x01;
-        tx_notify_data[19] += 0x02;
-        app_ccps_notify_send(tx_notify_data, 20); // test by Samuel
-        app_ccps_indicate_send(tx_notify_data, 20); // test by Samuel
-#endif
    
          s_tVenusCB.stSysCurTime = app_Time_Proc(1); //1 second
          VENUS_EVENT_OFF(E_VENUS_EVENT_DATETIMEFLUSH);
@@ -3668,8 +3664,9 @@ int venus_main(void)
     s_tVenusCB.eSystemPwrState = eSysStateInit;
 
     TracerInfo("> Venus While\r\n");
-
-
+#if 0 
+    app_ccps_test_code();
+#endif    
     while(1)
     {
         switch (s_tVenusCB.eSystemPwrState)

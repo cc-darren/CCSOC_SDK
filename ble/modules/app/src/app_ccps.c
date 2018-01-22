@@ -35,45 +35,82 @@
 #include "prf_types.h"
 #include "prf_utils.h"
 #include "arch.h"                    // Platform Definitions
-
+#include "ccps.h"
 #include "co_math.h"
 #include "ke_timer.h"
 #include "drvi_clock.h"
-
-#if (DISPLAY_SUPPORT)
-#include "app_display.h"
-#include "display.h"
-#endif //DISPLAY_SUPPORT
+#include "sw_timer.h"
+#include "tracer.h"
+#include "scheduler.h"
+#include "rwip.h"
 
 /*
  * DEFINES
  ****************************************************************************************
  */
 
+APP_TIMER_DEF(s_tCCPSTimerTime);
 
 /*
  * GLOBAL VARIABLE DEFINITIONS
  ****************************************************************************************
  */
-extern void venus_ready_to_bootloader(void);
 
 /// CCPS application environment structure
-struct app_ccps_env_tag app_ccps_env;
+//struct app_ccps_env_tag app_ccps_env;
 
 /*
  * LOCAL FUNCTION DEFINITIONS
  ****************************************************************************************
  */
 
-/**
+
+ /**
  ****************************************************************************************
- * @brief Notify user defined data
+ * @brief Handles reception of the write request event via "Report characteristic"
  *
- * @param[in] tx_data    Pointer to the data that would be sent by notifiction packets
- * @param[in] length     Length of the data
+ * @param[in] msgid Id of the message received (probably unused).
+ * @param[in] param Pointer to the parameters of the message.
+ * @param[in] dest_id ID of the receiving task instance (probably unused).
+ * @param[in] src_id ID of the sending task instance.
  * @return If the message was consumed or not.
  ****************************************************************************************
  */
+static int ccps_packet_send_cmd_handler(ke_msg_id_t const msgid,
+                                        struct ccps_packet_send_cmd const *param,
+                                        ke_task_id_t const dest_id,
+                                        ke_task_id_t const src_id)
+{
+
+    TracerInfo("Receive %d Bytes Data:",param->length);
+
+    for(uint8_t i = 0; i < param->length; i++)
+    {
+        TracerInfo("0x%0x, ", param->value[i]);
+    }
+
+    TracerInfo("\r\n");
+
+    return (KE_MSG_CONSUMED);
+}
+
+
+static int ccps_cfg_indntf_ind_handler(ke_msg_id_t const msgid,
+                                        struct ccps_cfg_indntf_ind const *param,
+                                        ke_task_id_t const dest_id,
+                                        ke_task_id_t const src_id)
+{
+    // Do nothing
+
+    return (KE_MSG_CONSUMED);
+}
+
+
+/*
+ * GLOBAL FUNCTION DEFINITIONS
+ ****************************************************************************************
+ */
+
 void app_ccps_notify_send(uint8_t *tx_data, uint8_t length)
 {
     // Allocate the CCPS_TEMP_SEND_REQ message
@@ -91,15 +128,7 @@ void app_ccps_notify_send(uint8_t *tx_data, uint8_t length)
 }
 
 
-/**
- ****************************************************************************************
- * @brief Indicate user defined data
- *
- * @param[in] tx_data    Pointer to the data that would be sent by indication packets
- * @param[in] length     Length of the data
- * @return If the message was consumed or not.
- ****************************************************************************************
- */
+
 void app_ccps_indicate_send(uint8_t *tx_data, uint8_t length)
 {
     // Allocate the CCPS_TEMP_SEND_REQ message
@@ -117,70 +146,22 @@ void app_ccps_indicate_send(uint8_t *tx_data, uint8_t length)
 }
 
 
-#if (DISPLAY_SUPPORT)
-static void app_ccps_update_type_string(uint8_t temp_type)
+void ccps_packet_send_reply_handler(uint8_t *tx_data, uint8_t *length)
 {
-    switch (temp_type)
-    {
-        case 0:
-            strcpy(app_ccps_env.temp_type_string, "NONE");
-            break;
-        case 1:
-            strcpy(app_ccps_env.temp_type_string, "ARMPIT");
-            break;
-        case 2:
-            strcpy(app_ccps_env.temp_type_string, "BODY");
-            break;
-        case 3:
-            strcpy(app_ccps_env.temp_type_string, "EAR");
-            break;
-        case 4:
-            strcpy(app_ccps_env.temp_type_string, "FINGER");
-            break;
-        case 5:
-            strcpy(app_ccps_env.temp_type_string, "GASTRO-INT");
-            break;
-        case 6:
-            strcpy(app_ccps_env.temp_type_string, "MOUTH");
-            break;
-        case 7:
-            strcpy(app_ccps_env.temp_type_string, "RECTUM");
-            break;
-        case 8:
-            strcpy(app_ccps_env.temp_type_string, "TOE");
-            break;
-        case 9:
-            strcpy(app_ccps_env.temp_type_string, "TYMPANUM");
-            break;
-        default:
-            strcpy(app_ccps_env.temp_type_string, "UNKNOWN");
-            break;
-    }
+    // write your response data from local
+    tx_data[0] = 0;
+    *length = 0;
 }
-#endif
 
-/*
- * GLOBAL FUNCTION DEFINITIONS
- ****************************************************************************************
- */
 
 void app_ccps_init(void)
 {
-    // Reset the environment
-    memset(&app_ccps_env, 0, sizeof(app_ccps_env));
+    // Reset the environment: no value should be initilized.
+//    memset(&app_ccps_env, 0, sizeof(app_ccps_env));
 
 }
-/*
-void app_ccps_stop_timer (void)
-{
-    // Stop the timer used for the measurement interval if enabled
-    if (app_ccps_env.timer_enable)
-    {
-        ke_timer_clear(APP_REPORT_MEAS_INTV_TIMER, TASK_APP);
-        app_ccps_env.timer_enable = false;
-    }
-}
-*/
+
+
 void app_ccps_add_ccpss(void)
 {
     struct ccps_db_cfg* db_cfg;
@@ -204,6 +185,7 @@ void app_ccps_add_ccpss(void)
     ke_msg_send(req);
 }
 
+
 void app_ccps_enable_prf(uint8_t conidx)
 {
     // Allocate the message
@@ -222,77 +204,51 @@ void app_ccps_enable_prf(uint8_t conidx)
 }
 
 
-static int ccps_packet_send_cmd_handler(ke_msg_id_t const msgid,
-                                        struct ccps_packet_send_cmd const *param,
-                                        ke_task_id_t const dest_id,
-                                        ke_task_id_t const src_id)
+void app_ccps_test_send(void * p_context)
 {
-    // Do nothing
 
-    return (KE_MSG_CONSUMED);
+    static uint8_t tx_data[CCPS_REPORT_MAX_LEN];    // Note: It should exchange MTU that can extend max length > 20 Bytes
+
+
+    // send Notification: 0 ~ (CCPS_REPORT_MAX_LEN-1)
+    for(uint16_t i = 0; i < CCPS_REPORT_MAX_LEN; i++)
+        tx_data[i] = i;
+
+    app_ccps_notify_send(tx_data, CCPS_REPORT_MAX_LEN); 
+
+
+    // send Indication: 0 ~ (CCPS_REPORT_MAX_LEN-1)
+    for(uint16_t i = 0; i < CCPS_REPORT_MAX_LEN; i++)
+        tx_data[i] = CCPS_REPORT_MAX_LEN-i;
+
+    app_ccps_indicate_send(tx_data, CCPS_REPORT_MAX_LEN);
 }
 
 
-static int ccps_cfg_indntf_ind_handler(ke_msg_id_t const msgid,
-                                        struct ccps_cfg_indntf_ind const *param,
-                                        ke_task_id_t const dest_id,
-                                        ke_task_id_t const src_id)
+void app_ccps_test_code(void)
 {
-    // Do nothing
 
-    return (KE_MSG_CONSUMED);
-}
-                                        
-#if 0
+    // send notify/indicate packets per 1sec while CCCD is enabled.
+    app_timer_create(&s_tCCPSTimerTime, APP_TIMER_MODE_REPEATED, app_ccps_test_send);      
+    app_timer_start(s_tCCPSTimerTime, APP_TIMER_TICKS(1000, APP_TIMER_PRESCALER), NULL);
 
-/**
- ****************************************************************************************
- * @brief Handles health thermometer timer
- *
- * @param[in] msgid     Id of the message received.
- * @param[in] param     Pointer to the parameters of the message.
- * @param[in] dest_id   ID of the receiving task instance (TASK_GAP).
- * @param[in] src_id    ID of the sending task instance.
- *
- * @return If the message was consumed or not.
- ****************************************************************************************
- */
 
-static int app_ccps_meas_intv_timer_handler(ke_msg_id_t const msgid,
-                                          void const *param,
-                                          ke_task_id_t const dest_id,
-                                          ke_task_id_t const src_id)
-{
-    // Random generation of a temperature value
-    uint32_t rand_temp_step;
-    // Sign used to know if the temperature will be increased or decreased
-    int8_t sign;
-
-    // Generate temperature step
-    rand_temp_step = (uint32_t)(co_rand_word()%20);
-    // Increase or decrease the temperature value
-    sign = (int8_t)(rand_temp_step & 0x00000001);
-
-    if (!sign)
+    while(1)
     {
-        sign = -1;
+        
+         APP_SCHED_RunScheduler();
+
+#ifdef CFG_BLE_APP
+         rwip_schedule();
+         rwip_ignore_ll_conn_param_update_patch();
+#endif    
     }
-
-    app_ccps_env.temp_value += sign*rand_temp_step;
-
-    // Send the new temperature
-    //app_ccps_temp_send();
-
-    #if (DISPLAY_SUPPORT)
-    app_display_update_temp_val_screen(app_ccps_env.temp_value);
-    #endif //DISPLAY_SUPPORT
-
-    // Reset the Timer (Measurement Interval is not 0 if we are here)
-    ke_timer_set(APP_REPORT_MEAS_INTV_TIMER, TASK_APP, app_ccps_env.ccps_meas_intv*100);
-
-    return (KE_MSG_CONSUMED);
 }
-#endif
+
+
+
+
+                                        
 /**
  ****************************************************************************************
  * @brief CloudChip Proprietary Services timer
@@ -329,7 +285,6 @@ const struct ke_msg_handler app_ccps_msg_handler_list[] =
     {CCPS_PACKET_SEND_CMD,          (ke_msg_func_t)ccps_packet_send_cmd_handler},       
     {CCPS_CFG_INDNTF_IND,           (ke_msg_func_t)ccps_cfg_indntf_ind_handler},
 
-    //{APP_OTA_MEAS_INTV_TIMER,        (ke_msg_func_t)app_ccps_meas_intv_timer_handler},
 };
 
 const struct ke_state_handler app_ccps_table_handler =

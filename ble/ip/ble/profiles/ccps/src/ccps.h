@@ -16,26 +16,10 @@
 
 /**
  ****************************************************************************************
- * @addtogroup CCPS  Profile Thermometer
+ * @addtogroup CCPS  Profile 
  * @ingroup CCPS
  * @brief CCPS Profile 
  *
- * An actual thermometer device does not exist on current platform, so measurement values
- * that would come from a driver are replaced by simple counters sent at certain intervals
- * following by the profile attributes configuration.
- * When a measurement interval
- * has been set to a non-zero value in a configuration connection, once reconnected,
- * TH will send regular measurement INDs if Temp Meas Char Cfg is set to indicate and
- * using the Meas Intv Value. The INDs will continue until meas interval is set to 0
- * or connection gets disconnected by C. Measurements should be stored even so, until
- * profile is disabled.(?)
- *
- * If the measurement interval has been set to 0, then if Intermediate Temp is set to be
- * notified and Temp Meas to be indicated, then a timer of fixed length simulates
- * sending several NTF before and indication of a "stable" value. This fake behavior
- * should be replaced once a real driver exists. If Intermediary Temp cannot be notified,
- * just send the indication, if neither can be sent (the configuration connection should
- * never leave this like this) then disconnect.
  *
  *
  * @{
@@ -52,7 +36,6 @@
 #if (BLE_CCPS_SERVER)
 #include <stdint.h>
 #include <stdbool.h>
-//#include "htp_common.h"
 #include "prf_types.h"
 #include "prf_utils.h"
 
@@ -74,8 +57,12 @@
 ///Maximum number of CCPS task instances
 #define CCPS_IDX_MAX    (1)
 
-#define CCPS_NOTIFY_SEND_MAX_LEN              (20)
-#define CCPS_REPORT_MAX_LEN                   (20)
+#ifdef CFG_DLE_EN 
+#define CCPS_REPORT_MAX_LEN              (244)
+#else
+#define CCPS_REPORT_MAX_LEN              (20)
+#endif
+
 #define CCPS_IND_NTF_CFG_MAX_LEN          (2)
 
 
@@ -84,21 +71,6 @@
 
 #define CCPS_REPORT_ATT_NB             (4)     
 
-/*
-#define CCPS_TEMP_MEAS_MASK               (0x000F)
-#define CCPS_TEMP_TYPE_MASK               (0x0030)
-#define CCPS_INTM_TEMP_MASK               (0x01C0)
-#define CCPS_MEAS_INTV_MASK               (0x0600)
-#define CCPS_MEAS_INTV_CCC_MASK           (0x0800)
-#define CCPS_MEAS_INTV_VALID_RGE_MASK     (0x1000)
-
-#define CCPS_TEMP_MEAS_ATT_NB             (4)
-#define CCPS_TEMP_TYPE_ATT_NB             (2)
-#define CCPS_INTERM_MEAS_ATT_NB           (3)
-#define CCPS_MEAS_INTV_ATT_NB             (2)
-#define CCPS_MEAS_INTV_CCC_ATT_NB         (1)
-#define CCPS_MEAS_INTV_RNG_ATT_NB         (1)
-*/
 
 /// Possible states of the CCPS task
 enum ccps_state
@@ -194,16 +166,6 @@ uint8_t ccps_get_valid_rge_offset(uint16_t features);
  ****************************************************************************************
  */
 const struct prf_task_cbs* ccps_prf_itf_get(void);
-
-
-/**
- ****************************************************************************************
- * @brief Pack temperature value from several components
- *
- * @return size of packed value
- ****************************************************************************************
- */
-//uint8_t ccps_pack_temp_value(uint8_t *packed_temp, struct htp_temp_meas temp_meas);
 
 
 /**
