@@ -22,12 +22,12 @@ __forceinline void drvi_I2sInit(T_callback *handler)
 
 __forceinline void drvi_I2sTxConfig(uint32_t dwDmaBufStart, uint32_t dwDmaBufEnd)
 {
-    drvi_I2sTxConfig(dwDmaBufStart, dwDmaBufEnd);
+    cc6801_I2sTxConfig(dwDmaBufStart, dwDmaBufEnd);
 }
 
 __forceinline void drvi_I2sRxConfig(uint32_t dwDmaBufStart, uint32_t dwDmaBufEnd)
 {
-    drvi_I2sRxConfig(dwDmaBufStart, dwDmaBufEnd);
+    cc6801_I2sRxConfig(dwDmaBufStart, dwDmaBufEnd);
 }
 
 __forceinline void drvi_I2sStart(uint16_t dwTxByte, uint16_t dwRxByte)
