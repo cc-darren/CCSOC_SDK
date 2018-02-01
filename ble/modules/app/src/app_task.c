@@ -1,3 +1,14 @@
+/* Copyright (c) 2018 Cloudchip, Inc. All Rights Reserved.
+ *
+ * The information contained herein is property of Cloudchip, Inc.
+ * Terms and conditions of usage are described in detail in CLOUDCHIP
+ * STANDARD SOFTWARE LICENSE AGREEMENT.
+ *
+ * Licensees are granted free, non-transferable use of the information.
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * from the file.
+ */
+
 /**
  ****************************************************************************************
  *
@@ -785,7 +796,7 @@ static int app_timer_handler(ke_msg_id_t const msgid,
         m_timer_node[id].p_timeout_handler(p_context);
     }
 
-    if(APP_TIMER_MODE_REPEATED == m_timer_node[id].mode)
+    if(SW_TIMER_MODE_REPEATED == m_timer_node[id].mode)
     {
 
         ke_timer_clear((APP_SW_TIMER_0_TIMER + id), TASK_APP);

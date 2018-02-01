@@ -342,7 +342,6 @@
 #define BLE_UDS_CLIENT          0
 #endif // defined(CFG_PRF_UDSC)
 
-/// Nordic based OTA
 #if defined(CFG_PRF_OTA)
 #define BLE_OTA_TARGET          1
 #else

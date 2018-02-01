@@ -1,9 +1,10 @@
 #include "project.h"
 
-#include "CC_DB_Structure.h"
+
 #include "CC_SleepMonitor_Service.h"
 #include "CC_Longsit_Service.h"
 #include "CC_Slpmtr.h"
+#include "CC_DB_Structure.h"
 #include "tracer.h"
 
 extern uint8_t CC_Charge_Register(charge_cb_t cb);

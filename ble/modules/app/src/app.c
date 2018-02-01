@@ -23,6 +23,7 @@
  ****************************************************************************************
  */
 
+#include "project.h"
 
 #include "rwip_config.h"             // SW configuration
 
@@ -256,7 +257,7 @@ struct app_env_tag app_env;
 volatile uint8_t  *p_llm_le_event_mask = (volatile uint8_t *) 0x20000680;
 
 
-uint8_t PUBLIC_BD_ADDR[BD_ADDR_LEN] = {0x66,0x48,0xF6,0x11,0x07,0x77};
+uint8_t PUBLIC_BD_ADDR[BD_ADDR_LEN] = APP_DFLT_DEVICE_ADDR;
 
 /*
  * Local VARIABLE DEFINITIONS

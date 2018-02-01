@@ -30,6 +30,7 @@
  ****************************************************************************************
  */
 
+#include "project.h"
 #include "rwip_config.h"     // SW configuration
 
 #if (BLE_APP_PRESENT)
@@ -51,7 +52,7 @@
 #define APP_DEVICE_NAME_MAX_LEN      (18)
 
 /// Default Device Name if no value can be found in NVDS
-#define APP_DFLT_DEVICE_NAME            ("CC6801")
+//#define APP_DFLT_DEVICE_NAME            ("CC6801")    /// Move this to project configuration file
 #define APP_DFLT_DEVICE_NAME_LEN        (sizeof(APP_DFLT_DEVICE_NAME))
 
 /*

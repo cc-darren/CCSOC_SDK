@@ -1,3 +1,13 @@
+/* Copyright (c) 2018 Cloudchip, Inc. All Rights Reserved.
+ *
+ * The information contained herein is property of Cloudchip, Inc.
+ * Terms and conditions of usage are described in detail in CLOUDCHIP
+ * STANDARD SOFTWARE LICENSE AGREEMENT.
+ *
+ * Licensees are granted free, non-transferable use of the information.
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * from the file.
+ */
 
 /**********************************************************
  *** INCLUDE FILE
@@ -17,15 +27,14 @@
 
 
 #ifdef DB_EN
-#include "fds.h"
-#include "cc_db_structure.h"
 #include "cc_db.h"
+#include "CC_DB_Structure.h"
 #endif
 /**********************************************************
  *** STRUCT / DEFINE / ENUM
  **********************************************************/
-#define APP_TIMER_PRESCALER        0
-#define APP_TIMER_OP_QUEUE_SIZE    4
+
+
 
 #define APPSRV_DEFAULT_TIME_PERIODIC_MEASUREMENT    (1800 * 1000)    // uint: ms
 #define APPSRV_DEFAULT_MAX_TIME_ONE_MEASUREMENT     (  25 * 1000)    // uint: ms
@@ -89,9 +98,9 @@ S_AppSrv_HR_CB    s_tAppSrvHrCB;
 #ifdef DB_EN 
 db_heartrate_t    s_tDbHrm __attribute__((aligned(4)));
 #endif
-APP_TIMER_DEF(s_tAppSrvHR_Timer_24HR_PeriodicMeasurement);
-APP_TIMER_DEF(s_tAppSrvHR_Timer_24HR_OneMeasurement     );
-APP_TIMER_DEF(s_tAppSrvHR_Timer_SystemTick);
+SW_TIMER_DEF(s_tAppSrvHR_Timer_24HR_PeriodicMeasurement);
+SW_TIMER_DEF(s_tAppSrvHR_Timer_24HR_OneMeasurement     );
+SW_TIMER_DEF(s_tAppSrvHR_Timer_SystemTick);
 
 
 /**********************************************************
@@ -132,13 +141,13 @@ static void _DB_Save_Hrm_Data(int16_t nHrData, int16_t nTrustLevel)
     s_tDbHrm.data.hr          = ((uint8_t) nHrData    );
     s_tDbHrm.data.trust_level = ((uint8_t) nTrustLevel);
 
-    if (FDS_SUCCESS != CC_Save_Record(eHrm, ((uint32_t *) &s_tDbHrm), sizeof(db_heartrate_t)))
+    if (CC_SUCCESS != CC_Save_Record(eHrm, ((uint32_t *) &s_tDbHrm), sizeof(db_heartrate_t)))
         TracerInfo("!!! ERROR !!! fail to save HRM to DB...\r\n");
 }
 #endif
 void Hrm_SysTick_Handler(void * pvContext)
 {
-    UNUSED_PARAMETER(pvContext);
+    
     s_tAppSrvHrCB.dwSysTick+=50; // temporary settings before fixed app time issue.
 }
 
@@ -150,7 +159,7 @@ uint32_t Hrm_get_sys_tick(void)
 
 static void _TO_24HR_PeriodicMeasurement(void * pvContext)
 {
-    UNUSED_PARAMETER(pvContext);
+    
 
     s_tAppSrvHrCB.e24HrState = E_APPSRV_HRM_ST_IN_MEASUREMENT;
 
@@ -164,7 +173,7 @@ static void _TO_24HR_PeriodicMeasurement(void * pvContext)
 
 static void _TO_24HR_OneMeasurement(void * pvContext)
 {
-    UNUSED_PARAMETER(pvContext);
+    
 
 #ifdef	APP_SERV_MGR_EN     
     APP_SVCMGR_PostEvent_HrTimeout(E_APP_SVC_HR_TIMER_24HR_ONE_MEASUREMENT);
@@ -218,9 +227,9 @@ void CC_AppSrv_HR_Init(void)
     s_tAppSrvHrCB.dwPeriodicMeasurementTime = APPSRV_DEFAULT_TIME_PERIODIC_MEASUREMENT;
     s_tAppSrvHrCB.dwOneMeasurementMaxTime   = APPSRV_DEFAULT_MAX_TIME_ONE_MEASUREMENT;
 
-    app_timer_create(&s_tAppSrvHR_Timer_SystemTick, APP_TIMER_MODE_REPEATED, Hrm_SysTick_Handler);
-    app_timer_create(&s_tAppSrvHR_Timer_24HR_PeriodicMeasurement, APP_TIMER_MODE_SINGLE_SHOT, _TO_24HR_PeriodicMeasurement);
-    app_timer_create(&s_tAppSrvHR_Timer_24HR_OneMeasurement     , APP_TIMER_MODE_SINGLE_SHOT, _TO_24HR_OneMeasurement     );
+    sw_timer_create(&s_tAppSrvHR_Timer_SystemTick, SW_TIMER_MODE_REPEATED, Hrm_SysTick_Handler);
+    sw_timer_create(&s_tAppSrvHR_Timer_24HR_PeriodicMeasurement, SW_TIMER_MODE_SINGLE_SHOT, _TO_24HR_PeriodicMeasurement);
+    sw_timer_create(&s_tAppSrvHR_Timer_24HR_OneMeasurement     , SW_TIMER_MODE_SINGLE_SHOT, _TO_24HR_OneMeasurement     );
 }
 
 
@@ -242,12 +251,12 @@ void CC_AppSrv_HR_ResetLimited(uint8_t _bAge)
 
 void CC_AppSrv_HR_StartSystemTick(void)
 {
-    app_timer_start(s_tAppSrvHR_Timer_SystemTick, APP_TIMER_TICKS(50, APP_TIMER_PRESCALER), NULL); // temporary settings before fixed app time issue.
+    sw_timer_start(s_tAppSrvHR_Timer_SystemTick, 50, NULL); // temporary settings before fixed app time issue.
 }
 
 void CC_AppSrv_HR_StopSystemTick(void)
 {
-    app_timer_stop(s_tAppSrvHR_Timer_SystemTick);
+    sw_timer_stop(s_tAppSrvHR_Timer_SystemTick);
 }
 
 void CC_AppSrv_HR_Set24HrPeriod(uint32_t dwPeriodicMeasurementTime_ms, uint32_t dwOneMeasurementMaxTime_ms)
@@ -412,8 +421,8 @@ void CC_AppSrv_HR_Stop24HR(void)
             _AppSrv_HR_Reset();
     }
 #endif
-    app_timer_stop(s_tAppSrvHR_Timer_24HR_PeriodicMeasurement);
-    app_timer_stop(s_tAppSrvHR_Timer_24HR_OneMeasurement     );
+    sw_timer_stop(s_tAppSrvHR_Timer_24HR_PeriodicMeasurement);
+    sw_timer_stop(s_tAppSrvHR_Timer_24HR_OneMeasurement     );
 
     s_tAppSrvHrCB.e24HrState = E_APPSRV_HRM_ST_INACTIVE;
 }
@@ -465,7 +474,7 @@ void CC_AppSrv_HR_DataReport(int16_t nHrData, int16_t nTrustLevel)
   
         if (s_tAppSrvHrCB.b24HrDataCount >= APPSRV_24HR_EXPECTED_DATA_MEASUREMENT_COUNT)
         {
-            app_timer_stop(s_tAppSrvHR_Timer_24HR_OneMeasurement);
+            sw_timer_stop(s_tAppSrvHR_Timer_24HR_OneMeasurement);
 
             CC_AppSrv_24HR_Handler_ToOneMeasurement();
         }
@@ -527,11 +536,11 @@ void CC_AppSrv_24HR_Handler_ToPeriodicMeasurement(void)
 #endif
     s_tAppSrvHrCB.e24HrState = E_APPSRV_HRM_ST_IN_MEASUREMENT;
 
-    app_timer_start(s_tAppSrvHR_Timer_24HR_OneMeasurement,
-                                    APP_TIMER_TICKS(s_tAppSrvHrCB.dwOneMeasurementMaxTime, APP_TIMER_PRESCALER), NULL);
+    sw_timer_start(s_tAppSrvHR_Timer_24HR_OneMeasurement,
+                                    s_tAppSrvHrCB.dwOneMeasurementMaxTime, NULL);
 
-    app_timer_start(s_tAppSrvHR_Timer_24HR_PeriodicMeasurement,
-                                    APP_TIMER_TICKS(s_tAppSrvHrCB.dwPeriodicMeasurementTime, APP_TIMER_PRESCALER), NULL);
+    sw_timer_start(s_tAppSrvHR_Timer_24HR_PeriodicMeasurement,
+                                    s_tAppSrvHrCB.dwPeriodicMeasurementTime, NULL);
 }
 
 bool CC_AppSrv_HR_IsSingleHrEnabled(void)

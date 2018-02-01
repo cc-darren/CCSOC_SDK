@@ -1,13 +1,13 @@
-/******************************************************************************
-*  Copyright 2017, CloudChip, Inc.
-*  ---------------------------------------------------------------------------
-*  Statement:
-*  ----------
-*  This software is protected by Copyright and the information contained
-*  herein is confidential. The software may not be copied and the information
-*  contained herein may not be used or disclosed except with the written
-*  permission of CloudChip, Inc. (C) 2017
-******************************************************************************/
+/* Copyright (c) 2018 Cloudchip, Inc. All Rights Reserved.
+ *
+ * The information contained herein is property of Cloudchip, Inc.
+ * Terms and conditions of usage are described in detail in CLOUDCHIP
+ * STANDARD SOFTWARE LICENSE AGREEMENT.
+ *
+ * Licensees are granted free, non-transferable use of the information.
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * from the file.
+ */
 
 /******************************************************************************
 *  Filename:
@@ -42,8 +42,7 @@
 /******************************************************************************
  * DEFINITION / CONSTANT / ENUM / TYPE
  ******************************************************************************/
-#define APP_TIMER_PRESCALER        0
-#define APP_TIMER_OP_QUEUE_SIZE    4
+
 
 /******************************************************************************
  * EXTERNAL FUNCTION
@@ -149,7 +148,7 @@ void    _SDK_SENSORMGR_EventHandler(S_AppSchedEvent *tEvent)
 /******************************************************************************
  * LOCAL FUNCTION > _SDK_VTHREAD_Handler
  ******************************************************************************/
-APP_TIMER_DEF(s_tAppSched_Timer_VThread);
+SW_TIMER_DEF(s_tAppSched_Timer_VThread);
 
 void    _SDK_VTHREAD_Handler(void * pvContext)
 {
@@ -251,7 +250,7 @@ void    SDK_APP_SCHED_EmulatorRun(void)
     /* [TC-05] Event Post by Multiple Access Simultaneously */
     /*     /CASE-1/ before critical section                 */
     /********************************************************/
-    app_timer_create(&s_tAppSched_Timer_VThread, APP_TIMER_MODE_SINGLE_SHOT, _SDK_VTHREAD_Handler);
+    sw_timer_create(&s_tAppSched_Timer_VThread, SW_TIMER_MODE_SINGLE_SHOT, _SDK_VTHREAD_Handler);
 
     #ifdef _APP_SCHED_DEBUG_ON
         #if 1
@@ -280,7 +279,7 @@ void    SDK_APP_SCHED_EmulatorRun(void)
 
     _tEvent.vpData = ((void *) _pbData);
     
-    app_timer_start(s_tAppSched_Timer_VThread, APP_TIMER_TICKS(500, APP_TIMER_PRESCALER), NULL);
+    sw_timer_start(s_tAppSched_Timer_VThread, SW_TIMER_TICKS(500, SW_TIMER_PRESCALER), NULL);
     
     //TracerInfo("    [TC-05] POSTING by SCHEDULER\r\n");
 

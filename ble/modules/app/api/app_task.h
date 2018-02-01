@@ -97,7 +97,7 @@ enum appm_msg
     #endif //(BLE_APP_OTA)  
 
 #ifdef SW_TIMER_BY_KERNEL
-    APP_SW_TIMER_0_TIMER,
+    APP_SW_TIMER_0_TIMER  =  20, 
     APP_SW_TIMER_1_TIMER,    
     APP_SW_TIMER_2_TIMER,    
     APP_SW_TIMER_3_TIMER,    

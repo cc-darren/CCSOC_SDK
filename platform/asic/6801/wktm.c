@@ -1,13 +1,13 @@
-/******************************************************************************
-*  Copyright 2017, CloudChip, Inc.
-*  ---------------------------------------------------------------------------
-*  Statement:
-*  ----------
-*  This software is protected by Copyright and the information contained
-*  herein is confidential. The software may not be copied and the information
-*  contained herein may not be used or disclosed except with the written
-*  permission of CloudChip, Inc. (C) 2017
-******************************************************************************/
+/* Copyright (c) 2018 Cloudchip, Inc. All Rights Reserved.
+ *
+ * The information contained herein is property of Cloudchip, Inc.
+ * Terms and conditions of usage are described in detail in CLOUDCHIP
+ * STANDARD SOFTWARE LICENSE AGREEMENT.
+ *
+ * Licensees are granted free, non-transferable use of the information.
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * from the file.
+ */
 
 /******************************************************************************
 *  Filename:
@@ -128,7 +128,7 @@ void cc6801_wktmStart(E_wktmTotal bPort)
     if(bPort < WKTM_TOTAL)
     {
         g_taWktm[bPort].pReg->bf.intEn = 1;                 //enable interrupt;
-        g_taWktm[bPort].pReg->dw.lowCounter = 0xFFFFFF;    //default load 24bit counter to match Nordic design
+        g_taWktm[bPort].pReg->dw.lowCounter = 0xFFFFFF;     //default load 24bit counter to match design
         g_taWktm[bPort].pReg->bf.clear = 0;
         g_taWktm[bPort].pReg->bf.repeat = 1;                //start from repeat mode
         g_taWktm[bPort].pReg->bf.enable = 1;

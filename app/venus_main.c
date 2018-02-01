@@ -51,12 +51,12 @@
 #include "CC_AppSrvc_HeartRate.h"
 #include "llm.h"
 #include "app.h"
-#include "fds.h"
 #include "CC_DB.h"
+#include "CC_DB_Structure.h"
 #include "jump_table.h"
 #include "app_ccps.h"
 #include "Acc_Gyro_Controller.h"
-
+#include "htpt_task.h"
 #include "scheduler.h"
 //#include "svc_mgr.h"
 #ifdef APP_SERV_MGR_EN  
@@ -86,7 +86,7 @@
 #define ACCEL_POLL_MODE_INTERVAL        20        // in ms
 #define MAG_BUF_LEN                     10
 
-#define BATTERY_LEVEL_MEAS_INTERVAL     APP_TIMER_TICKS(60000, APP_TIMER_PRESCALER)
+#define BATTERY_LEVEL_MEAS_INTERVAL     60000
 
 
 #define VENUS_EVENT_ON(EventID,Data)                             \
@@ -192,27 +192,27 @@ enum
 
 // App timer definition:
 // STANDBY TIMER ===============================
-APP_TIMER_DEF(s_tVenusTimerAccel);     // disable this timer to unify standby timers
-APP_TIMER_DEF(s_tVenusTimerDataTime);    // TBD: should rename like standby-base-timer
-//APP_TIMER_DEF(s_tVenusTimerDiffTime); // for test
+SW_TIMER_DEF(s_tVenusTimerAccel);     // disable this timer to unify standby timers
+SW_TIMER_DEF(s_tVenusTimerDataTime);    // TBD: should rename like standby-base-timer
+//SW_TIMER_DEF(s_tVenusTimerDiffTime); // for test
 
 // FUNCTION TIMER ===============================
-APP_TIMER_DEF(s_tTouchDebounceTime);
-APP_TIMER_DEF(s_tLongTouchTriggerTime);
-APP_TIMER_DEF(s_tChargePPRDebounceTime);
-APP_TIMER_DEF(s_tChargeCHGDebounceTime);
-APP_TIMER_DEF(s_tVenusTimerDisplayGeneral);
-APP_TIMER_DEF(m_battery_timer_id);                         /**< Battery timer. */
-APP_TIMER_DEF(m_rsc_meas_timer_id);                        /**< RSC measurement timer. */
-APP_TIMER_DEF(s_tVenusTimerOLEDWakeup);
-APP_TIMER_DEF(s_tVenusTimerOLEDSleep);
-APP_TIMER_DEF(s_tVenusTimerOLEDDisplaySrvTimer);
-APP_TIMER_DEF(s_tVenusTimerPWMVibSrvTimer);
-APP_TIMER_DEF(s_tVenusTimerPedoWalkTimer);
-APP_TIMER_DEF(s_tVenusTimerPedoRunTimer);
-//APP_TIMER_DEF(s_tVenusTimerBatteryLiftImmediatelyCheck);
-//APP_TIMER_DEF(s_tVenusTimerSwimCalTimer);
-APP_TIMER_DEF(s_tLockSwimOffTimer);
+SW_TIMER_DEF(s_tTouchDebounceTime);
+SW_TIMER_DEF(s_tLongTouchTriggerTime);
+SW_TIMER_DEF(s_tChargePPRDebounceTime);
+SW_TIMER_DEF(s_tChargeCHGDebounceTime);
+SW_TIMER_DEF(s_tVenusTimerDisplayGeneral);
+SW_TIMER_DEF(m_battery_timer_id);                         /**< Battery timer. */
+SW_TIMER_DEF(m_rsc_meas_timer_id);                        /**< RSC measurement timer. */
+SW_TIMER_DEF(s_tVenusTimerOLEDWakeup);
+SW_TIMER_DEF(s_tVenusTimerOLEDSleep);
+SW_TIMER_DEF(s_tVenusTimerOLEDDisplaySrvTimer);
+SW_TIMER_DEF(s_tVenusTimerPWMVibSrvTimer);
+SW_TIMER_DEF(s_tVenusTimerPedoWalkTimer);
+SW_TIMER_DEF(s_tVenusTimerPedoRunTimer);
+//SW_TIMER_DEF(s_tVenusTimerBatteryLiftImmediatelyCheck);
+//SW_TIMER_DEF(s_tVenusTimerSwimCalTimer);
+SW_TIMER_DEF(s_tLockSwimOffTimer);
 
 typedef struct
 {
@@ -387,53 +387,53 @@ extern void CC_Dsp_Srv_Reflash_Screen(void);
 
 void CC_VENUS_OLEDWakUpTimeOutTimerStart(uint16_t _wdata)
 {
-    app_timer_start(s_tVenusTimerOLEDWakeup, APP_TIMER_TICKS(_wdata,APP_TIMER_PRESCALER), NULL);
+    sw_timer_start(s_tVenusTimerOLEDWakeup, _wdata, NULL);
 }
 
 void CC_VENUS_OLEDWakUpTimeOutTimerStop(void)
 {
-    app_timer_stop(s_tVenusTimerOLEDWakeup);
+    sw_timer_stop(s_tVenusTimerOLEDWakeup);
 }
 
 void CC_VENUS_OLEDSleepTimeOutTimerStart(uint16_t _wdata)
 {
-    app_timer_start(s_tVenusTimerOLEDSleep, APP_TIMER_TICKS(_wdata,APP_TIMER_PRESCALER), NULL);
+    sw_timer_start(s_tVenusTimerOLEDSleep, _wdata, NULL);
 
 }
 
 void CC_VENUS_OLEDSleepTimeOutTimerStop(void)
 {
-    app_timer_stop(s_tVenusTimerOLEDSleep);
+    sw_timer_stop(s_tVenusTimerOLEDSleep);
 }
 
 void CC_VENUS_OLEDGeneralOutTimerStart(uint16_t _wdata)
 {
-    app_timer_start(s_tVenusTimerDisplayGeneral, APP_TIMER_TICKS(_wdata,APP_TIMER_PRESCALER), NULL);
+    sw_timer_start(s_tVenusTimerDisplayGeneral, _wdata, NULL);
 }
 
 void CC_VENUS_OLEDGeneralOutTimerReset(void)
 {
-    app_timer_start(s_tVenusTimerDisplayGeneral, APP_TIMER_TICKS(0,APP_TIMER_PRESCALER), NULL);
+    sw_timer_start(s_tVenusTimerDisplayGeneral, 0, NULL);
 }
 
 void CC_VENUS_OLEDGeneralOutTimerStop(void)
 {
-    app_timer_stop(s_tVenusTimerDisplayGeneral);
+    sw_timer_stop(s_tVenusTimerDisplayGeneral);
 }
 
 void CC_VENUS_OLEDDisplayServiceTimerStart(uint16_t _wdata)
 {
-    app_timer_start(s_tVenusTimerOLEDDisplaySrvTimer, APP_TIMER_TICKS(_wdata,APP_TIMER_PRESCALER), NULL);
+    sw_timer_start(s_tVenusTimerOLEDDisplaySrvTimer, _wdata, NULL);
 }
 
 void CC_VENUS_OLEDDisplayServiceTimerReset(void)
 {
-    app_timer_start(s_tVenusTimerOLEDDisplaySrvTimer, APP_TIMER_TICKS(0,APP_TIMER_PRESCALER), NULL);
+    sw_timer_start(s_tVenusTimerOLEDDisplaySrvTimer, 0, NULL);
 }
 
 void CC_VENUS_OLEDDisplayServiceTimerStop(void)
 {
-    app_timer_stop(s_tVenusTimerOLEDDisplaySrvTimer);
+    sw_timer_stop(s_tVenusTimerOLEDDisplaySrvTimer);
 }
 
 void CC_VENUS_OLEDDisplayServiceEventClear(void)
@@ -443,41 +443,41 @@ void CC_VENUS_OLEDDisplayServiceEventClear(void)
 
 void CC_VENUS_TOUCHDebounceTimerStart(uint16_t _wdata)
 {
-    app_timer_start(s_tTouchDebounceTime, APP_TIMER_TICKS(_wdata,APP_TIMER_PRESCALER), NULL);
+    sw_timer_start(s_tTouchDebounceTime, _wdata, NULL);
 }
 
 
 void CC_VENUS_LongTOUCHTriggerTimerStart(uint16_t _wdata)
 {
-    app_timer_start(s_tLongTouchTriggerTime, APP_TIMER_TICKS(_wdata,APP_TIMER_PRESCALER), NULL);
+    sw_timer_start(s_tLongTouchTriggerTime, _wdata, NULL);
 }
 
 
 void CC_VENUS_CHARGE_PPR_DebounceTimerStart(uint16_t _wData)
 {
-    app_timer_start(s_tChargePPRDebounceTime, APP_TIMER_TICKS(_wData,APP_TIMER_PRESCALER), NULL);
+    sw_timer_start(s_tChargePPRDebounceTime, _wData, NULL);
 }
 
 void CC_VENUS_CHARGE_CHG_DebounceTimerStart(uint16_t _wData)
 {
-    app_timer_start(s_tChargeCHGDebounceTime, APP_TIMER_TICKS(_wData,APP_TIMER_PRESCALER), NULL);
+    sw_timer_start(s_tChargeCHGDebounceTime, _wData, NULL);
 }
 
 
 
 void CC_VENUS_PWMVibrationServiceTimerStart(uint16_t _wdata)
 {
-    app_timer_start(s_tVenusTimerPWMVibSrvTimer, APP_TIMER_TICKS(_wdata,APP_TIMER_PRESCALER), NULL);
+    sw_timer_start(s_tVenusTimerPWMVibSrvTimer, _wdata, NULL);
 }
 
 void CC_VENUS_PWMVibrationServiceTimerReset(void)
 {
-    app_timer_start(s_tVenusTimerPWMVibSrvTimer, APP_TIMER_TICKS(0,APP_TIMER_PRESCALER), NULL);
+    sw_timer_start(s_tVenusTimerPWMVibSrvTimer, 0, NULL);
 }
 
 void CC_VENUS_PWMVibrationServiceTimerStop(void)
 {
-    app_timer_stop(s_tVenusTimerPWMVibSrvTimer);
+    sw_timer_stop(s_tVenusTimerPWMVibSrvTimer);
 }
 
 void CC_VENUS_PWMVibrationServiceEventClear(void)
@@ -488,12 +488,12 @@ void CC_VENUS_PWMVibrationServiceEventClear(void)
 
 void CC_VENUS_RscTimerStart(uint32_t interval_ms)
 {
-     app_timer_start(m_rsc_meas_timer_id, APP_TIMER_TICKS(interval_ms, APP_TIMER_PRESCALER), NULL);
+     sw_timer_start(m_rsc_meas_timer_id, interval_ms, NULL);
 }
 
 void CC_VENUS_RscTimerStop(void)
 {
-    app_timer_stop(m_rsc_meas_timer_id);
+    sw_timer_stop(m_rsc_meas_timer_id);
 }
 
 
@@ -524,7 +524,7 @@ void CC_DB_Force_Execute_Init(uint8_t init_type)
 void CC_DB_Init(uint8_t _bState)  
 {
     uint8_t _bFirstInit = 0;
-    ret_code_t ret = CC_DB_Init_FileRec(&_bFirstInit, _bState);
+    uint32_t ret = CC_DB_Init_FileRec(&_bFirstInit, _bState);
     TracerInfo("CC_DB_Init_FileRec return = [0x%x]\r\n",ret);
     if (false==_bFirstInit)
         CC_Fds_Change_DayofWeek(s_tVenusCB.stSysCurTime.dayofweek,true);
@@ -548,13 +548,13 @@ void CC_SetStaticCalibrationInfo(db_sys_static_gyro_offset_t *pData)
 void CC_VENUS_Lock_SwimOff_TimerStop(void)
 {
     s_tVenusCB.bIsLockSwimOff = false;
-    app_timer_stop(s_tLockSwimOffTimer);
+    sw_timer_stop(s_tLockSwimOffTimer);
 }
 
 void CC_VENUS_Lock_SwimOff_TimerStart(void)
 {    
     s_tVenusCB.bIsLockSwimOff = true;
-    app_timer_start(s_tLockSwimOffTimer, APP_TIMER_TICKS(LOCK_SWIM_OFF_TIMEOUT_INTERVAL,APP_TIMER_PRESCALER), NULL);
+    sw_timer_start(s_tLockSwimOffTimer, LOCK_SWIM_OFF_TIMEOUT_INTERVAL, NULL);
 }
 
 #ifndef APP_SERV_MGR_EN // not defined 
@@ -942,7 +942,7 @@ static void CC_DB_Save_Pedo_Data(uint8_t ped_type, S_DB_PedoRecord_t *ped_record
     m_db_pedo.endoftime.sec = ped_record_data->stopTime.seconds;
     m_db_pedo.calorie = ped_record_data->calorie;
 
-    if(FDS_SUCCESS != CC_Save_Record(ePed, (uint32_t*)&m_db_pedo, sizeof(db_pedometer_t)))
+    if(CC_SUCCESS != CC_Save_Record(ePed, (uint32_t*)&m_db_pedo, sizeof(db_pedometer_t)))
     {
         TracerInfo("HRM_DB_Save_Err\r\n");
     }
@@ -958,17 +958,17 @@ static void CC_DB_Save_Pedo_Data(uint8_t ped_type, S_DB_PedoRecord_t *ped_record
 
 void CC_VENUS_WALK_PedoTimerStart(uint32_t interval_ms)
 {
-    app_timer_start(s_tVenusTimerPedoWalkTimer, APP_TIMER_TICKS(interval_ms, APP_TIMER_PRESCALER), NULL);
+    sw_timer_start(s_tVenusTimerPedoWalkTimer, interval_ms, NULL);
 }
 
 void CC_VENUS_WALK_PedoTimerStop(void)
 {
-    app_timer_stop(s_tVenusTimerPedoWalkTimer);
+    sw_timer_stop(s_tVenusTimerPedoWalkTimer);
 }
 
 void cc_pedo_walk_timeout_handler(void * p_context)
 {
-    UNUSED_PARAMETER(p_context);
+    
 
     s_tVenusCB.stPedRecordData_Walk.saveDB = 1;
 
@@ -976,17 +976,17 @@ void cc_pedo_walk_timeout_handler(void * p_context)
 
 void CC_VENUS_RUN_PedoTimerStart(uint32_t interval_ms)
 {
-    app_timer_start(s_tVenusTimerPedoRunTimer, APP_TIMER_TICKS(interval_ms, APP_TIMER_PRESCALER), NULL);
+    sw_timer_start(s_tVenusTimerPedoRunTimer, interval_ms, NULL);
 }
 
 void CC_VENUS_RUN_PedoTimerStop(void)
 {
-	app_timer_stop(s_tVenusTimerPedoRunTimer);
+	sw_timer_stop(s_tVenusTimerPedoRunTimer);
 }
 
 void cc_pedo_run_timeout_handler(void * p_context)
 {
-    UNUSED_PARAMETER(p_context);
+    
     
     s_tVenusCB.stPedRecordData_Run.saveDB = 1;
 
@@ -1095,7 +1095,7 @@ void TOUCH_Handler(void)
 
 static void cc_touch_debounce_timeout(void * p_context)
 {
-    UNUSED_PARAMETER(p_context);
+ 
 
     if (0x00 == drvi_GpioRead(TOUCH_INT_PIN))
     {
@@ -1125,35 +1125,35 @@ static void CC_HrmTurnOffEventSet(void)
 
 static void cc_toolbox_Dispaly_General_handler(void * p_context)
 {   
-    UNUSED_PARAMETER(p_context);
+    
     VENUS_EVENT_ON(E_VENUS_EVENT_OLED_UPDATE , eEvent_None);
         
 }
 
 static void cc_toolbox_OLED_Wakup_TimeOut(void * p_context)
 {
-    UNUSED_PARAMETER(p_context);
+    
 //    TracerInfo(" cc_toolbox_OLED_Wakup_TimeOut \r\n");
     VENUS_EVENT_ON(E_VENUS_EVENT_OLED_WAKEUP , eEvent_None);
 }
 
 static void cc_toolbox_OLED_Sleep_TimeOut(void * p_context)
 {
-    UNUSED_PARAMETER(p_context);
+    
 //    TracerInfo(" cc_toolbox_OLED_Sleep_TimeOut \r\n");
     VENUS_EVENT_ON(E_VENUS_EVENT_OLED_SLEEP , eEvent_None);
 }
 
 static void cc_toolbox_OLED_Display_Service_timeout(void * p_context)
 {
-    UNUSED_PARAMETER(p_context);
+    
     VENUS_EVENT_ON(E_VENUS_EVENT_OLED_DSPSRV, eEvent_None);
     //TracerInfo(" cc_toolbox_OLED_Display_Service_timeout \r\n");
 }
 
 static void cc_toolBox_PWM_Vib_Service_timeout(void * p_context)
 {
-    UNUSED_PARAMETER(p_context);
+    
     //TracerInfo(" cc_toolBox_PWM_Vib_Service_timeout \r\n");
     VENUS_EVENT_ON(E_VENUS_EVENT_PWM_VIBSRV, eEvent_None);
 }
@@ -1166,29 +1166,29 @@ void CC_VENUS_AccelTimerFifoModeStart(void)
 #else
     if(0x01 == CC_BLE_Cmd_GetLiftArmStatus())
 #endif        
-        app_timer_start(s_tVenusTimerAccel, APP_TIMER_TICKS(ACCEL_FIFO_MODE_SHORT_INTERVAL, APP_TIMER_PRESCALER), NULL);
+        sw_timer_start(s_tVenusTimerAccel, ACCEL_FIFO_MODE_SHORT_INTERVAL, NULL);
     else
-        app_timer_start(s_tVenusTimerAccel, APP_TIMER_TICKS(ACCEL_FIFO_MODE_LONG_INTERVAL, APP_TIMER_PRESCALER), NULL);
+        sw_timer_start(s_tVenusTimerAccel, ACCEL_FIFO_MODE_LONG_INTERVAL, NULL);
 }
 
 void CC_VENUS_AccelTimerPollModeStart(void)
 {
-    app_timer_start(s_tVenusTimerAccel, APP_TIMER_TICKS(ACCEL_POLL_MODE_INTERVAL, APP_TIMER_PRESCALER), NULL);
+    sw_timer_start(s_tVenusTimerAccel, ACCEL_POLL_MODE_INTERVAL, NULL);
 }
 
 void CC_VENUS_AccelTimerReset(void)
 {
-    app_timer_start(s_tVenusTimerAccel, APP_TIMER_TICKS(0,APP_TIMER_PRESCALER), NULL);
+    sw_timer_start(s_tVenusTimerAccel, 0, NULL);
 }
 
 void CC_VENUS_AccelTimerStop(void)
 {
-    app_timer_stop(s_tVenusTimerAccel);
+    sw_timer_stop(s_tVenusTimerAccel);
 }
 
 void CC_VENUS_SwimTimerFifoModeStart(void)
 {
-    app_timer_start(s_tVenusTimerAccel, APP_TIMER_TICKS(ACCEL_FIFO_MODE_SWIM_INTERVAL, APP_TIMER_PRESCALER), NULL);
+    sw_timer_start(s_tVenusTimerAccel, ACCEL_FIFO_MODE_SWIM_INTERVAL, NULL);
 }
 
 void CC_SetHrmCloseSwitch(eHrm_Close_EventID _bEvent)
@@ -1204,7 +1204,7 @@ void CC_SetToTurnOffHrm(eHrm_Close_EventID _bID)
 
 static void cc_toolbox_sensor_accel_on_change(void * p_context)
 {
-    UNUSED_PARAMETER(p_context);
+
 
     VENUS_EVENT_ON(E_VENUS_EVENT_SENSOR_DATA_READY_ACCEL , eEvent_None);
 
@@ -1238,7 +1238,7 @@ void battery_level_update(uint8_t battery_level)
 
 static void battery_level_meas_timeout_handler(void * p_context)
 {
-    UNUSED_PARAMETER(p_context);
+    
     battery_level_update(cc_get_battery_level());
 }
 
@@ -1263,12 +1263,12 @@ static void _Ble_CommandHistroyPedoParse(void)
 
         rec_index = CC_BLE_Cmd_GetHistoryRecordIndex();
 
-        if(FDS_SUCCESS == CC_Read_DayofRecoordLen(ePed, dayofweek, &total))
+        if(CC_SUCCESS == CC_Read_DayofRecoordLen(ePed, dayofweek, &total))
         {
             if((total != 0) && (rec_index <= total))
             {
 
-                if(FDS_SUCCESS == CC_Read_Record(ePed, dayofweek, rec_index, (uint32_t*)&pedo_db_data, &rsize))
+                if(CC_SUCCESS == CC_Read_Record(ePed, dayofweek, rec_index, (uint32_t*)&pedo_db_data, &rsize))
                 {
                     //TracerInfo("rsize:%d\r\n",total, rsize);
                     uint8_t db_array[14];
@@ -1352,12 +1352,12 @@ static void _Ble_CommandHistroyHrmParse(void)
 
         rec_index = CC_BLE_Cmd_GetHistoryRecordIndex();
 
-        if(FDS_SUCCESS == CC_Read_DayofRecoordLen(eHrm, dayofweek, &total))
+        if(CC_SUCCESS == CC_Read_DayofRecoordLen(eHrm, dayofweek, &total))
         {
 
             if((total != 0) && (rec_index <= total))
             {
-                if(FDS_SUCCESS == CC_Read_Record(eHrm, dayofweek, rec_index, (uint32_t*)&hr_db_data, &rsize))
+                if(CC_SUCCESS == CC_Read_Record(eHrm, dayofweek, rec_index, (uint32_t*)&hr_db_data, &rsize))
                 {
                     uint8_t db_array[14];
 
@@ -1437,11 +1437,11 @@ static void  _Ble_CommandHistroySleepParse(void)
         rec_index = CC_BLE_Cmd_GetHistoryRecordIndex();
         
 
-        if(FDS_SUCCESS == CC_Read_DayofRecoordLen(eSleep, dayofweek, &total))
+        if(CC_SUCCESS == CC_Read_DayofRecoordLen(eSleep, dayofweek, &total))
         {
             if((total != 0) && (rec_index <= total))
             {
-                if(FDS_SUCCESS == CC_Read_Record(eSleep, dayofweek, rec_index, (uint32_t*)&sleep_db_data, &rsize))
+                if(CC_SUCCESS == CC_Read_Record(eSleep, dayofweek, rec_index, (uint32_t*)&sleep_db_data, &rsize))
                 {
 
                     uint8_t db_array[14];
@@ -1524,12 +1524,12 @@ static void _Ble_CommandHistroySwimParse(void)
 
         rec_index = CC_BLE_Cmd_GetHistoryRecordIndex();
 
-        if(FDS_SUCCESS == CC_Read_DayofRecoordLen(eSwim, dayofweek, &total))
+        if(CC_SUCCESS == CC_Read_DayofRecoordLen(eSwim, dayofweek, &total))
         {
             if((total != 0) && (rec_index <= total))
             {
 
-                if(FDS_SUCCESS == CC_Read_Record(eSwim, dayofweek, rec_index, (uint32_t*)&swim_db_data, &rsize))
+                if(CC_SUCCESS == CC_Read_Record(eSwim, dayofweek, rec_index, (uint32_t*)&swim_db_data, &rsize))
                 {
 
                     uint8_t db_array[14];
@@ -1707,7 +1707,7 @@ static void ble_notify_handler(void)
 static void rsc_meas_timeout_handler(void * p_context)
 {
 
-    UNUSED_PARAMETER(p_context);
+    
     VENUS_EVENT_ON(E_VENUS_EVENT_BLE_NOTIFY_TO, eEvent_None);
 }
 
@@ -1813,44 +1813,44 @@ static void app_multiple_timer_init(void)
 #endif
 
     
-    app_timer_create(&m_battery_timer_id,
-                      APP_TIMER_MODE_REPEATED,
+    sw_timer_create(&m_battery_timer_id,
+                      SW_TIMER_MODE_REPEATED,
                       battery_level_meas_timeout_handler);
 
-    app_timer_create(&m_rsc_meas_timer_id,
-                     APP_TIMER_MODE_REPEATED,
+    sw_timer_create(&m_rsc_meas_timer_id,
+                     SW_TIMER_MODE_REPEATED,
                      rsc_meas_timeout_handler);
 
-    app_timer_create(&s_tVenusTimerAccel,
-                     APP_TIMER_MODE_REPEATED,
+    sw_timer_create(&s_tVenusTimerAccel,
+                     SW_TIMER_MODE_REPEATED,
                      cc_toolbox_sensor_accel_on_change);
 
-    app_timer_create(&s_tTouchDebounceTime,
-                     APP_TIMER_MODE_SINGLE_SHOT,
+    sw_timer_create(&s_tTouchDebounceTime,
+                     SW_TIMER_MODE_SINGLE_SHOT,
                      cc_touch_debounce_timeout);    
 
-    app_timer_create(&s_tVenusTimerDisplayGeneral,
-                     APP_TIMER_MODE_SINGLE_SHOT,
+    sw_timer_create(&s_tVenusTimerDisplayGeneral,
+                     SW_TIMER_MODE_SINGLE_SHOT,
                      cc_toolbox_Dispaly_General_handler);
 
-    app_timer_create(&s_tVenusTimerOLEDWakeup,
-                     APP_TIMER_MODE_SINGLE_SHOT,
+    sw_timer_create(&s_tVenusTimerOLEDWakeup,
+                     SW_TIMER_MODE_SINGLE_SHOT,
                      cc_toolbox_OLED_Wakup_TimeOut);
 
-    app_timer_create(&s_tVenusTimerOLEDSleep,
-                     APP_TIMER_MODE_SINGLE_SHOT,
+    sw_timer_create(&s_tVenusTimerOLEDSleep,
+                     SW_TIMER_MODE_SINGLE_SHOT,
                      cc_toolbox_OLED_Sleep_TimeOut);
 
-    app_timer_create(&s_tVenusTimerOLEDDisplaySrvTimer,
-                     APP_TIMER_MODE_SINGLE_SHOT,
+    sw_timer_create(&s_tVenusTimerOLEDDisplaySrvTimer,
+                     SW_TIMER_MODE_SINGLE_SHOT,
                      cc_toolbox_OLED_Display_Service_timeout);
 
-    app_timer_create(&s_tVenusTimerDataTime,
-                     APP_TIMER_MODE_REPEATED,
+    sw_timer_create(&s_tVenusTimerDataTime,
+                     SW_TIMER_MODE_REPEATED,
                      cc_toolbox_Datatime_hanndler);
 
-    app_timer_create(&s_tVenusTimerPWMVibSrvTimer,
-                     APP_TIMER_MODE_SINGLE_SHOT,
+    sw_timer_create(&s_tVenusTimerPWMVibSrvTimer,
+                     SW_TIMER_MODE_SINGLE_SHOT,
                      cc_toolBox_PWM_Vib_Service_timeout);       
      
 
@@ -1861,7 +1861,7 @@ static void app_multiple_timer_init(void)
 static uint32_t systime_ms = 0;
 static void System_time_handler(void * pvContext)
 {
-    UNUSED_PARAMETER(pvContext);
+    
     //systime_ms++;
     systime_ms+=20;
 
@@ -1886,26 +1886,26 @@ static void application_timers_start(void)
     //uint32_t err_code;
 
 
-    app_timer_start(m_rsc_meas_timer_id, APP_TIMER_TICKS(SPEED_AND_CADENCE_MEAS_INTERVAL, APP_TIMER_PRESCALER), NULL);
+    sw_timer_start(m_rsc_meas_timer_id, SPEED_AND_CADENCE_MEAS_INTERVAL, NULL);
 
     // Start application timers.
-    //app_timer_start(m_battery_timer_id, BATTERY_LEVEL_MEAS_INTERVAL, NULL); 
+    //sw_timer_start(m_battery_timer_id, BATTERY_LEVEL_MEAS_INTERVAL, NULL); 
 
-    //err_code = app_timer_start(m_rsc_meas_timer_id, APP_TIMER_TICKS(SPEED_AND_CADENCE_MEAS_INTERVAL, APP_TIMER_PRESCALER), NULL);
+    //err_code = sw_timer_start(m_rsc_meas_timer_id, SPEED_AND_CADENCE_MEAS_INTERVAL, NULL);
     //APP_ERROR_CHECK(err_code);
 
     // disable this timer to unify standby timers
-    app_timer_start(s_tVenusTimerAccel, APP_TIMER_TICKS(ACCEL_FIFO_MODE_LONG_INTERVAL, APP_TIMER_PRESCALER), NULL);
+    sw_timer_start(s_tVenusTimerAccel, ACCEL_FIFO_MODE_LONG_INTERVAL, NULL);
 
-    app_timer_start(s_tVenusTimerDataTime, APP_TIMER_TICKS(DATETIME_CNT,APP_TIMER_PRESCALER), NULL);
+    sw_timer_start(s_tVenusTimerDataTime, DATETIME_CNT, NULL);
 
 #if 0 //test time diff
 
-    app_timer_create(&s_tVenusTimerDiffTime,
-                     APP_TIMER_MODE_REPEATED,
+    sw_timer_create(&s_tVenusTimerDiffTime,
+                     SW_TIMER_MODE_REPEATED,
                      System_time_handler);
 
-    app_timer_start(s_tVenusTimerDiffTime, APP_TIMER_TICKS(20, APP_TIMER_PRESCALER), NULL); // test by Samuel
+    sw_timer_start(s_tVenusTimerDiffTime, 20, NULL); // test by Samuel
 #endif
 
 
@@ -3508,7 +3508,7 @@ void venus_algorithm_init()
 
 void venus_platform_init(void)
 {  
-    ret_code_t ret;
+    uint32_t ret;
 
     drvi_RequestIrq(TOUCH_INT_PIN, TOUCH_int_handler, IRQ_TYPE_EDGE_FALLING);
     drvi_EnableIrq(TOUCH_INT_PIN);
@@ -3575,7 +3575,7 @@ void venus_platform_init(void)
 #ifdef DB_EN
     ret = CC_Fds_init();
 
-    if(FDS_SUCCESS != ret)
+    if(CC_SUCCESS != ret)
         TracerInfo("fds_init error: 0x%x\r\n", ret);
 #endif
 }

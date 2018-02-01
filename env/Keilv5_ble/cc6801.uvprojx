@@ -335,7 +335,7 @@
               <MiscControls>--preinclude ..\..\cfg\project\project.h  --preinclude ..\..\inc\global.h  </MiscControls>
               <Define>FPGA VENUS_WRISTBAND APPLICATION</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\ble\ip\ble\profiles\htp;..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\cfg;..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app;..\..\platform\asic\6801;..\..\platform\bootloader;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\crc32;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\sw_timer;..\..\service\tracer;..\..\service\uart;..\..\service\fds;..\..\algo\CC_Library\Inc;..\..\algo\CC_Library\Src\Inc;..\..\algo\CC_Swimming\Inc;..\..\app\HeartRate;..\..\module\ppg;..\..\ble\modules\app\src;..\..\ble\modules\common\api;..\..\app\Display;..\..\ble\ip\ble\profiles\ota\otac\api;..\..\ble\ip\ble\profiles\ota\otat\api;..\..\ble\ip\ble\profiles\ota;..\..\ble\ip\ble\profiles\ota\otac\src;..\..\ble\ip\ble\profiles\ota\otat\src;..\..\app\DataBase;..\..\app\scheduler;..\..\ble\ip\ble\profiles\ccps\api;..\..\app\svc_mgr;..\..\app\SensorController\inc</IncludePath>
+              <IncludePath>..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\ble\ip\ble\profiles\htp;..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\cfg;..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app;..\..\platform\asic\6801;..\..\platform\bootloader;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\crc32;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\sw_timer;..\..\service\tracer;..\..\service\uart;..\..\service\fds;..\..\algo\CC_Library\Inc;..\..\algo\CC_Library\Src\Inc;..\..\algo\CC_Swimming\Inc;..\..\app\HeartRate;..\..\module\ppg;..\..\ble\modules\app\src;..\..\ble\modules\common\api;..\..\app\Display;..\..\ble\ip\ble\profiles\ota\otac\api;..\..\ble\ip\ble\profiles\ota\otat\api;..\..\ble\ip\ble\profiles\ota;..\..\ble\ip\ble\profiles\ota\otac\src;..\..\ble\ip\ble\profiles\ota\otat\src;..\..\app\DataBase;..\..\app\scheduler;..\..\ble\ip\ble\profiles\ccps\api;..\..\app\svc_mgr;..\..\app\SensorController\inc;..\..\app\ble_mgr</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -531,11 +531,6 @@
               <FilePath>..\..\app\Display\icon.c</FilePath>
             </File>
             <File>
-              <FileName>CC_DB.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\DataBase\CC_DB.c</FilePath>
-            </File>
-            <File>
               <FileName>scheduler.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\app\scheduler\scheduler.c</FilePath>
@@ -564,6 +559,50 @@
               <FileName>PPG_Controller.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\app\SensorController\PPG_Controller.c</FilePath>
+            </File>
+            <File>
+              <FileName>ble_mgr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\ble_mgr\ble_mgr.c</FilePath>
+            </File>
+            <File>
+              <FileName>sdk_db.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\sdk\database\sdk_db.c</FilePath>
+            </File>
+            <File>
+              <FileName>sdk_ccps.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\sdk\ble\profiles\ccps\sdk_ccps.c</FilePath>
+            </File>
+            <File>
+              <FileName>database_lib_M0.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\app\DataBase\database_lib_M0.lib</FilePath>
+            </File>
+            <File>
+              <FileName>database_lib_M4.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\app\DataBase\database_lib_M4.lib</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds/>
+              </FileOption>
             </File>
           </Files>
         </Group>
@@ -1011,16 +1050,6 @@
               <FilePath>..\..\ble\ip\ble\profiles\dis\diss\src\diss.c</FilePath>
             </File>
             <File>
-              <FileName>co_list.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\common\src\co_list.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_utils.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\common\src\co_utils.c</FilePath>
-            </File>
-            <File>
               <FileName>otat.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\ble\ip\ble\profiles\ota\otat\src\otat.c</FilePath>
@@ -1289,44 +1318,38 @@
           <GroupName>service</GroupName>
           <Files>
             <File>
-              <FileName>app_fifo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\fifo\app_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_uart_fifo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\uart\app_uart_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>crc32.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\crc32\crc32.c</FilePath>
-            </File>
-            <File>
-              <FileName>fstorage.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\fstorage\fstorage.c</FilePath>
-            </File>
-            <File>
-              <FileName>retarget.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\uart\retarget.c</FilePath>
-            </File>
-            <File>
-              <FileName>sw_timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\sw_timer\sw_timer.c</FilePath>
-            </File>
-            <File>
               <FileName>tracer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\service\tracer\tracer.c</FilePath>
             </File>
             <File>
-              <FileName>fds.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\fds\fds.c</FilePath>
+              <FileName>service_lib_M0.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\service\service_lib_M0.lib</FilePath>
+            </File>
+            <File>
+              <FileName>service_lib_M4.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\service\service_lib_M4.lib</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds/>
+              </FileOption>
             </File>
           </Files>
         </Group>
@@ -1798,7 +1821,7 @@
               <MiscControls>--preinclude ..\..\cfg\project\project.h --preinclude ..\..\inc\global.h</MiscControls>
               <Define>FPGA VENUS_WRISTBAND APPLICATION</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\ble\ip\ble\profiles\htp;..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\service\tracer;..\..\cfg;..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app;..\..\platform\asic\6801;..\..\platform\bootloader;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\crc32;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\sw_timer;..\..\service\uart;..\..\algo\CC_Library\Inc;..\..\algo\CC_Swimming\Inc;..\..\algo\HRM_Library;..\..\app\Display;..\..\app\HeartRate;..\..\module\ppg;..\..\algo\CC_Library\Src\Inc;..\..\ble\modules\app\src;..\..\ble\ip\ble\profiles\ota\otat;..\..\ble\ip\ble\profiles\ota\otat\api;..\..\ble\ip\ble\profiles\ota\otat\src;..\..\app\DataBase;..\..\service\fds;..\..\app\scheduler</IncludePath>
+              <IncludePath>..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\ble\ip\ble\profiles\htp;..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\service\tracer;..\..\cfg;..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app;..\..\platform\asic\6801;..\..\platform\bootloader;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\crc32;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\sw_timer;..\..\service\uart;..\..\algo\CC_Library\Inc;..\..\algo\CC_Swimming\Inc;..\..\algo\HRM_Library;..\..\app\Display;..\..\app\HeartRate;..\..\module\ppg;..\..\algo\CC_Library\Src\Inc;..\..\ble\modules\app\src;..\..\ble\ip\ble\profiles\ota\otat;..\..\ble\ip\ble\profiles\ota\otat\api;..\..\ble\ip\ble\profiles\ota\otat\src;..\..\app\DataBase;..\..\service\fds;..\..\app\scheduler;..\..\app\ble_mgr</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1994,11 +2017,6 @@
               <FilePath>..\..\app\Display\icon.c</FilePath>
             </File>
             <File>
-              <FileName>CC_DB.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\DataBase\CC_DB.c</FilePath>
-            </File>
-            <File>
               <FileName>scheduler.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\app\scheduler\scheduler.c</FilePath>
@@ -2027,6 +2045,50 @@
               <FileName>PPG_Controller.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\app\SensorController\PPG_Controller.c</FilePath>
+            </File>
+            <File>
+              <FileName>ble_mgr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\ble_mgr\ble_mgr.c</FilePath>
+            </File>
+            <File>
+              <FileName>sdk_db.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\sdk\database\sdk_db.c</FilePath>
+            </File>
+            <File>
+              <FileName>sdk_ccps.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\sdk\ble\profiles\ccps\sdk_ccps.c</FilePath>
+            </File>
+            <File>
+              <FileName>database_lib_M0.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\app\DataBase\database_lib_M0.lib</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds/>
+              </FileOption>
+            </File>
+            <File>
+              <FileName>database_lib_M4.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\app\DataBase\database_lib_M4.lib</FilePath>
             </File>
           </Files>
         </Group>
@@ -2474,16 +2536,6 @@
               <FilePath>..\..\ble\ip\ble\profiles\dis\diss\src\diss.c</FilePath>
             </File>
             <File>
-              <FileName>co_list.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\common\src\co_list.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_utils.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\common\src\co_utils.c</FilePath>
-            </File>
-            <File>
               <FileName>otat.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\ble\ip\ble\profiles\ota\otat\src\otat.c</FilePath>
@@ -2752,44 +2804,38 @@
           <GroupName>service</GroupName>
           <Files>
             <File>
-              <FileName>app_fifo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\fifo\app_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_uart_fifo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\uart\app_uart_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>crc32.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\crc32\crc32.c</FilePath>
-            </File>
-            <File>
-              <FileName>fstorage.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\fstorage\fstorage.c</FilePath>
-            </File>
-            <File>
-              <FileName>retarget.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\uart\retarget.c</FilePath>
-            </File>
-            <File>
-              <FileName>sw_timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\sw_timer\sw_timer.c</FilePath>
-            </File>
-            <File>
               <FileName>tracer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\service\tracer\tracer.c</FilePath>
             </File>
             <File>
-              <FileName>fds.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\fds\fds.c</FilePath>
+              <FileName>service_lib_M0.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\service\service_lib_M0.lib</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds/>
+              </FileOption>
+            </File>
+            <File>
+              <FileName>service_lib_M4.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\service\service_lib_M4.lib</FilePath>
             </File>
           </Files>
         </Group>
@@ -3196,7 +3242,7 @@
               <MiscControls>--preinclude ..\..\cfg\project\project.h  --preinclude ..\..\inc\global.h  </MiscControls>
               <Define>EVB ZEUS_WRISTBAND APPLICATION</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\ble\ip\ble\profiles\htp;..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\cfg;..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app;..\..\platform\asic\6801;..\..\platform\bootloader;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\crc32;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\sw_timer;..\..\service\tracer;..\..\service\uart;..\..\service\fds;..\..\algo\CC_Library\Inc;..\..\algo\CC_Library\Src\Inc;..\..\algo\CC_Swimming\Inc;..\..\app\HeartRate;..\..\module\ppg;..\..\ble\modules\app\src;..\..\ble\modules\common\api;..\..\app\Display;..\..\ble\ip\ble\profiles\ota\otac\api;..\..\ble\ip\ble\profiles\ota\otat\api;..\..\ble\ip\ble\profiles\ota;..\..\ble\ip\ble\profiles\ota\otac\src;..\..\ble\ip\ble\profiles\ota\otat\src;..\..\app\DataBase;..\..\app\scheduler;..\..\app\AppService\inc;..\..\app\SensorController\inc;..\..\app\svc_mgr;..\..\ble\ip\ble\profiles\ccps\api;..\..\ble\ip\ble\profiles\ccps\src</IncludePath>
+              <IncludePath>..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\ble\ip\ble\profiles\htp;..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\cfg;..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app;..\..\platform\asic\6801;..\..\platform\bootloader;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\crc32;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\sw_timer;..\..\service\tracer;..\..\service\uart;..\..\service\fds;..\..\algo\CC_Library\Inc;..\..\algo\CC_Library\Src\Inc;..\..\algo\CC_Swimming\Inc;..\..\app\HeartRate;..\..\module\ppg;..\..\ble\modules\app\src;..\..\ble\modules\common\api;..\..\app\Display;..\..\ble\ip\ble\profiles\ota\otac\api;..\..\ble\ip\ble\profiles\ota\otat\api;..\..\ble\ip\ble\profiles\ota;..\..\ble\ip\ble\profiles\ota\otac\src;..\..\ble\ip\ble\profiles\ota\otat\src;..\..\app\DataBase;..\..\app\scheduler;..\..\app\AppService\inc;..\..\app\SensorController\inc;..\..\app\svc_mgr;..\..\ble\ip\ble\profiles\ccps\api;..\..\ble\ip\ble\profiles\ccps\src;..\..\app\ble_mgr;..\..\app\sdk\ble\profiles\ccps</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -3392,11 +3438,6 @@
               <FilePath>..\..\app\Display\icon.c</FilePath>
             </File>
             <File>
-              <FileName>CC_DB.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\DataBase\CC_DB.c</FilePath>
-            </File>
-            <File>
               <FileName>scheduler.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\app\scheduler\scheduler.c</FilePath>
@@ -3425,6 +3466,50 @@
               <FileName>PPG_Controller.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\app\SensorController\PPG_Controller.c</FilePath>
+            </File>
+            <File>
+              <FileName>ble_mgr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\ble_mgr\ble_mgr.c</FilePath>
+            </File>
+            <File>
+              <FileName>sdk_db.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\sdk\database\sdk_db.c</FilePath>
+            </File>
+            <File>
+              <FileName>sdk_ccps.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\sdk\ble\profiles\ccps\sdk_ccps.c</FilePath>
+            </File>
+            <File>
+              <FileName>database_lib_M0.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\app\DataBase\database_lib_M0.lib</FilePath>
+            </File>
+            <File>
+              <FileName>database_lib_M4.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\app\DataBase\database_lib_M4.lib</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds/>
+              </FileOption>
             </File>
           </Files>
         </Group>
@@ -3872,16 +3957,6 @@
               <FilePath>..\..\ble\ip\ble\profiles\dis\diss\src\diss.c</FilePath>
             </File>
             <File>
-              <FileName>co_list.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\common\src\co_list.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_utils.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\common\src\co_utils.c</FilePath>
-            </File>
-            <File>
               <FileName>otat.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\ble\ip\ble\profiles\ota\otat\src\otat.c</FilePath>
@@ -4150,44 +4225,38 @@
           <GroupName>service</GroupName>
           <Files>
             <File>
-              <FileName>app_fifo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\fifo\app_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_uart_fifo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\uart\app_uart_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>crc32.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\crc32\crc32.c</FilePath>
-            </File>
-            <File>
-              <FileName>fstorage.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\fstorage\fstorage.c</FilePath>
-            </File>
-            <File>
-              <FileName>retarget.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\uart\retarget.c</FilePath>
-            </File>
-            <File>
-              <FileName>sw_timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\sw_timer\sw_timer.c</FilePath>
-            </File>
-            <File>
               <FileName>tracer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\service\tracer\tracer.c</FilePath>
             </File>
             <File>
-              <FileName>fds.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\fds\fds.c</FilePath>
+              <FileName>service_lib_M0.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\service\service_lib_M0.lib</FilePath>
+            </File>
+            <File>
+              <FileName>service_lib_M4.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\service\service_lib_M4.lib</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds/>
+              </FileOption>
             </File>
           </Files>
         </Group>
@@ -4659,7 +4728,7 @@
               <MiscControls>--preinclude ..\..\cfg\project\project.h --preinclude ..\..\inc\global.h</MiscControls>
               <Define>EVB ZEUS_WRISTBAND APPLICATION</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\ble\ip\ble\profiles\htp;..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\service\tracer;..\..\cfg;..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app;..\..\platform\asic\6801;..\..\platform\bootloader;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\crc32;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\sw_timer;..\..\service\uart;..\..\algo\CC_Library\Inc;..\..\algo\CC_Swimming\Inc;..\..\algo\HRM_Library;..\..\app\Display;..\..\app\HeartRate;..\..\module\ppg;..\..\algo\CC_Library\Src\Inc;..\..\ble\modules\app\src;..\..\ble\ip\ble\profiles\ota\otat;..\..\ble\ip\ble\profiles\ota\otat\api;..\..\ble\ip\ble\profiles\ota\otat\src;..\..\app\DataBase;..\..\service\fds;..\..\app\scheduler;..\..\app\SensorController\inc;..\..\app\AppService\inc;..\..\app\svc_mgr;..\..\ble\ip\ble\profiles\ccps\api;..\..\ble\ip\ble\profiles\ccps\src</IncludePath>
+              <IncludePath>..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\ble\ip\ble\profiles\htp;..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\service\tracer;..\..\cfg;..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app;..\..\platform\asic\6801;..\..\platform\bootloader;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\crc32;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\sw_timer;..\..\service\uart;..\..\algo\CC_Library\Inc;..\..\algo\CC_Swimming\Inc;..\..\algo\HRM_Library;..\..\app\Display;..\..\app\HeartRate;..\..\module\ppg;..\..\algo\CC_Library\Src\Inc;..\..\ble\modules\app\src;..\..\ble\ip\ble\profiles\ota\otat;..\..\ble\ip\ble\profiles\ota\otat\api;..\..\ble\ip\ble\profiles\ota\otat\src;..\..\app\DataBase;..\..\service\fds;..\..\app\scheduler;..\..\app\SensorController\inc;..\..\app\AppService\inc;..\..\app\svc_mgr;..\..\ble\ip\ble\profiles\ccps\api;..\..\ble\ip\ble\profiles\ccps\src;..\..\app\ble_mgr;..\..\app\sdk\ble\profiles\ccps;..\..\app\sdk\database;..\..\app\DataBase</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -4855,11 +4924,6 @@
               <FilePath>..\..\app\Display\icon.c</FilePath>
             </File>
             <File>
-              <FileName>CC_DB.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\DataBase\CC_DB.c</FilePath>
-            </File>
-            <File>
               <FileName>scheduler.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\app\scheduler\scheduler.c</FilePath>
@@ -4888,6 +4952,50 @@
               <FileName>PPG_Controller.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\app\SensorController\PPG_Controller.c</FilePath>
+            </File>
+            <File>
+              <FileName>ble_mgr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\ble_mgr\ble_mgr.c</FilePath>
+            </File>
+            <File>
+              <FileName>sdk_db.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\sdk\database\sdk_db.c</FilePath>
+            </File>
+            <File>
+              <FileName>sdk_ccps.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\sdk\ble\profiles\ccps\sdk_ccps.c</FilePath>
+            </File>
+            <File>
+              <FileName>database_lib_M0.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\app\DataBase\database_lib_M0.lib</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds/>
+              </FileOption>
+            </File>
+            <File>
+              <FileName>database_lib_M4.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\app\DataBase\database_lib_M4.lib</FilePath>
             </File>
           </Files>
         </Group>
@@ -5335,16 +5443,6 @@
               <FilePath>..\..\ble\ip\ble\profiles\dis\diss\src\diss.c</FilePath>
             </File>
             <File>
-              <FileName>co_list.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\common\src\co_list.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_utils.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\common\src\co_utils.c</FilePath>
-            </File>
-            <File>
               <FileName>otat.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\ble\ip\ble\profiles\ota\otat\src\otat.c</FilePath>
@@ -5613,44 +5711,38 @@
           <GroupName>service</GroupName>
           <Files>
             <File>
-              <FileName>app_fifo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\fifo\app_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_uart_fifo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\uart\app_uart_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>crc32.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\crc32\crc32.c</FilePath>
-            </File>
-            <File>
-              <FileName>fstorage.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\fstorage\fstorage.c</FilePath>
-            </File>
-            <File>
-              <FileName>retarget.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\uart\retarget.c</FilePath>
-            </File>
-            <File>
-              <FileName>sw_timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\sw_timer\sw_timer.c</FilePath>
-            </File>
-            <File>
               <FileName>tracer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\service\tracer\tracer.c</FilePath>
             </File>
             <File>
-              <FileName>fds.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\fds\fds.c</FilePath>
+              <FileName>service_lib_M0.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\service\service_lib_M0.lib</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds/>
+              </FileOption>
+            </File>
+            <File>
+              <FileName>service_lib_M4.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\service\service_lib_M4.lib</FilePath>
             </File>
           </Files>
         </Group>

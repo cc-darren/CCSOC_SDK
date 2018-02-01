@@ -1,3 +1,13 @@
+/* Copyright (c) 2018 Cloudchip, Inc. All Rights Reserved.
+ *
+ * The information contained herein is property of Cloudchip, Inc.
+ * Terms and conditions of usage are described in detail in CLOUDCHIP
+ * STANDARD SOFTWARE LICENSE AGREEMENT.
+ *
+ * Licensees are granted free, non-transferable use of the information.
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * from the file.
+ */
 
 #include "project.h"
 #include "CC_HRM_drv.h"
@@ -10,7 +20,6 @@
 
 //#include "LSM6DS3_ACC_GYRO_driver.h"
 #include "cc_db.h"
-#include "cc_db_structure.h"
 #include "CC_AppSrvc_HeartRate.h"
 #include "clock.h"
 #include "tracer.h"
@@ -350,8 +359,6 @@ static uint8_t pah8002_get_touch_flag_ppg_mode()
     { 
         touch_sts_output = 0; 
     } 
-    //NRF_LOG_DEBUG("<<< pah8002_get_touch_flag_ppg_mode %d, %d\n",touch_cnt, no_touch_cnt); 
-    //NRF_LOG_DEBUG("<<< pah8002_get_touch_flag_ppg_mode %d\n", touch_sts_output); 
     return touch_sts_output;             
 } 
 

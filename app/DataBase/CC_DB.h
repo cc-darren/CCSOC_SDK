@@ -1,10 +1,9 @@
 #ifndef _CC_DB_H_
 #define _CC_DB_H_
 #include "project.h"
-#include "CC_DB_Structure.h"
+
 #include <stdint.h>
-#include "fds.h"
-#include "fstorage.h"
+
 
 #define BLE_DB_PED_COMMAND_ID       0xFA
 #define BLE_DB_HRM_COMMAND_ID       0xFB
@@ -132,25 +131,25 @@ typedef enum
 }eDB_System_Record_ID_t;
 
 
-ret_code_t CC_Save_Record(eDB_Content_Op_t _eOpCode,uint32_t *pWData,uint16_t _bWLen);
+uint32_t CC_Save_Record(eDB_Content_Op_t _eOpCode,uint32_t *pWData,uint16_t _bWLen);
 
-ret_code_t CC_Read_DayofRecoordLen(eDB_Content_Op_t _eOpCode,uint8_t _bDayofWeek, uint16_t *_wDataLen);
-ret_code_t CC_Read_Record(eDB_Content_Op_t _eOpCode,uint8_t _bDayofWeek,uint16_t _wRecId ,uint32_t *_pRData, uint16_t *_wDataLen);
-ret_code_t CC_Update_Record(void);
-ret_code_t CC_Delete_Record(void);
-ret_code_t CC_FindFile_And_DeleteFile(eDB_Content_Op_t _eOpCode,uint8_t _bDayofWeek);
-ret_code_t CC_DB_Init_FileRec(uint8_t *_bFirstInit, uint8_t _bState);
-ret_code_t CC_DB_Delete_OneDay_File(eDB_Content_Op_t id, uint8_t _bDayofWeek);
+uint32_t CC_Read_DayofRecoordLen(eDB_Content_Op_t _eOpCode,uint8_t _bDayofWeek, uint16_t *_wDataLen);
+uint32_t CC_Read_Record(eDB_Content_Op_t _eOpCode,uint8_t _bDayofWeek,uint16_t _wRecId ,uint32_t *_pRData, uint16_t *_wDataLen);
+uint32_t CC_Update_Record(void);
+uint32_t CC_Delete_Record(void);
+uint32_t CC_FindFile_And_DeleteFile(eDB_Content_Op_t _eOpCode,uint8_t _bDayofWeek);
+uint32_t CC_DB_Init_FileRec(uint8_t *_bFirstInit, uint8_t _bState);
+uint32_t CC_DB_Delete_OneDay_File(eDB_Content_Op_t id, uint8_t _bDayofWeek);
 uint8_t CC_DB_Check_DB_Full(void);
 
-ret_code_t CC_Fds_init (void);
-ret_code_t CC_Fds_Write(const uint16_t _wFileID, const uint16_t _wRecKey,uint32_t *pWData,uint16_t _bWLen);
-ret_code_t CC_Fds_Update(const uint16_t _wFileID, const uint16_t _wRecKey,uint32_t *pWData,uint16_t _bWLen);
-ret_code_t CC_Fds_Read(const uint16_t _wFileID, const uint16_t _wRecKey,uint32_t *_pRData,uint16_t *_pRLen);
-ret_code_t CC_Fds_Find_And_Delete (const uint16_t _FileID, const uint16_t _RecKey);
+uint32_t CC_Fds_init (void);
+uint32_t CC_Fds_Write(const uint16_t _wFileID, const uint16_t _wRecKey,uint32_t *pWData,uint16_t _bWLen);
+uint32_t CC_Fds_Update(const uint16_t _wFileID, const uint16_t _wRecKey,uint32_t *pWData,uint16_t _bWLen);
+uint32_t CC_Fds_Read(const uint16_t _wFileID, const uint16_t _wRecKey,uint32_t *_pRData,uint16_t *_pRLen);
+uint32_t CC_Fds_Find_And_Delete (const uint16_t _FileID, const uint16_t _RecKey);
 void CC_DB_System_Save_Request(eDB_System_Record_ID_t sys_id);
 void CC_DB_System_Check_Request_And_Save(void);
-ret_code_t CC_DB_Read_System_Data(eDB_System_Record_ID_t sys_id, void *data);
+uint32_t CC_DB_Read_System_Data(eDB_System_Record_ID_t sys_id, void *data);
 
 void CC_Fds_Change_DayofWeek(uint8_t _bDayofWeek, uint8_t _IsReCreateOneDay);
 uint8_t CC_DB_Check_Magic_Code(void);
@@ -173,5 +172,51 @@ void CC_Fds_Change_DayofWeek(uint8_t _bDayofWeek, uint8_t _IsReCreateOneDay);
 void _DB_Update_ID_Info(uint8_t _bDayofWeek);
 
 
+
+
+#define FOLDER_MixLog_ID_NUM1						  	0x9000
+#define FOLDER_MixLog_ID_NUM2                         	0x9001
+#define FOLDER_MixLog_ID_NUM3                         	0x9002
+#define FOLDER_MixLog_ID_NUM4                          	0x9003
+#define FOLDER_MixLog_ID_NUM5                         	0x9004
+#define FILE_ID_INIT									(0x0001) 
+#define FILE_ID_REC_OFFSET            					(0x0001)
+
+
+typedef struct
+{
+
+    uint32_t wMiscfile_1_Num;
+    uint16_t wMiscfile_1_Len;
+	
+    uint32_t wMiscfile_2_Num;
+    uint16_t wMiscfile_2_Len;
+	
+	uint32_t wMiscfile_3_Num;
+    uint16_t wMiscfile_3_Len;
+	
+    uint32_t wMiscfile_4_Num;
+    uint16_t wMiscfile_4_Len;
+	
+	uint32_t wMiscfile_5_Num;
+    uint16_t wMiscfile_5_Len;
+	
+}S_DB_FILE_Num __attribute__((aligned(4)));
+
+typedef enum
+{
+    eFOLDER1=0x9000,
+    eFOLDER2=0x9001,
+    eFOLDER3=0x9002,
+	eFOLDER4=0x9003,
+	eFOLDER5=0x9004
+}eDB_FOLDER_OP_t;
+
+
+uint32_t CC_DB_Init_Folder(void);
+uint32_t CC_DB_Save_File(eDB_FOLDER_OP_t _eOpCode,uint32_t *pWData,uint16_t _wLen); //_wLen: in words
+uint32_t CC_DB_Read_File(eDB_FOLDER_OP_t _eOpCode,uint16_t _wFileId ,uint32_t *_pRData, uint16_t *_wDataLen);// _wDataLen: in words
+uint32_t CC_DB_Read_Folder_NumOfFile(eDB_FOLDER_OP_t _eOpCode, uint16_t *_wDataLen);
+uint32_t CC_DB_Reset_One_Folder(eDB_FOLDER_OP_t _eOpCode);
 
 #endif

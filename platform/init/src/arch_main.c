@@ -1,16 +1,13 @@
-/**
- ****************************************************************************************
+/* Copyright (c) 2018 Cloudchip, Inc. All Rights Reserved.
  *
- * @file arch_main.c
+ * The information contained herein is property of Cloudchip, Inc.
+ * Terms and conditions of usage are described in detail in CLOUDCHIP
+ * STANDARD SOFTWARE LICENSE AGREEMENT.
  *
- * @brief Main loop of the application.
- *
- * Copyright (C) CloudChip 2017-2019
- *
- *
- ****************************************************************************************
+ * Licensees are granted free, non-transferable use of the information.
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * from the file.
  */
-
 
 /*
  * INCLUDES
@@ -51,29 +48,14 @@ extern void venus_main(void);
 
 int main(void)
 {
-#ifdef CFG_BLE_APP
-//    uint32_t error = 0;
-#endif
     //Must be first in main()
     sys_InitMain();
-
-#if 0//def CFG_BLE_APP
-    memset (((void *) 0x40006000), 0, 8192);
-    memset (((void *) 0x20000048), 0, 0x820);
- //   *((uint32_t *) 0x40000010) = 0x00000B40;
-    *((uint32_t *) 0x4000011C) = 0x00000008;
-    *((uint32_t *) 0x40000104) = (*((uint32_t *) 0x40000104) & 0xFFFFFE0) | 0x04;
-    //*((uint32_t *) 0x20000648) = 0x00;
-    //regCKGEN->bf.bleClkDiv = 0x04;
-
-    // Initialize RW SW stack
-    rwip_init(error);
-#endif
 
     //start interrupt handling
     GLOBAL_INT_START();
 
     drvi_initialize();
+
     TracerInfo("== CC6801 Start ==\r\n");
 
     /*******************************/
@@ -106,9 +88,3 @@ int main(void)
     //return(0);
 }
 
-#ifdef CFG_BLE_APP
-void BLE_IRQHandler(void)
-{    
-    rwble_isr();
-}
-#endif

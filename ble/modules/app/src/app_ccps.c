@@ -5,7 +5,7 @@
  *
  * @brief CloudChip Proprietary Services Application entry point
  *
- * Copyright (C) RivieraWaves 2009-2015
+ * Copyright (C) CloudChip 2009-2015
  *
  *
  ****************************************************************************************
@@ -43,13 +43,13 @@
 #include "tracer.h"
 #include "scheduler.h"
 #include "rwip.h"
+#include "sdk_ccps.h"
 
 /*
  * DEFINES
  ****************************************************************************************
  */
 
-APP_TIMER_DEF(s_tCCPSTimerTime);
 
 /*
  * GLOBAL VARIABLE DEFINITIONS
@@ -82,14 +82,7 @@ static int ccps_packet_send_cmd_handler(ke_msg_id_t const msgid,
                                         ke_task_id_t const src_id)
 {
 
-    TracerInfo("Receive %d Bytes Data:",param->length);
-
-    for(uint8_t i = 0; i < param->length; i++)
-    {
-        TracerInfo("0x%0x, ", param->value[i]);
-    }
-
-    TracerInfo("\r\n");
+    sdk_ccps_rx_req_data(param->value, param->length);
 
     return (KE_MSG_CONSUMED);
 }
@@ -149,6 +142,13 @@ void app_ccps_indicate_send(uint8_t *tx_data, uint8_t length)
 void ccps_packet_send_reply_handler(uint8_t *tx_data, uint8_t *length)
 {
     // write your response data from local
+/*
+	// test code:
+    uint8_t test_buf[] = "CloudChip";
+
+    *length = sizeof(test_buf);
+    memcpy(tx_data, test_buf, sizeof(test_buf));
+*/    
     tx_data[0] = 0;
     *length = 0;
 }
@@ -202,49 +202,6 @@ void app_ccps_enable_prf(uint8_t conidx)
     // Send the message
     ke_msg_send(req);
 }
-
-
-void app_ccps_test_send(void * p_context)
-{
-
-    static uint8_t tx_data[CCPS_REPORT_MAX_LEN];    // Note: It should exchange MTU that can extend max length > 20 Bytes
-
-
-    // send Notification: 0 ~ (CCPS_REPORT_MAX_LEN-1)
-    for(uint16_t i = 0; i < CCPS_REPORT_MAX_LEN; i++)
-        tx_data[i] = i;
-
-    app_ccps_notify_send(tx_data, CCPS_REPORT_MAX_LEN); 
-
-
-    // send Indication: 0 ~ (CCPS_REPORT_MAX_LEN-1)
-    for(uint16_t i = 0; i < CCPS_REPORT_MAX_LEN; i++)
-        tx_data[i] = CCPS_REPORT_MAX_LEN-i;
-
-    app_ccps_indicate_send(tx_data, CCPS_REPORT_MAX_LEN);
-}
-
-
-void app_ccps_test_code(void)
-{
-
-    // send notify/indicate packets per 1sec while CCCD is enabled.
-    app_timer_create(&s_tCCPSTimerTime, APP_TIMER_MODE_REPEATED, app_ccps_test_send);      
-    app_timer_start(s_tCCPSTimerTime, APP_TIMER_TICKS(1000, APP_TIMER_PRESCALER), NULL);
-
-
-    while(1)
-    {
-        
-         APP_SCHED_RunScheduler();
-
-#ifdef CFG_BLE_APP
-         rwip_schedule();
-         rwip_ignore_ll_conn_param_update_patch();
-#endif    
-    }
-}
-
 
 
 

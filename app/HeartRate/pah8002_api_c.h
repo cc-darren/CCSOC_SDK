@@ -1,7 +1,6 @@
 #ifndef __PAH8002_API_C_H__
 #define __PAH8002_API_C_H__
 
-
 #include "pah8series_data_c.h"
 
 

@@ -90,16 +90,10 @@ static uint8_t htpt_init(struct prf_task_env* env, uint16_t* start_hdl, uint16_t
 
     cfg_flag = htpt_compute_att_table(params->features);
 
-
-    // modified by Samuel
-    status = attm_svc_create_db(start_hdl, ATT_SVC_HEALTH_THERMOM, (uint8_t *)&cfg_flag,
-               HTS_IDX_NB, NULL, env->task, &htpt_att_db[0],
-              (sec_lvl & (PERM_MASK_SVC_DIS)) | PERM(SVC_MI, DISABLE) );
-/*
     status = attm_svc_create_db(start_hdl, ATT_SVC_HEALTH_THERMOM, (uint8_t *)&cfg_flag,
                HTS_IDX_NB, NULL, env->task, &htpt_att_db[0],
               (sec_lvl & (PERM_MASK_SVC_DIS | PERM_MASK_SVC_AUTH | PERM_MASK_SVC_EKS)) | PERM(SVC_MI, DISABLE) );
-*/
+
     if( status == ATT_ERR_NO_ERROR )
     {
         //-------------------- allocate memory required for the profile  ---------------------
@@ -362,7 +356,7 @@ void htpt_exe_operation(void)
 }
 
 
-uint8_t htpt_update_ntf_ind_cfg(uint8_t conidx, uint8_t cfg, uint16_t valid_val, uint16_t value) // called by gattc_write_req_ind_handler() @ htpt_task.c
+uint8_t htpt_update_ntf_ind_cfg(uint8_t conidx, uint8_t cfg, uint16_t valid_val, uint16_t value)
 {
     struct htpt_env_tag* htpt_env = PRF_ENV_GET(HTPT, htpt);
     uint8_t status = GAP_ERR_NO_ERROR;

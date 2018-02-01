@@ -1,6 +1,16 @@
+/* Copyright (c) 2018 Cloudchip, Inc. All Rights Reserved.
+ *
+ * The information contained herein is property of Cloudchip, Inc.
+ * Terms and conditions of usage are described in detail in CLOUDCHIP
+ * STANDARD SOFTWARE LICENSE AGREEMENT.
+ *
+ * Licensees are granted free, non-transferable use of the information.
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * from the file.
+ */
+ 
 #ifndef APP_DISPLAY_H
 #define APP_DISPLAY_H
-
 
 /**
  * -----------------------------------------------------------------------------
@@ -66,12 +76,9 @@ void app_displayoled_reset(void);
 void app_displayoled_setstepcnt(uint32_t step_cnt);
 void app_displayoled_changestate(E_OLED_PWRSTATE e_nxState,char state);
 
-
-
 #ifdef __cplusplus
 }
 #endif
-
 
 #endif /**< CFG_MODULE_LONGSIT */
 

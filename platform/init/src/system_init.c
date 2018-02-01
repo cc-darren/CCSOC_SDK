@@ -1,23 +1,14 @@
-/**************************************************************************//**
- * @file     system_init.c
- ******************************************************************************/
-/*
- * Copyright (c) 2009-2016 ARM Limited. All rights reserved.
+/* Copyright (c) 2018 Cloudchip, Inc. All Rights Reserved.
  *
- * SPDX-License-Identifier: Apache-2.0
+ * The information contained herein is property of Cloudchip, Inc.
+ * Terms and conditions of usage are described in detail in CLOUDCHIP
+ * STANDARD SOFTWARE LICENSE AGREEMENT.
  *
- * Licensed under the Apache License, Version 2.0 (the License); you may
- * not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an AS IS BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensees are granted free, non-transferable use of the information.
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * from the file.
  */
+
 #include "ll.h"
 #include "cc6801_reg.h"
 #include "drvi_clock.h"
@@ -83,7 +74,7 @@ void sys_InitMain (void)
 /******************************/
 
 #if defined (ARMCM4_FP)
-    NVIC_SetPriority(SWI0_IRQn       ,1);   //Based on Nordic sw timer, WKTM0 and SWI0 must have same priority
+    NVIC_SetPriority(SWI0_IRQn       ,1);
     NVIC_SetPriority(WDT_IRQn        ,6);
     NVIC_SetPriority(RTC_IRQn        ,6);
     NVIC_SetPriority(PWM0_IRQn       ,1);
