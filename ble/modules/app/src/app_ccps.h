@@ -133,13 +133,6 @@ void app_ccps_indicate_send(uint8_t *tx_data, uint8_t length);
  */
 void ccps_packet_send_reply_handler(uint8_t *tx_data, uint8_t *length);
 
-/**
- ****************************************************************************************
- * @brief CCPS Sample Code
- ****************************************************************************************
- */
-void app_ccps_test_code(void);
-
 
 
 #endif //(BLE_APP_CCPS)

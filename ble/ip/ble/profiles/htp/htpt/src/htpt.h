@@ -140,6 +140,7 @@ enum hts_att_db_list
     HTS_IDX_NB,
 };
 
+
 /// ongoing operation information
 struct htpt_op
 {
@@ -213,9 +214,9 @@ uint8_t htpt_get_valid_rge_offset(uint16_t features);
 
 /**
  ****************************************************************************************
- * @brief Retrieve OTAS service profile interface
+ * @brief Retrieve HTS service profile interface
  *
- * @return OTAS service profile interface
+ * @return HTS service profile interface
  ****************************************************************************************
  */
 const struct prf_task_cbs* htpt_prf_itf_get(void);

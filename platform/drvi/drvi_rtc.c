@@ -1,15 +1,14 @@
-/**
- ****************************************************************************************
+/* Copyright (c) 2018 Cloudchip, Inc. All Rights Reserved.
  *
- * @file drvi_rtc.c
+ * The information contained herein is property of Cloudchip, Inc.
+ * Terms and conditions of usage are described in detail in CLOUDCHIP
+ * STANDARD SOFTWARE LICENSE AGREEMENT.
  *
- * @brief HW RTC interface for all SOC.
- *
- * Copyright (C) CloudChip 2017-2019
- *
- *
- ****************************************************************************************
+ * Licensees are granted free, non-transferable use of the information.
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * from the file.
  */
+ 
 #include "project.h"
 #include "drvi_rtc.h"
 

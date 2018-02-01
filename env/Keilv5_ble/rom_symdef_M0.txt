@@ -5,6 +5,10 @@
 0x00002dd9 T attm_att_set_permission
 0x000031df T attm_svc_create_db
 0x000032d3 T attm_svc_create_db_128
+0x0000516d T co_list_extract
+0x000052c7 T co_list_push_back
+0x000051d9 T co_list_init
+0x000052b3 T co_list_pop_front
 0x000069fd T gapc_get_conhdl
 0x00019c11 T rwble_hl_init
 0x00019c2d T rwble_hl_reset

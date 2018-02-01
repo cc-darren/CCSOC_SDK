@@ -1,13 +1,13 @@
-/******************************************************************************
-*  Copyright 2017, CloudChip, Inc.
-*  ---------------------------------------------------------------------------
-*  Statement:
-*  ----------
-*  This software is protected by Copyright and the information contained
-*  herein is confidential. The software may not be copied and the information
-*  contained herein may not be used or disclosed except with the written
-*  permission of CloudChip, Inc. (C) 2017
-******************************************************************************/
+/* Copyright (c) 2018 Cloudchip, Inc. All Rights Reserved.
+ *
+ * The information contained herein is property of Cloudchip, Inc.
+ * Terms and conditions of usage are described in detail in CLOUDCHIP
+ * STANDARD SOFTWARE LICENSE AGREEMENT.
+ *
+ * Licensees are granted free, non-transferable use of the information.
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * from the file.
+ */
 
 #ifndef _DRVI_LOWPOWER_H_
 #define _DRVI_LOWPOWER_H_

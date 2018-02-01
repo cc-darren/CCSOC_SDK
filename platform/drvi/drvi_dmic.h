@@ -1,15 +1,14 @@
-/**
- ****************************************************************************************
+/* Copyright (c) 2018 Cloudchip, Inc. All Rights Reserved.
  *
- * @file drvi_dmic.h
+ * The information contained herein is property of Cloudchip, Inc.
+ * Terms and conditions of usage are described in detail in CLOUDCHIP
+ * STANDARD SOFTWARE LICENSE AGREEMENT.
  *
- * @brief Head file of drvi_dmic.c
- *
- * Copyright (C) CloudChip 2017-2019
- *
- *
- ****************************************************************************************
+ * Licensees are granted free, non-transferable use of the information.
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * from the file.
  */
+ 
 #ifndef _DRVI_DMIC_H_
 #define _DRVI_DMIC_H_
 #include "dmic.h"
@@ -21,19 +20,5 @@
 #define drvi_dmicDisableBoth(x)              cc6801_dmicDisableBoth(x)
 #define drvi_dmicReadCurrentPos(x, y)        cc6801_dmicReadCurrentPos(x, y)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 #endif //_DRVI_DMIC_H_
-
 

@@ -1,17 +1,16 @@
-/******************************************************************************
-*  Copyright 2017, CloudChip, Inc.
-*  ---------------------------------------------------------------------------
-*  Statement:
-*  ----------
-*  This software is protected by Copyright and the information contained
-*  herein is confidential. The software may not be copied and the information
-*  contained herein may not be used or disclosed except with the written
-*  permission of CloudChip, Inc. (C) 2017
-******************************************************************************/
+/* Copyright (c) 2018 Cloudchip, Inc. All Rights Reserved.
+ *
+ * The information contained herein is property of Cloudchip, Inc.
+ * Terms and conditions of usage are described in detail in CLOUDCHIP
+ * STANDARD SOFTWARE LICENSE AGREEMENT.
+ *
+ * Licensees are granted free, non-transferable use of the information.
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * from the file.
+ */
 
 #ifndef _DRVI_EFLASH_H_
 #define _DRVI_EFLASH_H_
-
 
 #include "project.h"
 #include "eflash.h"
@@ -42,12 +41,11 @@ __forceinline void drvi_EflashRegisterCallback(fpEflash_Callback fpCB)
     cc6801_EflashRegisterCallback(fpCB);
 }
 
-
 /**@brief SoC Events. */
-enum NRF_SOC_EVTS
+enum E_DRVI_EFLASH_EVTS
 {
-  NRF_EVT_FLASH_OPERATION_SUCCESS,              /**< Event indicating that the ongoing flash operation has completed successfully. */
-  NRF_EVT_FLASH_OPERATION_ERROR,                /**< Event indicating that the ongoing flash operation has timed out with an error. */
-  NRF_EVT_NUMBER_OF_EVTS
+  E_DRVI_EFLASH_OPERATION_SUCCESS,              /**< Event indicating that the ongoing flash operation has completed successfully. */
+  E_DRVI_EFLASH_OPERATION_ERROR,                /**< Event indicating that the ongoing flash operation has timed out with an error. */
+  E_DRVI_EFLASH_NUMBER_OF_EVTS
 };
 #endif

@@ -1,13 +1,13 @@
-/******************************************************************************
-*  Copyright 2017, Cloudchip, Inc.
-*  ---------------------------------------------------------------------------
-*  Statement:
-*  ----------
-*  This software is protected by Copyright and the information contained
-*  herein is confidential. The software may not be copied and the information
-*  contained herein may not be used or disclosed except with the written
-*  permission of Cloudchip, Inc. (C) 2017
-******************************************************************************/
+/* Copyright (c) 2018 Cloudchip, Inc. All Rights Reserved.
+ *
+ * The information contained herein is property of Cloudchip, Inc.
+ * Terms and conditions of usage are described in detail in CLOUDCHIP
+ * STANDARD SOFTWARE LICENSE AGREEMENT.
+ *
+ * Licensees are granted free, non-transferable use of the information.
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * from the file.
+ */
 
 /******************************************************************************
 *  Filename:
@@ -798,6 +798,7 @@ typedef struct
    unsigned long   dwTimestamp;
 }CC_Ble_Swim_Info_T;
 
+
 typedef struct
 {
     uint8_t cHeight;
@@ -906,11 +907,17 @@ typedef struct
 // Sec 12: BLE config settings
 ******************************************************************************/
 
-#define CFG_DLE_EN
-
-
 //BLE is always supported
 #define CFG_BLE    1
+
+// <h> BLE - DEVICE NAME
+#define APP_DFLT_DEVICE_NAME    "CC6801-01"
+
+// <h> BLE - DEVICE ADDRESS
+#define APP_DFLT_DEVICE_ADDR    { 0xAB, 0x89, 0x67, 0x45, 0x23, 0x01 }
+
+// <h> BLE - Data Length Extension (v4.2)
+#define CFG_DLE_EN
 
 // <h> BLE IP ARCH CONFIGURATION
 #define CFG_BLE_APP
@@ -926,11 +933,8 @@ typedef struct
     #define CFG_HOST    1
 #endif
 
-//#define CFG_ALLROLES
-//#define CFG_CENTRAL
 #define CFG_PERIPHERAL
-//#define CFG_BROADCASTER
-//#define CFG_OBSERVER
+//#define CFG_CENTRAL
 
 #define CFG_CON    8 
 #define CFG_SLEEP
@@ -955,29 +959,19 @@ typedef struct
 #define CFG_PRF_HTPT
 #define CFG_PRF_BASS
 #define CFG_PRF_DISS
-//#define CFG_PRF_CSCPS
 #define CFG_PRF_OTA
 #define CFG_PRF_CCPS
 
 #define CFG_APP
 #define CFG_APP_HT
+#define CFG_APP_HT
 #define BLE_APP_BATT  1
 #define CFG_APP_DIS    1
-//#define CFG_APP_CSCS    1
 #define CFG_APP_OTA
 #define CFG_APP_CCPS
 
 
 #define CFG_EXT_DB
-//#define CFG_DBG
-
-
-
-#define flash_read(a,b,c,d,e)
-#define flash_write(a,b,c,d,e)
-#define flash_erase(a,b,c,d)
-#define flash_identify(a,b)
-
-
 
 #endif // _PROJECT_ZEUS_EVB_H_
+

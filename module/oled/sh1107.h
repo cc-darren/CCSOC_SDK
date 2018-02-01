@@ -1,18 +1,12 @@
-/**
- ****************************************************************************************
+/* Copyright (c) 2018 Cloudchip, Inc. All Rights Reserved.
  *
- * @file spi_sensor.h
+ * The information contained herein is property of Cloudchip, Inc.
+ * Terms and conditions of usage are described in detail in CLOUDCHIP
+ * STANDARD SOFTWARE LICENSE AGREEMENT.
  *
- * @brief  SFL & Sensor Configuration Functions.
- *
- * Copyright (C) 2015. Dialog Semiconductor Ltd, unpublished work. This computer
- * program includes Confidential, Proprietary Information and is a Trade Secret of
- * Dialog Semiconductor Ltd.  All use, disclosure, and/or reproduction is prohibited
- * unless authorized in writing. All Rights Reserved.
- *
- * <bluetooth.support@diasemi.com> and contributors.
- *
- ****************************************************************************************
+ * Licensees are granted free, non-transferable use of the information.
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * from the file.
  */
 
 #ifndef _SH1107_SPI_H_

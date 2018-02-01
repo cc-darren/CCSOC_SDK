@@ -1,4 +1,13 @@
-
+/* Copyright (c) 2018 Cloudchip, Inc. All Rights Reserved.
+ *
+ * The information contained herein is property of Cloudchip, Inc.
+ * Terms and conditions of usage are described in detail in CLOUDCHIP
+ * STANDARD SOFTWARE LICENSE AGREEMENT.
+ *
+ * Licensees are granted free, non-transferable use of the information.
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * from the file.
+ */
 
 #ifdef CFG_BLE_APP
 
@@ -6,7 +15,6 @@
 #include "jump_table.h"
 #include "rwip_config.h"
 #include "rf.h"
-#include "nvds.h"
 #include "arch.h"
 #include "rwip_config.h"
 
@@ -14,19 +22,15 @@
     #include "app.h"
 #endif
 
-#if 1//(NVDS_SUPPORT)
-    #include "nvds.h"
-#endif
-
 #if (BLE_PROFILES)
     #include "prf.h"
 #endif
 
-#include "app_uart.h"
 #include "rwip.h"
 #include "gattc.h"
 #include "l2cc.h"
 
+#include "ble_mgr.h"
 
 uint32_t rwip_heap_non_ret[RWIP_CALC_HEAP_LEN(RWIP_HEAP_NON_RET_SIZE)];//  __attribute__((section("heap_mem_area_not_ret"), zero_init));
 uint32_t rwip_heap_env[RWIP_CALC_HEAP_LEN(RWIP_HEAP_ENV_SIZE)]   __attribute__((section("heap_env_area"), zero_init));
@@ -240,10 +244,10 @@ const uint32_t* const jump_table_base[] __attribute__((section("jump_table_mem_a
     #endif
 
         /* 013 */ (const uint32_t *) 0,
-        /* 014 */ (const uint32_t *) app_nvds_init,
-        /* 015 */ (const uint32_t *) app_nvds_get,
-        /* 016 */ (const uint32_t *) app_nvds_put,
-        /* 017 */ (const uint32_t *) app_nvds_del,
+        /* 014 */ (const uint32_t *) 0,
+        /* 015 */ (const uint32_t *) 0,
+        /* 016 */ (const uint32_t *) 0,
+        /* 017 */ (const uint32_t *) 0,
         /* 018 */ (const uint32_t *) 0,
         /* 019 */ (const uint32_t *) 0,
         /* 020 */ (const uint32_t *) 0,

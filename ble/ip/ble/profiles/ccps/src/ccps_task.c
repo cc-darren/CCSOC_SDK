@@ -1,3 +1,14 @@
+/* Copyright (c) 2018 Cloudchip, Inc. All Rights Reserved.
+ *
+ * The information contained herein is property of Cloudchip, Inc.
+ * Terms and conditions of usage are described in detail in CLOUDCHIP
+ * STANDARD SOFTWARE LICENSE AGREEMENT.
+ *
+ * Licensees are granted free, non-transferable use of the information.
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * from the file.
+ */
+
 /**
  ****************************************************************************************
  *
@@ -33,7 +44,6 @@
 #include "ccps.h"
 #include "ccps_task.h"
 #include "prf_utils.h"
-
 #include "ke_mem.h"
 #include "co_utils.h"
 #include "project.h"

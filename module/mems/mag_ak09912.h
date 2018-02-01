@@ -177,16 +177,10 @@ typedef enum {
 #define AKM_RST_MASK (1<<AKM_RST_PIN)
 #define AKM_RST_INV_MASK AKM_RST_MASK
 
-#define AKM_RST_CONFIGURE(akm_rst_mask) do { uint32_t pin;                  \
-                                  for (pin = 0; pin < 32; pin++) \
-                                      if ( (akm_rst_mask) & (1 << pin) )   \
-                                          nrf_gpio_cfg_output(pin); } while (0)
-
-#define AKM_RST_OFF(akm_rst_mask) do {  NRF_GPIO->OUTSET = (akm_rst_mask) & (AKM_RST_MASK & AKM_RST_INV_MASK); \
-                            NRF_GPIO->OUTCLR = (akm_rst_mask) & (AKM_RST_MASK & ~AKM_RST_INV_MASK); } while (0)
-
-#define AKM_RST_ON(akm_rst_mask) do {  NRF_GPIO->OUTCLR = (akm_rst_mask) & (AKM_RST_MASK & AKM_RST_INV_MASK); \
-                           NRF_GPIO->OUTSET = (akm_rst_mask) & (AKM_RST_MASK & ~AKM_RST_INV_MASK); } while (0)
+//TBD
+#define AKM_RST_CONFIGURE(akm_rst_mask)
+#define AKM_RST_OFF(akm_rst_mask)
+#define AKM_RST_ON(akm_rst_mask)
 
 
 /* Exported functions --------------------------------------------------------*/

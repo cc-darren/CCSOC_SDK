@@ -1,3 +1,13 @@
+/* Copyright (c) 2018 Cloudchip, Inc. All Rights Reserved.
+ *
+ * The information contained herein is property of Cloudchip, Inc.
+ * Terms and conditions of usage are described in detail in CLOUDCHIP
+ * STANDARD SOFTWARE LICENSE AGREEMENT.
+ *
+ * Licensees are granted free, non-transferable use of the information.
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * from the file.
+ */
 
 #include <stdio.h>
 #include <string.h>
@@ -13,7 +23,6 @@
  * -----------------------------------------------------------------------------
  */
 
-
 typedef struct app_displayoled {
 
     int16_t id;
@@ -26,11 +35,6 @@ typedef struct app_displayoled {
     E_OLED_PWRSTATE ePwr_curstate;
     E_OLED_PWRSTATE ePwr_nextstate;
 } app_displayoled_t;
-
-
-
-
-
 
 /**
  * -----------------------------------------------------------------------------
@@ -65,13 +69,7 @@ int16_t app_displayoled_routine(void)
      if (!f_displayoled()->is_inited)
         goto EXIT_OF_FAILURE;
 
-
-
-
     //app_console_trace("app_displayoled_routine.");
-
-
-
 
    switch (f_displayoled()->ePwr_curstate)
   {
@@ -214,8 +212,6 @@ void app_displayoled_stop(void)
         f_displayoled()->id = -1;
     }
 
-
-
     TracerInfo("done.\r\n");
 }
 
@@ -224,15 +220,11 @@ void app_displayoled_reset(void)
     if (!f_displayoled()->is_inited)
         return;
 
-
     TracerInfo("done.\r\n");
 }
 
-
-
 void app_displayoled_setstepcnt(uint32_t step_cnt)
 {
-
       f_displayoled()->step_cnt = step_cnt;
 }
 void app_displayoled_changestate(E_OLED_PWRSTATE e_nxState,char state)
@@ -240,7 +232,4 @@ void app_displayoled_changestate(E_OLED_PWRSTATE e_nxState,char state)
     f_displayoled()->ePwr_nextstate = e_nxState;
     f_displayoled()->remote_turnon = state;
 }
-
-
-
 

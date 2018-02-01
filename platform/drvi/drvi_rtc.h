@@ -1,15 +1,14 @@
-/**
- ****************************************************************************************
+/* Copyright (c) 2018 Cloudchip, Inc. All Rights Reserved.
  *
- * @file drvi_rtc.h
+ * The information contained herein is property of Cloudchip, Inc.
+ * Terms and conditions of usage are described in detail in CLOUDCHIP
+ * STANDARD SOFTWARE LICENSE AGREEMENT.
  *
- * @brief Head file of drvi_rtc.c
- *
- * Copyright (C) CloudChip 2017-2019
- *
- *
- ****************************************************************************************
+ * Licensees are granted free, non-transferable use of the information.
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * from the file.
  */
+ 
 #ifndef _DRVI_RTC_H_
 #define _DRVI_RTC_H_
 #include "rtc.h"
@@ -54,5 +53,4 @@ __forceinline void drvi_AlarmEnable(E_RTCALARMSupported EAlarmNum)
     cc6801_AlarmEnable(EAlarmNum);
 }
 #endif //_DRVI_RTC_H_
-
 
