@@ -966,7 +966,6 @@ typedef struct
 
 #define CFG_APP
 #define CFG_APP_HT
-#define CFG_APP_HT
 #define BLE_APP_BATT  1
 #define CFG_APP_DIS    1
 #define CFG_APP_OTA

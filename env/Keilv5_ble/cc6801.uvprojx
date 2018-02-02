@@ -16,7 +16,7 @@
         <TargetCommonOption>
           <Device>ARMCM0P</Device>
           <Vendor>ARM</Vendor>
-          <PackID>ARM.CMSIS.5.0.0</PackID>
+          <PackID>ARM.CMSIS.5.0.1</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000,0x00020000) IROM(0x00000000,0x00040000) CPUTYPE("Cortex-M0+") CLOCK(12000000) ESEL ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -126,59 +126,18 @@
             <HexOffset>0</HexOffset>
             <Oh166RecLen>16</Oh166RecLen>
           </OPTHX>
-          <Simulator>
-            <UseSimulator>0</UseSimulator>
-            <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>0</RunToMain>
-            <RestoreBreakpoints>1</RestoreBreakpoints>
-            <RestoreWatchpoints>1</RestoreWatchpoints>
-            <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
-            <RestoreFunctions>1</RestoreFunctions>
-            <RestoreToolbox>1</RestoreToolbox>
-            <LimitSpeedToRealTime>0</LimitSpeedToRealTime>
-            <RestoreSysVw>1</RestoreSysVw>
-          </Simulator>
-          <Target>
-            <UseTarget>1</UseTarget>
-            <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>0</RunToMain>
-            <RestoreBreakpoints>1</RestoreBreakpoints>
-            <RestoreWatchpoints>1</RestoreWatchpoints>
-            <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
-            <RestoreFunctions>0</RestoreFunctions>
-            <RestoreToolbox>1</RestoreToolbox>
-            <RestoreTracepoints>1</RestoreTracepoints>
-            <RestoreSysVw>1</RestoreSysVw>
-          </Target>
-          <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>3</TargetSelection>
-          <SimDlls>
-            <CpuDll></CpuDll>
-            <CpuDllArguments></CpuDllArguments>
-            <PeripheralDll></PeripheralDll>
-            <PeripheralDllArguments></PeripheralDllArguments>
-            <InitializationFile>.\Map_eflash.ini</InitializationFile>
-          </SimDlls>
-          <TargetDlls>
-            <CpuDll></CpuDll>
-            <CpuDllArguments></CpuDllArguments>
-            <PeripheralDll></PeripheralDll>
-            <PeripheralDllArguments></PeripheralDllArguments>
-            <InitializationFile>.\Map_eflash_App_only.ini</InitializationFile>
-            <Driver>Segger\JL2CM3.dll</Driver>
-          </TargetDlls>
         </DebugOption>
         <Utilities>
           <Flash1>
             <UseTargetDll>1</UseTargetDll>
             <UseExternalTool>0</UseExternalTool>
             <RunIndependent>0</RunIndependent>
-            <UpdateFlashBeforeDebugging>0</UpdateFlashBeforeDebugging>
+            <UpdateFlashBeforeDebugging>1</UpdateFlashBeforeDebugging>
             <Capability>1</Capability>
             <DriverSelection>4099</DriverSelection>
           </Flash1>
-          <bUseTDR>0</bUseTDR>
-          <Flash2>Segger\JL2CM3.dll</Flash2>
+          <bUseTDR>1</bUseTDR>
+          <Flash2>BIN\UL2CM3.DLL</Flash2>
           <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
@@ -370,11 +329,13 @@
             <v6LangP>0</v6LangP>
             <vShortEn>1</vShortEn>
             <vShortWch>1</vShortWch>
+            <v6Lto>0</v6Lto>
+            <v6WtE>0</v6WtE>
             <VariousControls>
               <MiscControls>--preinclude ..\..\cfg\project\project.h  --preinclude ..\..\inc\global.h  </MiscControls>
               <Define>FPGA VENUS_WRISTBAND APPLICATION</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\ble\ip\ble\profiles\htp;..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\cfg;..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app;..\..\platform\asic\6801;..\..\platform\bootloader;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\crc32;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\sw_timer;..\..\service\tracer;..\..\service\uart;..\..\service\fds;..\..\algo\CC_Library\Inc;..\..\algo\CC_Library\Src\Inc;..\..\algo\CC_Swimming\Inc;..\..\app\HeartRate;..\..\module\ppg;..\..\ble\modules\app\src;..\..\ble\modules\common\api;..\..\app\Display;..\..\ble\ip\ble\profiles\ota\otac\api;..\..\ble\ip\ble\profiles\ota\otat\api;..\..\ble\ip\ble\profiles\ota;..\..\ble\ip\ble\profiles\ota\otac\src;..\..\ble\ip\ble\profiles\ota\otat\src;..\..\app\DataBase;..\..\app\scheduler;..\..\ble\ip\ble\profiles\ccps\api;..\..\app\svc_mgr;..\..\app\SensorController\inc;..\..\app\ble_mgr</IncludePath>
+              <IncludePath>..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\ble\ip\ble\profiles\htp;..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\cfg;..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app;..\..\platform\asic\6801;..\..\platform\bootloader;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\crc32;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\sw_timer;..\..\service\tracer;..\..\service\uart;..\..\service\fds;..\..\algo\CC_Library\Inc;..\..\algo\CC_Library\Src\Inc;..\..\algo\CC_Swimming\Inc;..\..\app\HeartRate;..\..\module\ppg;..\..\ble\modules\app\src;..\..\ble\modules\common\api;..\..\app\Display;..\..\ble\ip\ble\profiles\ota\otac\api;..\..\ble\ip\ble\profiles\ota\otat\api;..\..\ble\ip\ble\profiles\ota;..\..\ble\ip\ble\profiles\ota\otac\src;..\..\ble\ip\ble\profiles\ota\otat\src;..\..\app\DataBase;..\..\app\scheduler;..\..\ble\ip\ble\profiles\ccps\api;..\..\app\svc_mgr;..\..\app\SensorController\inc;..\..\app\ble_mgr;..\..\app\Vibration</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -644,14 +605,14 @@
               </FileOption>
             </File>
             <File>
-              <FileName>App_Vib_Manager.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\Vibration\App_Vib_Manager.c</FilePath>
-            </File>
-            <File>
               <FileName>App_Vib_Pattern.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\app\Vibration\App_Vib_Pattern.c</FilePath>
+            </File>
+            <File>
+              <FileName>App_Vib_Manager.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\Vibration\App_Vib_Manager.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -779,14 +740,14 @@
               <FilePath>..\..\ble\modules\app\src\app_task.c</FilePath>
             </File>
             <File>
-              <FileName>app_ota.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\app\src\app_ota.c</FilePath>
-            </File>
-            <File>
               <FileName>app_ccps.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\ble\modules\app\src\app_ccps.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_ota.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ble\modules\app\src\app_ota.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1169,14 +1130,14 @@
           <GroupName>fota</GroupName>
           <Files>
             <File>
-              <FileName>fota_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_flash.c</FilePath>
-            </File>
-            <File>
               <FileName>fota_settings.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\bootloader\fota_settings.c</FilePath>
+            </File>
+            <File>
+              <FileName>fota_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\bootloader\fota_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1293,8 +1254,10 @@
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
-                    <vShortEn>0</vShortEn>
-                    <vShortWch>0</vShortWch>
+                    <vShortEn>2</vShortEn>
+                    <vShortWch>2</vShortWch>
+                    <v6Lto>0</v6Lto>
+                    <v6WtE>0</v6WtE>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -1345,8 +1308,10 @@
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
-                    <vShortEn>0</vShortEn>
-                    <vShortWch>0</vShortWch>
+                    <vShortEn>2</vShortEn>
+                    <vShortWch>2</vShortWch>
+                    <v6Lto>0</v6Lto>
+                    <v6WtE>0</v6WtE>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -1436,8 +1401,10 @@
                 <useXO>2</useXO>
                 <v6Lang>0</v6Lang>
                 <v6LangP>0</v6LangP>
-                <vShortEn>0</vShortEn>
-                <vShortWch>0</vShortWch>
+                <vShortEn>2</vShortEn>
+                <vShortWch>2</vShortWch>
+                <v6Lto>0</v6Lto>
+                <v6WtE>0</v6WtE>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -1503,8 +1470,10 @@
                 <useXO>2</useXO>
                 <v6Lang>0</v6Lang>
                 <v6LangP>0</v6LangP>
-                <vShortEn>0</vShortEn>
-                <vShortWch>0</vShortWch>
+                <vShortEn>2</vShortEn>
+                <vShortWch>2</vShortWch>
+                <v6Lto>0</v6Lto>
+                <v6WtE>0</v6WtE>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -1543,7 +1512,7 @@
         <TargetCommonOption>
           <Device>ARMCM4_FP</Device>
           <Vendor>ARM</Vendor>
-          <PackID>ARM.CMSIS.5.0.0</PackID>
+          <PackID>ARM.CMSIS.5.0.1</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000,0x00020000) IROM(0x00000000,0x00040000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ESEL ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -1653,47 +1622,6 @@
             <HexOffset>0</HexOffset>
             <Oh166RecLen>16</Oh166RecLen>
           </OPTHX>
-          <Simulator>
-            <UseSimulator>0</UseSimulator>
-            <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>0</RunToMain>
-            <RestoreBreakpoints>1</RestoreBreakpoints>
-            <RestoreWatchpoints>1</RestoreWatchpoints>
-            <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
-            <RestoreFunctions>1</RestoreFunctions>
-            <RestoreToolbox>1</RestoreToolbox>
-            <LimitSpeedToRealTime>0</LimitSpeedToRealTime>
-            <RestoreSysVw>1</RestoreSysVw>
-          </Simulator>
-          <Target>
-            <UseTarget>1</UseTarget>
-            <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>0</RunToMain>
-            <RestoreBreakpoints>1</RestoreBreakpoints>
-            <RestoreWatchpoints>1</RestoreWatchpoints>
-            <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
-            <RestoreFunctions>0</RestoreFunctions>
-            <RestoreToolbox>1</RestoreToolbox>
-            <RestoreTracepoints>1</RestoreTracepoints>
-            <RestoreSysVw>1</RestoreSysVw>
-          </Target>
-          <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>3</TargetSelection>
-          <SimDlls>
-            <CpuDll></CpuDll>
-            <CpuDllArguments></CpuDllArguments>
-            <PeripheralDll></PeripheralDll>
-            <PeripheralDllArguments></PeripheralDllArguments>
-            <InitializationFile>.\Map_eflash.ini</InitializationFile>
-          </SimDlls>
-          <TargetDlls>
-            <CpuDll></CpuDll>
-            <CpuDllArguments></CpuDllArguments>
-            <PeripheralDll></PeripheralDll>
-            <PeripheralDllArguments></PeripheralDllArguments>
-            <InitializationFile>.\Map_eflash.ini</InitializationFile>
-            <Driver>Segger\JL2CM3.dll</Driver>
-          </TargetDlls>
         </DebugOption>
         <Utilities>
           <Flash1>
@@ -1897,6 +1825,8 @@
             <v6LangP>1</v6LangP>
             <vShortEn>1</vShortEn>
             <vShortWch>1</vShortWch>
+            <v6Lto>0</v6Lto>
+            <v6WtE>0</v6WtE>
             <VariousControls>
               <MiscControls>--preinclude ..\..\cfg\project\project.h --preinclude ..\..\inc\global.h</MiscControls>
               <Define>FPGA VENUS_WRISTBAND APPLICATION</Define>
@@ -2171,14 +2101,14 @@
               <FilePath>..\..\app\DataBase\database_lib_M4.lib</FilePath>
             </File>
             <File>
-              <FileName>App_Vib_Manager.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\Vibration\App_Vib_Manager.c</FilePath>
-            </File>
-            <File>
               <FileName>App_Vib_Pattern.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\app\Vibration\App_Vib_Pattern.c</FilePath>
+            </File>
+            <File>
+              <FileName>App_Vib_Manager.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\Vibration\App_Vib_Manager.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2306,14 +2236,14 @@
               <FilePath>..\..\ble\modules\app\src\app_task.c</FilePath>
             </File>
             <File>
-              <FileName>app_ota.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\app\src\app_ota.c</FilePath>
-            </File>
-            <File>
               <FileName>app_ccps.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\ble\modules\app\src\app_ccps.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_ota.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ble\modules\app\src\app_ota.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2696,14 +2626,14 @@
           <GroupName>fota</GroupName>
           <Files>
             <File>
-              <FileName>fota_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_flash.c</FilePath>
-            </File>
-            <File>
               <FileName>fota_settings.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\bootloader\fota_settings.c</FilePath>
+            </File>
+            <File>
+              <FileName>fota_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\bootloader\fota_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2820,8 +2750,10 @@
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
-                    <vShortEn>0</vShortEn>
-                    <vShortWch>0</vShortWch>
+                    <vShortEn>2</vShortEn>
+                    <vShortWch>2</vShortWch>
+                    <v6Lto>0</v6Lto>
+                    <v6WtE>0</v6WtE>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -2872,8 +2804,10 @@
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
-                    <vShortEn>0</vShortEn>
-                    <vShortWch>0</vShortWch>
+                    <vShortEn>2</vShortEn>
+                    <vShortWch>2</vShortWch>
+                    <v6Lto>0</v6Lto>
+                    <v6WtE>0</v6WtE>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -2963,8 +2897,10 @@
                 <useXO>2</useXO>
                 <v6Lang>0</v6Lang>
                 <v6LangP>0</v6LangP>
-                <vShortEn>0</vShortEn>
-                <vShortWch>0</vShortWch>
+                <vShortEn>2</vShortEn>
+                <vShortWch>2</vShortWch>
+                <v6Lto>0</v6Lto>
+                <v6WtE>0</v6WtE>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -3007,7 +2943,7 @@
         <TargetCommonOption>
           <Device>ARMCM0P</Device>
           <Vendor>ARM</Vendor>
-          <PackID>ARM.CMSIS.5.0.0</PackID>
+          <PackID>ARM.CMSIS.5.0.1</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000,0x00020000) IROM(0x00000000,0x00040000) CPUTYPE("Cortex-M0+") CLOCK(12000000) ESEL ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -3117,59 +3053,18 @@
             <HexOffset>0</HexOffset>
             <Oh166RecLen>16</Oh166RecLen>
           </OPTHX>
-          <Simulator>
-            <UseSimulator>0</UseSimulator>
-            <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>0</RunToMain>
-            <RestoreBreakpoints>1</RestoreBreakpoints>
-            <RestoreWatchpoints>1</RestoreWatchpoints>
-            <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
-            <RestoreFunctions>1</RestoreFunctions>
-            <RestoreToolbox>1</RestoreToolbox>
-            <LimitSpeedToRealTime>0</LimitSpeedToRealTime>
-            <RestoreSysVw>1</RestoreSysVw>
-          </Simulator>
-          <Target>
-            <UseTarget>1</UseTarget>
-            <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>0</RunToMain>
-            <RestoreBreakpoints>1</RestoreBreakpoints>
-            <RestoreWatchpoints>1</RestoreWatchpoints>
-            <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
-            <RestoreFunctions>0</RestoreFunctions>
-            <RestoreToolbox>1</RestoreToolbox>
-            <RestoreTracepoints>1</RestoreTracepoints>
-            <RestoreSysVw>1</RestoreSysVw>
-          </Target>
-          <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>3</TargetSelection>
-          <SimDlls>
-            <CpuDll></CpuDll>
-            <CpuDllArguments></CpuDllArguments>
-            <PeripheralDll></PeripheralDll>
-            <PeripheralDllArguments></PeripheralDllArguments>
-            <InitializationFile>.\Map_eflash.ini</InitializationFile>
-          </SimDlls>
-          <TargetDlls>
-            <CpuDll></CpuDll>
-            <CpuDllArguments></CpuDllArguments>
-            <PeripheralDll></PeripheralDll>
-            <PeripheralDllArguments></PeripheralDllArguments>
-            <InitializationFile>.\Map_eflash_App_only.ini</InitializationFile>
-            <Driver>Segger\JL2CM3.dll</Driver>
-          </TargetDlls>
         </DebugOption>
         <Utilities>
           <Flash1>
             <UseTargetDll>1</UseTargetDll>
             <UseExternalTool>0</UseExternalTool>
             <RunIndependent>0</RunIndependent>
-            <UpdateFlashBeforeDebugging>0</UpdateFlashBeforeDebugging>
+            <UpdateFlashBeforeDebugging>1</UpdateFlashBeforeDebugging>
             <Capability>1</Capability>
             <DriverSelection>4099</DriverSelection>
           </Flash1>
-          <bUseTDR>0</bUseTDR>
-          <Flash2>Segger\JL2CM3.dll</Flash2>
+          <bUseTDR>1</bUseTDR>
+          <Flash2>BIN\UL2CM3.DLL</Flash2>
           <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
@@ -3361,11 +3256,13 @@
             <v6LangP>0</v6LangP>
             <vShortEn>1</vShortEn>
             <vShortWch>1</vShortWch>
+            <v6Lto>0</v6Lto>
+            <v6WtE>0</v6WtE>
             <VariousControls>
               <MiscControls>--preinclude ..\..\cfg\project\project.h  --preinclude ..\..\inc\global.h  </MiscControls>
               <Define>EVB ZEUS_WRISTBAND APPLICATION</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\ble\ip\ble\profiles\htp;..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\cfg;..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app;..\..\platform\asic\6801;..\..\platform\bootloader;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\crc32;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\sw_timer;..\..\service\tracer;..\..\service\uart;..\..\service\fds;..\..\algo\CC_Library\Inc;..\..\algo\CC_Library\Src\Inc;..\..\algo\CC_Swimming\Inc;..\..\app\HeartRate;..\..\module\ppg;..\..\ble\modules\app\src;..\..\ble\modules\common\api;..\..\app\Display;..\..\ble\ip\ble\profiles\ota\otac\api;..\..\ble\ip\ble\profiles\ota\otat\api;..\..\ble\ip\ble\profiles\ota;..\..\ble\ip\ble\profiles\ota\otac\src;..\..\ble\ip\ble\profiles\ota\otat\src;..\..\app\DataBase;..\..\app\scheduler;..\..\app\AppService\inc;..\..\app\SensorController\inc;..\..\app\svc_mgr;..\..\ble\ip\ble\profiles\ccps\api;..\..\ble\ip\ble\profiles\ccps\src;..\..\app\ble_mgr;..\..\app\sdk\ble\profiles\ccps</IncludePath>
+              <IncludePath>..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\ble\ip\ble\profiles\htp;..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\cfg;..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app;..\..\platform\asic\6801;..\..\platform\bootloader;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\crc32;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\sw_timer;..\..\service\tracer;..\..\service\uart;..\..\service\fds;..\..\algo\CC_Library\Inc;..\..\algo\CC_Library\Src\Inc;..\..\algo\CC_Swimming\Inc;..\..\app\HeartRate;..\..\module\ppg;..\..\ble\modules\app\src;..\..\ble\modules\common\api;..\..\app\Display;..\..\ble\ip\ble\profiles\ota\otac\api;..\..\ble\ip\ble\profiles\ota\otat\api;..\..\ble\ip\ble\profiles\ota;..\..\ble\ip\ble\profiles\ota\otac\src;..\..\ble\ip\ble\profiles\ota\otat\src;..\..\app\DataBase;..\..\app\scheduler;..\..\app\AppService\inc;..\..\app\SensorController\inc;..\..\app\svc_mgr;..\..\ble\ip\ble\profiles\ccps\api;..\..\ble\ip\ble\profiles\ccps\src;..\..\app\ble_mgr;..\..\app\sdk\ble\profiles\ccps;..\..\service\fds;..\..\app\Vibration</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -3635,14 +3532,14 @@
               </FileOption>
             </File>
             <File>
-              <FileName>App_Vib_Manager.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\Vibration\App_Vib_Manager.c</FilePath>
-            </File>
-            <File>
               <FileName>App_Vib_Pattern.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\app\Vibration\App_Vib_Pattern.c</FilePath>
+            </File>
+            <File>
+              <FileName>App_Vib_Manager.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\Vibration\App_Vib_Manager.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3770,14 +3667,14 @@
               <FilePath>..\..\ble\modules\app\src\app_task.c</FilePath>
             </File>
             <File>
-              <FileName>app_ota.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\app\src\app_ota.c</FilePath>
-            </File>
-            <File>
               <FileName>app_ccps.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\ble\modules\app\src\app_ccps.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_ota.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ble\modules\app\src\app_ota.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4160,14 +4057,14 @@
           <GroupName>fota</GroupName>
           <Files>
             <File>
-              <FileName>fota_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_flash.c</FilePath>
-            </File>
-            <File>
               <FileName>fota_settings.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\bootloader\fota_settings.c</FilePath>
+            </File>
+            <File>
+              <FileName>fota_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\bootloader\fota_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4274,8 +4171,10 @@
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
-                    <vShortEn>0</vShortEn>
-                    <vShortWch>0</vShortWch>
+                    <vShortEn>2</vShortEn>
+                    <vShortWch>2</vShortWch>
+                    <v6Lto>0</v6Lto>
+                    <v6WtE>0</v6WtE>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -4326,8 +4225,10 @@
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
-                    <vShortEn>0</vShortEn>
-                    <vShortWch>0</vShortWch>
+                    <vShortEn>2</vShortEn>
+                    <vShortWch>2</vShortWch>
+                    <v6Lto>0</v6Lto>
+                    <v6WtE>0</v6WtE>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -4427,8 +4328,10 @@
                 <useXO>2</useXO>
                 <v6Lang>0</v6Lang>
                 <v6LangP>0</v6LangP>
-                <vShortEn>0</vShortEn>
-                <vShortWch>0</vShortWch>
+                <vShortEn>2</vShortEn>
+                <vShortWch>2</vShortWch>
+                <v6Lto>0</v6Lto>
+                <v6WtE>0</v6WtE>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -4494,8 +4397,10 @@
                 <useXO>2</useXO>
                 <v6Lang>0</v6Lang>
                 <v6LangP>0</v6LangP>
-                <vShortEn>0</vShortEn>
-                <vShortWch>0</vShortWch>
+                <vShortEn>2</vShortEn>
+                <vShortWch>2</vShortWch>
+                <v6Lto>0</v6Lto>
+                <v6WtE>0</v6WtE>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -4529,12 +4434,12 @@
       <TargetName>EVB_M4f</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060061::V5.06 update 1 (build 61)::ARMCC</pCCUsed>
+      <pCCUsed>5060183::V5.06 update 2 (build 183)::ARMCC</pCCUsed>
       <TargetOption>
         <TargetCommonOption>
           <Device>ARMCM4_FP</Device>
           <Vendor>ARM</Vendor>
-          <PackID>ARM.CMSIS.5.0.0</PackID>
+          <PackID>ARM.CMSIS.5.0.1</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000,0x00020000) IROM(0x00000000,0x00040000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ESEL ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -4644,59 +4549,18 @@
             <HexOffset>0</HexOffset>
             <Oh166RecLen>16</Oh166RecLen>
           </OPTHX>
-          <Simulator>
-            <UseSimulator>0</UseSimulator>
-            <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>0</RunToMain>
-            <RestoreBreakpoints>1</RestoreBreakpoints>
-            <RestoreWatchpoints>1</RestoreWatchpoints>
-            <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
-            <RestoreFunctions>1</RestoreFunctions>
-            <RestoreToolbox>1</RestoreToolbox>
-            <LimitSpeedToRealTime>0</LimitSpeedToRealTime>
-            <RestoreSysVw>1</RestoreSysVw>
-          </Simulator>
-          <Target>
-            <UseTarget>1</UseTarget>
-            <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>0</RunToMain>
-            <RestoreBreakpoints>1</RestoreBreakpoints>
-            <RestoreWatchpoints>1</RestoreWatchpoints>
-            <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
-            <RestoreFunctions>0</RestoreFunctions>
-            <RestoreToolbox>1</RestoreToolbox>
-            <RestoreTracepoints>1</RestoreTracepoints>
-            <RestoreSysVw>1</RestoreSysVw>
-          </Target>
-          <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>6</TargetSelection>
-          <SimDlls>
-            <CpuDll></CpuDll>
-            <CpuDllArguments></CpuDllArguments>
-            <PeripheralDll></PeripheralDll>
-            <PeripheralDllArguments></PeripheralDllArguments>
-            <InitializationFile>.\Map_eflash.ini</InitializationFile>
-          </SimDlls>
-          <TargetDlls>
-            <CpuDll></CpuDll>
-            <CpuDllArguments></CpuDllArguments>
-            <PeripheralDll></PeripheralDll>
-            <PeripheralDllArguments></PeripheralDllArguments>
-            <InitializationFile>.\Map_eflash_App_only.ini</InitializationFile>
-            <Driver>Segger\JL2CM3.dll</Driver>
-          </TargetDlls>
         </DebugOption>
         <Utilities>
           <Flash1>
             <UseTargetDll>1</UseTargetDll>
             <UseExternalTool>0</UseExternalTool>
             <RunIndependent>0</RunIndependent>
-            <UpdateFlashBeforeDebugging>0</UpdateFlashBeforeDebugging>
+            <UpdateFlashBeforeDebugging>1</UpdateFlashBeforeDebugging>
             <Capability>1</Capability>
             <DriverSelection>4099</DriverSelection>
           </Flash1>
-          <bUseTDR>0</bUseTDR>
-          <Flash2>Segger\JL2CM3.dll</Flash2>
+          <bUseTDR>1</bUseTDR>
+          <Flash2>BIN\UL2CM3.DLL</Flash2>
           <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
@@ -4888,6 +4752,8 @@
             <v6LangP>1</v6LangP>
             <vShortEn>1</vShortEn>
             <vShortWch>1</vShortWch>
+            <v6Lto>0</v6Lto>
+            <v6WtE>0</v6WtE>
             <VariousControls>
               <MiscControls>--preinclude ..\..\cfg\project\project.h --preinclude ..\..\inc\global.h</MiscControls>
               <Define>EVB ZEUS_WRISTBAND APPLICATION</Define>
@@ -5162,14 +5028,14 @@
               <FilePath>..\..\app\DataBase\database_lib_M4.lib</FilePath>
             </File>
             <File>
-              <FileName>App_Vib_Manager.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\Vibration\App_Vib_Manager.c</FilePath>
-            </File>
-            <File>
               <FileName>App_Vib_Pattern.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\app\Vibration\App_Vib_Pattern.c</FilePath>
+            </File>
+            <File>
+              <FileName>App_Vib_Manager.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\Vibration\App_Vib_Manager.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -5297,14 +5163,14 @@
               <FilePath>..\..\ble\modules\app\src\app_task.c</FilePath>
             </File>
             <File>
-              <FileName>app_ota.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\app\src\app_ota.c</FilePath>
-            </File>
-            <File>
               <FileName>app_ccps.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\ble\modules\app\src\app_ccps.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_ota.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ble\modules\app\src\app_ota.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -5687,14 +5553,14 @@
           <GroupName>fota</GroupName>
           <Files>
             <File>
-              <FileName>fota_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_flash.c</FilePath>
-            </File>
-            <File>
               <FileName>fota_settings.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\bootloader\fota_settings.c</FilePath>
+            </File>
+            <File>
+              <FileName>fota_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\bootloader\fota_flash.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -5801,8 +5667,10 @@
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
-                    <vShortEn>0</vShortEn>
-                    <vShortWch>0</vShortWch>
+                    <vShortEn>2</vShortEn>
+                    <vShortWch>2</vShortWch>
+                    <v6Lto>0</v6Lto>
+                    <v6WtE>0</v6WtE>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -5853,8 +5721,10 @@
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
-                    <vShortEn>0</vShortEn>
-                    <vShortWch>0</vShortWch>
+                    <vShortEn>2</vShortEn>
+                    <vShortWch>2</vShortWch>
+                    <v6Lto>0</v6Lto>
+                    <v6WtE>0</v6WtE>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -5954,8 +5824,10 @@
                 <useXO>2</useXO>
                 <v6Lang>0</v6Lang>
                 <v6LangP>0</v6LangP>
-                <vShortEn>0</vShortEn>
-                <vShortWch>0</vShortWch>
+                <vShortEn>2</vShortEn>
+                <vShortWch>2</vShortWch>
+                <v6Lto>0</v6Lto>
+                <v6WtE>0</v6WtE>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -6021,7 +5893,7 @@
       <file attr="config" category="sourceAsm" condition="ARMCC" name="Device\ARM\ARMCM0plus\Source\ARM\startup_ARMCM0plus.s" version="1.0.0">
         <instance index="0">RTE\Device\ARMCM0P\startup_ARMCM0plus.s</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="ARM" Cversion="1.0.1" condition="ARMCM0+ CMSIS"/>
-        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.0.0"/>
+        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.0.1"/>
         <targetInfos>
           <targetInfo name="EVB_M0p"/>
           <targetInfo name="FPGA_M0p"/>
@@ -6030,7 +5902,7 @@
       <file attr="config" category="sourceC" name="Device\ARM\ARMCM0plus\Source\system_ARMCM0plus.c" version="1.0.0">
         <instance index="0">RTE\Device\ARMCM0P\system_ARMCM0plus.c</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="ARM" Cversion="1.0.1" condition="ARMCM0+ CMSIS"/>
-        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.0.0"/>
+        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.0.1"/>
         <targetInfos>
           <targetInfo name="EVB_M0p"/>
           <targetInfo name="FPGA_M0p"/>
@@ -6039,7 +5911,7 @@
       <file attr="config" category="sourceAsm" condition="ARMCC" name="Device\ARM\ARMCM4\Source\ARM\startup_ARMCM4.s" version="1.0.0">
         <instance index="0">RTE\Device\ARMCM4_FP\startup_ARMCM4.s</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="ARM" Cversion="1.0.1" condition="ARMCM4 CMSIS"/>
-        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.0.0"/>
+        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.0.1"/>
         <targetInfos>
           <targetInfo name="EVB_M4f"/>
           <targetInfo name="FPGA_M4f"/>
@@ -6048,7 +5920,7 @@
       <file attr="config" category="sourceC" name="Device\ARM\ARMCM4\Source\system_ARMCM4.c" version="1.0.0">
         <instance index="0">RTE\Device\ARMCM4_FP\system_ARMCM4.c</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="ARM" Cversion="1.0.1" condition="ARMCM4 CMSIS"/>
-        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.0.0"/>
+        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.0.1"/>
         <targetInfos>
           <targetInfo name="EVB_M4f"/>
           <targetInfo name="FPGA_M4f"/>

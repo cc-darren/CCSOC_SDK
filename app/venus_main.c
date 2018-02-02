@@ -2924,7 +2924,7 @@ void CC_SYS_FactroyReset_Setting(void)
 //    CC_BLE_Cmd_SetSwimmingEN(0);
     s_tVenusCB.cSwimmingEn = CC_BLE_Cmd_GetSwimmingEN();
 
-#if 0 // it should be open here, but it can make re-connection fail?
+#if 1 // it should be open here, but it can make re-connection fail?
     if (CC_AppSrv_HR_IsHrmWorking())
     {
 

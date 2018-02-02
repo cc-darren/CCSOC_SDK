@@ -576,7 +576,7 @@ static int gapc_disconnect_ind_handler(ke_msg_id_t const msgid,
     // Stop interval timer
     app_ota_stop_timer();
     #endif //(BLE_APP_OTA)
-
+		
     if(true == s_dfu_settings.enter_buttonless_dfu)
          NVIC_SystemReset();
 
@@ -852,7 +852,7 @@ const struct ke_msg_handler appm_default_state[] =
     {APP_SW_TIMER_13_TIMER,      (ke_msg_func_t)app_timer_handler},
     {APP_SW_TIMER_14_TIMER,      (ke_msg_func_t)app_timer_handler},
     {APP_SW_TIMER_15_TIMER,      (ke_msg_func_t)app_timer_handler},    
-    {APP_SW_TIMER_16_TIMER,      (ke_msg_func_t)app_timer_handler},        
+    {APP_SW_TIMER_16_TIMER,      (ke_msg_func_t)app_timer_handler},               
     {APP_SW_TIMER_17_TIMER,      (ke_msg_func_t)app_timer_handler},
     {APP_SW_TIMER_18_TIMER,      (ke_msg_func_t)app_timer_handler},
     {APP_SW_TIMER_19_TIMER,      (ke_msg_func_t)app_timer_handler},
