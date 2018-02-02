@@ -5,7 +5,7 @@
  * STANDARD SOFTWARE LICENSE AGREEMENT.
  *
  * Licensees are granted free, non-transferable use of the information.
- * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed
  * from the file.
  */
 
@@ -308,7 +308,7 @@ Head Block of The File
 
 // GPIO Pin Group1
 #define GPIO_MODE_PINGROUP1                  GPIO_MODE_GPIO
-#define GPIO4_CONFIG                        ((GPIO_PULL_UP) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT) | (GPIO_INPUT_NOPULL)) 
+#define GPIO4_CONFIG                        ((GPIO_PULL_UP) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT) | (GPIO_INPUT_NOPULL))
 #define GPIO5_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
 #define GPIO6_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
 #define GPIO7_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
@@ -441,11 +441,11 @@ Declaration of static Global Variables & Functions
 
 #define DEVICE_MODEL "Z E U S"
 #define VENUS_HW_VERSION "v0.000.001"
-#define VENUS_FW_VERSION "v0.000.001" 
+#define VENUS_FW_VERSION "v0.000.001"
 
 #define CFG_APP_CODE_ONLY
 
-#ifndef CFG_APP_CODE_ONLY 
+#ifndef CFG_APP_CODE_ONLY
 #define CFG_JUMP_TABLE_2
 #endif
 
@@ -460,6 +460,8 @@ Declaration of static Global Variables & Functions
 #define FIFO_MODE_EN
 #define FACTORY_RESET
 
+#define CC_REFINE_VIB
+
 
 #define TOUCH_INT_PIN       4
 #define HRM_INT_PIN         9
@@ -470,7 +472,7 @@ Declaration of static Global Variables & Functions
 #define FORCE_LIFTARM_TEST_EN   // for test
 //#define FORCE_SWIM_TEST_EN   // for test
 //#define FORCE_HRS_TEST_EN   // for test
- 
+
 #define APP_SERV_MGR_EN        // for new service/sensor manager
 #ifdef APP_SERV_MGR_EN
 //#define SM_TEST_EN
@@ -489,9 +491,9 @@ Declaration of static Global Variables & Functions
 
 
 
-typedef enum 
+typedef enum
 {
-	
+
     eSysStateInit=1,
     eSysStateNormal,
     eSysStateLowPwr,
@@ -501,10 +503,10 @@ typedef enum
 
 enum
 {
-    eEvent_None = 0, 
+    eEvent_None = 0,
     eEvent_LOWPOWER,
-    eEvent_TOUCH,  
-//    eEvent_LONG_TOUCH,  
+    eEvent_TOUCH,
+//    eEvent_LONG_TOUCH,
     eEvent_SWIM_ON,
     eEvent_SWIM_OFF,
     eEvent_SWIM_CONFIRM_ON,
@@ -522,7 +524,7 @@ enum
     eEvent_INCOMMINGCALL_ON,
     eEvent_INCOMMINGCALL_OFF,
     eEvent_INCOMMINGSMS,
-    eEvent_ALARM,    
+    eEvent_ALARM,
     eEvent_HR_WARNING_HIHG,
     eEvent_HR_WARNING_LOW,
     eEvent_FACTORY_RESET_START,
@@ -541,10 +543,10 @@ enum
 #if 0
 enum
 {
-    eEvent_None = 0, 
+    eEvent_None = 0,
     eEvent_LOWPOWER,
-    eEvent_TOUCH,  
-//    eEvent_LONG_TOUCH,  
+    eEvent_TOUCH,
+//    eEvent_LONG_TOUCH,
     eEvent_SWIM_ON,
     eEvent_SWIM_OFF,
     eEvent_SWIM_CONFIRM_ON,
@@ -561,27 +563,27 @@ enum
     eEvent_INCOMMINGCALL_ON,
     eEvent_INCOMMINGCALL_OFF,
     eEvent_INCOMMINGSMS,
-    eEvent_ALARM,    
+    eEvent_ALARM,
     eEvent_FACTORY_RESET_START,
     eEvent_FACTORY_RESET_DONE,
-    eEvent_FACTORY_RESET_STOP,  //LOW POWER FAIL    
+    eEvent_FACTORY_RESET_STOP,  //LOW POWER FAIL
     eEvent_Dummy
 };
 #endif
-typedef enum 
+typedef enum
 {
     eDEVICE_CHARGE_IN = 0,
     eDEVICE_CHARGE_OUT
 }eDEV_CHARGE_STATE_t;
 
-typedef enum 
+typedef enum
 {
     eDEVICE_CHARGE_NOFULL = 0,
     eDEVICE_CHARGE_FULL
 }eDEV_CHARGEFULL_STATE_t;
 
-typedef enum 
-{   
+typedef enum
+{
     eSWIM_25M = 0,
     eSWIM_50M,
     eSWIM_25YD,
@@ -590,8 +592,8 @@ typedef enum
     eeSWIM_UNKNOWN
 }eSWIM_LEN_SET_t;
 
-typedef enum 
-{   
+typedef enum
+{
     eMMI_STANDBY_PAGE =0,
     eMMI_CLOCK_PAGE = 1,
     eMMI_PEDO_PAGE,
@@ -615,7 +617,7 @@ typedef enum
     eMMI_INCOMMING_SMS_PAGE,
     eMMI_ALARM_PAGE,
     eMMI_SWIMMING_ON_PAGE,
-    eMMI_SWIMMING_OFF_PAGE,  
+    eMMI_SWIMMING_OFF_PAGE,
     eMMI_SWIMMING_CONFIRM_ON_PAGE,
     eMMI_SWIMMING_CONFIRM_OFF_PAGE,
     eMMI_PRE_LOWPOWER,
@@ -628,7 +630,7 @@ typedef enum
     eMMI_FACTORY_RESET_STOP,
     eMMI_PAIR_PASSKEY,
     eMMI_PAIR_SUCCESS,
-    eMMI_PAIR_FAIL,    
+    eMMI_PAIR_FAIL,
 #ifdef PED_GOAL
     eMMI_PED_GOAL_ACHIEVE,
     eMMI_SWIMMING_GOAL_ACHIEVE,
@@ -637,14 +639,14 @@ typedef enum
     eMMI_DUMMY_END
 }eMMI_Page_t;
 
-typedef enum 
+typedef enum
 {
     eHRMCLOSE_ID_TOUCH=0,
     eHRMCLOSE_ID_GENERALTIMEOUT,
     eHRMCLOSE_ID_DUMMY
 }eHrm_Close_EventID;
 
-typedef enum 
+typedef enum
 {
     eHRM_Off=0,
     eHRM_On,
@@ -652,7 +654,7 @@ typedef enum
 }eHrmOp_State;
 
 
-typedef enum 
+typedef enum
 {
     eStateOff=0,
     eStateOn,
@@ -660,7 +662,7 @@ typedef enum
 }eCommon_State;
 
 
-typedef enum 
+typedef enum
 {
     eDisable=0,
     eEnable,
@@ -668,21 +670,21 @@ typedef enum
 }eStete_t;
 
 
-typedef enum 
+typedef enum
 {
     eOne=1,
     eDayofChange
 }eClear_DB_Setting_t;
 
 
-typedef enum 
+typedef enum
 {
     eSwimCalProcStop=0,
     eSwimCalProcStart =1,
     eSwimCalProcInvaild,
 }eSwim_Cal_ProcState_t;
 
-typedef enum 
+typedef enum
 {
     eSwimCalInit=1,
     eSwimCalProc,
@@ -691,7 +693,7 @@ typedef enum
     eSwimCalInvaild,
 }eSwim_Cal_State_t;
 
-typedef enum 
+typedef enum
 {
     ePedo_Stop = 0x00,
     ePedo_Walk = 0x01,
@@ -720,14 +722,14 @@ typedef void (*charge_cb_t)(eDEV_CHARGE_STATE_t eState);
 
 #if 0
 
-typedef struct 
+typedef struct
 {
    int16_t    Data[3];
    uint16_t     wVaildFlag;
-}db_sys_static_gyro_offset_t __attribute__((aligned(4))); 
+}db_sys_static_gyro_offset_t __attribute__((aligned(4)));
 
 
-typedef struct 
+typedef struct
 {
     uint8_t start_time_hour;
     uint8_t start_time_min;
@@ -736,7 +738,7 @@ typedef struct
 }db_sys_sleep_monitor_t __attribute__((aligned(4))); // from cc_db_structrure.h
 
 
-typedef struct 
+typedef struct
 {
     uint16_t count;
     uint8_t rsvd[2];
@@ -744,7 +746,7 @@ typedef struct
 
 
 
-typedef struct 
+typedef struct
 {
     uint8_t year;
     uint8_t month;
@@ -757,13 +759,13 @@ typedef struct
 }db_sleep_time_t __attribute__((aligned(4)));
 
 
-typedef struct 
+typedef struct
 {
     uint32_t period_second;
 }db_sleep_time_period_t __attribute__((aligned(4)));
 
 
-typedef struct 
+typedef struct
 {
     db_sleep_time_t         detect_time;
     db_sleep_time_period_t  period;
@@ -774,11 +776,11 @@ typedef struct
 
 typedef struct
 {
-   uint8_t     command;   
-   uint8_t     is_update_steps; 
+   uint8_t     command;
+   uint8_t     is_update_steps;
    uint32_t    dwTotal_steps;
    uint32_t    dwTotal_calorie;
-   
+
 }CC_Ble_Ped_Info_T;
 
 typedef struct
@@ -793,7 +795,7 @@ typedef struct
    uint8_t     command;
    uint8_t     is_Swim_En;  //bit 0: Ped = 0xF1, Hrm = 0xF2 Sleep = 0xF3  Swim = 0xF4
    uint8_t     style_type;
-   uint32_t   dwSwimCnt;  
+   uint32_t   dwSwimCnt;
    uint32_t     cSwimLap;
    unsigned long   dwTimestamp;
 }CC_Ble_Swim_Info_T;
@@ -826,7 +828,7 @@ typedef struct
 }CC_Ble_Unit_Info_T;
 
 
-typedef enum 
+typedef enum
 {
     eCALLDISABLE =0,
     eCALLENABLE,
@@ -836,7 +838,7 @@ typedef enum
 }eCALL_state_t;
 
 
-typedef enum 
+typedef enum
 {
     eSMSDISABLE =0,
     eSMSENABLE,
@@ -844,14 +846,14 @@ typedef enum
     eSMSUNKNOWN
 }eSMS_state_t;
 
-typedef enum 
+typedef enum
 {
     eLONGSITDISABLE =0,
     eLONGSITENABLE,
     eLONGSITUNKNOWN
 }eLONGSIT_state_t;
 
-typedef enum 
+typedef enum
 {
     eLIFTARMDISABLE =0,
     eLIFTARMENABLE,
@@ -877,7 +879,7 @@ typedef struct
 
 
 #if 0
-typedef struct 
+typedef struct
 {
     eStete_t eIsHrsEnabled;
     eStete_t eIs24HrEnabled;
@@ -888,12 +890,12 @@ typedef struct
 
 
 
-typedef struct 
+typedef struct
 {
     uint8_t incomming_call_en;
     uint8_t incomming_sms_en;
     uint8_t longsit_en;
-    uint8_t lifearm_en;    
+    uint8_t lifearm_en;
 }db_sys_notify_enabled_t __attribute__((aligned(4)));
 #endif
 
@@ -936,7 +938,7 @@ typedef struct
 #define CFG_PERIPHERAL
 //#define CFG_CENTRAL
 
-#define CFG_CON    8 
+#define CFG_CON    8
 #define CFG_SLEEP
 
 #define CFG_CHNL_ASSESS
@@ -946,7 +948,7 @@ typedef struct
 //#define CFG_NVDS
 #define CFG_HW_AUDIO
 
-#define CFG_SEC_CON 
+#define CFG_SEC_CON
 #define CFG_APP_SEC
 
 #define CFG_ATTC
