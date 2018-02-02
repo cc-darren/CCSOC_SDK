@@ -532,7 +532,7 @@
       <OPTFL>
         <tvExp>1</tvExp>
         <tvExpOptDlg>0</tvExpOptDlg>
-        <IsCurrentTarget>0</IsCurrentTarget>
+        <IsCurrentTarget>1</IsCurrentTarget>
       </OPTFL>
       <CpuCode>7</CpuCode>
       <DebugOpt>
@@ -607,7 +607,40 @@
           <Name>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000)</Name>
         </SetRegEntry>
       </TargetDriverDllRegistry>
-      <Breakpoint/>
+      <Breakpoint>
+        <Bp>
+          <Number>0</Number>
+          <Type>0</Type>
+          <LineNumber>572</LineNumber>
+          <EnabledFlag>0</EnabledFlag>
+          <Address>268529706</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\..\ble\modules\app\src\app_task.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\EVB_M0p\../../ble/modules/app/src/app_task.c\572</Expression>
+        </Bp>
+        <Bp>
+          <Number>1</Number>
+          <Type>0</Type>
+          <LineNumber>558</LineNumber>
+          <EnabledFlag>0</EnabledFlag>
+          <Address>268529694</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\..\ble\modules\app\src\app_task.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\EVB_M0p\../../ble/modules/app/src/app_task.c\558</Expression>
+        </Bp>
+      </Breakpoint>
       <WatchWindow1>
         <Ww>
           <count>0</count>
@@ -703,6 +736,16 @@
           <count>18</count>
           <WinNumber>1</WinNumber>
           <ItemText>&amp;p_llm_le_env-&gt;public_add.addr[0]</ItemText>
+        </Ww>
+        <Ww>
+          <count>19</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>m_pages</ItemText>
+        </Ww>
+        <Ww>
+          <count>20</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>length_words</ItemText>
         </Ww>
       </WatchWindow1>
       <MemoryWindow1>
@@ -821,7 +864,7 @@
       <OPTFL>
         <tvExp>1</tvExp>
         <tvExpOptDlg>0</tvExpOptDlg>
-        <IsCurrentTarget>1</IsCurrentTarget>
+        <IsCurrentTarget>0</IsCurrentTarget>
       </OPTFL>
       <CpuCode>7</CpuCode>
       <DebugOpt>
@@ -863,7 +906,6 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
-          <Name>/</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -900,18 +942,34 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>74</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>268538436</Address>
+          <LineNumber>572</LineNumber>
+          <EnabledFlag>0</EnabledFlag>
+          <Address>268531958</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\..\platform\init\src\arch_main.c</Filename>
+          <Filename>..\..\ble\modules\app\src\app_task.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\EVB_M4f\../../platform/init/src/arch_main.c\74</Expression>
+          <Expression>\\EVB_M4f\../../ble/modules/app/src/app_task.c\572</Expression>
+        </Bp>
+        <Bp>
+          <Number>1</Number>
+          <Type>0</Type>
+          <LineNumber>558</LineNumber>
+          <EnabledFlag>0</EnabledFlag>
+          <Address>268531946</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\..\ble\modules\app\src\app_task.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\EVB_M4f\../../ble/modules/app/src/app_task.c\558</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -1654,8 +1712,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\ble\modules\app\src\app_ota.c</PathWithFileName>
-      <FilenameWithoutPath>app_ota.c</FilenameWithoutPath>
+      <PathWithFileName>..\..\ble\modules\app\src\app_ccps.c</PathWithFileName>
+      <FilenameWithoutPath>app_ccps.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -1666,8 +1724,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\ble\modules\app\src\app_ccps.c</PathWithFileName>
-      <FilenameWithoutPath>app_ccps.c</FilenameWithoutPath>
+      <PathWithFileName>..\..\ble\modules\app\src\app_ota.c</PathWithFileName>
+      <FilenameWithoutPath>app_ota.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -2574,8 +2632,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\platform\bootloader\fota_flash.c</PathWithFileName>
-      <FilenameWithoutPath>fota_flash.c</FilenameWithoutPath>
+      <PathWithFileName>..\..\platform\bootloader\fota_settings.c</PathWithFileName>
+      <FilenameWithoutPath>fota_settings.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -2586,8 +2644,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\platform\bootloader\fota_settings.c</PathWithFileName>
-      <FilenameWithoutPath>fota_settings.c</FilenameWithoutPath>
+      <PathWithFileName>..\..\platform\bootloader\fota_flash.c</PathWithFileName>
+      <FilenameWithoutPath>fota_flash.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
