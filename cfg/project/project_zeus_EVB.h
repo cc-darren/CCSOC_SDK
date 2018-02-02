@@ -460,7 +460,7 @@ Declaration of static Global Variables & Functions
 #define FIFO_MODE_EN
 #define FACTORY_RESET
 
-#define CC_REFINE_VIB
+#define APP_VIB_MGR
 
 
 #define TOUCH_INT_PIN       4

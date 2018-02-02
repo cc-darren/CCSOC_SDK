@@ -67,7 +67,7 @@
 #include "app_task.h"
 #endif
 
-#ifdef CC_REFINE_VIB
+#ifdef APP_VIB_MGR
 #include "App_Vib_Manager.h"
 #include "App_Vib_Pattern.h"
 #endif
@@ -181,7 +181,7 @@ enum
 
 #endif
 
-#ifdef CC_REFINE_VIB
+#ifdef APP_VIB_MGR
     E_VENUS_EVENT_VIB_OPT,
     E_VENUS_EVENT_VIB_EXECTIME,
     E_VENUS_EVENT_VIB_DUTYCYCLECHANGE,
@@ -224,7 +224,7 @@ SW_TIMER_DEF(s_tVenusTimerPedoRunTimer);
 //SW_TIMER_DEF(s_tVenusTimerSwimCalTimer);
 SW_TIMER_DEF(s_tLockSwimOffTimer);
 
-#ifdef CC_REFINE_VIB
+#ifdef APP_VIB_MGR
 SW_TIMER_DEF(s_tVenusVibOpt);
 SW_TIMER_DEF(s_tVenusVibExecInterval);
 SW_TIMER_DEF(s_tVenusVibDutyCycleChange);
@@ -512,7 +512,7 @@ void CC_VENUS_RscTimerStop(void)
     sw_timer_stop(m_rsc_meas_timer_id);
 }
 
-#ifdef CC_REFINE_VIB
+#ifdef APP_VIB_MGR
 void CC_VENUS_VIB_TIMER_OPT_Start(uint16_t _wdata)
 {
     sw_timer_start(s_tVenusVibOpt, _wdata, NULL);
@@ -546,7 +546,7 @@ void CC_VENUS_VIB_TIMER_DUTYCYCLECHANGE_Stop(void)
 
 #endif
 
-#ifdef CC_REFINE_VIB
+#ifdef APP_VIB_MGR
 static void cc_vibopt_timeout_handler(void * p_context)
 {
     VENUS_EVENT_ON(E_VENUS_EVENT_VIB_OPT, E_APP_SCHED_VIB_TIMER_OPT_TIMEOUT);
@@ -1935,7 +1935,7 @@ static void app_multiple_timer_init(void)
     sw_timer_create(&s_tVenusTimerPWMVibSrvTimer,
                      SW_TIMER_MODE_SINGLE_SHOT,
                      cc_toolBox_PWM_Vib_Service_timeout);
-    #ifdef CC_REFINE_VIB
+    #ifdef APP_VIB_MGR
     sw_timer_create(&s_tVenusVibOpt,
                      SW_TIMER_MODE_SINGLE_SHOT,
                      cc_vibopt_timeout_handler);
@@ -3202,10 +3202,6 @@ bool _app_scheduler(void)
     {
          TracerInfo("touch!\r\n");
          TOUCH_Handler();
-
-         E_APP_VIB_RESULT  eRet;
-         eRet = APP_VibMgr_StartService(&s_tVibAscendingAndRepeat);
-
          VENUS_EVENT_OFF(E_VENUS_EVENT_TOUCH_INT);
          s_tVenusCB.cTouchDebounceFlag=0;
          _bScheduleOperating =true;
@@ -3545,7 +3541,7 @@ bool _app_scheduler(void)
     }
 #endif
 
-    #ifdef CC_REFINE_VIB
+    #ifdef APP_VIB_MGR
         if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_VIB_OPT))
         {
             //TracerInfo("\r\n<E_VENUS_EVENT_VIB_OPT>\r\n");
