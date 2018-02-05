@@ -215,7 +215,8 @@ uint8_t appm_get_dev_name(uint8_t* name);
  ****************************************************************************************
  */
 bool app_sec_get_bond_status(void);
-void rwip_ignore_ll_conn_param_update_patch(void);;
+void rwip_ignore_ll_conn_param_update_patch(void);
+void rwip_detect_disconnect_patch(void);
 void app_start_reset_ble(void);
 void app_wait_for_reset_ble(void);
 

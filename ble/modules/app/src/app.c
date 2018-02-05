@@ -278,6 +278,28 @@ void rwip_ignore_ll_conn_param_update_patch(void)
 }
 
 
+void rwip_detect_disconnect_patch(void)
+{
+
+        
+    if(APPM_CONNECTED == ke_state_get(TASK_APP))
+    {
+        if((LLC_DISC_BUSY == ke_state_get(TASK_LLC))
+            || (LLC_FREE == ke_state_get(TASK_LLC)))
+        {
+
+            // send disconnection message.
+            struct gapc_disconnect_ind * disconnect_ind = KE_MSG_ALLOC(GAPC_DISCONNECT_IND,
+                    TASK_APP, KE_BUILD_ID(TASK_APP, 0), gapc_disconnect_ind);
+
+            // send indication
+            ke_msg_send(disconnect_ind);
+            
+        }
+    }
+ 
+}
+
 void appm_init()
 {
 

@@ -2924,7 +2924,7 @@ void CC_SYS_FactroyReset_Setting(void)
 //    CC_BLE_Cmd_SetSwimmingEN(0);
     s_tVenusCB.cSwimmingEn = CC_BLE_Cmd_GetSwimmingEN();
 
-#if 1 // it should be open here, but it can make re-connection fail?
+
     if (CC_AppSrv_HR_IsHrmWorking())
     {
 
@@ -2943,7 +2943,7 @@ void CC_SYS_FactroyReset_Setting(void)
         }
 
     }
-#endif
+
 
 }
 
@@ -3852,6 +3852,7 @@ int venus_main(void)
 
                 #ifdef CFG_BLE_APP
                     rwip_schedule();
+                    rwip_detect_disconnect_patch();
                     rwip_ignore_ll_conn_param_update_patch();
                 #endif
 

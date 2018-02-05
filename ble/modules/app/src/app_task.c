@@ -265,10 +265,6 @@ static int gapm_cmp_evt_handler(ke_msg_id_t const msgid,
 
                 // No more service to add, start advertising
                 appm_start_advertising();
-
-#if 0 // RW Gross Timer Test by Samuel
-                ke_timer_set(APP_TIMER_TEST_TIMER, TASK_APP, (uint16_t)1); // 10ms
-#endif
                 
             }
         }
@@ -485,6 +481,7 @@ static int gapc_connection_req_ind_handler(ke_msg_id_t const msgid,
         // We are now in connected State
         ke_state_set(dest_id, APPM_CONNECTED);
 
+
         #if (BLE_APP_SEC && !defined(BLE_APP_AM0))
         if (app_sec_get_bond_status())
         {
@@ -554,6 +551,11 @@ static int gapc_disconnect_ind_handler(ke_msg_id_t const msgid,
                                       ke_task_id_t const dest_id,
                                       ke_task_id_t const src_id)
 {
+
+
+    if(APPM_CONNECTED != ke_state_get(TASK_APP))
+        return (KE_MSG_CONSUMED);
+
     // Go to the ready state
     ke_state_set(TASK_APP, APPM_READY);
 
