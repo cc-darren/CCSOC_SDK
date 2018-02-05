@@ -33,7 +33,8 @@
 //#include "app_util.h"
 //#include "nrf_sdm.h"
 //#include "sdk_macros.h"
-#include "nrf_crypto.h"
+#include "crypto.h"
+#include "utility.h"
 
 
 //STATIC_ASSERT(DFU_SIGNED_COMMAND_SIZE <= INIT_COMMAND_MAX_SIZE);
@@ -86,15 +87,15 @@ static bool m_valid_init_packet_present;                /**< Global variable hol
 
 
 
-static const nrf_crypto_key_t crypto_key_pk =
+static const crypto_key_t crypto_key_pk =
 {
     .p_le_data = (uint8_t *) pk,
     .len = sizeof(pk)
 };
 
-static nrf_crypto_key_t crypto_sig;
+static crypto_key_t crypto_sig;
 __align(4) static uint8_t hash[32];
-static nrf_crypto_key_t hash_data;
+static crypto_key_t hash_data;
 
 __align(4) static uint8_t sig[64];
 
@@ -208,7 +209,7 @@ static nrf_dfu_res_code_t dfu_signature_check(dfu_signed_command_t const * p_com
                 NRF_LOG_HEXDUMP_INFO(&p_init_cmd[0], init_cmd_len);
                 TracerInfo("\r\n");
 
-                err_code = nrf_crypto_hash_compute(NRF_CRYPTO_HASH_ALG_SHA256, p_init_cmd, init_cmd_len, &hash_data);
+                err_code = crypto_hash_compute(CRYPTO_HASH_ALG_SHA256, p_init_cmd, init_cmd_len, &hash_data);
                 if (err_code != CC_SUCCESS)
                 {
                     return NRF_DFU_RES_CODE_OPERATION_FAILED;
@@ -227,7 +228,7 @@ static nrf_dfu_res_code_t dfu_signature_check(dfu_signed_command_t const * p_com
                 TracerInfo("signature len: %d\r\n", p_command->signature.size);
 
                 // calculate the signature
-                err_code = nrf_crypto_verify(NRF_CRYPTO_CURVE_SECP256R1, &crypto_key_pk, &hash_data, &crypto_sig);
+                err_code = crypto_verify(CRYPTO_CURVE_SECP256R1, &crypto_key_pk, &hash_data, &crypto_sig);
                 if (err_code != CC_SUCCESS)
                 {
                     return NRF_DFU_RES_CODE_INVALID_OBJECT;
@@ -460,7 +461,7 @@ static nrf_dfu_res_code_t nrf_dfu_postvalidate(dfu_init_command_t * p_init)
             case DFU_HASH_TYPE_SHA256:
                 hash_data.p_le_data = &hash[0];
                 hash_data.len = sizeof(hash);
-                err_code = nrf_crypto_hash_compute(NRF_CRYPTO_HASH_ALG_SHA256, (uint8_t*)m_firmware_start_addr, m_firmware_size_req, &hash_data);
+                err_code = crypto_hash_compute(CRYPTO_HASH_ALG_SHA256, (uint8_t*)m_firmware_start_addr, m_firmware_size_req, &hash_data);
                 if (err_code != CC_SUCCESS)
                 {
                     res_code = NRF_DFU_RES_CODE_OPERATION_FAILED;

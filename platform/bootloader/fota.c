@@ -19,9 +19,10 @@
 #include "fota_settings.h"
 #include "drvi_gpio.h"
 #include "app_scheduler.h"
-#include "app_timer_appsh.h"
+//#include "app_timer_appsh.h"
 #include "tracer.h"
 //#include "boards.h"
+#include "sw_timer.h"
 #include "bootloader_info.h"
 #include "fota_req_handler.h"
 #include "fota_transport.h"
@@ -30,7 +31,16 @@
 #include "rwip.h"
 #endif
 
-#define SCHED_MAX_EVENT_DATA_SIZE       MAX(APP_TIMER_SCHED_EVT_SIZE, 0)                        /**< Maximum size of scheduler events. */
+
+typedef void (*sw_timer_timeout_handler_t)(void * p_context);
+
+typedef struct
+{
+    sw_timer_timeout_handler_t timeout_handler;
+    void *                      p_context;
+} sw_timer_event_t;
+
+#define SCHED_MAX_EVENT_DATA_SIZE       MAX(sizeof(sw_timer_event_t), 0)                        /**< Maximum size of scheduler events. */
 
 #define SCHED_QUEUE_SIZE                20                                                      /**< Maximum number of events in the scheduler queue. */
 
@@ -47,13 +57,14 @@
  */
 __WEAK bool nrf_dfu_enter_check(void)
 {
+/*    
     drvi_GpioDirectInput(GPIO_PIN_1);
 
     if (drvi_GpioRead(GPIO_PIN_1) == 0)
     {
         return true;
     }
-
+*/
     if (s_dfu_settings.enter_buttonless_dfu == 1)
     {
         s_dfu_settings.enter_buttonless_dfu = 0;
@@ -71,7 +82,7 @@ __WEAK bool nrf_dfu_enter_check(void)
 static void timers_init(void)
 {
     // Initialize timer module, making it use the scheduler.
-    APP_TIMER_APPSH_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, true);
+    //APP_TIMER_APPSH_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, true);
 }
 
 
@@ -92,6 +103,7 @@ static void wait_for_event()
         app_sched_execute();
 #ifdef CFG_BLE_APP
         rwip_schedule();
+        rwip_detect_disconnect_patch();
         rwip_ignore_ll_conn_param_update_patch();   
         app_wait_for_reset_ble();
 
@@ -100,7 +112,7 @@ static void wait_for_event()
 }
 
 #ifdef FOTA_TEST_NO_BLE
-static void fota_test(void)
+static void fota_test(void) 
 {
     nrf_dfu_res_code_t  res_code;
     nrf_dfu_req_t       dfu_req;

@@ -32,7 +32,7 @@
 ;   <o> Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ; </h>
 
-Stack_Size      EQU     0x00000800
+Stack_Size      EQU     0x00000c00
 
                 AREA    STACK, NOINIT, READWRITE, ALIGN=3
 Stack_Mem       SPACE   Stack_Size
@@ -113,7 +113,7 @@ __Vectors       DCD     __initial_sp              ; Top of Stack
                 DCD     I2S_TXDMA_IRQHandler      ; 22
                 DCD     I2S_IP_IRQHandler         ; 23
                 DCD     DMIC_IRQHandler           ; 24
-                DCD     BLE_IRQHandler            ; 25
+                DCD     APP_BLEMGR_IRQHandler     ; 25
                 DCD     GPIO_IRQHandler           ; 26
                 DCD     CCU_IRQHandler            ; 27
                 DCD     AES_IRQHandler            ; 28
@@ -215,7 +215,7 @@ Default_Handler PROC
                 EXPORT  I2S_TXDMA_IRQHandler        [WEAK]
                 EXPORT  I2S_IP_IRQHandler           [WEAK]
                 EXPORT  DMIC_IRQHandler             [WEAK]
-                EXPORT  BLE_IRQHandler              [WEAK]
+                EXPORT  APP_BLEMGR_IRQHandler       [WEAK]
                 EXPORT  GPIO_IRQHandler             [WEAK]
                 EXPORT  CCU_IRQHandler              [WEAK]
                 EXPORT  AES_IRQHandler              [WEAK]
@@ -248,7 +248,7 @@ I2S_RXDMA_IRQHandler
 I2S_TXDMA_IRQHandler
 I2S_IP_IRQHandler
 DMIC_IRQHandler
-BLE_IRQHandler
+APP_BLEMGR_IRQHandler
 GPIO_IRQHandler
 CCU_IRQHandler
 AES_IRQHandler

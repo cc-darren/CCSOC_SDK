@@ -86,7 +86,7 @@ uint32_t nrf_dfu_settings_calculate_crc(void)
 
 void nrf_dfu_settings_init(void)
 {
-    TracerInfo("running nrf_dfu_settings_init\r\n");
+    TracerInfo("running n rf_dfu_settings_init\r\n");
 
     uint32_t crc;
 

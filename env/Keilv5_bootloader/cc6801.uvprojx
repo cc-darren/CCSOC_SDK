@@ -438,6 +438,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\ble\modules\nvds\src\nvds.c</FilePath>
             </File>
+            <File>
+              <FileName>ble_mgr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\ble_mgr\ble_mgr.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -576,97 +581,41 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>nano-pb</GroupName>
-          <Files>
-            <File>
-              <FileName>pb_common.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\nano-pb\pb_common.c</FilePath>
-            </File>
-            <File>
-              <FileName>pb_decode.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\nano-pb\pb_decode.c</FilePath>
-            </File>
-            <File>
-              <FileName>pb_encode.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\nano-pb\pb_encode.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>service</GroupName>
           <Files>
-            <File>
-              <FileName>app_fifo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\fifo\app_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_scheduler.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\scheduler\app_scheduler.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_timer_appsh.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\sw_timer\app_timer_appsh.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_uart_fifo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\uart\app_uart_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>crc32.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\crc32\crc32.c</FilePath>
-            </File>
-            <File>
-              <FileName>ecc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\ecc\ecc.c</FilePath>
-            </File>
-            <File>
-              <FileName>fstorage.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\fstorage\fstorage.c</FilePath>
-            </File>
-            <File>
-              <FileName>micro_ecc_lib_m0p.lib</FileName>
-              <FileType>4</FileType>
-              <FilePath>..\..\service\ecc\micro_ecc_lib_m0p.lib</FilePath>
-            </File>
-            <File>
-              <FileName>nrf_crypto.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\crypto\nrf_crypto.c</FilePath>
-            </File>
-            <File>
-              <FileName>retarget.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\uart\retarget.c</FilePath>
-            </File>
-            <File>
-              <FileName>sha256.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\sha256\sha256.c</FilePath>
-            </File>
-            <File>
-              <FileName>sw_timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\sw_timer\sw_timer.c</FilePath>
-            </File>
             <File>
               <FileName>tracer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\service\tracer\tracer.c</FilePath>
             </File>
             <File>
-              <FileName>fds.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\fds\fds.c</FilePath>
+              <FileName>service_lib_M0.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\service\service_lib_M0.lib</FilePath>
+            </File>
+            <File>
+              <FileName>service_lib_M4.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\service\service_lib_M4.lib</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds/>
+              </FileOption>
             </File>
           </Files>
         </Group>
@@ -737,16 +686,6 @@
               <FileName>otat_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\ble\ip\ble\profiles\ota\otat\src\otat_task.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_list.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\common\src\co_list.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_utils.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\common\src\co_utils.c</FilePath>
             </File>
             <File>
               <FileName>prf.c</FileName>
@@ -1331,6 +1270,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\ble\modules\nvds\src\nvds.c</FilePath>
             </File>
+            <File>
+              <FileName>ble_mgr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\ble_mgr\ble_mgr.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1469,97 +1413,41 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>nano-pb</GroupName>
-          <Files>
-            <File>
-              <FileName>pb_common.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\nano-pb\pb_common.c</FilePath>
-            </File>
-            <File>
-              <FileName>pb_decode.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\nano-pb\pb_decode.c</FilePath>
-            </File>
-            <File>
-              <FileName>pb_encode.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\nano-pb\pb_encode.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>service</GroupName>
           <Files>
-            <File>
-              <FileName>app_fifo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\fifo\app_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_scheduler.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\scheduler\app_scheduler.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_timer_appsh.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\sw_timer\app_timer_appsh.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_uart_fifo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\uart\app_uart_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>crc32.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\crc32\crc32.c</FilePath>
-            </File>
-            <File>
-              <FileName>ecc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\ecc\ecc.c</FilePath>
-            </File>
-            <File>
-              <FileName>fstorage.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\fstorage\fstorage.c</FilePath>
-            </File>
-            <File>
-              <FileName>micro_ecc_lib_m0p.lib</FileName>
-              <FileType>4</FileType>
-              <FilePath>..\..\service\ecc\micro_ecc_lib_m0p.lib</FilePath>
-            </File>
-            <File>
-              <FileName>nrf_crypto.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\crypto\nrf_crypto.c</FilePath>
-            </File>
-            <File>
-              <FileName>retarget.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\uart\retarget.c</FilePath>
-            </File>
-            <File>
-              <FileName>sha256.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\sha256\sha256.c</FilePath>
-            </File>
-            <File>
-              <FileName>sw_timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\sw_timer\sw_timer.c</FilePath>
-            </File>
             <File>
               <FileName>tracer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\service\tracer\tracer.c</FilePath>
             </File>
             <File>
-              <FileName>fds.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\fds\fds.c</FilePath>
+              <FileName>service_lib_M0.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\service\service_lib_M0.lib</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds/>
+              </FileOption>
+            </File>
+            <File>
+              <FileName>service_lib_M4.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\service\service_lib_M4.lib</FilePath>
             </File>
           </Files>
         </Group>
@@ -1630,16 +1518,6 @@
               <FileName>otat_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\ble\ip\ble\profiles\ota\otat\src\otat_task.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_list.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\common\src\co_list.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_utils.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\common\src\co_utils.c</FilePath>
             </File>
             <File>
               <FileName>prf.c</FileName>
@@ -2159,6 +2037,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\ble\modules\nvds\src\nvds.c</FilePath>
             </File>
+            <File>
+              <FileName>ble_mgr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\ble_mgr\ble_mgr.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2297,97 +2180,41 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>nano-pb</GroupName>
-          <Files>
-            <File>
-              <FileName>pb_common.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\nano-pb\pb_common.c</FilePath>
-            </File>
-            <File>
-              <FileName>pb_decode.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\nano-pb\pb_decode.c</FilePath>
-            </File>
-            <File>
-              <FileName>pb_encode.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\nano-pb\pb_encode.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>service</GroupName>
           <Files>
-            <File>
-              <FileName>app_fifo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\fifo\app_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_scheduler.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\scheduler\app_scheduler.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_timer_appsh.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\sw_timer\app_timer_appsh.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_uart_fifo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\uart\app_uart_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>crc32.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\crc32\crc32.c</FilePath>
-            </File>
-            <File>
-              <FileName>ecc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\ecc\ecc.c</FilePath>
-            </File>
-            <File>
-              <FileName>fstorage.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\fstorage\fstorage.c</FilePath>
-            </File>
-            <File>
-              <FileName>micro_ecc_lib_m0p.lib</FileName>
-              <FileType>4</FileType>
-              <FilePath>..\..\service\ecc\micro_ecc_lib_m0p.lib</FilePath>
-            </File>
-            <File>
-              <FileName>nrf_crypto.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\crypto\nrf_crypto.c</FilePath>
-            </File>
-            <File>
-              <FileName>retarget.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\uart\retarget.c</FilePath>
-            </File>
-            <File>
-              <FileName>sha256.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\sha256\sha256.c</FilePath>
-            </File>
-            <File>
-              <FileName>sw_timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\sw_timer\sw_timer.c</FilePath>
-            </File>
             <File>
               <FileName>tracer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\service\tracer\tracer.c</FilePath>
             </File>
             <File>
-              <FileName>fds.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\fds\fds.c</FilePath>
+              <FileName>service_lib_M0.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\service\service_lib_M0.lib</FilePath>
+            </File>
+            <File>
+              <FileName>service_lib_M4.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\service\service_lib_M4.lib</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds/>
+              </FileOption>
             </File>
           </Files>
         </Group>
@@ -2458,16 +2285,6 @@
               <FileName>otat_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\ble\ip\ble\profiles\ota\otat\src\otat_task.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_list.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\common\src\co_list.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_utils.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\common\src\co_utils.c</FilePath>
             </File>
             <File>
               <FileName>prf.c</FileName>
@@ -3052,6 +2869,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\ble\modules\nvds\src\nvds.c</FilePath>
             </File>
+            <File>
+              <FileName>ble_mgr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\ble_mgr\ble_mgr.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -3190,97 +3012,41 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>nano-pb</GroupName>
-          <Files>
-            <File>
-              <FileName>pb_common.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\nano-pb\pb_common.c</FilePath>
-            </File>
-            <File>
-              <FileName>pb_decode.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\nano-pb\pb_decode.c</FilePath>
-            </File>
-            <File>
-              <FileName>pb_encode.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\nano-pb\pb_encode.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>service</GroupName>
           <Files>
-            <File>
-              <FileName>app_fifo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\fifo\app_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_scheduler.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\scheduler\app_scheduler.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_timer_appsh.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\sw_timer\app_timer_appsh.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_uart_fifo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\uart\app_uart_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>crc32.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\crc32\crc32.c</FilePath>
-            </File>
-            <File>
-              <FileName>ecc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\ecc\ecc.c</FilePath>
-            </File>
-            <File>
-              <FileName>fstorage.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\fstorage\fstorage.c</FilePath>
-            </File>
-            <File>
-              <FileName>micro_ecc_lib_m0p.lib</FileName>
-              <FileType>4</FileType>
-              <FilePath>..\..\service\ecc\micro_ecc_lib_m0p.lib</FilePath>
-            </File>
-            <File>
-              <FileName>nrf_crypto.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\crypto\nrf_crypto.c</FilePath>
-            </File>
-            <File>
-              <FileName>retarget.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\uart\retarget.c</FilePath>
-            </File>
-            <File>
-              <FileName>sha256.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\sha256\sha256.c</FilePath>
-            </File>
-            <File>
-              <FileName>sw_timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\sw_timer\sw_timer.c</FilePath>
-            </File>
             <File>
               <FileName>tracer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\service\tracer\tracer.c</FilePath>
             </File>
             <File>
-              <FileName>fds.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\fds\fds.c</FilePath>
+              <FileName>service_lib_M0.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\service\service_lib_M0.lib</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds/>
+              </FileOption>
+            </File>
+            <File>
+              <FileName>service_lib_M4.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\service\service_lib_M4.lib</FilePath>
             </File>
           </Files>
         </Group>
@@ -3351,16 +3117,6 @@
               <FileName>otat_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\ble\ip\ble\profiles\ota\otat\src\otat_task.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_list.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\common\src\co_list.c</FilePath>
-            </File>
-            <File>
-              <FileName>co_utils.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\ble\modules\common\src\co_utils.c</FilePath>
             </File>
             <File>
               <FileName>prf.c</FileName>

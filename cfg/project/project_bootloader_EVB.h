@@ -422,10 +422,17 @@ Declaration of static Global Variables & Functions
 ******************************************************************************/
 #include "stdint.h"
     
+		
 #define BLE_OTA_BL_MODE_EN
 
 //BLE is always supported
 #define CFG_BLE    1
+
+// <h> BLE - DEVICE NAME
+#define APP_DFLT_DEVICE_NAME    "CC6801-01"
+
+// <h> BLE - DEVICE ADDRESS
+#define APP_DFLT_DEVICE_ADDR    { 0xAB, 0x89, 0x67, 0x45, 0x23, 0x01 }
 
 // <h> BLE IP ARCH CONFIGURATION
 #define CFG_BLE_APP
