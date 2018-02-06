@@ -418,7 +418,17 @@ Declaration of static Global Variables & Functions
 ******************************************************************************/
 
 /******************************************************************************
-// Sec 11: BLE config settings
+// Sec 11: Bootloader config settings
+******************************************************************************/
+#define EFLASH_START_ADDRESS               (0x10000000)
+#define EFLASH_TOTAL_SIZE                  (0x40000)
+#define APPLICATION_START_ADDRESS          (0x10010000)
+#define USER_DATA_SIZE                     (4096 * 3)  //increased by 4096
+
+//#define BOOTLOADER_BUTTON                  (3)
+
+/******************************************************************************
+// Sec 12: BLE config settings
 ******************************************************************************/
 #include "stdint.h"
     

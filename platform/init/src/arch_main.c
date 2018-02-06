@@ -67,7 +67,7 @@ int main(void)
 #endif
 
 #ifdef BOOTLOADER
-    bootloader_main();
+    BootloaderMain();
 #elif VENUS_WRISTBAND
     venus_main();
 #elif ZEUS_WRISTBAND

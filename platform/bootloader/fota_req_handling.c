@@ -36,6 +36,15 @@
 #include "crypto.h"
 #include "utility.h"
 
+#define DEBUG_LOG 0
+
+#if (DEBUG_LOG) && DEBUG_LOG
+#define DebugInfo          TracerInfo
+#else
+#define DebugInfo(x...)    do { ; } while (0)
+#endif
+
+extern void nrf_dfu_wait(void);
 
 //STATIC_ASSERT(DFU_SIGNED_COMMAND_SIZE <= INIT_COMMAND_MAX_SIZE);
 void NRF_LOG_HEXDUMP_INFO(uint8_t *data, uint32_t size)
@@ -44,9 +53,9 @@ void NRF_LOG_HEXDUMP_INFO(uint8_t *data, uint32_t size)
          for (i=0; i<size; i++)
          {
              if ((i) && (((i >> 4) << 4) == i))
-                 TracerInfo("\n");
+                 DebugInfo("\n");
 
-             TracerInfo("%02X ", data[i]);
+             DebugInfo("%02X ", data[i]);
          }
 }
 
@@ -145,7 +154,7 @@ static nrf_dfu_res_code_t image_checksum_validate(uint32_t fw_addr, uint32_t fw_
 
 static void on_dfu_complete(fs_evt_t const * const evt, fs_ret_t result)
 {
-    TracerInfo("Resetting device. \r\n");
+    DebugInfo("Resetting device. \r\n");
     (void)fota_transports_close();
     //NVIC_SystemReset();
     return;
@@ -176,7 +185,7 @@ static void pb_decoding_callback(pb_istream_t *str, uint32_t tag, pb_wire_type_t
         hash_data.p_le_data = ptr;
         hash_data.len = size;
 
-        TracerInfo("PB: Init data len: %d\r\n", hash_data.len);
+        DebugInfo("PB: Init data len: %d\r\n", hash_data.len);
     }
 }
 
@@ -201,13 +210,13 @@ static nrf_dfu_res_code_t dfu_signature_check(dfu_signed_command_t const * p_com
                 hash_data.p_le_data = &hash[0];
                 hash_data.len = sizeof(hash);
 
-                TracerInfo("Init command:\r\n");
+                DebugInfo("Init command:\r\n");
                 NRF_LOG_HEXDUMP_INFO(&s_dfu_settings.init_command[0], s_dfu_settings.progress.command_size);
-                TracerInfo("\r\n");
+                DebugInfo("\r\n");
 
-                TracerInfo("p_Init command:\r\n");
+                DebugInfo("p_Init command:\r\n");
                 NRF_LOG_HEXDUMP_INFO(&p_init_cmd[0], init_cmd_len);
-                TracerInfo("\r\n");
+                DebugInfo("\r\n");
 
                 err_code = crypto_hash_compute(CRYPTO_HASH_ALG_SHA256, p_init_cmd, init_cmd_len, &hash_data);
                 if (err_code != CC_SUCCESS)
@@ -218,14 +227,14 @@ static nrf_dfu_res_code_t dfu_signature_check(dfu_signed_command_t const * p_com
                 // prepare the signature received over the air.
                 memcpy(&sig[0], p_command->signature.bytes, p_command->signature.size);
 
-                TracerInfo("Signature\r\n");
+                DebugInfo("Signature\r\n");
                 NRF_LOG_HEXDUMP_INFO((uint8_t *)&p_command->signature.bytes[0], p_command->signature.size);
-                TracerInfo("\r\n");
+                DebugInfo("\r\n");
 
                 crypto_sig.p_le_data = sig;
                 crypto_sig.len = p_command->signature.size;
 
-                TracerInfo("signature len: %d\r\n", p_command->signature.size);
+                DebugInfo("signature len: %d\r\n", p_command->signature.size);
 
                 // calculate the signature
                 err_code = crypto_verify(CRYPTO_CURVE_SECP256R1, &crypto_key_pk, &hash_data, &crypto_sig);
@@ -234,7 +243,7 @@ static nrf_dfu_res_code_t dfu_signature_check(dfu_signed_command_t const * p_com
                     return NRF_DFU_RES_CODE_INVALID_OBJECT;
                 }
 
-                TracerInfo("Image verified\r\n");
+                DebugInfo("Image verified\r\n");
             }
             break;
 
@@ -317,11 +326,11 @@ static nrf_dfu_res_code_t dfu_handle_prevalidate(dfu_init_command_t const * p_in
                 break;
 
             default:
-                TracerInfo("Unknown FW update type\r\n");
+                DebugInfo("Unknown FW update type\r\n");
                 return NRF_DFU_RES_CODE_OPERATION_FAILED;
         }
 
-        TracerInfo("Req version: %d, Present: %d\r\n", p_init->fw_version, fw_version);
+        DebugInfo("Req version: %d, Present: %d\r\n", p_init->fw_version, fw_version);
 
         // Check of init command FW version
         switch (p_init->type)
@@ -412,7 +421,7 @@ static nrf_dfu_res_code_t dfu_handle_prevalidate(dfu_init_command_t const * p_in
             break;
 
         default:
-            TracerInfo("Unknown FW update type\r\n");
+            DebugInfo("Unknown FW update type\r\n");
             return NRF_DFU_RES_CODE_OPERATION_FAILED;
     }
 
@@ -430,9 +439,9 @@ static nrf_dfu_res_code_t dfu_handle_prevalidate(dfu_init_command_t const * p_in
         return NRF_DFU_RES_CODE_INSUFFICIENT_RESOURCES;
     }
 
-    TracerInfo("Write address set to 0x%08x\r\n", m_firmware_start_addr);
+    DebugInfo("Write address set to 0x%08x\r\n", m_firmware_start_addr);
 
-    TracerInfo("DFU prevalidate SUCCESSFUL!\r\n");
+    DebugInfo("DFU prevalidate SUCCESSFUL!\r\n");
 
     return NRF_DFU_RES_CODE_SUCCESS;
 }
@@ -469,7 +478,7 @@ static nrf_dfu_res_code_t nrf_dfu_postvalidate(dfu_init_command_t * p_init)
 
                 if (memcmp(&hash_data.p_le_data[0], &p_init->hash.hash.bytes[0], 32) != 0)
                 {
-                    TracerInfo("Hash failure\r\n");
+                    DebugInfo("Hash failure\r\n");
 
                     res_code = NRF_DFU_RES_CODE_INVALID_OBJECT;
                 }
@@ -483,23 +492,23 @@ static nrf_dfu_res_code_t nrf_dfu_postvalidate(dfu_init_command_t * p_init)
 
     if (s_dfu_settings.bank_current == NRF_DFU_CURRENT_BANK_0)
     {
-        TracerInfo("Current bank is bank 0\r\n");
+        DebugInfo("Current bank is bank 0\r\n");
         p_bank = &s_dfu_settings.bank_0;
     }
     else if (s_dfu_settings.bank_current == NRF_DFU_CURRENT_BANK_1)
     {
-        TracerInfo("Current bank is bank 1\r\n");
+        DebugInfo("Current bank is bank 1\r\n");
         p_bank = &s_dfu_settings.bank_1;
     }
     else
     {
-        TracerInfo("Internal error, invalid current bank\r\n");
+        DebugInfo("Internal error, invalid current bank\r\n");
         return NRF_DFU_RES_CODE_OPERATION_FAILED;
     }
 
     if (res_code == NRF_DFU_RES_CODE_SUCCESS)
     {
-        TracerInfo("Successfully run the postvalidation check!\r\n");
+        DebugInfo("Successfully run the postvalidation check!\r\n");
 
         switch (p_init->type)
         {
@@ -601,10 +610,10 @@ static nrf_dfu_res_code_t dfu_handle_signed_command(dfu_signed_command_t const *
     ret_val = dfu_handle_prevalidate(&p_command->command.init, p_stream);
     if(ret_val == NRF_DFU_RES_CODE_SUCCESS)
     {
-        TracerInfo("Prevalidate OK.\r\n");
+        DebugInfo("Prevalidate OK.\r\n");
 
         // This saves the init command to flash
-        TracerInfo("Saving init command...\r\n");
+        DebugInfo("Saving init command...\r\n");
         if (nrf_dfu_settings_write(NULL) != CC_SUCCESS)
         {
             return NRF_DFU_RES_CODE_OPERATION_FAILED;
@@ -612,7 +621,7 @@ static nrf_dfu_res_code_t dfu_handle_signed_command(dfu_signed_command_t const *
     }
     else
     {
-        TracerInfo("Prevalidate FAILED!\r\n");
+        DebugInfo("Prevalidate FAILED!\r\n");
     }
     return ret_val;
 }
@@ -625,10 +634,10 @@ static nrf_dfu_res_code_t dfu_handle_command(dfu_command_t const * p_command, pb
     ret_val = dfu_handle_prevalidate(&p_command->init, p_stream);
     if(ret_val == NRF_DFU_RES_CODE_SUCCESS)
     {
-        TracerInfo("Prevalidate OK.\r\n");
+        DebugInfo("Prevalidate OK.\r\n");
 
         // This saves the init command to flash
-        TracerInfo("Saving init command...\r\n");
+        DebugInfo("Saving init command...\r\n");
         if (nrf_dfu_settings_write(NULL) != CC_SUCCESS)
         {
             return NRF_DFU_RES_CODE_OPERATION_FAILED;
@@ -636,7 +645,7 @@ static nrf_dfu_res_code_t dfu_handle_command(dfu_command_t const * p_command, pb
     }
     else
     {
-        TracerInfo("Prevalidate FAILED!\r\n");
+        DebugInfo("Prevalidate FAILED!\r\n");
     }
     return ret_val;
 }
@@ -654,7 +663,7 @@ static uint32_t dfu_decode_commmand(void)
 
     if (!pb_decode(&stream, dfu_packet_fields, &packet))
     {
-        TracerInfo("Handler: Invalid protocol buffer stream\r\n");
+        DebugInfo("Handler: Invalid protocol buffer stream\r\n");
         return 0;
     }
 
@@ -679,7 +688,7 @@ static nrf_dfu_res_code_t nrf_dfu_command_req(void * p_context, nrf_dfu_req_t * 
     switch (p_req->req_type)
     {
         case NRF_DFU_OBJECT_OP_CREATE:
-            TracerInfo("Before OP create command\r\n");
+            DebugInfo("Before OP create command\r\n");
             if(p_req->object_size == 0)
             {
                 return NRF_DFU_RES_CODE_INVALID_PARAMETER;
@@ -691,7 +700,7 @@ static nrf_dfu_res_code_t nrf_dfu_command_req(void * p_context, nrf_dfu_req_t * 
                 return NRF_DFU_RES_CODE_INSUFFICIENT_RESOURCES;
             }
 
-            TracerInfo("Valid Command Create\r\n");
+            DebugInfo("Valid Command Create\r\n");
 
             // Setting DFU to uninitialized.
             m_valid_init_packet_present = false;
@@ -705,13 +714,13 @@ static nrf_dfu_res_code_t nrf_dfu_command_req(void * p_context, nrf_dfu_req_t * 
             break;
 
         case NRF_DFU_OBJECT_OP_CRC:
-            TracerInfo("Valid Command CRC\r\n");
+            DebugInfo("Valid Command CRC\r\n");
             p_res->offset = s_dfu_settings.progress.command_offset;
             p_res->crc = s_dfu_settings.progress.command_crc;
             break;
 
         case NRF_DFU_OBJECT_OP_WRITE:
-            TracerInfo("Before OP write command\r\n");
+            DebugInfo("Before OP write command\r\n");
 
             if ((p_req->req_len + s_dfu_settings.progress.command_offset) > s_dfu_settings.progress.command_size)
 
@@ -719,7 +728,7 @@ static nrf_dfu_res_code_t nrf_dfu_command_req(void * p_context, nrf_dfu_req_t * 
                 // Too large for the command that was requested
                 p_res->offset = s_dfu_settings.progress.command_offset;
                 p_res->crc = s_dfu_settings.progress.command_crc;
-                TracerInfo("Error. Init command larger than expected. \r\n");
+                DebugInfo("Error. Init command larger than expected. \r\n");
                 return NRF_DFU_RES_CODE_INVALID_PARAMETER;
             }
 
@@ -735,15 +744,15 @@ static nrf_dfu_res_code_t nrf_dfu_command_req(void * p_context, nrf_dfu_req_t * 
             break;
 
         case NRF_DFU_OBJECT_OP_EXECUTE:
-            TracerInfo("Before OP execute command\r\n");
+            DebugInfo("Before OP execute command\r\n");
             if (s_dfu_settings.progress.command_offset != s_dfu_settings.progress.command_size)
             {
                 // The object wasn't the right (requested) size
-                TracerInfo("Execute with faulty offset\r\n");
+                DebugInfo("Execute with faulty offset\r\n");
                 return NRF_DFU_RES_CODE_OPERATION_NOT_PERMITTED;
             }
 
-            TracerInfo("Valid command execute\r\n");
+            DebugInfo("Valid command execute\r\n");
 
             if (m_valid_init_packet_present)
             {
@@ -753,7 +762,7 @@ static nrf_dfu_res_code_t nrf_dfu_command_req(void * p_context, nrf_dfu_req_t * 
 
             NRF_LOG_HEXDUMP_INFO(&s_dfu_settings.init_command[0], s_dfu_settings.progress.command_size);
 
-            TracerInfo("\r\n");
+            DebugInfo("\r\n");
 
             if (dfu_decode_commmand() != true)
             {
@@ -763,44 +772,44 @@ static nrf_dfu_res_code_t nrf_dfu_command_req(void * p_context, nrf_dfu_req_t * 
             if ((packet.command.init.has_encrypt && packet.command.init.encrypt == true) ||
                 (packet.signed_command.command.init.has_encrypt && packet.signed_command.command.init.encrypt == true))
             {
-                TracerInfo("Execute application encryption\r\n");
+                DebugInfo("Execute application encryption\r\n");
             }
 
             // We have a valid DFU packet
             if (packet.has_signed_command)
             {
-                TracerInfo("Handling signed command\r\n");
+                DebugInfo("Handling signed command\r\n");
                 ret_val = dfu_handle_signed_command(&packet.signed_command, &stream);
             }
             else if (packet.has_command)
             {
-                TracerInfo("Handling unsigned command\r\n");
+                DebugInfo("Handling unsigned command\r\n");
                 ret_val = dfu_handle_command(&packet.command, &stream);
             }
             else
             {
                 // We had no regular or signed command.
-                TracerInfo("Decoded command but it has no content!!\r\n");
+                DebugInfo("Decoded command but it has no content!!\r\n");
                 return NRF_DFU_RES_CODE_INVALID_OBJECT;
             }
 
             if (ret_val == NRF_DFU_RES_CODE_SUCCESS)
             {
                 // Setting DFU to initialized
-                TracerInfo("Setting DFU flag to initialized\r\n");
+                DebugInfo("Setting DFU flag to initialized\r\n");
                 m_valid_init_packet_present = true;
             }
             break;
 
         case NRF_DFU_OBJECT_OP_SELECT:
-            TracerInfo("Valid Command: NRF_DFU_OBJECT_OP_SELECT\r\n");
+            DebugInfo("Valid Command: NRF_DFU_OBJECT_OP_SELECT\r\n");
             p_res->crc = s_dfu_settings.progress.command_crc;
             p_res->offset = s_dfu_settings.progress.command_offset;
             p_res->max_size = INIT_COMMAND_MAX_SIZE;
             break;
 
         default:
-            TracerInfo("Invalid Command Operation\r\n");
+            DebugInfo("Invalid Command Operation\r\n");
             ret_val = NRF_DFU_RES_CODE_OP_CODE_NOT_SUPPORTED;
             break;
     }
@@ -825,12 +834,12 @@ static nrf_dfu_res_code_t nrf_dfu_data_req(void * p_context, nrf_dfu_req_t * p_r
     switch (p_req->req_type)
     {
         case NRF_DFU_OBJECT_OP_CREATE:
-            TracerInfo("Before OP create\r\n");
+            DebugInfo("Before OP create\r\n");
 
             if (p_req->object_size == 0)
             {
                 // Empty object is not possible
-                //TracerInfo("Trying to create data object of size 0\r\n");
+                //DebugInfo("Trying to create data object of size 0\r\n");
                 return NRF_DFU_RES_CODE_INVALID_PARAMETER;
             }
 
@@ -844,24 +853,24 @@ static nrf_dfu_res_code_t nrf_dfu_data_req(void * p_context, nrf_dfu_req_t * p_r
             if (p_req->object_size > DATA_OBJECT_MAX_SIZE)
             {
                 // It is impossible to handle the command because the size is too large
-                TracerInfo("Invalid size for object (too large)\r\n");
+                DebugInfo("Invalid size for object (too large)\r\n");
                 return NRF_DFU_RES_CODE_INSUFFICIENT_RESOURCES;
             }
 
             if (m_valid_init_packet_present == false)
             {
                 // Can't accept data because DFU isn't initialized by init command.
-                TracerInfo("Trying to create data object without valid init command\r\n");
+                DebugInfo("Trying to create data object without valid init command\r\n");
                 return NRF_DFU_RES_CODE_OPERATION_NOT_PERMITTED;
             }
 
             if ((s_dfu_settings.progress.firmware_image_offset_last + p_req->object_size) > m_firmware_size_req)
             {
-                TracerInfo("Trying to create an object of size %d, when offset is 0x%08x and firmware size is 0x%08x\r\n", p_req->object_size, s_dfu_settings.progress.firmware_image_offset_last, m_firmware_size_req);
+                DebugInfo("Trying to create an object of size %d, when offset is 0x%08x and firmware size is 0x%08x\r\n", p_req->object_size, s_dfu_settings.progress.firmware_image_offset_last, m_firmware_size_req);
                 return NRF_DFU_RES_CODE_OPERATION_NOT_PERMITTED;
             }
 
-            TracerInfo("Valid Data Create\r\n");
+            DebugInfo("Valid Data Create\r\n");
 
             s_dfu_settings.progress.firmware_image_crc    = s_dfu_settings.progress.firmware_image_crc_last;
             s_dfu_settings.progress.data_object_size      = p_req->object_size;
@@ -875,11 +884,11 @@ static nrf_dfu_res_code_t nrf_dfu_data_req(void * p_context, nrf_dfu_req_t * p_r
             if (nrf_dfu_flash_erase((uint32_t*)(m_firmware_start_addr + s_dfu_settings.progress.firmware_image_offset), CEIL_DIV(p_req->object_size, CODE_PAGE_SIZE), dfu_data_write_handler) != FS_SUCCESS)
             {
                 m_flash_operations_pending--;
-                TracerInfo("Erase operation failed\r\n");
+                DebugInfo("Erase operation failed\r\n");
                 return NRF_DFU_RES_CODE_INVALID_OBJECT;
             }
 
-            TracerInfo("Creating object with size: %d. Offset: 0x%08x, CRC: 0x%08x\r\n", s_dfu_settings.progress.data_object_size, s_dfu_settings.progress.firmware_image_offset, s_dfu_settings.progress.firmware_image_crc);
+            DebugInfo("Creating object with size: %d. Offset: 0x%08x, CRC: 0x%08x\r\n", s_dfu_settings.progress.data_object_size, s_dfu_settings.progress.firmware_image_offset, s_dfu_settings.progress.firmware_image_crc);
 
             break;
 
@@ -902,7 +911,7 @@ static nrf_dfu_res_code_t nrf_dfu_data_req(void * p_context, nrf_dfu_req_t * p_r
             if ((p_req->req_len + s_dfu_settings.progress.firmware_image_offset - s_dfu_settings.progress.firmware_image_offset_last) > s_dfu_settings.progress.data_object_size)
             {
                 // Can't accept data because too much data has been received.
-                TracerInfo("Write request too long\r\n");
+                DebugInfo("Write request too long\r\n");
                 return NRF_DFU_RES_CODE_INVALID_PARAMETER;
             }
 
@@ -946,14 +955,14 @@ static nrf_dfu_res_code_t nrf_dfu_data_req(void * p_context, nrf_dfu_req_t * p_r
                 ++m_flash_operations_pending;
                 if (nrf_dfu_flash_store(p_write_addr, (uint32_t*)&m_data_buf[m_current_data_buffer][0], CEIL_DIV(m_data_buf_pos,4), dfu_data_write_handler) == FS_SUCCESS)
                 {
-                    TracerInfo("Storing %d B at: 0x%08x\r\n", m_data_buf_pos, (uint32_t)p_write_addr);
+                    DebugInfo("Storing %d B at: 0x%08x\r\n", m_data_buf_pos, (uint32_t)p_write_addr);
                     // Pre-calculate Offset + CRC assuming flash operation went OK
                     s_dfu_settings.write_offset += m_data_buf_pos;
                 }
                 else
                 {
                     --m_flash_operations_pending;
-                    TracerInfo("!!! Failed storing %d B at address: 0x%08x\r\n", m_data_buf_pos, (uint32_t)p_write_addr);
+                    DebugInfo("!!! Failed storing %d B at address: 0x%08x\r\n", m_data_buf_pos, (uint32_t)p_write_addr);
                     // Previous flash operation failed. Revert CRC and offset.
                     s_dfu_settings.progress.firmware_image_crc = s_dfu_settings.progress.firmware_image_crc_last;
                     s_dfu_settings.progress.firmware_image_offset = s_dfu_settings.progress.firmware_image_offset_last;
@@ -986,13 +995,13 @@ static nrf_dfu_res_code_t nrf_dfu_data_req(void * p_context, nrf_dfu_req_t * p_r
                 ++m_flash_operations_pending;
                 if (nrf_dfu_flash_store(p_write_addr, (uint32_t*)&m_data_buf[m_current_data_buffer][0], CEIL_DIV(m_data_buf_pos,4), dfu_data_write_handler) == FS_SUCCESS)
                 {
-                    TracerInfo("Storing %d B at: 0x%08x\r\n", m_data_buf_pos, (uint32_t)p_write_addr);
+                    DebugInfo("Storing %d B at: 0x%08x\r\n", m_data_buf_pos, (uint32_t)p_write_addr);
                     s_dfu_settings.write_offset += m_data_buf_pos;
                 }
                 else
                 {
                     --m_flash_operations_pending;
-                    TracerInfo("!!! Failed storing %d B at address: 0x%08x\r\n", m_data_buf_pos, (uint32_t)p_write_addr);
+                    DebugInfo("!!! Failed storing %d B at address: 0x%08x\r\n", m_data_buf_pos, (uint32_t)p_write_addr);
                     // Previous flash operation failed. Revert CRC and offset.
                     s_dfu_settings.progress.firmware_image_crc = s_dfu_settings.progress.firmware_image_crc_last;
                     s_dfu_settings.progress.firmware_image_offset = s_dfu_settings.progress.firmware_image_offset_last;
@@ -1009,23 +1018,23 @@ static nrf_dfu_res_code_t nrf_dfu_data_req(void * p_context, nrf_dfu_req_t * p_r
             break;
 
         case NRF_DFU_OBJECT_OP_CRC:
-            TracerInfo("Before OP crc\r\n");
+            DebugInfo("Before OP crc\r\n");
             p_res->offset = s_dfu_settings.progress.firmware_image_offset;
             p_res->crc = s_dfu_settings.progress.firmware_image_crc;
             break;
 
         case NRF_DFU_OBJECT_OP_EXECUTE:
-            TracerInfo("Before OP execute\r\n");
+            DebugInfo("Before OP execute\r\n");
             if (s_dfu_settings.progress.data_object_size !=
                 s_dfu_settings.progress.firmware_image_offset -
                 s_dfu_settings.progress.firmware_image_offset_last)
             {
                 // The size of the written object was not as expected.
-                TracerInfo("Invalid data here: exp: %d, got: %d\r\n", s_dfu_settings.progress.data_object_size, s_dfu_settings.progress.firmware_image_offset - s_dfu_settings.progress.firmware_image_offset_last);
+                DebugInfo("Invalid data here: exp: %d, got: %d\r\n", s_dfu_settings.progress.data_object_size, s_dfu_settings.progress.firmware_image_offset - s_dfu_settings.progress.firmware_image_offset_last);
                 return NRF_DFU_RES_CODE_OPERATION_NOT_PERMITTED;
             }
 
-            TracerInfo("Valid Data Execute\r\n");
+            DebugInfo("Valid Data Execute\r\n");
 
             // Update the offset and crc values for the last object written.
             s_dfu_settings.progress.data_object_size = 0;
@@ -1038,13 +1047,13 @@ static nrf_dfu_res_code_t nrf_dfu_data_req(void * p_context, nrf_dfu_req_t * p_r
 
             if (s_dfu_settings.progress.firmware_image_offset == m_firmware_size_req)
             {
-                TracerInfo("Waiting for %d pending flash operations before doing postvalidate.\r\n", m_flash_operations_pending);
+                DebugInfo("Waiting for %d pending flash operations before doing postvalidate.\r\n", m_flash_operations_pending);
                 while(m_flash_operations_pending)
                 {
                     nrf_dfu_wait();
                 }
                 // Received the whole image. Doing postvalidate.
-                TracerInfo("Doing postvalidate\r\n");
+                DebugInfo("Doing postvalidate\r\n");
                 if (packet.has_signed_command)
                     ret_val = nrf_dfu_postvalidate(&packet.signed_command.command.init);
                 else if (packet.has_command)
@@ -1053,14 +1062,14 @@ static nrf_dfu_res_code_t nrf_dfu_data_req(void * p_context, nrf_dfu_req_t * p_r
             break;
 
         case NRF_DFU_OBJECT_OP_SELECT:
-            TracerInfo("Valid Data Read info\r\n");
+            DebugInfo("Valid Data Read info\r\n");
             p_res->crc = s_dfu_settings.progress.firmware_image_crc;
             p_res->offset = s_dfu_settings.progress.firmware_image_offset;
             p_res->max_size = DATA_OBJECT_MAX_SIZE;
             break;
 
         default:
-            TracerInfo("Invalid Data Operation\r\n");
+            DebugInfo("Invalid Data Operation\r\n");
             ret_val = NRF_DFU_RES_CODE_OP_CODE_NOT_SUPPORTED;
             break;
     }
@@ -1139,7 +1148,7 @@ nrf_dfu_res_code_t nrf_dfu_req_handler_on_req(void * p_context, nrf_dfu_req_t * 
             break;
 
         default:
-            TracerInfo("Invalid request type\r\n");
+            DebugInfo("Invalid request type\r\n");
             ret_val = NRF_DFU_RES_CODE_INVALID_OBJECT;
             break;
     }

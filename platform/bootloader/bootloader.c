@@ -1,60 +1,70 @@
-/* Copyright (c) 2016 Nordic Semiconductor. All Rights Reserved.
+/* Copyright (c) 2018 Cloudchip, Inc. All Rights Reserved.
  *
- * The information contained herein is property of Nordic Semiconductor ASA.
- * Terms and conditions of usage are described in detail in NORDIC
- * SEMICONDUCTOR STANDARD SOFTWARE LICENSE AGREEMENT.
+ * The information contained herein is property of Cloudchip, Inc.
+ * Terms and conditions of usage are described in detail in CLOUDCHIP
+ * STANDARD SOFTWARE LICENSE AGREEMENT.
  *
- * Licensees are granted free, non-transferable use of the information. NO
- * WARRANTY of ANY KIND is provided. This heading must NOT be removed from
- * the file.
- *
+ * Licensees are granted free, non-transferable use of the information.
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * from the file.
  */
 
 #include "bootloader.h"
 
-//#include "compiler_abstraction.h"
-//#include "nrf.h"
-#include "fota_bootloader_app_start.h"
-#include "bootloader_info.h"
 #include "tracer.h"
 #include "fota.h"
 #include "error.h"
 
-uint32_t nrf_bootloader_init(void)
+
+#define EF_ENTRY(addr)                (addr+4)
+#define EF_ENTRY_PTR(addr)            (*(volatile uint32_t*)EF_ENTRY(addr))
+#define gotoApplication(addr)         ((void (*)(void))(EF_ENTRY_PTR(addr)))()
+
+void JumpToApplication(uint32_t dwStartAddr)
 {
-    TracerInfo("In nrf_bootloader_init\r\n");
+    TracerInfo("Jump to application address: 0x%08x\r\n", dwStartAddr);
+
+    // Jump to application
+    gotoApplication(dwStartAddr);
+}
+
+uint32_t BootloaderInit(T_FotaConfig *tpConfig)
+{
+    TracerInfo("Bootloader init start...\r\n");
 
     uint32_t ret_val = CC_SUCCESS;
 
-    // Call DFU init function if implemented
-    ret_val = nrf_dfu_init();
+    ret_val = FotaInit(tpConfig);
     if (ret_val != CC_SUCCESS)
     {
         return ret_val;
     }
 
-    TracerInfo("After nrf_bootloader_init\r\n");
+    TracerInfo("Bootloader init done...\r\n");
     return ret_val;
 }
 
-void bootloader_main(void)
+void BootloaderMain(void)
 {
     uint32_t ret_val;
+    T_FotaConfig tBlConfig;
 
-    TracerInfo("Inside main\r\n");
+    TracerInfo("Bootloader main start...\r\n");
 
-    ret_val = nrf_bootloader_init();
+    tBlConfig.dwEflashStartAddr = EFLASH_START_ADDRESS;
+    tBlConfig.dwEflashTotalSize = EFLASH_TOTAL_SIZE;
+    tBlConfig.dwAppStartAddr    = APPLICATION_START_ADDRESS;
+    tBlConfig.dwUserDataSize    = USER_DATA_SIZE;
+
+    ret_val = BootloaderInit(&tBlConfig);
     if (ret_val != CC_SUCCESS)
     {
         TracerInfo("bootloader init fail!!\r\n");
         return;
     }
 
-    // Either there was no DFU functionality enabled in this project or the DFU module detected
-    // no ongoing DFU operation and found a valid main application.
-    // Boot the main application.
-    nrf_bootloader_app_start(MAIN_APPLICATION_START_ADDR);
+    // Boot the application
+    JumpToApplication(tBlConfig.dwAppStartAddr);
 
-    // Should never be reached.
-    TracerInfo("After main\r\n");
+    TracerInfo("Bootloader main done...\r\n");
 }

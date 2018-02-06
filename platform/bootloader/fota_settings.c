@@ -21,6 +21,13 @@
 #include "error.h"
 #include "tracer.h"
 
+#define DEBUG_LOG 0
+
+#if (DEBUG_LOG) && DEBUG_LOG
+#define DebugInfo          DebugInfo
+#else
+#define DebugInfo(x...)    do { ; } while (0)
+#endif
 
 /** @brief  This variable reserves a codepage for bootloader specific settings,
  *          to ensure the compiler doesn't locate any code or variables at his location.
@@ -62,7 +69,7 @@ static void wait_for_pending(void)
 {
     while (flash_operation_pending == true)
     {
-        TracerInfo("Waiting for other flash operation to finish.\r\n");
+        DebugInfo("Waiting for other flash operation to finish.\r\n");
         delay_operation();
     }
 }
@@ -71,7 +78,7 @@ static void wait_for_queue(void)
 {
     while (fs_queue_is_full())
     {
-        TracerInfo("Waiting for available space on flash queue.\r\n");
+        DebugInfo("Waiting for available space on flash queue.\r\n");
         delay_operation();
     }
 }
@@ -84,9 +91,9 @@ uint32_t nrf_dfu_settings_calculate_crc(void)
 }
 
 
-void nrf_dfu_settings_init(void)
+void BootloaderSettingInit(void)
 {
-    TracerInfo("running n rf_dfu_settings_init\r\n");
+    DebugInfo("running n rf_dfu_settings_init\r\n");
 
     uint32_t crc;
 
@@ -106,7 +113,7 @@ void nrf_dfu_settings_init(void)
     }
 
     // Reached if nothing is configured or if CRC was wrong
-    TracerInfo("!!!!!!!!!!!!!!! Resetting bootloader settings !!!!!!!!!!!\r\n");
+    DebugInfo("!!!!!!!!!!!!!!! Resetting bootloader settings !!!!!!!!!!!\r\n");
     memset(&s_dfu_settings, 0x00, sizeof(nrf_dfu_settings_t));
     s_dfu_settings.settings_version = NRF_DFU_SETTINGS_VERSION;
     //Blake, remove APP_ERROR_CHECK
@@ -118,7 +125,7 @@ void nrf_dfu_settings_init(void)
 int nrf_dfu_settings_write(dfu_flash_callback_t callback)
 {
     int err_code = FS_SUCCESS;
-    TracerInfo("Erasing old settings at: 0x%08x\r\n", (uint32_t)&m_dfu_settings_buffer[0]);
+    DebugInfo("Erasing old settings at: 0x%08x\r\n", (uint32_t)&m_dfu_settings_buffer[0]);
 
     // Wait for any ongoing operation (because of multiple calls to nrf_dfu_settings_write)
     wait_for_pending();
@@ -146,7 +153,7 @@ int nrf_dfu_settings_write(dfu_flash_callback_t callback)
 
     s_dfu_settings.crc = nrf_dfu_settings_calculate_crc();
 
-    TracerInfo("Writing 0x%08x words\r\n", sizeof(nrf_dfu_settings_t)/4);
+    DebugInfo("Writing 0x%08x words\r\n", sizeof(nrf_dfu_settings_t)/4);
 
     static nrf_dfu_settings_t temp_dfu_settings;
     memcpy(&temp_dfu_settings, &s_dfu_settings, sizeof(nrf_dfu_settings_t));
@@ -169,18 +176,18 @@ int nrf_dfu_settings_write(dfu_flash_callback_t callback)
         return CC_ERROR_INTERNAL;
     }
 
-    TracerInfo("Writing settings...\r\n");
+    DebugInfo("Writing settings...\r\n");
     return CC_SUCCESS;
 }
 
 #if defined(APPLICATION) && APPLICATION
-void enter_bootloader(dfu_flash_callback_t callback)
+void EnterBootloader(T_callback callback)
 {
-    TracerInfo("Device is entering bootloader mode!\r\n");
+    DebugInfo("Device is entering bootloader mode!\r\n");
 
     s_dfu_settings.enter_buttonless_dfu = true;
 
-    (void)nrf_dfu_settings_write(callback);
+    (void)nrf_dfu_settings_write((dfu_flash_callback_t)callback);
 
     /*
     TODO:

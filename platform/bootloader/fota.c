@@ -15,7 +15,6 @@
 #include "fota.h"
 //#include "nrf_dfu_transport.h"
 #include "fota_utils.h"
-#include "fota_bootloader_app_start.h"
 #include "fota_settings.h"
 #include "drvi_gpio.h"
 #include "app_scheduler.h"
@@ -23,7 +22,6 @@
 #include "tracer.h"
 //#include "boards.h"
 #include "sw_timer.h"
-#include "bootloader_info.h"
 #include "fota_req_handler.h"
 #include "fota_transport.h"
 #ifdef CFG_BLE_APP
@@ -31,6 +29,13 @@
 #include "rwip.h"
 #endif
 
+#define DEBUG_LOG 0
+
+#if (DEBUG_LOG) && DEBUG_LOG
+#define DebugInfo          TracerInfo
+#else
+#define DebugInfo(x...)    do { ; } while (0)
+#endif
 
 typedef void (*sw_timer_timeout_handler_t)(void * p_context);
 
@@ -48,6 +53,19 @@ typedef struct
 #define APP_TIMER_OP_QUEUE_SIZE         4                                                       /**< Size of timer operation queues. */
 
 
+#define FOTA_EF_ENTRY(addr)                (addr+4)
+#define FOTA_EF_ENTRY_PTR(addr)            (*(volatile uint32_t*)FOTA_EF_ENTRY(addr))
+#define FOTA_BOOT_APPLICATION(addr)        ((void (*)(void))(FOTA_EF_ENTRY_PTR(addr)))()
+
+void FotaBootToApplication(uint32_t dwStartAddr)
+{
+    DebugInfo("Jump to application address: 0x%08x\r\n", dwStartAddr);
+
+    // Jump to application
+    FOTA_BOOT_APPLICATION(dwStartAddr);
+}
+
+
 // Weak function implementation
 
 /** @brief Weak implemenation of nrf_dfu_check_enter.
@@ -57,14 +75,16 @@ typedef struct
  */
 __WEAK bool nrf_dfu_enter_check(void)
 {
-/*    
-    drvi_GpioDirectInput(GPIO_PIN_1);
 
-    if (drvi_GpioRead(GPIO_PIN_1) == 0)
+#ifdef BOOTLOADER_BUTTON
+    drvi_GpioDirectInput(BOOTLOADER_BUTTON);
+
+    if (drvi_GpioRead(BOOTLOADER_BUTTON) == 0)
     {
         return true;
     }
-*/
+#endif
+
     if (s_dfu_settings.enter_buttonless_dfu == 1)
     {
         s_dfu_settings.enter_buttonless_dfu = 0;
@@ -125,14 +145,14 @@ static void fota_test(void)
     dfu_req.obj_type = NRF_DFU_OBJ_TYPE_COMMAND;
     dfu_req.req_type = NRF_DFU_OBJECT_OP_SELECT;
     res_code = nrf_dfu_req_handler_on_req(NULL, &dfu_req, &dfu_res);
-    TracerInfo("Sending Response: [0x%01x, 0x%01x]\r\n", dfu_req.req_type, res_code);
+    DebugInfo("Sending Response: [0x%01x, 0x%01x]\r\n", dfu_req.req_type, res_code);
 
     // 2nd cmd, CREATE
     dfu_req.obj_type    =  NRF_DFU_OBJ_TYPE_COMMAND;
     dfu_req.object_size = 0x40; //Header DAT size
     dfu_req.req_type    = NRF_DFU_OBJECT_OP_CREATE;
     res_code = nrf_dfu_req_handler_on_req(NULL, &dfu_req, &dfu_res);
-    TracerInfo("Sending Response: [0x%01x, 0x%01x]\r\n", dfu_req.req_type, res_code);
+    DebugInfo("Sending Response: [0x%01x, 0x%01x]\r\n", dfu_req.req_type, res_code);
 
     // 3rd cmd, WRITE Header/20 bytes, around 7 times
     {
@@ -153,13 +173,13 @@ static void fota_test(void)
 
             offset += dfu_req.req_len;
             res_code = nrf_dfu_req_handler_on_req(NULL, &dfu_req, &dfu_res);
-            //TracerInfo("Sending Response: [0x%01x, 0x%01x]\r\n", dfu_req.req_type, res_code);
+            //DebugInfo("Sending Response: [0x%01x, 0x%01x]\r\n", dfu_req.req_type, res_code);
         }
     }
     // 4th cmd, EXECUTE
     dfu_req.req_type     =  NRF_DFU_OBJECT_OP_EXECUTE;
     res_code = nrf_dfu_req_handler_on_req(NULL, &dfu_req, &dfu_res);
-    TracerInfo("Sending Response: [0x%01x, 0x%01x]\r\n", dfu_req.req_type, res_code);
+    DebugInfo("Sending Response: [0x%01x, 0x%01x]\r\n", dfu_req.req_type, res_code);
 
     //Data transfer start
     buffer = (char *)0x20011000;
@@ -168,14 +188,14 @@ static void fota_test(void)
     dfu_req.obj_type = NRF_DFU_OBJ_TYPE_DATA;
     dfu_req.req_type = NRF_DFU_OBJECT_OP_SELECT;
     res_code = nrf_dfu_req_handler_on_req(NULL, &dfu_req, &dfu_res);
-    TracerInfo("Sending Response: [0x%01x, 0x%01x]\r\n", dfu_req.req_type, res_code);
+    DebugInfo("Sending Response: [0x%01x, 0x%01x]\r\n", dfu_req.req_type, res_code);
 
     // 2nd cmd, CREATE
     dfu_req.obj_type    =  NRF_DFU_OBJ_TYPE_DATA;
     dfu_req.object_size = 0x358C; //Image BIN size
     dfu_req.req_type    = NRF_DFU_OBJECT_OP_CREATE;
     res_code = nrf_dfu_req_handler_on_req(NULL, &dfu_req, &dfu_res);
-    TracerInfo("Sending Response: [0x%01x, 0x%01x]\r\n", dfu_req.req_type, res_code);
+    DebugInfo("Sending Response: [0x%01x, 0x%01x]\r\n", dfu_req.req_type, res_code);
 
     // 3rd cmd, WRITE Header/20 bytes, around 7 times
     {
@@ -196,29 +216,37 @@ static void fota_test(void)
 
             offset += dfu_req.req_len;
             res_code = nrf_dfu_req_handler_on_req(NULL, &dfu_req, &dfu_res);
-            //TracerInfo("Sending Response: [0x%01x, 0x%01x]\r\n", dfu_req.req_type, res_code);
+            //DebugInfo("Sending Response: [0x%01x, 0x%01x]\r\n", dfu_req.req_type, res_code);
         }
     }
 
     // 4th cmd, EXECUTE
     dfu_req.req_type     =  NRF_DFU_OBJECT_OP_EXECUTE;
     res_code = nrf_dfu_req_handler_on_req(NULL, &dfu_req, &dfu_res);
-    TracerInfo("Sending Response: [0x%01x, 0x%01x]\r\n", dfu_req.req_type, res_code);
+    DebugInfo("Sending Response: [0x%01x, 0x%01x]\r\n", dfu_req.req_type, res_code);
 }
 #endif
 
-void nrf_dfu_wait()
+void nrf_dfu_wait(void)
 {
     app_sched_execute();
 }
 
+T_FotaConfig PartitionInfo;
 
-uint32_t nrf_dfu_init()
+uint32_t FotaInit(T_FotaConfig *tpConfig)
 {
     uint32_t ret_val = CC_SUCCESS;
     uint32_t enter_bootloader_mode = 0;
 
-    TracerInfo("In real nrf_dfu_init\r\n");
+    DebugInfo("In FotaInit\r\n");
+
+    memset(&PartitionInfo, 0, sizeof(T_FotaConfig));
+
+    PartitionInfo.dwEflashStartAddr = tpConfig->dwEflashStartAddr;
+    PartitionInfo.dwEflashTotalSize = tpConfig->dwEflashTotalSize;
+    PartitionInfo.dwAppStartAddr    = tpConfig->dwAppStartAddr;
+    PartitionInfo.dwUserDataSize    = tpConfig->dwUserDataSize;
 
 #if defined(FSTORAGE_ENABLED) && FSTORAGE_ENABLED
     ret_val = nrf_dfu_flash_init(true);
@@ -228,7 +256,7 @@ uint32_t nrf_dfu_init()
 
     if (ret_val)
     {
-        TracerInfo("Could not initalize flash\n");
+        DebugInfo("Could not initalize flash\n");
         return ret_val;
     }
 
@@ -239,7 +267,7 @@ uint32_t nrf_dfu_init()
     ret_val = nrf_dfu_continue(&enter_bootloader_mode);
     if(ret_val != CC_SUCCESS)
     {
-        TracerInfo("Could not continue DFU operation: 0x%08x\r\n");
+        DebugInfo("Could not continue DFU operation: 0x%08x\r\n");
         enter_bootloader_mode = 1;
     }
 
@@ -247,7 +275,7 @@ uint32_t nrf_dfu_init()
     // besides the effect of the continuation
     if (nrf_dfu_enter_check())
     {
-        TracerInfo("Application sent bootloader request\n");
+        DebugInfo("Application sent bootloader request\n");
         enter_bootloader_mode = 1;
     }
 
@@ -260,14 +288,14 @@ uint32_t nrf_dfu_init()
         ret_val = fota_transports_init();
         if (ret_val != CC_SUCCESS)
         {
-            TracerInfo("Could not initalize DFU transport: 0x%08x\r\n");
+            DebugInfo("Could not initalize DFU transport: 0x%08x\r\n");
             return ret_val;
         }
 
         (void)nrf_dfu_req_handler_init();
 
         // This function will never return
-        TracerInfo("Waiting for events\r\n");
+        DebugInfo("Waiting for events\r\n");
 
 #ifdef FOTA_TEST_NO_BLE
         // Blake, Add for testing DFU request handle to simulation BLE
@@ -275,16 +303,16 @@ uint32_t nrf_dfu_init()
 #endif
 
         wait_for_event();
-        TracerInfo("After waiting for events\r\n");
+        DebugInfo("After waiting for events\r\n");
     }
 
     if (nrf_dfu_app_is_valid())
     {
-        TracerInfo("Jumping to: 0x%08x\r\n", MAIN_APPLICATION_START_ADDR);
-        nrf_bootloader_app_start(MAIN_APPLICATION_START_ADDR);
+        DebugInfo("Jumping to: 0x%08x\r\n", PartitionInfo.dwAppStartAddr);
+        FOTA_BOOT_APPLICATION(PartitionInfo.dwAppStartAddr);
     }
 
     // Should not be reached!
-    TracerInfo("After real nrf_dfu_init\r\n");
+    DebugInfo("After FotaInit\r\n");
     return CC_SUCCESS;
 }

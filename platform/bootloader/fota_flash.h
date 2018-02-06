@@ -1,13 +1,12 @@
-/* Copyright (c) 2016 Nordic Semiconductor. All Rights Reserved.
+/* Copyright (c) 2018 Cloudchip, Inc. All Rights Reserved.
  *
- * The information contained herein is property of Nordic Semiconductor ASA.
- * Terms and conditions of usage are described in detail in NORDIC
- * SEMICONDUCTOR STANDARD SOFTWARE LICENSE AGREEMENT.
+ * The information contained herein is property of Cloudchip, Inc.
+ * Terms and conditions of usage are described in detail in CLOUDCHIP
+ * STANDARD SOFTWARE LICENSE AGREEMENT.
  *
- * Licensees are granted free, non-transferable use of the information. NO
- * WARRANTY of ANY KIND is provided. This heading must NOT be removed from
- * the file.
- *
+ * Licensees are granted free, non-transferable use of the information.
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * from the file.
  */
 
 /**@file
@@ -17,44 +16,14 @@
  * @ingroup  sdk_nrf_dfu
  */
 
-#ifndef NRF_DFU_FLASH_H__
-#define NRF_DFU_FLASH_H__
+#ifndef _FOTA_FLASH_H_
+#define _FOTA_FLASH_H_
 
 #include <stdint.h>
 #include <stdbool.h>
 #include "fstorage.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
-/**@brief   fstorage event handler function for DFU fstorage operations.
- *
- * This function is intended to be registered to the fstorage module as the event handler for all DFU flash operations.
- * When each flash operation has completed or failed this function will be called.
- *
- * See ::fs_cb_t for implementation details.
- */
 typedef fs_cb_t dfu_flash_callback_t;
-
-/**@brief Function for initializing the flash module.
- *
- * You can use this module with or without a SoftDevice:
- * - If the module is initialized with the SoftDevice enabled flag set, the @ref fstorage
- *   module is used as back end for all flash operations. Flash storage calls
- *   are asynchronous; the SoftDevice manages when the actual operation in
- *   flash is done.
- * - If the module is initialized with the SoftDevice enabled flag not set,
- *   the non-volatile memory controller (NVMC) driver handles the flash operations
- *   by directly accessing flash. These operations are synchronous.
- *
- * @param[in]  sd_enabled Set the flash handling to run with or without the SoftDevice enabled.
- *
- * @retval CC_SUCCESS             If the operation was successful.
- * @retval NRF_ERROR_INVALID_STATE If the fstorage module could not be initiated or the SoftDevice could not set the event handler.
- */
-uint32_t nrf_dfu_flash_init(bool fstorage_enable);
 
 
 /**@brief Function for storing data to flash (with or without the SoftDevice enabled).

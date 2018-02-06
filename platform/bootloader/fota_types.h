@@ -1,13 +1,12 @@
-/* Copyright (c) 2016 Nordic Semiconductor. All Rights Reserved.
+/* Copyright (c) 2018 Cloudchip, Inc. All Rights Reserved.
  *
- * The information contained herein is property of Nordic Semiconductor ASA.
- * Terms and conditions of usage are described in detail in NORDIC
- * SEMICONDUCTOR STANDARD SOFTWARE LICENSE AGREEMENT.
+ * The information contained herein is property of Cloudchip, Inc.
+ * Terms and conditions of usage are described in detail in CLOUDCHIP
+ * STANDARD SOFTWARE LICENSE AGREEMENT.
  *
- * Licensees are granted free, non-transferable use of the information. NO
- * WARRANTY of ANY KIND is provided. This heading must NOT be removed from
- * the file.
- *
+ * Licensees are granted free, non-transferable use of the information.
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * from the file.
  */
 
 /**@file
@@ -22,24 +21,14 @@
 
 #include <stdint.h>
 #include <stddef.h>
-//#include "nrf_mbr.h"
-//#include "nrf_sdm.h"
 
-//Blake
 #define PAGE_SIZE_IN_WORDS  (1024)
 #define NRF_DFU_SETTINGS_VERSION 1
+
 /** @brief The size that must be reserved for the MBR when a softdevice is written to flash.
 This is the offset where the first byte of the softdevice hex file is written.*/
 #define MBR_SIZE                (0x1000)
-/** @brief Defines a macro for retreiving the actual SoftDevice size value from a given base
- *         address. Use @ref MBR_SIZE as the argument when the SoftDevice is installed just above
- *         the MBR (the usual case). */
-#define SD_SIZE_GET(baseaddr) (*((uint32_t *) ((baseaddr) + 0x10000000)))
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #define INIT_COMMAND_MAX_SIZE       256     /**< Maximum size of the init command stored in dfu_settings. */
 
@@ -48,85 +37,30 @@ extern "C" {
  *          flash space in the bootloader region. It is checked against NRF_UICR->CODEPAGESIZE
  *          at run time to ensure that the region is correct.
  */
-//#if defined(NRF51)
-    #define CODE_PAGE_SIZE            (PAGE_SIZE_IN_WORDS*sizeof(uint32_t))
-//#elif defined(NRF52)
-//    #define CODE_PAGE_SIZE            (MBR_PAGE_SIZE_IN_WORDS*sizeof(uint32_t))
-//#else
-//    #error "Architecture not set."
-//#endif
+#define CODE_PAGE_SIZE            (PAGE_SIZE_IN_WORDS*sizeof(uint32_t))
 
 
 /** @brief  Maximum size of a data object.*/
-//#ifdef NRF51
+#define DATA_OBJECT_MAX_SIZE           (CODE_PAGE_SIZE * 4)
 
-    #define DATA_OBJECT_MAX_SIZE           (CODE_PAGE_SIZE * 4)
-
-//#elif NRF52
-
-//    #define DATA_OBJECT_MAX_SIZE           (CODE_PAGE_SIZE)
-
-//#else
-
-//    #error "Architecture not set."
-
-//#endif
 
 /** @brief  Page location of the bootloader settings address.
  */
+#define BOOTLOADER_SETTINGS_ADDRESS     (0x1003F000UL)
 
-//#if defined (NRF51 )
-
-//    #define BOOTLOADER_SETTINGS_ADDRESS     (0x0003FC00UL)
-
-//#elif defined ( NRF52 )
-
-    #define BOOTLOADER_SETTINGS_ADDRESS     (0x1003F000UL)
-
-//#else
-
-//    #error No valid target set for BOOTLOADER_SETTINGS_ADDRESS.
-
-//#endif
-
-
-
-#if defined(NRF52)
-
-/**
- * @brief   MBR parameters page in UICR.
- *
- * Register location in UICR where the page address of the MBR parameters page is stored (only used by the nRF52 MBR).
- *
- * @note If the value at the given location is 0xFFFFFFFF, no MBR parameters page is set.
- */
-#define NRF_UICR_MBR_PARAMS_PAGE_ADDRESS        (NRF_UICR_BASE + 0x18)
-
-
-/** @brief Page location of the MBR parameters page address.
- *
- */
-#define NRF_MBR_PARAMS_PAGE_ADDRESS         (0x0007E000UL)
-
-#endif
 
 /** @brief  Size of the flash space reserved for application data.
  */
-#ifndef DFU_APP_DATA_RESERVED
-#define DFU_APP_DATA_RESERVED               CODE_PAGE_SIZE * 3
-#endif
+//#ifndef DFU_APP_DATA_RESERVED
+//#define DFU_APP_DATA_RESERVED               CODE_PAGE_SIZE * 3
+//#endif
 
 
 /** @brief Total size of the region between the SoftDevice and the bootloader.
  */
-//#define DFU_REGION_TOTAL_SIZE               ((* (uint32_t *)NRF_UICR_BOOTLOADER_START_ADDRESS) - CODE_REGION_1_START)
-//Blake BOOTLOADER start address
-#define DFU_REGION_TOTAL_SIZE               ((0x10040000) - CODE_REGION_1_START)
-
-
-/** @brief Start address of the SoftDevice (excluding the area for the MBR).
- */
-#define SOFTDEVICE_REGION_START             MBR_SIZE
+//#ifndef DFU_APP_DATA_RESERVED
+//#define DFU_REGION_TOTAL_SIZE               ((0x10040000) - CODE_REGION_1_START)
+//#endif
 
 
 /** @brief Size of the Code Region 0, found in the UICR.CLEN0 register.
@@ -136,10 +70,9 @@ extern "C" {
  *          into the bootloader. At run time, the bootloader uses the value found in UICR.CLEN0.
  */
 
-#ifndef CODE_REGION_1_START
-//#define CODE_REGION_1_START                 SD_SIZE_GET(MBR_SIZE)
-#define CODE_REGION_1_START                 0x10010000
-#endif
+//#ifndef CODE_REGION_1_START
+//#define CODE_REGION_1_START                 0x10010000
+//#endif
 
 #define NRF_DFU_CURRENT_BANK_0 0x00
 #define NRF_DFU_CURRENT_BANK_1 0x01
@@ -214,10 +147,6 @@ typedef struct
 } nrf_dfu_settings_t;
 #pragma pack() // revert pack settings
 
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // NRF_DFU_TYPES_H__
 

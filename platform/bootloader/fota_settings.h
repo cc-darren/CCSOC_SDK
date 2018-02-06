@@ -1,13 +1,12 @@
-/* Copyright (c) 2016 Nordic Semiconductor. All Rights Reserved.
+/* Copyright (c) 2018 Cloudchip, Inc. All Rights Reserved.
  *
- * The information contained herein is property of Nordic Semiconductor ASA.
- * Terms and conditions of usage are described in detail in NORDIC
- * SEMICONDUCTOR STANDARD SOFTWARE LICENSE AGREEMENT.
+ * The information contained herein is property of Cloudchip, Inc.
+ * Terms and conditions of usage are described in detail in CLOUDCHIP
+ * STANDARD SOFTWARE LICENSE AGREEMENT.
  *
- * Licensees are granted free, non-transferable use of the information. NO
- * WARRANTY of ANY KIND is provided. This heading must NOT be removed from
- * the file.
- *
+ * Licensees are granted free, non-transferable use of the information.
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * from the file.
  */
 
  /**@file
@@ -47,13 +46,6 @@ extern nrf_dfu_settings_t s_dfu_settings;
 int nrf_dfu_settings_write(dfu_flash_callback_t callback);
 
 
-/** @brief Function for initializing the DFU settings module.
- */
-void nrf_dfu_settings_init(void);
-
-#if defined(APPLICATION) && APPLICATION
-void enter_bootloader(dfu_flash_callback_t callback);
-#endif
 
 #ifdef __cplusplus
 }

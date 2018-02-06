@@ -14,12 +14,19 @@
 
 #include <string.h>
 #include "fota_settings.h"
-//#include "nrf_dfu_mbr.h"
-//#include "nrf_bootloader_app_start.h"
-#include "bootloader_info.h"
+#include "bootloader.h"
 #include "crc32.h"
 #include "tracer.h"
 
+#define DEBUG_LOG 0
+
+#if (DEBUG_LOG) && DEBUG_LOG
+#define DebugInfo          TracerInfo
+#else
+#define DebugInfo(x...)    do { ; } while (0)
+#endif
+
+extern T_FotaConfig PartitionInfo;
 
 static uint32_t align_to_page(uint32_t val, uint32_t page_size)
 {
@@ -74,12 +81,12 @@ static uint32_t nrf_dfu_app_continue(uint32_t               src_addr)
     uint32_t const split_size  = CODE_PAGE_SIZE; // Arbitrary number that must be page aligned
 
     uint32_t ret_val            = CC_SUCCESS;
-    uint32_t target_addr        = MAIN_APPLICATION_START_ADDR + s_dfu_settings.write_offset;
+    uint32_t target_addr        = PartitionInfo.dwAppStartAddr + s_dfu_settings.write_offset;
     uint32_t length_left        = (image_size - s_dfu_settings.write_offset);
     uint32_t cur_len;
     uint32_t crc;
 
-    TracerInfo("Enter nrf_dfu_app_continue\r\n");
+    DebugInfo("Enter nrf_dfu_app_continue\r\n");
 
     // Copy the application down safely
     do
@@ -104,7 +111,7 @@ static uint32_t nrf_dfu_app_continue(uint32_t               src_addr)
 //        if (ret_val != CC_SUCCESS)
 //        {
 //            // We will not retry the copy
-//            TracerInfo("Invalid data during compare: target: 0x%08x, src: 0x%08x\r\n", target_addr, src_addr);
+//            DebugInfo("Invalid data during compare: target: 0x%08x, src: 0x%08x\r\n", target_addr, src_addr);
 //            return ret_val;
 //        }
 
@@ -112,7 +119,7 @@ static uint32_t nrf_dfu_app_continue(uint32_t               src_addr)
         ret_val = nrf_dfu_flash_erase((uint32_t*) src_addr, split_size / CODE_PAGE_SIZE, NULL);
         if (ret_val != CC_SUCCESS)
         {
-            TracerInfo("App update: Failure erasing page at addr: 0x%08x\r\n", src_addr);
+            DebugInfo("App update: Failure erasing page at addr: 0x%08x\r\n", src_addr);
             return ret_val;
         }
 
@@ -129,18 +136,18 @@ static uint32_t nrf_dfu_app_continue(uint32_t               src_addr)
     nrf_dfu_flash_wait();
 
     // Check the crc of the copied data. Enable if so.
-    crc = crc32_compute((uint8_t*)MAIN_APPLICATION_START_ADDR, image_size, NULL);
+    crc = crc32_compute((uint8_t*)PartitionInfo.dwAppStartAddr, image_size, NULL);
 
     if (crc == s_dfu_settings.bank_1.image_crc)
     {
-        TracerInfo("Setting app as valid\r\n");
+        DebugInfo("Setting app as valid\r\n");
         s_dfu_settings.bank_0.bank_code = NRF_DFU_BANK_VALID_APP;
         s_dfu_settings.bank_0.image_crc = crc;
         s_dfu_settings.bank_0.image_size = image_size;
     }
     else
     {
-        TracerInfo("CRC computation failed for copied app: src crc: 0x%08x, res crc: 0x%08x\r\n", s_dfu_settings.bank_1.image_crc, crc);
+        DebugInfo("CRC computation failed for copied app: src crc: 0x%08x, res crc: 0x%08x\r\n", s_dfu_settings.bank_1.image_crc, crc);
     }
 
     nrf_dfu_invalidate_bank(&s_dfu_settings.bank_1);
@@ -169,42 +176,42 @@ static uint32_t nrf_dfu_sd_continue_impl(uint32_t             src_addr,
     uint32_t   length_left  = align_to_page(s_dfu_settings.sd_size - s_dfu_settings.write_offset, CODE_PAGE_SIZE);
     uint32_t   split_size   = align_to_page(length_left / 4, CODE_PAGE_SIZE);
 
-    TracerInfo("Enter nrf_bootloader_dfu_sd_continue\r\n");
+    DebugInfo("Enter nrf_bootloader_dfu_sd_continue\r\n");
 
     // This can be a continuation due to a power failure
     src_addr += s_dfu_settings.write_offset;
 
     if (s_dfu_settings.sd_size != 0 && s_dfu_settings.write_offset == s_dfu_settings.sd_size)
     {
-        TracerInfo("SD already copied\r\n");
+        DebugInfo("SD already copied\r\n");
         return CC_SUCCESS;
     }
 
-    TracerInfo("Updating SD. Old SD ver: 0x%04x\r\n", SD_FWID_GET(MBR_SIZE));
+    DebugInfo("Updating SD. Old SD ver: 0x%04x\r\n", SD_FWID_GET(MBR_SIZE));
 
     do
     {
-        TracerInfo("Copying [0x%08x-0x%08x] to [0x%08x-0x%08x]: Len: 0x%08x\r\n", src_addr, src_addr + split_size, target_addr, target_addr + split_size, split_size);
+        DebugInfo("Copying [0x%08x-0x%08x] to [0x%08x-0x%08x]: Len: 0x%08x\r\n", src_addr, src_addr + split_size, target_addr, target_addr + split_size, split_size);
 
         // Copy a chunk of the SD. Size in words
         ret_val = nrf_dfu_mbr_copy_sd((uint32_t*)target_addr, (uint32_t*)src_addr, split_size);
         if (ret_val != CC_SUCCESS)
         {
-            TracerInfo("Failed to copy SD: target: 0x%08x, src: 0x%08x, len: 0x%08x\r\n", target_addr, src_addr, split_size);
+            DebugInfo("Failed to copy SD: target: 0x%08x, src: 0x%08x, len: 0x%08x\r\n", target_addr, src_addr, split_size);
             return ret_val;
         }
 
-        TracerInfo("Finished copying [0x%08x-0x%08x] to [0x%08x-0x%08x]: Len: 0x%08x\r\n", src_addr, src_addr + split_size, target_addr, target_addr + split_size, split_size);
+        DebugInfo("Finished copying [0x%08x-0x%08x] to [0x%08x-0x%08x]: Len: 0x%08x\r\n", src_addr, src_addr + split_size, target_addr, target_addr + split_size, split_size);
 
         // Validate copy. Size in words
         ret_val = nrf_dfu_mbr_compare((uint32_t*)target_addr, (uint32_t*)src_addr, split_size);
         if (ret_val != CC_SUCCESS)
         {
-            TracerInfo("Failed to Compare SD: target: 0x%08x, src: 0x%08x, len: 0x%08x\r\n", target_addr, src_addr, split_size);
+            DebugInfo("Failed to Compare SD: target: 0x%08x, src: 0x%08x, len: 0x%08x\r\n", target_addr, src_addr, split_size);
             return ret_val;
         }
 
-        TracerInfo("Validated 0x%08x-0x%08x to 0x%08x-0x%08x: Size: 0x%08x\r\n", src_addr, src_addr + split_size, target_addr, target_addr + split_size, split_size);
+        DebugInfo("Validated 0x%08x-0x%08x to 0x%08x-0x%08x: Size: 0x%08x\r\n", src_addr, src_addr + split_size, target_addr, target_addr + split_size, split_size);
 
         target_addr += split_size;
         src_addr += split_size;
@@ -218,7 +225,7 @@ static uint32_t nrf_dfu_sd_continue_impl(uint32_t             src_addr,
             length_left -= split_size;
         }
 
-        TracerInfo("Finished with the SD update.\r\n");
+        DebugInfo("Finished with the SD update.\r\n");
 
         // Save the updated point of writes in case of power loss
         s_dfu_settings.write_offset = s_dfu_settings.sd_size - length_left;
@@ -253,7 +260,7 @@ static uint32_t nrf_dfu_sd_continue(uint32_t             src_addr,
     ret_val = nrf_dfu_sd_continue_impl(src_addr, p_bank);
     if (ret_val != CC_SUCCESS)
     {
-        TracerInfo("SD update continuation failed\r\n");
+        DebugInfo("SD update continuation failed\r\n");
         return ret_val;
     }
 
@@ -290,14 +297,14 @@ static uint32_t nrf_dfu_bl_continue(uint32_t src_addr, nrf_dfu_bank_t * p_bank)
     // if the update is a combination of BL + SD, offset with SD size to get BL start address
     src_addr += s_dfu_settings.sd_size;
 
-    TracerInfo("Verifying BL: Addr: 0x%08x, Src: 0x%08x, Len: 0x%08x\r\n", MAIN_APPLICATION_START_ADDR, src_addr, len);
+    DebugInfo("Verifying BL: Addr: 0x%08x, Src: 0x%08x, Len: 0x%08x\r\n", MAIN_APPLICATION_START_ADDR, src_addr, len);
 
 
     // If the bootloader is the same as the banked version, the copy is finished
     ret_val = nrf_dfu_mbr_compare((uint32_t*)BOOTLOADER_START_ADDR, (uint32_t*)src_addr, len);
     if (ret_val == CC_SUCCESS)
     {
-        TracerInfo("Bootloader was verified\r\n");
+        DebugInfo("Bootloader was verified\r\n");
 
         // Invalidate bank, marking completion
         nrf_dfu_invalidate_bank(p_bank);
@@ -305,13 +312,13 @@ static uint32_t nrf_dfu_bl_continue(uint32_t src_addr, nrf_dfu_bank_t * p_bank)
     }
     else
     {
-        TracerInfo("Bootloader not verified, copying: Src: 0x%08x, Len: 0x%08x\r\n", src_addr, len);
+        DebugInfo("Bootloader not verified, copying: Src: 0x%08x, Len: 0x%08x\r\n", src_addr, len);
         // Bootloader is different than the banked version. Continue copy
         // Note that if the SD and BL was combined, then the split point between them is in s_dfu_settings.sd_size
         ret_val = nrf_dfu_mbr_copy_bl((uint32_t*)src_addr, len);
         if(ret_val != CC_SUCCESS)
         {
-            TracerInfo("Request to copy BL failed\r\n");
+            DebugInfo("Request to copy BL failed\r\n");
         }
     }
 
@@ -339,19 +346,19 @@ static uint32_t nrf_dfu_sd_bl_continue(uint32_t src_addr, nrf_dfu_bank_t * p_ban
 {
     uint32_t ret_val = CC_SUCCESS;
 
-    TracerInfo("Enter nrf_dfu_sd_bl_continue\r\n");
+    DebugInfo("Enter nrf_dfu_sd_bl_continue\r\n");
 
     ret_val = nrf_dfu_sd_continue_impl(src_addr, p_bank);
     if (ret_val != CC_SUCCESS)
     {
-        TracerInfo("SD+BL: SD copy failed\r\n");
+        DebugInfo("SD+BL: SD copy failed\r\n");
         return ret_val;
     }
 
     ret_val = nrf_dfu_bl_continue(src_addr, p_bank);
     if (ret_val != CC_SUCCESS)
     {
-        TracerInfo("SD+BL: BL copy failed\r\n");
+        DebugInfo("SD+BL: BL copy failed\r\n");
         return ret_val;
     }
 
@@ -366,7 +373,7 @@ static uint32_t nrf_dfu_continue_bank(nrf_dfu_bank_t * p_bank, uint32_t src_addr
     switch (p_bank->bank_code)
     {
        case NRF_DFU_BANK_VALID_APP:
-            TracerInfo("Valid App\r\n");
+            DebugInfo("Valid App\r\n");
             if(s_dfu_settings.bank_current == NRF_DFU_CURRENT_BANK_1)
             {
                 // Only continue copying if valid app in bank1
@@ -375,20 +382,20 @@ static uint32_t nrf_dfu_continue_bank(nrf_dfu_bank_t * p_bank, uint32_t src_addr
             break;
 
        case NRF_DFU_BANK_VALID_SD:
-            TracerInfo("Valid SD\r\n");
+            DebugInfo("Valid SD\r\n");
             // There is a valid SD that needs to be copied (or continued)
             //ret_val = nrf_dfu_sd_continue(src_addr, p_bank);
             //(*p_enter_dfu_mode) = 1;
             break;
 
         case NRF_DFU_BANK_VALID_BL:
-            TracerInfo("Valid BL\r\n");
+            DebugInfo("Valid BL\r\n");
             // There is a valid BL that must be copied (or continued)
             //ret_val = nrf_dfu_bl_continue(src_addr, p_bank);
             break;
 
         case NRF_DFU_BANK_VALID_SD_BL:
-            TracerInfo("Single: Valid SD + BL\r\n");
+            DebugInfo("Single: Valid SD + BL\r\n");
             // There is a valid SD + BL that must be copied (or continued)
             //ret_val = nrf_dfu_sd_bl_continue(src_addr, p_bank);
             // Set the bank-code to invalid, and reset size/CRC
@@ -397,7 +404,7 @@ static uint32_t nrf_dfu_continue_bank(nrf_dfu_bank_t * p_bank, uint32_t src_addr
 
         case NRF_DFU_BANK_INVALID:
         default:
-            TracerInfo("Single: Invalid bank\r\n");
+            DebugInfo("Single: Invalid bank\r\n");
             break;
     }
 
@@ -409,9 +416,9 @@ uint32_t nrf_dfu_continue(uint32_t * p_enter_dfu_mode)
 {
     uint32_t            ret_val;
     nrf_dfu_bank_t    * p_bank;
-    uint32_t            src_addr = CODE_REGION_1_START;
+    uint32_t            src_addr = PartitionInfo.dwAppStartAddr;
 
-    TracerInfo("Enter nrf_dfu_continue\r\n");
+    DebugInfo("Enter nrf_dfu_continue\r\n");
 
     if (s_dfu_settings.bank_layout == NRF_DFU_BANK_LAYOUT_SINGLE )
     {
@@ -434,71 +441,71 @@ uint32_t nrf_dfu_continue(uint32_t * p_enter_dfu_mode)
 
 bool nrf_dfu_app_is_valid(void)
 {
-    TracerInfo("Enter nrf_dfu_app_is_valid\r\n");
+    DebugInfo("Enter nrf_dfu_app_is_valid\r\n");
     if (s_dfu_settings.bank_0.bank_code != NRF_DFU_BANK_VALID_APP)
     {
        // Bank 0 has no valid app. Nothing to boot
-       TracerInfo("Return false in valid app check\r\n");
+       DebugInfo("Return false in valid app check\r\n");
        return false;
     }
 
     // If CRC == 0, this means CRC check is skipped.
     if (s_dfu_settings.bank_0.image_crc != 0)
     {
-        uint32_t crc = crc32_compute((uint8_t*) CODE_REGION_1_START,
+        uint32_t crc = crc32_compute((uint8_t*) PartitionInfo.dwAppStartAddr,
                                      s_dfu_settings.bank_0.image_size,
                                      NULL);
 
         if (crc != s_dfu_settings.bank_0.image_crc)
         {
             // CRC does not match with what is stored.
-            TracerInfo("Return false in CRC\r\n");
+            DebugInfo("Return false in CRC\r\n");
             return  false;
         }
     }
 
-    TracerInfo("Return true. App was valid\r\n");
+    DebugInfo("Return true. App was valid\r\n");
     return true;
 }
-
 
 uint32_t nrf_dfu_find_cache(uint32_t size_req, bool dual_bank_only, uint32_t * p_address)
 {
     // TODO: Prevalidate p_address and p_bank
 
-    uint32_t free_size =  DFU_REGION_TOTAL_SIZE - DFU_APP_DATA_RESERVED;
+    uint32_t total_size = PartitionInfo.dwEflashStartAddr + PartitionInfo.dwEflashTotalSize - PartitionInfo.dwAppStartAddr;
+    uint32_t free_size =  total_size - PartitionInfo.dwUserDataSize;
     nrf_dfu_bank_t * p_bank;
 
-    TracerInfo("Enter nrf_dfu_find_cache\r\n");
+    DebugInfo("Enter nrf_dfu_find_cache\r\n");
 
     // Simple check if size requirement can me met
     if(free_size < size_req)
     {
-        TracerInfo("No way to fit the new firmware on device\r\n");
+        DebugInfo("No way to fit the new firmware on device\r\n");
         return CC_ERROR_NO_MEM;
     }
 
-    TracerInfo("Bank content\r\n");
-    TracerInfo("Bank type: %d\r\n", s_dfu_settings.bank_layout);
-    TracerInfo("Bank 0 code: 0x%02x: Size: %d\r\n", s_dfu_settings.bank_0.bank_code, s_dfu_settings.bank_0.image_size);
-    TracerInfo("Bank 1 code: 0x%02x: Size: %d\r\n", s_dfu_settings.bank_1.bank_code, s_dfu_settings.bank_1.image_size);
+    DebugInfo("Bank content\r\n");
+    DebugInfo("Bank type: %d\r\n", s_dfu_settings.bank_layout);
+    DebugInfo("Bank 0 code: 0x%02x: Size: %d\r\n", s_dfu_settings.bank_0.bank_code, s_dfu_settings.bank_0.image_size);
+    DebugInfo("Bank 1 code: 0x%02x: Size: %d\r\n", s_dfu_settings.bank_1.bank_code, s_dfu_settings.bank_1.image_size);
 
     // Setting bank_0 as candidate
     p_bank = &s_dfu_settings.bank_0;
 
     // Setting candidate address
-    (*p_address) = MAIN_APPLICATION_START_ADDR;
+    (*p_address) = PartitionInfo.dwAppStartAddr;
 
     // Calculate free size
     if (s_dfu_settings.bank_0.bank_code == NRF_DFU_BANK_VALID_APP)
     {
         // Valid app present.
 
-        TracerInfo("free_size before bank select: %d\r\n", free_size);
+        DebugInfo("free_size before bank select: %d\r\n", free_size);
 
         free_size -= align_to_page(p_bank->image_size, CODE_PAGE_SIZE);
 
-        TracerInfo("free_size: %d, size_req: %d\r\n", free_size, size_req);
+        DebugInfo("free_size: %d, size_req: %d\r\n", free_size, size_req);
 
         // Check if we can fit the new in the free space or if removal of old app is required.
         if(size_req > free_size)
@@ -506,7 +513,7 @@ uint32_t nrf_dfu_find_cache(uint32_t size_req, bool dual_bank_only, uint32_t * p
             // Not enough room in free space (bank_1)
             if ((dual_bank_only))
             {
-                TracerInfo("Failure: dual bank restriction\r\n");
+                DebugInfo("Failure: dual bank restriction\r\n");
                 return CC_ERROR_NO_MEM;
             }
 
@@ -514,7 +521,7 @@ uint32_t nrf_dfu_find_cache(uint32_t size_req, bool dual_bank_only, uint32_t * p
             s_dfu_settings.bank_layout = NRF_DFU_BANK_LAYOUT_SINGLE;
             s_dfu_settings.bank_current = NRF_DFU_CURRENT_BANK_0;
             p_bank = &s_dfu_settings.bank_0;
-            TracerInfo("Enforcing single bank\r\n");
+            DebugInfo("Enforcing single bank\r\n");
         }
         else
         {
@@ -525,7 +532,7 @@ uint32_t nrf_dfu_find_cache(uint32_t size_req, bool dual_bank_only, uint32_t * p
             p_bank = &s_dfu_settings.bank_1;
             // Set to first free page boundry after previous app
             (*p_address) += align_to_page(s_dfu_settings.bank_0.image_size, CODE_PAGE_SIZE);
-            TracerInfo("Using second bank\r\n");
+            DebugInfo("Using second bank\r\n");
         }
     }
     else
@@ -535,7 +542,7 @@ uint32_t nrf_dfu_find_cache(uint32_t size_req, bool dual_bank_only, uint32_t * p
         s_dfu_settings.bank_current = NRF_DFU_CURRENT_BANK_0;
 
         p_bank = &s_dfu_settings.bank_0;
-        TracerInfo("No previous, using bank 0\r\n");
+        DebugInfo("No previous, using bank 0\r\n");
     }
 
     // Set the bank-code to invalid, and reset size/CRC

@@ -16,6 +16,14 @@
 #include "tracer.h"
 #include "fstorage.h"
 
+#define DEBUG_LOG 0
+
+#if (DEBUG_LOG) && DEBUG_LOG
+#define DebugInfo          TracerInfo
+#else
+#define DebugInfo(x...)    do { ; } while (0)
+#endif
+
 #define FLASH_FLAG_NONE                 (0)
 #define FLASH_FLAG_OPER                 (1<<0)
 #define FLASH_FLAG_FAILURE_SINCE_LAST   (1<<1)
@@ -47,7 +55,7 @@ static void fs_evt_handler(fs_evt_t const * const evt, fs_ret_t result)
     }
     else
     {
-        TracerInfo("Generating failure\r\n");
+        DebugInfo("Generating failure\r\n");
         m_flags |= FLASH_FLAG_FAILURE_SINCE_LAST;
     }
 
@@ -60,16 +68,16 @@ static void fs_evt_handler(fs_evt_t const * const evt, fs_ret_t result)
 
 
 
-uint32_t nrf_dfu_flash_init(bool fstorage_enable)
+uint32_t FotaFlashInit(bool bFsEnable)
 {
     uint32_t err_code = CC_SUCCESS;
 
-    if(fstorage_enable)
+    if(bFsEnable)
     {
-        TracerInfo("------- nrf_dfu_flash_init-------\r\n");
+        DebugInfo("------- FotaFlashInit-------\r\n");
         if (fs_init() != FS_SUCCESS)
         {
-            TracerInfo("Not initializing the thing\r\n");
+            DebugInfo("Not initializing the thing\r\n");
             return CC_ERROR_INVALID_STATE;
         }
 
@@ -92,14 +100,14 @@ uint32_t nrf_dfu_flash_init(bool fstorage_enable)
 fs_ret_t nrf_dfu_flash_store(uint32_t const * p_dest, uint32_t const * const p_src, uint32_t len_words, dfu_flash_callback_t callback)
 {
     fs_ret_t ret_val = FS_SUCCESS;
-    //TracerInfo("Storing: from 0x%08x to 0x%08x, num: %d\r\n", (uint32_t)p_src, (uint32_t)p_dest, len_words);
+    //DebugInfo("Storing: from 0x%08x to 0x%08x, num: %d\r\n", (uint32_t)p_src, (uint32_t)p_dest, len_words);
 
     if ((m_flags & FLASH_FLAG_FSTORAGE_ENABLED) != 0)
     {
         // Check if there is a pending error
         if ((m_flags & FLASH_FLAG_FAILURE_SINCE_LAST) != 0)
         {
-            TracerInfo("Flash: Failure since last\r\n");
+            DebugInfo("Flash: Failure since last\r\n");
             return FS_ERR_FAILURE_SINCE_LAST;
         }
 
@@ -110,7 +118,7 @@ fs_ret_t nrf_dfu_flash_store(uint32_t const * p_dest, uint32_t const * const p_s
 
         if (ret_val != FS_SUCCESS)
         {
-            TracerInfo("Flash: failed %d\r\n", ret_val);
+            DebugInfo("Flash: failed %d\r\n", ret_val);
             return ret_val;
         }
 
@@ -134,7 +142,7 @@ fs_ret_t nrf_dfu_flash_store(uint32_t const * p_dest, uint32_t const * const p_s
 
         if (len_words == 0)
         {
-            TracerInfo("Flash: Invallid length (NVMC)\r\n");
+            DebugInfo("Flash: Invallid length (NVMC)\r\n");
             return FS_ERR_INVALID_ARG;
         }
 
@@ -167,7 +175,7 @@ fs_ret_t nrf_dfu_flash_store(uint32_t const * p_dest, uint32_t const * const p_s
 fs_ret_t nrf_dfu_flash_erase(uint32_t const * p_dest, uint32_t num_pages, dfu_flash_callback_t callback)
 {
     fs_ret_t ret_val = FS_SUCCESS;
-    TracerInfo("Erasing: 0x%08x, num: %d\r\n", (uint32_t)p_dest, num_pages);
+    DebugInfo("Erasing: 0x%08x, num: %d\r\n", (uint32_t)p_dest, num_pages);
 
 
     if ((m_flags & FLASH_FLAG_FSTORAGE_ENABLED) != 0)
@@ -175,7 +183,7 @@ fs_ret_t nrf_dfu_flash_erase(uint32_t const * p_dest, uint32_t num_pages, dfu_fl
         // Check if there is a pending error
         if ((m_flags & FLASH_FLAG_FAILURE_SINCE_LAST) != 0)
         {
-            TracerInfo("Erase: Failure since last\r\n");
+            DebugInfo("Erase: Failure since last\r\n");
             return FS_ERR_FAILURE_SINCE_LAST;
         }
 
@@ -184,7 +192,7 @@ fs_ret_t nrf_dfu_flash_erase(uint32_t const * p_dest, uint32_t num_pages, dfu_fl
 
         if (ret_val != FS_SUCCESS)
         {
-            TracerInfo("Erase failed: %d\r\n", ret_val);
+            DebugInfo("Erase failed: %d\r\n", ret_val);
             m_flags &= ~FLASH_FLAG_OPER;
             return ret_val;
         }
@@ -197,7 +205,7 @@ fs_ret_t nrf_dfu_flash_erase(uint32_t const * p_dest, uint32_t num_pages, dfu_fl
         // Softdevice is not present or activated. Run the NVMC instead
         if (((uint32_t)p_dest & (CODE_PAGE_SIZE-1)) != 0)
         {
-            TracerInfo("Invalid address\r\n");
+            DebugInfo("Invalid address\r\n");
             return FS_ERR_UNALIGNED_ADDR;
         }
         
@@ -243,7 +251,7 @@ void nrf_dfu_flash_error_clear(void)
 
 fs_ret_t nrf_dfu_flash_wait(void)
 {
-    TracerInfo("Waiting for finished...\r\n");
+    DebugInfo("Waiting for finished...\r\n");
 
     if ((m_flags & FLASH_FLAG_FSTORAGE_ENABLED) != 0)
     {
@@ -254,12 +262,12 @@ fs_ret_t nrf_dfu_flash_wait(void)
 
         if ((m_flags & FLASH_FLAG_FAILURE_SINCE_LAST) != 0)
         {
-            TracerInfo("Failure since last\r\n");
+            DebugInfo("Failure since last\r\n");
             return FS_ERR_FAILURE_SINCE_LAST;
         }
     }
     drvi_EflashFlush();
 
-    TracerInfo("After wait!\r\n");
+    DebugInfo("After wait!\r\n");
     return FS_SUCCESS;
 }

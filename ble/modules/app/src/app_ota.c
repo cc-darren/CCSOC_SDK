@@ -41,8 +41,7 @@
 #ifdef BLE_OTA_BL_MODE_EN
 #include "fota_ble_handler.h"
 #endif
-#include "fota_flash.h"
-#include "fota_settings.h"
+#include "fota.h"
 #include "drvi_clock.h"
 
 #if (DISPLAY_SUPPORT)
@@ -481,12 +480,12 @@ static int otat_packet_send_cmd_handler(ke_msg_id_t const msgid,
 
         // Ready to enter bootloader mode:
 #if FSTORAGE_ENABLED == 1
-        nrf_dfu_flash_init(true);
+        FotaFlashInit(true);
 #else
-        nrf_dfu_flash_init(false);
+        FotaFlashInit(false);
 #endif        
-        nrf_dfu_settings_init();
-        enter_bootloader((dfu_flash_callback_t)venus_ready_to_bootloader);      
+        BootloaderSettingInit();
+        EnterBootloader(venus_ready_to_bootloader);
 #endif 
     return (KE_MSG_CONSUMED);
 }

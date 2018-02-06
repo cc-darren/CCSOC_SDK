@@ -464,11 +464,6 @@
               <FilePath>..\..\platform\bootloader\fota.c</FilePath>
             </File>
             <File>
-              <FileName>fota_bootloader_app_start.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_bootloader_app_start.c</FilePath>
-            </File>
-            <File>
               <FileName>fota_flash.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\bootloader\fota_flash.c</FilePath>
@@ -1296,11 +1291,6 @@
               <FilePath>..\..\platform\bootloader\fota.c</FilePath>
             </File>
             <File>
-              <FileName>fota_bootloader_app_start.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_bootloader_app_start.c</FilePath>
-            </File>
-            <File>
               <FileName>fota_flash.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\bootloader\fota_flash.c</FilePath>
@@ -2061,11 +2051,6 @@
               <FileName>fota.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\bootloader\fota.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota_bootloader_app_start.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_bootloader_app_start.c</FilePath>
             </File>
             <File>
               <FileName>fota_flash.c</FileName>
@@ -2893,11 +2878,6 @@
               <FileName>fota.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\bootloader\fota.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota_bootloader_app_start.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_bootloader_app_start.c</FilePath>
             </File>
             <File>
               <FileName>fota_flash.c</FileName>

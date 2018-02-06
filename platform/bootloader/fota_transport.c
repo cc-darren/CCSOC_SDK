@@ -20,11 +20,19 @@
 #include "jump_table.h"
 #include "app.h"
 
+#define DEBUG_LOG 0
+
+#if (DEBUG_LOG) && DEBUG_LOG
+#define DebugInfo          DebugInfo
+#else
+#define DebugInfo(x...)    do { ; } while (0)
+#endif
+
  uint32_t fota_transports_init(void)
  {
      uint32_t ret_val = CC_SUCCESS;
  
-     TracerInfo("In nrf_dfu_transports_init\r\n");
+     DebugInfo("In nrf_dfu_transports_init\r\n");
 
 #ifdef CFG_BLE_APP
      uint32_t error;
@@ -50,7 +58,7 @@
 #endif
 
  
-     TracerInfo("After nrf_dfu_transports_init\r\n");
+     DebugInfo("After nrf_dfu_transports_init\r\n");
  
      return ret_val;
  }
@@ -60,7 +68,7 @@
  {
      uint32_t ret_val = CC_SUCCESS;
  
-     //TracerInfo("In nrf_dfu_transports_close\r\n");
+     //DebugInfo("In nrf_dfu_transports_close\r\n");
      app_start_reset_ble();
 
 #if 0
@@ -85,7 +93,7 @@
 */     
 #endif
 #endif 
-    // TracerInfo("After nrf_dfu_transports_close\r\n");
+    // DebugInfo("After nrf_dfu_transports_close\r\n");
  
      return ret_val;
  }
