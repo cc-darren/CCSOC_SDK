@@ -136,14 +136,16 @@ IN_RET_RAM_BEGIN
 void cc6801_EflashFlush(void) 
 {
     uint32_t tdata;
-    rd(SCU_ICACHE_REG,tdata);
-    
-    tdata|=FLUSH_EN;
-    wr(SCU_ICACHE_REG,tdata);
-    
+	
+    GLOBAL_INT_STOP();
+
+    setbit(SCU_ICACHE_REG,FLUSH_EN);
     do {
         rd(SCU_ICACHE_REG,tdata);
     } while((tdata&FLUSH_EN)!=0);
+	
+    GLOBAL_INT_START();
+
 }
 IN_RET_RAM_END
 
