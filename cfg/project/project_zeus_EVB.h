@@ -449,12 +449,10 @@ Declaration of static Global Variables & Functions
 #define CFG_JUMP_TABLE_2
 #endif
 
-//#define SLEEP_EN
-//#define LONGSIT_EN
-//#define MEMS_ZERO  // not ready for MEMS
+#define SLEEP_EN
+#define LONGSIT_EN
 #define PEDO_EN
 #define HRM_EN
-//#define SLEEP_EN
 //#define BLE_OTA_BL_MODE_EN
 #define DB_EN
 #define FIFO_MODE_EN
@@ -489,6 +487,7 @@ Declaration of static Global Variables & Functions
 #define   DB_INIT_FROM_APP              2
 #define   DB_INIT_FROM_APP_FACTORY_RESET 3
 
+#define  TIME_OF_24_HOUR     86400
 
 
 typedef enum
@@ -692,6 +691,14 @@ typedef enum
     eSwimCalExit,
     eSwimCalInvaild,
 }eSwim_Cal_State_t;
+
+typedef enum 
+{
+    eLongsitNoResult = 0,
+    eLongsitNoWear =1,
+    eLongsitWearOnHand,
+}eLongsit_Wear_State_t;
+
 
 typedef enum
 {

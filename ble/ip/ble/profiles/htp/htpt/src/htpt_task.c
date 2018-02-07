@@ -61,18 +61,15 @@
 #define SPEED_AND_CADENCE_NOTIFY_INTERVAL  1000
 
 
-
+#ifdef PED_GOAL
 typedef struct
 {
-    uint8_t _cNotify_General_Info_Flag;
-    CC_Ble_General_Info_T _eGeneralInfo;
-    uint8_t _cNotify_Unit_Flag;
-    CC_Ble_Unit_Info_T _eUnitInfo;
-    uint8_t _cNotify_ClockAlarm_Flag;
-    CC_Ble_Clock_Alarm_T _eClockAlarmInfo;
-    uint8_t _cNotify_SleepMonitorTimeSetting_Flag;
-    db_sys_sleep_monitor_t  _stSleepMonitorTimeSetting;
-}CC_SYNCDATA_T;
+    uint32_t dwPed_Goal;
+    uint32_t dwSwimming_Goal;
+}
+CC_Ble_Goal_Achieved_T;
+#endif
+
 
 
 void CC_VENUS_RscTimerStart(uint32_t interval_ms);
@@ -334,31 +331,32 @@ eStete_t CC_BLE_Cme_Get_24HourHeartRateMode(void)
     return _cBleCmd_NotifySetting_24HHeartRateMode;
 }
 
-uint8_t CC_BLE_Cmd_CheckSleepTimeSetting(void)
+
+uint8_t CC_BLE_Cmd_CheckLongSitTimeSetting(void)
 {
-    return s_tVensuSyncData._cNotify_SleepMonitorTimeSetting_Flag;
+    return s_tVensuSyncData._cNotify_LongSitTimeSetting_Flag;
 }
 
 void CC_BLE_Cmd_SetSleepTimeSetting(uint8_t *pData)
 {
-    s_tVensuSyncData._cNotify_SleepMonitorTimeSetting_Flag = true;
-    s_tVensuSyncData._stSleepMonitorTimeSetting.start_time_hour= (uint8_t)*pData++;
-    s_tVensuSyncData._stSleepMonitorTimeSetting.start_time_min= (uint8_t)*pData++;
-    s_tVensuSyncData._stSleepMonitorTimeSetting.end_time_hour= (uint8_t)*pData++;
-    s_tVensuSyncData._stSleepMonitorTimeSetting.end_time_min= (uint8_t)*pData;
+    s_tVensuSyncData._cNotify_LongSitTimeSetting_Flag = true;
+    s_tVensuSyncData._stLongSitTimeSetting.start_time_hour= (uint8_t)*pData++;
+    s_tVensuSyncData._stLongSitTimeSetting.start_time_min= (uint8_t)*pData++;
+    s_tVensuSyncData._stLongSitTimeSetting.end_time_hour= (uint8_t)*pData++;
+    s_tVensuSyncData._stLongSitTimeSetting.end_time_min= (uint8_t)*pData;
+
 }
 
-void CC_BLE_Cmd_GetSleepTimeSetting(db_sys_sleep_monitor_t *pData, uint8_t _bOption)
+
+void CC_BLE_Cmd_GetLongSitTimeSetting(db_sys_longsit_t *pData, uint8_t _bOption)
 {
-    memcpy(pData,&s_tVensuSyncData._stSleepMonitorTimeSetting,sizeof(db_sys_sleep_monitor_t));
+    memcpy(pData,&s_tVensuSyncData._stLongSitTimeSetting,sizeof(db_sys_longsit_t));
     // the option, true = get form one second polling, false get form DB,
     // avoid DB get data before one second polling. 
     if (_bOption == true) 
-    s_tVensuSyncData._cNotify_SleepMonitorTimeSetting_Flag = false;
-    TracerInfo("CC_BLE_Cmd_GetSleepTimeSetting   [%d]   \r\n",s_tVensuSyncData._cNotify_SleepMonitorTimeSetting_Flag);
-
+    s_tVensuSyncData._cNotify_LongSitTimeSetting_Flag = false;
+    TracerInfo("CC_BLE_Cmd_GetLongSitTimeSetting   [%d]   \r\n",s_tVensuSyncData._cNotify_LongSitTimeSetting_Flag);
 }
-
 
 void CC_BLE_Cmd_GetClockAlarm(CC_Ble_Clock_Alarm_T *pData,uint8_t _Option)
 {

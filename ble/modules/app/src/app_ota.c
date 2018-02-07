@@ -67,7 +67,7 @@
  * GLOBAL VARIABLE DEFINITIONS
  ****************************************************************************************
  */
-extern void venus_ready_to_bootloader(void);
+extern void venus_ready_to_bootloader(void*);
 
 /// health thermometer application environment structure
 struct app_ota_env_tag app_ota_env;

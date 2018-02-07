@@ -1,43 +1,31 @@
 #include "project.h"
 
-
+#ifdef SLEEP_EN
 #include "CC_SleepMonitor_Service.h"
 #include "CC_Longsit_Service.h"
 #include "CC_Slpmtr.h"
-#include "CC_DB_Structure.h"
+#include "htpt_task.h"
 #include "tracer.h"
+
+
 
 extern uint8_t CC_Charge_Register(charge_cb_t cb);
 extern void _sensor_algorithm_sleepmeter_proc(void);
 extern void CC_MainGet_CurrentTime(app_date_time_t *_stCurTime);
 extern eDEV_CHARGE_STATE_t CC_GetChargeStatus(void);
 extern void CC_ResetSleep_StateCount(void);
+extern uint8_t CC_MainGet_SwimmingEn(void);
+extern void CC_DB_Save_StartSleepService_Info(void);
+extern void CC_DB_Save_EndSleepService_Info(void);
+
+
 extern float g_fSleepCalSeconds;
-extern uint8_t g_bSleepEnCnt;
+extern float g_bSleepEnCnt;
 
 
-uint8_t m_bIsSleepAlgActive = false;
+eStete_t m_bIsSleepAlgActive = eDisable;
 uint8_t m_bIsSleepAlwayon = false;
-uint8_t m_bIsSleepStartService = false;
-db_sys_sleep_monitor_t m_stSleepExecPeriod;
-eSleep_State_t eAlgoProcState =eInit;
-
-
-#if 0 //sleep algorithm for temporarily
-uint8_t g_bSleepEnCnt;
-float g_fSleepCalSeconds;
-uint8_t g_bSleepEnCnt;
-
-void _sensor_algorithm_sleepmeter_proc(void){}
-void slpmtr_close(void){}
-int8_t slpmtr_is_opened(void){return 0x01;}
-void slpmtr_open_with_sensitivity(const slpmtr_sens_t sensitivity){}
-
-#endif
-
-
-
-
+eStete_t m_bIsSleepStartService = eDisable;
 
 static void _SleepMonitor_Charge_Evt_CB(eDEV_CHARGE_STATE_t eState)
 {
@@ -47,7 +35,7 @@ static void _SleepMonitor_Charge_Evt_CB(eDEV_CHARGE_STATE_t eState)
     }
     else if (eDEVICE_CHARGE_OUT== eState)
     {
-        eAlgoProcState = eStartToService;
+        CC_SleepMonitor_Srv_Enable();
     }
     else
     {
@@ -60,191 +48,30 @@ void CC_SleepMonitor_Srv_Register(void)
       CC_Charge_Register(_SleepMonitor_Charge_Evt_CB);
 }
 
-
-static uint8_t _SleepMonitor_CheckAlwayON(void)
-{
-    if ((m_stSleepExecPeriod.start_time_hour == m_stSleepExecPeriod.end_time_hour) &&
-    (m_stSleepExecPeriod.start_time_min == m_stSleepExecPeriod.end_time_min))
-    {
-        m_bIsSleepAlwayon = true;
-        TracerInfo("_SleepMonitor_CheckAlwayON Alway on  !!!!!!\r\n");
-        CC_SleepMonitor_Srv_Enable();
-        return true;
-    }
-    else
-    {    
-        TracerInfo("_SleepMonitor_CheckAlwayON Time different   !!!!!!\r\n");
-        m_bIsSleepAlwayon = false;
-        return false;
-    }
-}
-
-static uint8_t _SleepMonitor_CheckStartAlgo(void)
-{
-    app_date_time_t _stCurTime;
-    CC_MainGet_CurrentTime(&_stCurTime);
-    uint16_t _wStartTime = m_stSleepExecPeriod.start_time_hour *60 + m_stSleepExecPeriod.start_time_min;
-    uint16_t _wEndTime = m_stSleepExecPeriod.end_time_hour *60 + m_stSleepExecPeriod.end_time_min;
-    uint16_t _wCurTime = _stCurTime.hours*60 + _stCurTime.minutes;
-    
-    if (m_bIsSleepAlgActive == true)
-        return false;
-
-    if (_wStartTime < _wEndTime)
-    {
-        if ((_wCurTime>= _wStartTime) && (_wCurTime <= _wEndTime))
-        {
-            TracerInfo("CC_SleepMonitor_Srv_PollingCheck Enable  1  !!!!!!\r\n");
-            CC_SleepMonitor_Srv_Enable();    
-            
-            return true;
-
-        }
-        else
-        {
-            //CC_SleepMonitor_Srv_Disable();
-        }
-    }
-    else
-    {
-        if ((_wCurTime < _wStartTime) && (_wCurTime > _wEndTime))
-        {
-            
-            //CC_SleepMonitor_Srv_Disable();    
-
-        }
-        else
-        {
-            TracerInfo("CC_SleepMonitor_Srv_PollingCheck Enable  2  !!!!!!\r\n");
-            CC_SleepMonitor_Srv_Enable();
-            return true;
-        }
-
-        
-    }
-    
-    return false;
-}
-
-static uint8_t _SleepMonitor_CheckStopAlgo(void)
-{
-    app_date_time_t _stCurTime;
-    CC_MainGet_CurrentTime(&_stCurTime);
-    uint16_t _wStartTime = m_stSleepExecPeriod.start_time_hour *60 + m_stSleepExecPeriod.start_time_min;
-    uint16_t _wEndTime = m_stSleepExecPeriod.end_time_hour *60 + m_stSleepExecPeriod.end_time_min;
-    uint16_t _wCurTime = _stCurTime.hours*60 + _stCurTime.minutes;
-
-
-    if (m_bIsSleepAlgActive == false)
-        return false;
-
-    if (_wStartTime < _wEndTime)
-    {
-        if ((_wCurTime>= _wStartTime) && (_wCurTime <= _wEndTime))
-        {
-            //CC_SleepMonitor_Srv_Enable();    
-
-        }
-        else
-        {
-            TracerInfo("CC_SleepMonitor_Srv_PollingCheck Disable  1 !!!!!!\r\n");
-    
-            CC_SleepMonitor_Srv_Disable();
-            return true;
-
-        }
-    }
-    else
-    {
-        if ((_wCurTime < _wStartTime) && (_wCurTime > _wEndTime))
-        {
-            TracerInfo("CC_SleepMonitor_Srv_PollingCheck Disable  2 !!!!!!\r\n");
-
-            CC_SleepMonitor_Srv_Disable();    
-            return true;
-        }
-        else
-        {
-            //CC_SleepMonitor_Srv_Enable();
-
-        }
-
-    }    
-
-    return false;
-}
-
-void _SleepMonitor_SwitchAlgo(void)
-{
-    TracerInfo("_SleepMonitor_SwitchAlgo \r\n");
-    app_date_time_t _stCurTime;
-    CC_MainGet_CurrentTime(&_stCurTime);
-    uint16_t _wStartTime = m_stSleepExecPeriod.start_time_hour *60 + m_stSleepExecPeriod.start_time_min;
-    uint16_t _wEndTime = m_stSleepExecPeriod.end_time_hour *60 + m_stSleepExecPeriod.end_time_min;
-    uint16_t _wCurTime = _stCurTime.hours*60 + _stCurTime.minutes;
-
-
-    if (_wStartTime < _wEndTime)
-    {
-        if ((_wCurTime>= _wStartTime) && (_wCurTime <= _wEndTime))
-        {
-            TracerInfo("_SleepMonitor_SwitchAlgo Enable  1 !!!!!!\r\n");
-           
-            CC_SleepMonitor_Srv_Enable();   
-            eAlgoProcState = eAlgoCheckStopAlgo;
-        }
-        else
-        {
-            TracerInfo("_SleepMonitor_SwitchAlgo Disable  2 !!!!!!\r\n");
-        
-            CC_SleepMonitor_Srv_Disable();
-            eAlgoProcState = eAlgoCheckStartAlgo;
-        }
-    }
-    else
-    {
-        if ((_wCurTime < _wStartTime) && (_wCurTime > _wEndTime))
-        {
-            TracerInfo("_SleepMonitor_SwitchAlgo Disable  3 !!!!!!\r\n");
-
-            CC_SleepMonitor_Srv_Disable();    
-            eAlgoProcState = eAlgoCheckStartAlgo;
-        }
-        else
-        {
-            TracerInfo("_SleepMonitor_SwitchAlgo enable  4 !!!!!!\r\n");
-        
-            CC_SleepMonitor_Srv_Enable();
-            eAlgoProcState = eAlgoCheckStopAlgo;
-        }        
-    }
-}
-
-void CC_SleepMonitor_InitSetTimePeriod(db_sys_sleep_monitor_t *_stExecPeriod)
-{
-     m_stSleepExecPeriod.start_time_hour= _stExecPeriod->start_time_hour;
-     m_stSleepExecPeriod.start_time_min = _stExecPeriod->start_time_min;
-     m_stSleepExecPeriod.end_time_hour = _stExecPeriod->end_time_hour;
-     m_stSleepExecPeriod.end_time_min  = _stExecPeriod->end_time_min;
-     eAlgoProcState = eInit;
-}
-
-uint8_t CC_SleepMonitor_GetSleepState(void)
+eStete_t CC_SleepMonitor_GetSleepState(void)
 {
     return m_bIsSleepAlgActive;
 }
 
 void CC_SleepMonitor_Srv_Enable(void)
 {
+    if ( false == m_bIsSleepStartService )
+        return;
+    
+    if (eDEVICE_CHARGE_IN == CC_GetChargeStatus())
+        return;
+
+    if (true == CC_MainGet_SwimmingEn())
+        return;
+
     if (!slpmtr_is_opened())
     {
         slpmtr_open_with_sensitivity(SLPMTR_SENS_LOW);
-        m_bIsSleepAlgActive= true;
-#ifdef LONGSIT_EN        
-        CC_Longsit_Srv_NotifySleepState(eEnable);
-#endif        
+        m_bIsSleepAlgActive= eEnable;
         CC_ResetSleep_StateCount();
-        TracerInfo("CC_SleepMonitor_Srv_Enable \r\n");
+        CC_DB_Save_StartSleepService_Info();
+
+        TracerInfo("CC_SleepMonitor_Srv_Enable Sleep Algo Open\r\n");
     } 
 }
 
@@ -253,127 +80,48 @@ void CC_SleepMonitor_Srv_Disable(void)
     if (slpmtr_is_opened())
     {
         slpmtr_close();
-        m_bIsSleepAlgActive= false;
+        CC_DB_Save_EndSleepService_Info();
+        m_bIsSleepAlgActive= eDisable;
         g_fSleepCalSeconds = 0;
         g_bSleepEnCnt=0;
-#ifdef LONGSIT_EN        
-        CC_Longsit_Srv_NotifySleepState(eDisable);
-#endif        
-        TracerInfo("CC_SleepMonitor_Srv_Disable \r\n");
+        TracerInfo("CC_SleepMonitor_Srv_Disable Sleep Algo Close \r\n");
     }        
 }
 
-void CC_SleepMonitor_Srv_SyncTimeSlot(db_sys_sleep_monitor_t *_stExecPeriod)
+eStete_t CC_SleepMonitor_Srv_Get_SleepService(void)
 {
-    //  1 first time service 
-    if (m_bIsSleepStartService == false)
-    {
-        m_stSleepExecPeriod.start_time_hour= _stExecPeriod->start_time_hour;
-        m_stSleepExecPeriod.start_time_min = _stExecPeriod->start_time_min;
-        m_stSleepExecPeriod.end_time_hour = _stExecPeriod->end_time_hour;
-        m_stSleepExecPeriod.end_time_min  = _stExecPeriod->end_time_min;        
-
-        eAlgoProcState = eStartToService;
-        m_bIsSleepStartService = true;
-    
-    }
-    else
-    {
-        // 2 time change or not
-        if (( m_stSleepExecPeriod.start_time_hour != _stExecPeriod->start_time_hour) ||
-        ( m_stSleepExecPeriod.start_time_min != _stExecPeriod->start_time_min) ||
-        ( m_stSleepExecPeriod.end_time_hour != _stExecPeriod->end_time_hour) ||
-        ( m_stSleepExecPeriod.end_time_min != _stExecPeriod->end_time_min))
-        {
-            m_stSleepExecPeriod.start_time_hour= _stExecPeriod->start_time_hour;
-            m_stSleepExecPeriod.start_time_min = _stExecPeriod->start_time_min;
-            m_stSleepExecPeriod.end_time_hour = _stExecPeriod->end_time_hour;
-            m_stSleepExecPeriod.end_time_min  = _stExecPeriod->end_time_min;        
-
-            
-            eAlgoProcState = eTimeSettingChange;
-        }
-        else
-        {
-            // to do 
-            // no time change
-        }    
-    
-    }    
+    //return m_bIsSleepStartService;
+    return m_bIsSleepAlgActive;
 }
 
-void CC_SleepMonitor_Srv_PollingCheck(void)
+void CC_SleepMonitor_Srv_Enable_SleepService(eStete_t eStete)
 {
-
-    
-    if (m_bIsSleepStartService == false)
-        return;
-
-    if (eDEVICE_CHARGE_IN == CC_GetChargeStatus())
-        return;
-    
-    switch (eAlgoProcState)
-    {
-        case eInit:
-            break;
-        case eStartToService:
-                if (true == _SleepMonitor_CheckAlwayON())
-                {
-                    eAlgoProcState = eAlgoCheckStopAlgo;
-                    TracerInfo("CC_SleepMonitor_Srv_PollingCheck FIRST TIME ALWAYS ON \r\n");
-                }                   
-                else
-                {
-                    _SleepMonitor_SwitchAlgo();                    
-                }
-            break;
-        case eTimeSettingChange:            
-            {
-                // 1, check time same
-                if (true == _SleepMonitor_CheckAlwayON())
-                {
-                    eAlgoProcState = eAlgoCheckStopAlgo;
-                    return;
-                }
-                else
-                {
-                    _SleepMonitor_SwitchAlgo();        
-                }    
-            }
-            break;
-
-        case eAlgoCheckStartAlgo:
-            {
-                if (true == _SleepMonitor_CheckStartAlgo())
-                    eAlgoProcState = eAlgoCheckStopAlgo;
-            }
-            break;
-        case eAlgoCheckStopAlgo:
-            {
-                if (m_bIsSleepAlwayon == true)
-                    break;
-                if (true == _SleepMonitor_CheckStopAlgo())
-                    eAlgoProcState = eAlgoCheckStartAlgo;
-
-            }
-            break;
-            
-        case eAlgoInvaild:
-        default:
-            break;
-
+    m_bIsSleepStartService = eStete;
+    CC_SleepMonitor_Srv_Enable();
     }
 
+void CC_SleepMonitor_Srv_Disable_SleepService(eStete_t eStete)
+        {
+    m_bIsSleepStartService = eStete;
 }
 
 void CC_SleepMonitor_Srv_Handle(void)
 {
+
+    if ( false == m_bIsSleepStartService)
+        return;
+    
     if ( false ==m_bIsSleepAlgActive )
         return;
+        
     if  ( eDEVICE_CHARGE_IN == CC_GetChargeStatus() )
         return;
     
+    if (true == CC_MainGet_SwimmingEn())
+        return;
+
         _sensor_algorithm_sleepmeter_proc();
 }
 
+#endif
 

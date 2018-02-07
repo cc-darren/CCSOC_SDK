@@ -86,6 +86,14 @@ typedef struct
     uint8_t start_time_min;
     uint8_t end_time_hour;
     uint8_t end_time_min;
+}db_sys_longsit_t __attribute__((aligned(4)));
+
+typedef struct 
+{
+    uint8_t start_time_hour;
+    uint8_t start_time_min;
+    uint8_t end_time_hour;
+    uint8_t end_time_min;
 }db_sys_sleep_monitor_t __attribute__((aligned(4)));
 
 typedef struct 

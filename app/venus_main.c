@@ -31,14 +31,12 @@
 #include "cc_vib_service.h"
 #include "acc_lsm6ds3.h"
 #include "mag_ak09912.h"
-#include "CC_SleepMonitor_Service.h"
 #include "clock.h"
 #include "CC_FP_PED_8Bit.h"
 #include "CC_Calorie_burn.h"
 #include "cc_algo.h"
 #include "cc_swim_detection.h"
 #include "CC_Liftarm.h"
-#include "CC_Longsit_Service.h"
 #include "app_ht.h"
 #include "htpt_task.h"
 #include "pah8series_data_c.h"
@@ -67,9 +65,18 @@
 #include "app_task.h"
 #endif
 
+#ifdef LONGSIT_EN
+#include "CC_Longsit_Service.h"
+#endif
+
 #ifdef APP_VIB_MGR
 #include "App_Vib_Manager.h"
 #include "App_Vib_Pattern.h"
+#endif
+
+#ifdef SLEEP_EN
+#include "CC_SleepMonitor_Service.h"
+#include "CC_Slpmtr.h"
 #endif
 
 #define APP_TIMER_PRESCALER        0
@@ -345,6 +352,10 @@ typedef struct
     db_sys_sleep_monitor_t stSleepAlgExecPeriod;
     db_sleep_t stDBSleep;
 
+    //////// APPLICATION :: LONGSIT MONITOR   /////////////////////////////////////////
+    db_sys_longsit_t stLongSitAlgExecPeriod;
+    
+
     //////// APPLICATION :: SWIM CAL   /////////////////////////////////////////
     eSwim_Cal_State_t eSwimCalState;
     eSwim_Cal_ProcState_t eSwimCalEn;
@@ -365,10 +376,6 @@ typedef struct
 }   S_VenusCB;
 
 
-//volatile uint8_t  *p_llm_le_event_mask = (volatile uint8_t *) 0x20000680;
-
-//char deviceName[10] = {'V','N','S','_'};
-//char deviceName[10] = {'Z','S','_'};
 char deviceName[10] = {'Z','S','_','1','3','3','4','8'}; // for test
 
 S_VenusCB    s_tVenusCB;
@@ -383,22 +390,22 @@ s_SensorData_t s_tGyro;
 #endif
 S_TMagBuf_t s_tMagDataBuf;
 AxesRaw_t s_tMagRaw;
-//static uint8_t g_bMagEnCnt = 0;
+
 #ifdef DB_EN
 static db_pedometer_t m_db_pedo;
 #endif
 eLiftarm_Mode g_bLiftArm_State;
 
-/*
-static CC_Ble_Ped_Info_T _sPedInfo = {0xF1,0,0};
-static CC_Ble_Hrm_Info_T _sHrmInfo = {0xF2,0,0};
-static CC_Ble_Swim_Info_T _sSwimInfo = {0xF4,0,0};
-*/
-extern void _sensor_algorithm_sleepmeter_proc(void);
 extern void CC_Dsp_Srv_Reflash_Screen(void);
 
+#ifdef LONGSIT_EN
+eStete_t CC_Get_LongsitEnState(void);
+void CC_Longsit_PostOLedUpdate(void);
+#endif
 
-
+#ifdef SLEEP_EN
+void _sensor_algorithm_sleepmeter_proc(void);
+#endif
 
 
 void CC_VENUS_OLEDWakUpTimeOutTimerStart(uint16_t _wdata)
@@ -1107,6 +1114,10 @@ void CC_MainGet_CurrentTime(app_date_time_t *_stCurTime)
     *_stCurTime = s_tVenusCB.stSysCurTime;
 }
 
+uint8_t CC_MainGet_SwimmingEn(void)
+{
+    return s_tVenusCB.cSwimmingEn;
+}
 
 void CC_MainGet_Stride_LengthSetting(uint8_t *_pbStride, uint8_t *_pbUnit)
 {
@@ -2094,75 +2105,159 @@ void CC_Incommingsms_onNotified(void)
 }
 
 
-static void CC_LongSit_CheckNotifyProc(void)
-{
-    uint8_t _bHrmStatus=0xff;
 
-    #if 0
-    if (false == CC_SleepMonitor_GetSleepState())
-    {
+#ifdef SLEEP_EN
+#ifdef DB_EN
+
+app_date_time_t g_stInit_Algo_Time;
+app_date_time_t g_stLast_Record_StartTime;
+unsigned long long g_qwLast_Record_ExecTime = 0;
+float g_qwStateProcTime = 0;
+uint32_t g_dwLast_SleepStage;
+
+void CC_DB_Save_StartSleepService_Info(void)
+{
+    TracerInfo(" CC_DB_Save_StartSleepService_Info\r\n");
+    g_stInit_Algo_Time = app_getSysTime();
+
+    g_stLast_Record_StartTime = app_getSysTime();
+    g_qwLast_Record_ExecTime = 0;
+    g_dwLast_SleepStage = CC_SLEEPMETER_AWAKE;
+
+}
+void CC_DB_Save_EndSleepService_Info(void)
+{
+    TracerInfo(" CC_DB_Save_EndSleepService_Info\r\n");
+    // Save the last record to DB
+    s_tVenusCB.stDBSleep.detect_time.year = (uint8_t) (g_stLast_Record_StartTime.year-2000);
+    s_tVenusCB.stDBSleep.detect_time.month = g_stLast_Record_StartTime.month;
+    s_tVenusCB.stDBSleep.detect_time.day= g_stLast_Record_StartTime.day;
+    s_tVenusCB.stDBSleep.detect_time.hour= g_stLast_Record_StartTime.hours;
+    s_tVenusCB.stDBSleep.detect_time.min = g_stLast_Record_StartTime.minutes;
+    s_tVenusCB.stDBSleep.detect_time.sec= g_stLast_Record_StartTime.seconds;
+    s_tVenusCB.stDBSleep.detect_time.sleep_state = g_dwLast_SleepStage;
+    
+    // state duration
+    s_tVenusCB.stDBSleep.period.exec_time_second = (uint32_t)(g_fSleepCalSeconds - g_qwStateProcTime);
+    // state exet time
+    s_tVenusCB.stDBSleep.period.period_min = (uint16_t)((unsigned long long)g_fSleepCalSeconds / 60);
+
+         
+   	if(CC_SUCCESS != CC_Save_Record(eSleep, (uint32_t*)&s_tVenusCB.stDBSleep, sizeof(db_sleep_t)))
+    		TracerInfo("HRM_DB_Save_Err\r\n"); 
+
+    // Resest all Ram data
+    memset(&g_stInit_Algo_Time,0x00,sizeof(app_date_time_t));
+    memset(&g_stLast_Record_StartTime,0x00,sizeof(app_date_time_t));
+    g_qwLast_Record_ExecTime = 0;
+    g_qwStateProcTime = 0;
+    g_dwLast_SleepStage =0;
+
+    }       
+
+#if 0
+uint32_t g_dwDeubgSleepRecordFaile = false;
+void _CC_DB_Sleep_Record_Failed(eStete_t state)
+{
+    g_dwDeubgSleepRecordFaile++;
+}
+#endif
+
+void _CC_DB_Save_SleepProc(slpmtr_output_t _stSleepResult)
+{
+    TracerInfo("_CC_DB_Save_SleepProc Record Sleep state\r\n");
+
+    // Step 1 . Generation Record Data
+
+    s_tVenusCB.stDBSleep.detect_time.year = (uint8_t) (g_stLast_Record_StartTime.year-2000);
+    s_tVenusCB.stDBSleep.detect_time.month = g_stLast_Record_StartTime.month;
+    s_tVenusCB.stDBSleep.detect_time.day= g_stLast_Record_StartTime.day;
+    s_tVenusCB.stDBSleep.detect_time.hour= g_stLast_Record_StartTime.hours;
+    s_tVenusCB.stDBSleep.detect_time.min = g_stLast_Record_StartTime.minutes;
+    s_tVenusCB.stDBSleep.detect_time.sec= g_stLast_Record_StartTime.seconds;
+    s_tVenusCB.stDBSleep.detect_time.sleep_state = g_dwLast_SleepStage;
+    // state duration
+    s_tVenusCB.stDBSleep.period.exec_time_second = (uint32_t)(_stSleepResult.time - g_qwLast_Record_ExecTime);
+    // state exec time
+    s_tVenusCB.stDBSleep.period.period_min = (uint16_t)(_stSleepResult.time / 60);
+        
+
+    #if 1
+    TracerInfo("Record time %d %d %d %d %d %d\r\n",s_tVenusCB.stDBSleep.detect_time.year,
+                                                 s_tVenusCB.stDBSleep.detect_time.month,
+                                                 s_tVenusCB.stDBSleep.detect_time.day,
+                                                 s_tVenusCB.stDBSleep.detect_time.hour,
+                                                 s_tVenusCB.stDBSleep.detect_time.min,
+                                                 s_tVenusCB.stDBSleep.detect_time.sec);
+    TracerInfo("Record state = %d duration=%d period %d\r\n",s_tVenusCB.stDBSleep.detect_time.sleep_state,
+                                                    s_tVenusCB.stDBSleep.period.exec_time_second,
+                                                     s_tVenusCB.stDBSleep.period.period_min);
+        
+    TracerInfo("Record time Test dayofweek %d\r\n",g_stLast_Record_StartTime.dayofweek);
     #endif
-    if ( false== CC_AppSrv_HR_IsHrmWorking())
+        
+    // Step 2 .Save this new Record to DB
+    if(CC_SUCCESS != CC_Save_Record(eSleep, (uint32_t*)&s_tVenusCB.stDBSleep, sizeof(db_sleep_t)))
     {
-        if (false==CC_AppSrv_HR_IsSingleHrEnabled())
+        //_CC_DB_Sleep_Record_Failed();
+		TracerInfo("HRM_DB_Save_Err\r\n");
+    }
+    // Step 3. Save this new Reacod Info to ram (become last record)
+    // a. put exec time to ram
+    g_qwLast_Record_ExecTime = _stSleepResult.time;
+
+    // b. put the new state to ram
+    g_dwLast_SleepStage = _stSleepResult.NewStage;
+ 
+    // c. Calculate the new state "START time"
+
+    app_interval_t _stTimeInterval;
+    app_date_time_t  _stTmpforTheNewTime;
+    unsigned long long _qwOneDay;
+    unsigned long long _qwLeftofDay;
+    unsigned long long _qwTimeDuration =  (unsigned long long) (_stSleepResult.time);
+    _stTmpforTheNewTime =  g_stInit_Algo_Time;
+    memset(&g_stLast_Record_StartTime,0x00, sizeof(app_date_time_t));
+
+    if (_qwTimeDuration > TIME_OF_24_HOUR)
+    {
+        _qwOneDay = _qwTimeDuration / TIME_OF_24_HOUR;
+        _qwLeftofDay = _qwTimeDuration % TIME_OF_24_HOUR;
+        while(_qwOneDay--)
         {
-            CC_AppSrv_HR_ClrHrmStatus();
-            TracerInfo();
-            TracerInfo("CC_LongSit_onNotified OPEN SINGLE HRM\r\n");
-        }
-        else
-        {
-            // should be error case
-            CC_Longsit_Srv_Reset_Notification();
-            TracerInfo("CC_LongSit_onNotified AVOID ERROR CASE TO RESET LONGSIT\r\n");
-        }
-        s_tVenusCB.LongSitWaitCnt =0;
+            app_interval_make_64bits ( &_stTimeInterval ,TIME_OF_24_HOUR);
+            g_stLast_Record_StartTime =app_time_add(_stTmpforTheNewTime,_stTimeInterval);
+            _stTmpforTheNewTime = g_stLast_Record_StartTime;
+        };
     }
     else
     {
-        _bHrmStatus = CC_AppSrv_HR_GetHrmStatus();
-
-        if (0xff == _bHrmStatus)
-        {
-            TracerInfo("CC_LongSit_onNotified HRM PROCESS WAIT RESULT\r\n");
-        }
-        else
-        {
-            _bHrmStatus &=0x0f;
-            if (( MSG_NO_TOUCH == _bHrmStatus))
-            {
-                CC_Longsit_Srv_Reset_Notification();
-                CC_AppSrv_HR_StopSingleHR();
-                TracerInfo("CC_LongSit_onNotified HRM NO TOUCH - NO OPEN OLED\r\n");
-
-            }
-            else
-            {
-                VENUS_EVENT_ON(E_VENUS_EVENT_OLED_UPDATE , eEvent_LONGSIT);
-                CC_Longsit_Srv_Reset_Notification();
-                TracerInfo("CC_LongSit_onNotified HRM HAS TOUCH  - OPEN OLED\r\n");
-                CC_AppSrv_HR_StopSingleHR();
-            }
-        }
-
+        _qwLeftofDay = _qwTimeDuration;
     }
+    app_interval_make_64bits ( &_stTimeInterval ,_qwLeftofDay);
+    g_stLast_Record_StartTime =app_time_add(_stTmpforTheNewTime,_stTimeInterval);
+    g_stLast_Record_StartTime.dayofweek = app_caculation_dayofweek(g_stLast_Record_StartTime);
+
+    // Step 4. Have new proc time
+    g_qwStateProcTime = g_fSleepCalSeconds;
+
+
+
+#if 1
+    TracerInfo("The last Time %d %d %d %d %d %d\r\n",g_stLast_Record_StartTime.year,
+                                                 g_stLast_Record_StartTime.month,
+                                                 g_stLast_Record_StartTime.day,
+                                                 g_stLast_Record_StartTime.hours,
+                                                 g_stLast_Record_StartTime.minutes,
+                                                 g_stLast_Record_StartTime.seconds);
+
+    TracerInfo("the last dayofweek %d\r\n",g_stLast_Record_StartTime.dayofweek);
+#endif
 
 }
-
-
-void CC_LongSit_onNotified(uint8_t notified)
-{
-    TracerInfo("CC_LongSit_onNotified notified= %d \r\n",notified);
-    //Enable vib
-    if (notified == 1)
-    {
-        CC_LongSit_CheckNotifyProc();
-    }
-}
-
-
+#endif
 uint32_t g_dwSleepState = 0;
-uint32_t g_dwSleepStateCount =0;
+uint32_T g_dwSleepStateCount =0;
 uint32_t CC_GetSleepAlgorithmReport_State(void)
 {
     return g_dwSleepState;
@@ -2178,52 +2273,121 @@ void CC_ResetSleep_StateCount(void)
     g_dwSleepStateCount = 0;
 }
 
+
+#ifdef SLEEP_DEBUG // for debug
+uint32_t g_dwCnt;
+uint32_t g_dwCnttime;
+uint32_t g_dwDayCnt =0;
+#endif
+
 void _sensor_algorithm_sleepmeter_proc(void)
 {
 
     slpmtr_input_t slpmtr_input;
-    slpmtr_output_t slpmtr_output;
+    slpmtr_output_t slpmtr_output;    
 
-    if ((++g_bSleepEnCnt % 11)  == 0)
-    {
+    //if ((++g_bSleepEnCnt % 11)  == 0)
+     g_bSleepEnCnt+=19.23077f;
+    if (g_bSleepEnCnt >=250.0f)
+    {    
+        g_bSleepEnCnt = g_bSleepEnCnt-250.0f;
         g_fSleepCalSeconds+=0.25f;
+
+        #ifdef SLEEP_DEBUG
+        g_dwCnt++;
+        if (g_dwCnt % 4 ==0 )
+        {
+            g_dwCnttime++;
+        }
+        #endif
+
+        //TracerInfo("_sensor_algorithm_sleepmeter_proc g_fSleepCalSeconds %d \r\n",NRF_LOG_FLOAT(g_fSleepCalSeconds));
+
+        //TracerInfo("_sensor_algorithm_sleepmeter_proc g_bSleepEnCnt %d \r\n",g_bSleepEnCnt);
+
         slpmtr_input.mpss[0] = (float)(((double)_wAccelData[0]*9.8)/1024);
         slpmtr_input.mpss[1] = (float)(((double)_wAccelData[1]*9.8)/1024);
         slpmtr_input.mpss[2] = (float)(((double)_wAccelData[2]*9.8)/1024);
 
-
+        #if 0
+        TracerInfo("slpmtr_detect input.mpss[0]=%d, nput.mpss[1]=%d, nput.mpss[2]=%d\r\n",
+                                                slpmtr_input.mpss[0], 
+                                                slpmtr_input.mpss[1],
+                                                slpmtr_input.mpss[2]);
+        #endif
+        
         slpmtr_detect(&slpmtr_input, g_fSleepCalSeconds, &slpmtr_output);
+
+#ifdef LOG_SLEEP_MONITOR_RAW_DATA
+        if (s_tVenusCB.bIsRawLogON)
+            _notify_sleep_monitor_raw_log(s_tVenusCB.dwSlpMonTimestamp, _wAccelData);
+#endif
+
+        #ifdef SLEEP_DEBUG // for debug
+        if ( ( (g_dwCnt % 4) ==0) && ((g_dwCnttime % 100) == 0))
+        {
+            static int i = 0;
+
+            g_dwDayCnt++;
+            slpmtr_output.OldStage = slpmtr_output.NewStage;
+            slpmtr_output.NewStage = 1<<i;
+            slpmtr_output.time = 43200 * g_dwDayCnt + 100 * g_dwDayCnt;
+            slpmtr_output.period = (43200 * g_dwDayCnt + 100 * g_dwDayCnt) - (43200 * (g_dwDayCnt-1) + 100 * (g_dwDayCnt-1)) ;
+            ++i;
+            g_fSleepCalSeconds = (float)slpmtr_output.time;
+
+            if (4 == i)
+            {
+                i = 0;
+            }
+
+        }
+        #endif
 
 
         if (slpmtr_output.NewStage != slpmtr_output.OldStage)
         {
-
             g_dwSleepState = slpmtr_output.NewStage;
-            g_dwSleepStateCount++;
-
-           //_CC_DB_Save_SleepProc(slpmtr_output);
+           _CC_DB_Save_SleepProc(slpmtr_output);
            TracerInfo("CCSleep_onStateChange OldStage=%d, NewStage=%d \r\n",
-                                            slpmtr_output.OldStage,
+                                            slpmtr_output.OldStage, 
                                             slpmtr_output.NewStage);
            TracerInfo("CCSleep_onStateChange period=%d, time=%d \r\n",slpmtr_output.period, slpmtr_output.time);
-
-           TracerInfo("System Date %d.%d.%d \r\n",s_tVenusCB.stSysCurTime.year,s_tVenusCB.stSysCurTime.month,s_tVenusCB.stSysCurTime.day);
-           TracerInfo("System Clock %d:%d:%d \r\n",s_tVenusCB.stSysCurTime.hours,s_tVenusCB.stSysCurTime.minutes,s_tVenusCB.stSysCurTime.seconds);
-
         }
-    }
+    }        
 
+    #if 0
     if (g_bSleepEnCnt == 50)
     {
         g_bSleepEnCnt= 0;
+        //TracerInfo("reset sleep Count = %d\r\n",_cSleepEnCnt);
     }
+    #endif
 }
+#endif
 
 
 eStete_t CC_Get_LongsitEnState(void)
 {
     return s_tVenusCB.cLongsitEn;
 }
+
+#ifdef LONGSIT_EN
+void CC_Longsit_PostOLedUpdate(void)
+{
+    VENUS_EVENT_ON(E_VENUS_EVENT_OLED_UPDATE_LONGSIT, eEvent_LONGSIT); 
+}
+
+void CC_Longsit_Post_TO_HRM_CHECKWEAR(void)
+{
+    VENUS_EVENT_ON(E_VENUS_EVENT_LONGSIT_LAUNCH_HRM_TO_CHECK_WEAR, eEvent_None);
+}
+
+void CC_Longsit_Post_TO_MonitorMotion(void)
+{
+    VENUS_EVENT_ON(E_VENUS_EVENT_LONGSIT_LAUNCH_1MIN_TO_MONITOR_MOTION, eEvent_None);
+}
+#endif
 
 uint32_t CC_MainGet_PedCnt(void)
 {
@@ -2523,89 +2687,6 @@ static void _sensor_algorithm_swimming_proc(void)
 
         //TracerInfo("diff_time: %d\r\n", curr_time - old_time);
     }
-#if 0 // old
-    raw_sensor_event _stSwmimingData;
-
-    //TracerInfo("_sensor_algorithm_swimming_proc \r\n");
-
-    LSM6DS3_ACC_GYRO_GetRawAccData(NULL, (i16_t *) _wAccelData);
-    LSM6DS3_ACC_GYRO_GetRawGyroData16(NULL, (i16_t *) _wGyroData);
-
-    memcpy( &_stSwmimingData.acc_data,_wAccelData,sizeof(_wAccelData));
-    memcpy( &_stSwmimingData.gyro_data,_wGyroData,sizeof(_wGyroData));
-    _stSwmimingData.type= ACC_SENSOR | GYRO_SENSOR;
-
-    if ((++g_bMagEnCnt % 5)  == 0) // 1 s
-    {
-        AKM_Data_Get();
-        if ((s_tMagRaw.AXIS_X == 0) &&
-            (s_tMagRaw.AXIS_Y == 0) &&
-            (s_tMagRaw.AXIS_Z == 0))
-        {
-            TracerInfo( "Swimming Send Mag data  invaild !!!!!!!!!!!!!\r\n");
-        }
-        else
-        {
-            memcpy( &_stSwmimingData.mag_data,&s_tMagRaw,sizeof(s_tMagRaw));
-            _stSwmimingData.type |= MAG_SENSOR;
-            if (g_bMagEnCnt == 5)
-            {
-                g_bMagEnCnt= 0;
-                //TracerInfo("reset Mag Count = %d\r\n",_cMagEnCnt);
-
-            }
-
-        }
-
-    }
-
-    CC_Swimming_Proc(_stSwmimingData, &s_tVenusCB.stSwimmingResult);
-
-    g_dwLapCnt = s_tVenusCB.stSwimmingResult.swimlap;
-    g_dwStroke = s_tVenusCB.stSwimmingResult.swimcount;
-
-
-    //if(SWIMMING_OTHERS != s_tVenusCB.stSwimmingResult.swimstyle) //TBD
-    //if(true == CC_CheckSwimStrokeChanged(s_tVenusCB.stSwimmingResult.swimcount))
-    //{
-      //  CC_VENUS_Lock_SwimOff_TimerStop();
-      //  CC_VENUS_Lock_SwimOff_TimerStart();
-    //}
-
-
-    if ( s_tVenusCB.dwSwimLapCnt != s_tVenusCB.stSwimmingResult.swimlap) // swim lap
-    {
-        s_tVenusCB.dwSwimLapCnt = s_tVenusCB.stSwimmingResult.swimlap;
-
-        TracerInfo( "Swimming dwSwimLapCnt = %d \r\n",s_tVenusCB.dwSwimLapCnt);
-        #ifdef DB_EN
-        //_CC_DB_Save_SwimmingProc();
-        #endif
-
-
-
-        switch (s_tVenusCB.stGeneralInfo.cSwim_Pool_Size)
-        {
-            case eSWIM_25M:
-                s_tVenusCB.wSwimmingLen = s_tVenusCB.dwSwimLapCnt * 25;
-            break;
-            case eSWIM_50M:
-                s_tVenusCB.wSwimmingLen = s_tVenusCB.dwSwimLapCnt * 50;
-            break;
-            case eSWIM_25YD:
-                s_tVenusCB.wSwimmingLen = s_tVenusCB.dwSwimLapCnt * 25;
-            break;
-            case eSWIM_33_33M:
-                s_tVenusCB.wSwimmingLen = (double)s_tVenusCB.dwSwimLapCnt * 33.33;
-            break;
-            case eSWIM_33_33YD:
-                s_tVenusCB.wSwimmingLen = (double) s_tVenusCB.dwSwimLapCnt * 33.33;
-            break;
-            default:
-                break;
-        }
-    }
-#endif
 }
 
 //void _DumpSensorRegisterMap(void); //test
@@ -2644,6 +2725,13 @@ void _sensor_accel_gyro_on_change(void)
             //_CC_DB_Save_SwimmingEnd();
             //_DumpSensorRegisterMap(); //test!!!
             CC_VENUS_AccelTimerFifoModeStart();
+#ifdef LONGSIT_EN            
+			CC_Longsit_Srv_Enable();
+#endif            
+#ifdef SLEEP_EN
+            //Disable sleep monitor when swimming mode
+            CC_SleepMonitor_Srv_Enable();
+#endif
 
         }
         else
@@ -2904,6 +2992,13 @@ void _sensor_accel_gyro_on_change(void)
                 //_CC_DB_Save_SwimmingStart();
 
                 CC_VENUS_SwimTimerFifoModeStart();
+#ifdef LONGSIT_EN
+		        CC_Longsit_Srv_Disable();
+#endif                
+#ifdef SLEEP_EN
+                //Disable sleep monitor when swimming mode
+                CC_SleepMonitor_Srv_Disable();
+#endif             
 
         }
         else
@@ -2916,6 +3011,8 @@ void _sensor_accel_gyro_on_change(void)
 
 
 #endif
+
+
 
 #ifdef FACTORY_RESET
 void CC_SYS_FactroyReset_Setting(void)
@@ -2950,6 +3047,12 @@ void CC_SYS_FactroyReset_Setting(void)
 
 void CC_SYS_FactoryReset_Handler(void)
 {
+
+#ifdef SLEEP_EN
+    CC_SleepMonitor_Srv_Disable();
+    CC_SleepMonitor_Srv_Disable_SleepService(eDisable);
+#endif
+
 #ifdef DB_EN
     //DB data reset
     CC_DB_Factory_System_DataReset();
@@ -2959,7 +3062,7 @@ void CC_SYS_FactoryReset_Handler(void)
     //System data reset
     CC_BLE_Cmd_GetGeneralInfo(&s_tVenusCB.stGeneralInfo,true);
     CC_AppSrv_HR_ResetLimited(s_tVenusCB.stGeneralInfo.cAge);
-
+    
     CC_CalorieInfoSetting();
 
     CC_BLE_Cmd_GetUnitInfo(&s_tVenusCB.stUnitInfo,true);
@@ -2967,7 +3070,7 @@ void CC_SYS_FactoryReset_Handler(void)
     CC_BLE_Cmd_GetClockAlarm(&s_tVenusCB.stClockAlarm,true);
     CC_ClockAlarm_Parse();
 
-    CC_BLE_Cmd_GetSleepTimeSetting(&s_tVenusCB.stSleepAlgExecPeriod,true);
+    CC_BLE_Cmd_GetLongSitTimeSetting(&s_tVenusCB.stLongSitAlgExecPeriod,true);
 
     CC_BLE_Cmd_GetCallState(&s_tVenusCB.cNotify_flag,
                                                     &s_tVenusCB.cIncommingCallState,
@@ -2975,13 +3078,18 @@ void CC_SYS_FactoryReset_Handler(void)
                                                     &s_tVenusCB.cLongsitEn,
                                                     &s_tVenusCB.cLiftarmEn);
 
+#ifdef PED_GOAL
+    CC_BLE_Cmd_Get_GoalAchievedInfo(&s_tVenusCB.stGoalSetting,true);
+#endif
+
 #ifdef DB_EN
 
     CC_DB_System_Save_Request(DB_SYS_GENERAL_INFO);
     CC_DB_System_Save_Request(DB_SYS_ALARM);
     CC_DB_System_Save_Request(DB_SYS_NOTIFY);
     CC_DB_System_Save_Request(DB_SYS_UNIT);
-    CC_DB_System_Save_Request(DB_SYS_SLEEP_MONITOR_TIME_SETTING);
+    CC_DB_System_Save_Request(DB_SYS_LONGSIT_TIME_SETTING);
+    CC_DB_System_Save_Request(DB_SYS_GOAL_ACHIEVED);
 
     CC_DB_System_Check_Request_And_Save();
 #endif
@@ -3009,19 +3117,10 @@ void CC_SYS_FactoryReset_Handler(void)
     CC_CalorieBurn_Close();
     CC_CalorieBurn_Open();
 
-    //Sleep
+        //Sleep
 #ifdef SLEEP_EN
-    g_fSleepCalSeconds = 0;
-    g_bSleepEnCnt =0.0f;
-    //CC_SleepMonitor_Srv_SyncTimeSlot(&s_tVenusCB.stSleepAlgExecPeriod);
-    // factory reset will erase sleep algorithm start and end time records,
-    // So, call disable
-    // after reset done, device will reinit sleep algorithm and save new start and end time records.
-    CC_SleepMonitor_Srv_Disable();
-
-    CC_SleepMonitor_InitSetTimePeriod(&s_tVenusCB.stSleepAlgExecPeriod);
-    CC_SleepMonitor_Srv_StartService();
-    CC_SleepMonitor_Srv_PollingCheck();
+     g_fSleepCalSeconds = 0;
+     g_bSleepEnCnt =0.0f;
 #endif
 
     //Liftarm
@@ -3047,7 +3146,13 @@ void CC_SYS_FactoryReset_Handler(void)
 #endif
 
     //Longsit
+#ifdef LONGSIT_EN
+    CC_BLE_Cmd_GetLongSitTimeSetting(&s_tVenusCB.stLongSitAlgExecPeriod,true);
+    CC_LongSit_Srv_TimeSetting(&s_tVenusCB.stLongSitAlgExecPeriod);
     CC_Longsit_Srv_LowPowerStateChange(s_tVenusCB.cLongsitEn, s_tVenusCB.bIsLowPower);
+    CC_LongSit_Srv_PollingHandler();
+#endif
+
 }
 #endif
 
@@ -3104,7 +3209,7 @@ bool _app_scheduler(void)
     {
         if (CC_PageMgr_IsBlockingOLED())
         {
-            //NRF_LOG_INFO(" OLED IS BLOCKING \r\n");
+            //TracerInfo(" OLED IS BLOCKING \r\n");
         }
         else
         {
@@ -3243,42 +3348,50 @@ bool _app_scheduler(void)
          if (s_tVenusCB.cNotify_flag)
          {
              //check incommaingcall
+//#ifdef INCALL_NOTIFY_EN
              CC_Incommingcall_onNotified();
-
+//#endif
+             
+             //check incommingsms
+//#ifdef INSMS_EN
              CC_Incommingsms_onNotified();
-
+//#endif
+             
              //init long sig
+#ifdef LONGSIT_EN
              CC_Longsit_Srv_LowPowerStateChange(s_tVenusCB.cLongsitEn, s_tVenusCB.bIsLowPower);
-
+#endif
+             
+#ifdef LIFTARM_EN
              if (eEnable ==s_tVenusCB.cLiftarmEn)
              {
                  if (!liftarm_is_open())
                  {
                      liftarm_open();
                      liftarm_set_hangconfig(s_tVenusCB.stGeneralInfo.bBandLocation);
-                 }
+                 }  
              }
-
-            if(0 == CC_BLE_Cmd_GetSwimmingEN())
-            {
-                CC_VENUS_AccelTimerStop();
-                CC_VENUS_AccelTimerReset();
-                CC_VENUS_AccelTimerFifoModeStart();
-            }
+             else
+             {
+                 liftarm_close();
+             }
+             
+             CC_VENUS_AccelTimerStop();
+             CC_VENUS_AccelTimerReset();
+             CC_VENUS_AccelTimerFifoModeStart();                                    
+#endif
 
          }
 
 
-         #ifdef SLEEP_EN
-         if (CC_BLE_Cmd_CheckSleepTimeSetting())
+#ifdef LONGSIT_EN
+         if (CC_BLE_Cmd_CheckLongSitTimeSetting())
          {
-             CC_BLE_Cmd_GetSleepTimeSetting(&s_tVenusCB.stSleepAlgExecPeriod,true);
-             CC_SleepMonitor_Srv_SyncTimeSlot(&s_tVenusCB.stSleepAlgExecPeriod);
-             TracerInfo("Updated Sleep Monitor Time Setting \r\n");
+             CC_BLE_Cmd_GetLongSitTimeSetting(&s_tVenusCB.stLongSitAlgExecPeriod,true);
+             CC_LongSit_Srv_TimeSetting(&s_tVenusCB.stLongSitAlgExecPeriod);
+             TracerInfo("Updated Long sit Time Setting \r\n");
          }
-
-         CC_SleepMonitor_Srv_PollingCheck();
-         #endif
+#endif
 
          if (CC_BLE_Cmd_CheckGeneralInfo())
          {
@@ -3329,6 +3442,9 @@ bool _app_scheduler(void)
                  CC_DB_Init(CC_DB_Get_Init_Type());
 
              CC_DB_Set_Init_Done();
+#ifdef SLEEP_EN								
+             CC_SleepMonitor_Srv_Enable_SleepService(eEnable);
+#endif		             
          }
 
          CC_DB_System_Check_Request_And_Save();
@@ -3338,6 +3454,21 @@ bool _app_scheduler(void)
          _bScheduleOperating =true;
     }
 
+
+    if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_LONGSITEVENT) )
+    {
+        if (eEnable==s_tVenusCB.cLongsitEn)
+        {   
+            #ifdef LONGSIT_EN
+            CC_LongSit_Srv_PollingHandler();
+            
+            if( eSysStateNormal==s_tVenusCB.eSystemPwrState)
+                CC_Longsit_Srv_handle(s_tVenusCB.dwPedTotalStepCount);
+            #endif
+        }    
+        VENUS_EVENT_OFF(E_VENUS_EVENT_LONGSITEVENT);
+        _bScheduleOperating =true;
+    }
 
     if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_HRM_SERVICE_24HR_START) )
     {
@@ -3437,6 +3568,29 @@ bool _app_scheduler(void)
 
         _bScheduleOperating = true;
     }
+
+
+#ifdef LONGSIT_EN
+    if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_LONGSIT_LAUNCH_HRM_TO_CHECK_WEAR) )
+    {
+        TracerInfo("\r\n<E_VENUS_EVENT_LONGSIT_LAUNCH_HRM_TO_CHECK_WEAR>\r\n");
+        CC_LongSit_Srv_Idle_CheckWearProc();    
+        VENUS_EVENT_OFF(E_VENUS_EVENT_LONGSIT_LAUNCH_HRM_TO_CHECK_WEAR);
+        
+        _bScheduleOperating = true;
+    }
+
+#ifdef UTILITY_EN    
+    if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_LONGSIT_LAUNCH_1MIN_TO_MONITOR_MOTION) )
+    {
+        TracerInfo("\r\n<E_VENUS_EVENT_LONGSIT_LAUNCH_1MIN_TO_MONITOR_MOTION>\r\n");
+        CC_LongSit_Srv_Idle_MonitorMotionHanlder();    
+        VENUS_EVENT_OFF(E_VENUS_EVENT_LONGSIT_LAUNCH_1MIN_TO_MONITOR_MOTION);
+        
+        _bScheduleOperating = true;
+    }
+#endif    
+#endif
 
 #ifdef FACTORY_RESET
     if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_FACTORY_RESET_START))
@@ -3579,18 +3733,7 @@ bool _app_scheduler(void)
 }
 
 
-/*
-void CC_BLE_Cmd_GetSleepTimeSetting(db_sys_sleep_monitor_t *pData, uint8_t _bOption)
-{
-    memcpy(pData,&s_tVensuSyncData._stSleepMonitorTimeSetting,sizeof(db_sys_sleep_monitor_t));
-    // the option, true = get form one second polling, false get form DB,
-    // avoid DB get data before one second polling.
-    if (_bOption == true)
-        s_tVensuSyncData._cNotify_SleepMonitorTimeSetting_Flag = false;
-    TracerInfo("CC_BLE_Cmd_GetSleepTimeSetting   [%d]   \r\n",s_tVensuSyncData._cNotify_SleepMonitorTimeSetting_Flag);
 
-}
-*/
 
 void venus_algorithm_init()
 {
@@ -3617,19 +3760,18 @@ void venus_algorithm_init()
     }
     //#endif
 
-    #ifdef LONGSIT_EN
-        s_tVenusCB.cLongsitEn = CC_BLE_Cmd_GetLongSitStatus();
-        if ( eEnable==s_tVenusCB.cLongsitEn)
-            CC_Longsit_Srv_Init();
-        else
-            CC_Longsit_Srv_Deinit();     // default disable Longsit
-    #endif
+#ifdef LONGSIT_EN
+    CC_BLE_Cmd_GetLongSitTimeSetting(&s_tVenusCB.stLongSitAlgExecPeriod,true);
+    CC_LongSit_Srv_TimeSetting(&s_tVenusCB.stLongSitAlgExecPeriod);
+    CC_LongSit_Srv_PollingHandler();
+#endif
 
-    #ifdef SLEEP_EN
-    CC_SleepMonitor_Srv_Register();
-    CC_BLE_Cmd_GetSleepTimeSetting(&s_tVenusCB.stSleepAlgExecPeriod,true);
-    CC_SleepMonitor_InitSetTimePeriod(&s_tVenusCB.stSleepAlgExecPeriod);
-    #endif
+
+#ifdef SLEEP_EN
+    g_fSleepCalSeconds = 0;
+    g_bSleepEnCnt =0;
+#endif
+
 }
 
 
@@ -3723,13 +3865,17 @@ void venus_app_init(void)
     CC_AppSrv_HR_Init();
 #endif
 
+#ifdef LONGSIT_EN
+    CC_Longsit_Srv_TimerInit();
+#endif
+
     CC_PageMgr_Init();
 
     CC_VENUS_OLEDGeneralOutTimerStart(5000);
 
 }
 
-void venus_ready_to_bootloader(void)
+void venus_ready_to_bootloader(void* param)
 {
     //TracerInfo("venus_ready_to_bootloader!\r\n");
 #ifdef CFG_BLE_APP
@@ -3807,17 +3953,24 @@ int venus_main(void)
         switch (s_tVenusCB.eSystemPwrState)
         {
             case eSysStateInit:
+
+                #ifdef LONGSIT_EN
+                CC_LongSit_Srv_Register();
+                #endif            
+                #ifdef SLEEP_EN
+                CC_SleepMonitor_Srv_Register();
+                #endif                
                 venus_algorithm_init();
-        #ifdef SWIM_CAL_EN
+                #ifdef SWIM_CAL_EN
                 //if(false == s_tVenusCB.wSwimCalData.wVaildFlag)
                   //  CC_Charge_Register(_SwimCal_Evt_Handler);
-        #endif
+                #endif
 
                 //CC_ChargePPR_PinStatInit();
 
-#ifdef FORCE_HRS_TEST_EN
+                #ifdef FORCE_HRS_TEST_EN
                 CC_HRM_PostHeartRateStrapModeEvent(1);
-#endif
+                #endif
                 s_tVenusCB.eSystemPwrState = eSysStateNormal;
                 break;
 

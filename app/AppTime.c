@@ -16,7 +16,18 @@
 #include "cc_db.h"
 #include "tracer.h"
 
-//static app_sys_time_t m_SystemTime;
+#ifdef SLEEP_EN
+extern void CC_SleepMonitor_Srv_Enable_SleepService(eStete_t eStete);
+extern eStete_t CC_SleepMonitor_Srv_Get_SleepService(void);
+#endif
+
+#ifdef DB_EN
+extern void CC_DB_Init(uint8_t _bState);
+extern void CC_DB_Force_Execute_Init(uint8_t init_type);
+extern uint8_t CC_DB_Get_Init_Type(void);
+extern bool CC_DB_Check_Init_Done(void);
+#endif
+
 app_sys_time_t m_SystemTime; // no static for test
 
 
@@ -217,21 +228,44 @@ void app_UpdatTimeDate(const uint8_t *data)
         m_SystemTime.systime.hours      = *data++;
         m_SystemTime.systime.minutes     = *data++;
         m_SystemTime.systime.seconds    = *data++;
-        m_SystemTime.systime.dayofweek = *data; 
+        m_SystemTime.systime.dayofweek = *data;    
 
-/*
         if(0x00 == CC_DB_Check_Magic_Code())
         {
-            CC_DB_System_Save_Request(DB_SYS_TIME);    
+            CC_DB_System_Save_Request(DB_SYS_TIME);	
             // Save Init Data to DB
             CC_DB_System_Save_Request(DB_SYS_GENERAL_INFO);
             CC_DB_System_Save_Request(DB_SYS_ALARM);
             CC_DB_System_Save_Request(DB_SYS_NOTIFY);
             CC_DB_System_Save_Request(DB_SYS_UNIT);
-            CC_DB_System_Save_Request(DB_SYS_SLEEP_MONITOR_TIME_SETTING);
-
+            CC_DB_System_Save_Request(DB_SYS_LONGSIT_TIME_SETTING);
         }
-*/                
+
+        if( false ==app_Get_Update_Time_Flag())
+        {
+#ifdef SLEEP_EN            
+            CC_SleepMonitor_Srv_Enable_SleepService(eEnable);
+#endif
+            if((DB_INIT_FROM_APP_FACTORY_RESET == CC_DB_Get_Init_Type()) || (true == CC_DB_Check_Init_Done())) 
+            {
+                // do nothing;
+            }
+            else
+            {
+                CC_DB_Force_Execute_Init(DB_INIT_FROM_APP);
+            }
+            
+        }
+        else
+        {
+#ifdef SLEEP_EN            
+            if (eDisable == CC_SleepMonitor_Srv_Get_SleepService())
+            {
+                CC_SleepMonitor_Srv_Enable_SleepService(eEnable);
+            }
+#endif            
+        }
+
         m_SystemTime.is_updated     = 1;
 
         // Jason, Algin dayofweek to DB current time fileID and RecID 
@@ -316,4 +350,62 @@ app_interval_t app_time_to_interval(const app_date_time_t t1,
         }
     }
     return n;
+}
+
+app_interval_t app_interval_normalize(const app_interval_t n)
+{
+    return interval_move_carry(n);
+}
+
+void  app_interval_make(app_interval_t *_stInterval ,uint32_t _dwTimeOfSeconds)
+{
+    
+    _stInterval->day  = _dwTimeOfSeconds/86400;
+    _stInterval->hour = (_dwTimeOfSeconds %86400)/3600;
+    _stInterval->minute = (_dwTimeOfSeconds%3600)/60;
+    _stInterval->second  = ((_dwTimeOfSeconds%3600)%60);
+
+}
+
+
+void  app_interval_make_64bits(app_interval_t *_stInterval ,unsigned long long _qwTimeOfSeconds)
+{
+
+    _stInterval->day  = (int8_t)((unsigned long long)_qwTimeOfSeconds/86400);
+    _stInterval->hour = (int8_t)((unsigned long long)(_qwTimeOfSeconds %86400)/3600);
+    _stInterval->minute = (int8_t)((unsigned long long)(_qwTimeOfSeconds%3600)/60);
+    _stInterval->second  = (int8_t)((unsigned long long)((_qwTimeOfSeconds%3600)%60));
+
+}
+
+uint8_t app_caculation_dayofweek(const app_date_time_t tl)
+{
+    uint32_t W[12]={6, 2, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4};
+
+    uint32_t y, m, d, w;
+
+    app_date_time_t time = { 0 };
+    if (app_time_is_valid(tl))
+    {
+        time = tl;
+        y = time.year;
+        m = time.month;
+        d = time.day;
+
+        w=W[m-1]+y+(y/4)-(y/100)+(y/400);
+
+        if( ((y%4)==0) && (m<3) )
+        {
+            w--;
+
+            if((y%100)==0)
+                w++;
+            if((y%400)==0)
+                w--;
+
+        }
+        return (w+d)%7;
+    }
+
+    return time.dayofweek;
 }

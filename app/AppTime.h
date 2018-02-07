@@ -76,5 +76,9 @@ uint8_t app_Check_Time_And_DB_Init(void);
 void app_Set_DB_Init_Done(void);
 void app_Force_Init_DB(void);
 app_interval_t app_time_to_interval(const app_date_time_t t1,const app_date_time_t t2);
+void  app_interval_make(app_interval_t *_stInterval ,uint32_t _dwTimeOfSeconds);
+void  app_interval_make_64bits(app_interval_t *_stInterval ,unsigned long long _nTimeOfSeconds);
+uint8_t app_caculation_dayofweek(const app_date_time_t tl);
+
 
 #endif

@@ -240,6 +240,23 @@ typedef enum
 
 
 
+typedef struct
+{
+    uint8_t _cNotify_General_Info_Flag;
+    CC_Ble_General_Info_T _eGeneralInfo;
+    uint8_t _cNotify_Unit_Flag;
+    CC_Ble_Unit_Info_T _eUnitInfo;
+    uint8_t _cNotify_ClockAlarm_Flag;
+    CC_Ble_Clock_Alarm_T _eClockAlarmInfo;
+    uint8_t _cNotify_LongSitTimeSetting_Flag;
+    db_sys_longsit_t  _stLongSitTimeSetting;
+    uint8_t  cNotify_GoalAchieved_Flag;
+#ifdef PED_GOAL    
+    CC_Ble_Goal_Achieved_T stGoalAchieved;
+#endif
+}CC_SYNCDATA_T;
+
+
 void CC_BLE_Cmd_SetHistoryType(uint8_t cVal);
 void CC_BLE_Cmd_ClrHistoryType(void);
 void CC_BLE_Cmd_ClrHistoryRecordIndex(void);
@@ -251,7 +268,7 @@ void CC_BLE_Cmd_UpdateHistoryDayIndex(void);
 void CC_BLE_Cmd_GetCallState(uint8_t *_Notify,eCALL_state_t *_stCall,
                                                             eSMS_state_t *_stSms,eStete_t *_stLongsit,
                                                             eStete_t * _stLiftarm);
-void CC_BLE_Cmd_GetSleepTimeSetting(db_sys_sleep_monitor_t *pData, uint8_t _bOption);
+
 eStete_t CC_BLE_Cme_Get_HeartRateStrapMode(void);
 eStete_t CC_BLE_Cme_Get_24HourHeartRateMode(void);
 uint8_t CC_BLE_Cmd_GetSwimmingEN(void);
@@ -272,8 +289,9 @@ void CC_BLE_Cmd_SetNotifySetting(uint8_t *pData);
 void CC_BLE_Cmd_SetUnitInfo(const uint8_t *pData);
 void CC_BLE_Cmd_SetHrSetting(db_sys_hr_setting_t *ptHrSetting);
 uint8_t CC_BLE_Cmd_CheckSleepTimeSetting(void);
+uint8_t CC_BLE_Cmd_CheckLongSitTimeSetting(void);
 void CC_BLE_Cmd_SetSleepTimeSetting(uint8_t * pData);
-void CC_BLE_Cmd_GetSleepTimeSetting(db_sys_sleep_monitor_t *pData, uint8_t _bOption);
+void CC_BLE_Cmd_GetLongSitTimeSetting(db_sys_longsit_t *pData, uint8_t _bOption);
 void CC_BLE_Cmd_SetNotificaitonState(uint8_t state, uint8_t index);
 
 /// @} HTPTTASK
