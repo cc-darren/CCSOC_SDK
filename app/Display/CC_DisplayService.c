@@ -293,12 +293,12 @@ void CC_Dsp_Srv_PresentTime(app_date_time_t _mCurTime, uint8_t _Format)
 
 void CC_Dsp_Srv_PedCnt(uint32_t _dwData)
 {
-    uint8_t _bX = 0;
+    int8_t _bX = 0;
     uint8_t _bY = 0;
     char strbuf[8] = {0};
 
     sprintf(strbuf,"%d",_dwData);    
-    _OLED_Display_CharLen_Calculation(_dwData, &_bX, &_bY);
+    _OLED_Display_CharLen_Calculation(_dwData, (uint8_t *)&_bX, &_bY);
     oled_DrawBlack(); 
     if (_bY == 2)
         oled_DrawPixel8x16(LCD_X_OFFSET + _bX, _bY, (uint8_t*)strbuf);    

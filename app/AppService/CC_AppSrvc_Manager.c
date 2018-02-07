@@ -122,6 +122,7 @@ typedef struct
  *     <in> id: identifier for registered from service manager
  * [RETURN  ] E_App_Srv_Err_Code.
  ******************************************************************************/
+#if 0    // TODO: comment out for compiler warning
  static E_App_Srv_Err_Code AppSrv_Suspend(E_App_Srv_ID id)
  {
  
@@ -150,7 +151,7 @@ typedef struct
  
      return ret_code; 
  }
- 
+#endif
 
  /******************************************************************************
  * [FUNCTION] AppSrv_Resume
