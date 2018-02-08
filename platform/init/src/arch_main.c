@@ -38,16 +38,22 @@ extern void rwip_schedule(void);
 #endif
 
 extern void sys_InitMain(void);
-extern void venus_main(void);
+extern int venus_main(void);
 
 /*
  * MAIN FUNCTION
  ****************************************************************************************
  */
 
-
 int main(void)
 {
+    #if ZEUS_WRISTBAND
+        venus_main();    // infinite loop in venus_main()
+    #elif VENUS_WRISTBAND
+        venus_main();    // infinite loop in venus_main()
+    #endif
+
+
     //Must be first in main()
     sys_InitMain();
 
@@ -68,10 +74,6 @@ int main(void)
 
 #ifdef BOOTLOADER
     BootloaderMain();
-#elif VENUS_WRISTBAND
-    venus_main();
-#elif ZEUS_WRISTBAND
-    venus_main();
 #endif
 
 

@@ -39,7 +39,6 @@
 #include "cc_db.h"
 #include "tracer.h"
 #include "sdk_db.h"
-#include "AppTime.h"
 #include "string.h"
 #include "clock.h"
 #include "sw_timer.h"

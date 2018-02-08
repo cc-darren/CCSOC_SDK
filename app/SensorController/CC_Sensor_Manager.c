@@ -1461,14 +1461,6 @@ void SM_Test(void)
 
         
         cc6801_ClockDelayMs(10);
-
-        if (true == NRF_LOG_PROCESS())
-        {
-            
-            continue;         
-        }
-        
-        
     };
 
 

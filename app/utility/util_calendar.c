@@ -12,7 +12,6 @@
 #include <stdint.h>
 #include <string.h>
 #include "project.h"
-#include "appTime.h"
 #include "cc_db.h"
 #include "tracer.h"
 

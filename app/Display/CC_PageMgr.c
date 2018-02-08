@@ -13,7 +13,6 @@
 
 #include "CC_AppSrvc_HeartRate.h"
 
-#include "appTime.h"
 #include "cc_db.h"
 #include "tracer.h"
 #ifdef APP_SERV_MGR_EN

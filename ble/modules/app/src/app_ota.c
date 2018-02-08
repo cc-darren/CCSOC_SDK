@@ -67,7 +67,6 @@
  * GLOBAL VARIABLE DEFINITIONS
  ****************************************************************************************
  */
-extern void venus_ready_to_bootloader(void*);
 
 /// health thermometer application environment structure
 struct app_ota_env_tag app_ota_env;
@@ -450,6 +449,14 @@ static int otat_temp_send_rsp_handler(ke_msg_id_t const msgid,
 }
 */
 
+static void _ready_to_bootloader(void)
+{
+    //TracerInfo("_ready_to_bootloader!\r\n");
+#ifdef CFG_BLE_APP
+    appm_disconnect();
+#endif
+}
+
 static int otat_packet_send_cmd_handler(ke_msg_id_t const msgid,
                                         struct otat_packet_send_cmd const *param,
                                         ke_task_id_t const dest_id,
@@ -468,13 +475,13 @@ static int otat_packet_send_cmd_handler(ke_msg_id_t const msgid,
         uint8_t  buffer[3]; 
         uint8_t  index = 0;
     
-        buffer[index++] = 0x20;//DFU_OP_RESPONSE_CODE;
+        buffer[index++] = 0x20;//OP_RESPONSE_CODE;
         
         // Encode the Request Op code
-        buffer[index++] = 0x01;//BLE_DFU_OP_CODE_CREATE_OBJECT;
+        buffer[index++] = 0x01;//OP_CODE_CREATE_OBJECT;
         
         // Encode the Response Value.
-        buffer[index++] = 0x01;//NRF_DFU_RES_CODE_SUCCESS;
+        buffer[index++] = 0x01;//RET_CODE_SUCCESS;
     
         app_ota_notify_send(buffer, index);
 
@@ -485,7 +492,7 @@ static int otat_packet_send_cmd_handler(ke_msg_id_t const msgid,
         FotaFlashInit(false);
 #endif        
         BootloaderSettingInit();
-        EnterBootloader(venus_ready_to_bootloader);
+        EnterBootloader((T_callback)_ready_to_bootloader);
 #endif 
     return (KE_MSG_CONSUMED);
 }

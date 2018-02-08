@@ -40,10 +40,9 @@ Head Block of The File
 
 // Sec 1: Include File
 #include "global.h"
-#include "appTime.h"
 #include "stdint.h"
 #include "CC_Calorie_burn.h"
-//#include "CC_DB_Structure.h"
+#include "util_calendar.h"
 
 // Sec 2: Constant Definitions, Imported Symbols, miscellaneous
 

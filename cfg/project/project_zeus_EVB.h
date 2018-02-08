@@ -40,10 +40,9 @@ Head Block of The File
 
 // Sec 1: Include File
 #include "global.h"
-#include "appTime.h"
 #include "stdint.h"
 #include "CC_Calorie_burn.h"
-//#include "CC_DB_Structure.h"
+#include "util_calendar.h"
 
 // Sec 2: Constant Definitions, Imported Symbols, miscellaneous
 
@@ -440,8 +439,7 @@ Declaration of static Global Variables & Functions
 
 
 #define DEVICE_MODEL "Z E U S"
-#define VENUS_HW_VERSION "v0.000.001"
-#define VENUS_FW_VERSION "v0.000.001"
+#define SDK_FW_VERSION "v0.000.003"
 
 #define CFG_APP_CODE_ONLY
 
@@ -920,10 +918,10 @@ typedef struct
 #define CFG_BLE    1
 
 // <h> BLE - DEVICE NAME
-#define APP_DFLT_DEVICE_NAME    "CC6801-01"
+#define APP_DFLT_DEVICE_NAME    "CC6801-77"
 
 // <h> BLE - DEVICE ADDRESS
-#define APP_DFLT_DEVICE_ADDR    { 0xAB, 0x89, 0x67, 0x45, 0x23, 0x01 }
+#define APP_DFLT_DEVICE_ADDR    { 0xAB, 0x36, 0x61, 0x45, 0x23, 0x01 }
 
 // <h> BLE - Data Length Extension (v4.2)
 #define CFG_DLE_EN

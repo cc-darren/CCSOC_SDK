@@ -675,19 +675,13 @@ void CC_Dsp_Srv_DeviceInfo(void)
 {
     char strbuf[11] = {0};
     uint8_t _bX = 0;
-    oled_DrawBlack();
-    
-    sprintf(strbuf,"%s",deviceName);
 
-    //_bX = (LCD_SIZE_X - 9*8)/2;
-    //_bX = (LCD_SIZE_X - 9*8);
-    oled_DrawPixel8x16(LCD_X_OFFSET, 1, (uint8_t*)strbuf);  
-    //oled_DrawPixel8x16(LCD_X_OFFSET+_bX, 1, (uint8_t*)strbuf);  
-    sprintf(strbuf,"%s",VENUS_FW_VERSION);
+    oled_DrawBlack();
+
+    sprintf(strbuf, "%s", SDK_FW_VERSION);
 
     _bX = (LCD_SIZE_X - 10*6)/2;
     oled_DrawPixel6x8(LCD_X_OFFSET+_bX, 4, (uint8_t*)strbuf);  
-
 }
 
 

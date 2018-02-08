@@ -1,29 +1,47 @@
-/**
- ****************************************************************************************
+/* Copyright (c) 2018 Cloudchip, Inc. All Rights Reserved.
  *
- * @file venus_main.c
+ * The information contained herein is property of Cloudchip, Inc.
+ * Terms and conditions of usage are described in detail in CLOUDCHIP
+ * STANDARD SOFTWARE LICENSE AGREEMENT.
  *
- * @brief Main loop of the application.
- *
- * Copyright (C) CloudChip 2017-2019
- *
- *
- ****************************************************************************************
+ * Licensees are granted free, non-transferable use of the information.
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * from the file.
  */
 
+/******************************************************************************
+*  Filename:
+*  ---------
+*  main.c
+*
+*  Project:
+*  --------
+*  cc6801
+*
+*  Description:
+*  ------------
+*  Entry of user program
+*
+*  Author:
+*  -------
+*  CloudChip
+*
+*===========================================================================/
+*  20180206 Louis initial version
+******************************************************************************/
 
-/*
- * INCLUDES
- ****************************************************************************************
- */
+/******************************************************************************
+ * INCLUDE FILE
+ ******************************************************************************/
 #include <string.h>
+#include "project.h"
+
+#include "ble_mgr.h"
+
 #include "ll.h"
 #include "drvi_init.h"
 #include "tracer.h"
-#include "project.h"
 
-//#include "wktm.h"
-//#include "drvi_wktm.h"
 #include "sw_timer.h"
 #include "appdisplay.h"
 #include "CC_PageMgr.h"
@@ -56,27 +74,28 @@
 #include "Acc_Gyro_Controller.h"
 #include "htpt_task.h"
 #include "scheduler.h"
-//#include "svc_mgr.h"
+
 #ifdef APP_SERV_MGR_EN
-#include "CC_AppSrvc_Manager.h"
-#include "CC_Sensor_Manager.h"
+    #include "CC_AppSrvc_Manager.h"
+    #include "CC_Sensor_Manager.h"
 #endif
+
 #ifdef SW_TIMER_BY_KERNEL
-#include "app_task.h"
+    #include "app_task.h"
 #endif
 
 #ifdef LONGSIT_EN
-#include "CC_Longsit_Service.h"
+    #include "CC_Longsit_Service.h"
 #endif
 
 #ifdef APP_VIB_MGR
-#include "App_Vib_Manager.h"
-#include "App_Vib_Pattern.h"
+    #include "App_Vib_Manager.h"
+    #include "App_Vib_Pattern.h"
 #endif
 
 #ifdef SLEEP_EN
-#include "CC_SleepMonitor_Service.h"
-#include "CC_Slpmtr.h"
+    #include "CC_SleepMonitor_Service.h"
+    #include "CC_Slpmtr.h"
 #endif
 
 #define APP_TIMER_PRESCALER        0
@@ -100,10 +119,10 @@
 #define BATTERY_LEVEL_MEAS_INTERVAL     60000
 
 
-#define VENUS_EVENT_ON(EventID,Data)                             \
-        {                                                              \
-            s_tVenusCB.taEvent[EventID].bCount = 1;                   \
-            s_tVenusCB.taEvent[EventID].dwData= Data;          \
+#define VENUS_EVENT_ON(EventID,Data)                     \
+        {                                                \
+            s_tVenusCB.taEvent[EventID].bCount = 1;      \
+            s_tVenusCB.taEvent[EventID].dwData= Data;    \
         }
 
 #define VENUS_EVENT_OFF(EventID)             {    s_tVenusCB.taEvent[EventID].bCount = 0;    }
@@ -211,7 +230,6 @@ enum
 // STANDBY TIMER ===============================
 SW_TIMER_DEF(s_tVenusTimerAccel);     // disable this timer to unify standby timers
 SW_TIMER_DEF(s_tVenusTimerDataTime);    // TBD: should rename like standby-base-timer
-//SW_TIMER_DEF(s_tVenusTimerDiffTime); // for test
 
 // FUNCTION TIMER ===============================
 SW_TIMER_DEF(s_tTouchDebounceTime);
@@ -227,8 +245,6 @@ SW_TIMER_DEF(s_tVenusTimerOLEDDisplaySrvTimer);
 SW_TIMER_DEF(s_tVenusTimerPWMVibSrvTimer);
 SW_TIMER_DEF(s_tVenusTimerPedoWalkTimer);
 SW_TIMER_DEF(s_tVenusTimerPedoRunTimer);
-//SW_TIMER_DEF(s_tVenusTimerBatteryLiftImmediatelyCheck);
-//SW_TIMER_DEF(s_tVenusTimerSwimCalTimer);
 SW_TIMER_DEF(s_tLockSwimOffTimer);
 
 #ifdef APP_VIB_MGR
@@ -375,9 +391,6 @@ typedef struct
 
 }   S_VenusCB;
 
-
-char deviceName[10] = {'Z','S','_','1','3','3','4','8'}; // for test
-
 S_VenusCB    s_tVenusCB;
 extern uint8_t g_GyroEnable;
 static short _wGyroData[3]  = { 0 };
@@ -406,6 +419,9 @@ void CC_Longsit_PostOLedUpdate(void);
 #ifdef SLEEP_EN
 void _sensor_algorithm_sleepmeter_proc(void);
 #endif
+
+extern void sys_InitMain(void);
+
 
 
 void CC_VENUS_OLEDWakUpTimeOutTimerStart(uint16_t _wdata)
@@ -665,267 +681,21 @@ void CC_HRM_Post24HrModeEvent(uint8_t bSwitch)
 uint8_t CC_GetLowPowerState(void)
 {
       return 0;
-//    return s_tVenusCB.bIsLowPower;
 }
 
 uint8_t CC_Charge_Register(charge_cb_t cb)
 {
     return 1;
-/*
-    int ret;
-
-    if (m_charge_users == CHARGE_MAX_USERS)
-    {
-        ret = 0;
-    }
-    else
-    {
-        m_charge_cb_table[m_charge_users] = cb;
-        m_charge_users++;
-
-        ret = 1;
-    }
-    return ret;
-*/
-}
-/*
-static void CC_Charge_Event_Send(eDEV_CHARGE_STATE_t eState)
-{
-
-    for (uint32_t user = 0; user < FDS_MAX_USERS; user++)
-    {
-        if (m_charge_cb_table[user] != NULL)
-        {
-            m_charge_cb_table[user](eState);
-        }
-    }
-
-}
-*/
-/*
-static void cc_charge_ppr_debounce_timeout(void * p_context)
-{
-//    VENUS_EVENT_ON(E_VENUS_EVENT_CHARGING_INT , eEvent_None);
 }
 
-static void cc_charge_chg_debounce_timeout(void * p_context)
-{
-
-    uint8_t _bIsFull = nrf_gpio_pin_read(CHG_PIN);
-    if( eDEVICE_CHARGE_FULL==_bIsFull)
-    {
-        VENUS_EVENT_ON(E_VENUS_EVENT_CHARGING_FULL, eEvent_None);
-    }
-    else
-    {
-        s_tVenusCB.bChargCHGDebounceFlag=false;
-    }
-
-}
-
-static void _CC_Reflash_BatteryLevel(void)
-{
-
-    //start time 40 ms to reflash battery level.
-    CC_VENUS_BatteryImmediatelyCheckTimerStart(TIMER_CNT_CEHCKBATLEVEL_MS);
-
-}
-
-static uint8_t _CC_Is_CHARGE_FULL(void)
-{
-    return 0;
-
-    uint8_t _bIsPPRCHARGE = nrf_gpio_pin_read(PPR_PIN);
-    uint8_t _bIsFull = nrf_gpio_pin_read(CHG_PIN);
-
-    if (eDEVICE_CHARGE_IN ==_bIsPPRCHARGE && eDEVICE_CHARGE_FULL == _bIsFull && s_tVenusCB.bIs_FullReported == false )
-    {
-        //TracerInfo("_CC_CHARGE_In_Cfg chg hi ~~~~~ \r\n");
-        CC_VENUS_CHARGE_CHG_DebounceTimerStart(CHG_DEBOUNCE_TIME);
-        s_tVenusCB.bChargCHGDebounceFlag=true;
-    }
-    else
-    {
-        //TracerInfo("_CC_CHARGE_In_Cfg chg LO !!!! \r\n");
-        if(s_tVenusCB.bIs_FullReported == false)
-            s_tVenusCB.eChargingFullState = eDEVICE_CHARGE_NOFULL;  //full
-    }
-    return _bIsFull;
-
-}
-
-static void CC_BatteryLevelReset(void)
-{
-
-    if (s_tVenusCB.eExChangingState != s_tVenusCB.eChargingState)
-    {
-        if (s_tVenusCB.eChargingState == eDEVICE_CHARGE_IN)
-            s_tVenusCB.wAdc_val = 0;
-        else
-        {
-            s_tVenusCB.wAdc_val = 0xffff;
-            s_tVenusCB.bAvg_BatLevel = BAS_LEVEL_MAX_INVAILD;
-        }
-
-        s_tVenusCB.eExChangingState = s_tVenusCB.eChargingState;
-    }
-
-}
-
-static void _CC_CHARGE_In_Cfg(void)
-{
-
-    s_tVenusCB.eChargingState = eDEVICE_CHARGE_IN;
-    if (eDEVICE_CHARGE_NOFULL ==_CC_Is_CHARGE_FULL())
-        VENUS_EVENT_ON(E_VENUS_EVENT_OLED_UPDATE , eEvent_CHARGINGIN);
-
-    CC_Charge_Event_Send(s_tVenusCB.eChargingState);
-
-    CC_VENUS_BatteryImmeditaelyCheckTimerReset();
-    CC_VENUS_BatteryImmeditaelyCheckTimerStop();
-    s_tVenusCB.bIsLowPowerNotify = false;
-
-    //Set battery level reflash count when charge-out or charge full to re-flash battery level.
-    s_tVenusCB.bReadBatLevelCnt=READ_BATLEVELCNT;
-
-    CC_BatteryLevelReset();
-
-}
-
-static void _CC_CHARGE_Out_Cfg(void)
-{
-
-    s_tVenusCB.eChargingState = eDEVICE_CHARGE_OUT;
-    s_tVenusCB.bIs_FullReported = false;
-
-    CC_Charge_Event_Send(s_tVenusCB.eChargingState);
-
-    CC_AppSrv_HR_SetAppLockHrm(CC_APPSRV_HR_APP_UNLOCK);
-
-    if (1 == CC_BLE_Cmd_GetSwimmingEN())
-    {
-        VENUS_EVENT_ON(E_VENUS_EVENT_OLED_UPDATE , eEvent_SWIM_ON);
-        CC_AppSrv_HR_SetAppLockHrm(CC_APPSRV_HR_APP_LOCK);
-    }
-    else if (eEnable == CC_BLE_Cme_Get_HeartRateStrapMode())
-    {
-        VENUS_EVENT_ON(E_VENUS_EVENT_OLED_UPDATE , eEvent_HEARTRATESTRAPMODE_ON);
-    }
-    else
-    {
-        VENUS_EVENT_ON(E_VENUS_EVENT_OLED_UPDATE , eEvent_CHARGINGOUT);
-    }
-
-    if (eEnable == CC_BLE_Cme_Get_24HourHeartRateMode())
-    {
-        CC_AppSrv_HR_Start24HR();
-    }
-
-    CC_BatteryLevelReset();
-
-    _CC_Reflash_BatteryLevel();
-
-}
-
-void CC_CHARGING_Handler(void)
-{
-
-    uint8_t Charging = nrf_gpio_pin_read(PPR_PIN);
-    if (Charging == eDEVICE_CHARGE_IN) // 0 = charge in , 1 = no charge
-    {
-        _CC_CHARGE_In_Cfg();
-    }
-    else
-    {
-        _CC_CHARGE_Out_Cfg();
-    }
-
-    nrf_drv_gpiote_in_event_enable(PPR_PIN,true);
-
-}
-
-void CHARGING_Full_Handler(void)
-{
-
-    TracerInfo("CHARGING_In_Handler Charging Full !!! \r\n");
-    VENUS_EVENT_ON(E_VENUS_EVENT_OLED_UPDATE , eEvent_CHARGINGFULL);
-    s_tVenusCB.eChargingFullState = eDEVICE_CHARGE_FULL;  //full
-    s_tVenusCB.bIs_FullReported = true;
-    s_tVenusCB.bFullIndicationtoBattery = true;
-
-    //Reflash battery level immediately
-    _CC_Reflash_BatteryLevel();
-
-}
-
-void CC_ChargeStatePolling(void)
-{
-
-    uint8_t Charging = nrf_gpio_pin_read(PPR_PIN);
-    if (s_tVenusCB.eChargingState != Charging)
-    {
-        if (Charging == eDEVICE_CHARGE_IN) // 0 = charge in , 1 = no charge
-        {
-            _CC_CHARGE_In_Cfg();
-        }
-        else
-        {
-            _CC_CHARGE_Out_Cfg();
-        }
-    }
-    else
-    {
-        if(Charging == eDEVICE_CHARGE_IN)
-        {
-            _CC_Is_CHARGE_FULL();
-        }
-    }
-
-}
-
-void CC_ChargePPR_PinStatInit(void)
-{
-
-    uint8_t Charging = nrf_gpio_pin_read(PPR_PIN);
-    if (Charging == eDEVICE_CHARGE_IN) // 0 = charge in , 1 = no charge
-    {
-        _CC_CHARGE_In_Cfg();
-    }
-    else
-    {
-        //default  bIsLowPower = false
-        //First boot check battery capacity,
-        //Init state,
-        //battery low power will go to low power page,
-
-        #ifdef EN_APPPROTECTION_AND_LOWPWR
-        if (s_tVenusCB.bAvg_BatLevel >BATTERYLEVEL_ENTER_LOWPOWER)
-            s_tVenusCB.bIsLowPower = false;
-        else
-            s_tVenusCB.bIsLowPower = true;
-
-         _CC_CHARGE_Out_Cfg();
-        //[VNS-97]
-        CC_Battery_PreLowPowerCheck();
-        #else
-        _CC_CHARGE_Out_Cfg();
-        //[VNS-97]
-        CC_Battery_PreLowPowerCheck();
-        #endif
-    }
-
-}
-*/
 eDEV_CHARGE_STATE_t CC_GetChargeStatus(void)
 {
     return eDEVICE_CHARGE_OUT;
-    //return s_tVenusCB.eChargingState;
 }
 
 eDEV_CHARGEFULL_STATE_t CC_GetChargeFullStatus(void)
 {
     return eDEVICE_CHARGE_NOFULL;
-    //return s_tVenusCB.eChargingFullState;
 }
 #endif
 
@@ -1039,7 +809,6 @@ static void CC_DB_Save_Pedo_Data(uint8_t ped_type, S_DB_PedoRecord_t *ped_record
     else
     {
         TracerInfo("PEDO_DB_SAVE OK!!\r\n");
-        //TracerInfo("start_time.year:%d\r\n",ped_record_data->startTime.year, ped_record_data->startTime.year);
         TracerInfo("pedo_state: %d, step: %d\r\n", m_db_pedo.ped_state.state, m_db_pedo.ped_single.count);
     }
 
@@ -1148,11 +917,9 @@ static void _TouchDebounce_Handler(uint16_t _wData)
 }
 
 
-//void TOUCH_int_handler(nrf_drv_gpiote_pin_t pin, nrf_gpiote_polarity_t action)
 void TOUCH_int_handler(void) // no implement parameter
 {
 
-//    if(pin == TOUCH_INT_PIN)
     if(0x00 == drvi_GpioRead(TOUCH_INT_PIN))
     {
         if (s_tVenusCB.cTouchDebounceFlag == 0)
@@ -1174,16 +941,6 @@ void TOUCH_Handler(void)
 
     VENUS_EVENT_ON(E_VENUS_EVENT_OLED_UPDATE , eEvent_TOUCH);
 
-/*
-    if((eDEVICE_CHARGE_OUT == CC_GetChargeStatus()) && (eEnable == CC_BLE_Cme_Get_HeartRateStrapMode()))
-    {
-        VENUS_EVENT_ON(E_VENUS_EVENT_OLED_UPDATE , eEvent_HEARTRATESTRAPMODE_ON);
-    }
-    else
-    {
-        VENUS_EVENT_ON(E_VENUS_EVENT_OLED_UPDATE , eEvent_TOUCH);
-    }
-*/
 }
 
 
@@ -1876,7 +1633,6 @@ static void CC_ClockAlarm_Notified(void)
 
 #ifdef HRM_EN
 
-//void HRM_int_handler(nrf_drv_gpiote_pin_t pin, nrf_gpiote_polarity_t action)
 void HRM_int_handler(void)
 {
     VENUS_EVENT_ON(E_VENUS_EVENT_HRM , eEvent_None);
@@ -1990,33 +1746,11 @@ uint32_t Get_system_time_ms(void)
 
 static void application_timers_start(void)
 {
-    //uint32_t err_code;
-
-
     sw_timer_start(m_rsc_meas_timer_id, SPEED_AND_CADENCE_MEAS_INTERVAL, NULL);
 
-    // Start application timers.
-    //sw_timer_start(m_battery_timer_id, BATTERY_LEVEL_MEAS_INTERVAL, NULL);
-
-    //err_code = sw_timer_start(m_rsc_meas_timer_id, SPEED_AND_CADENCE_MEAS_INTERVAL, NULL);
-    //APP_ERROR_CHECK(err_code);
-
-    // disable this timer to unify standby timers
     sw_timer_start(s_tVenusTimerAccel, ACCEL_FIFO_MODE_LONG_INTERVAL, NULL);
 
     sw_timer_start(s_tVenusTimerDataTime, DATETIME_CNT, NULL);
-
-#if 0 //test time diff
-
-    sw_timer_create(&s_tVenusTimerDiffTime,
-                     SW_TIMER_MODE_REPEATED,
-                     System_time_handler);
-
-    sw_timer_start(s_tVenusTimerDiffTime, 20, NULL); // test by Samuel
-#endif
-
-
-
 }
 
 static void CC_CalorieInfoSetting(void)
@@ -2301,9 +2035,6 @@ void _sensor_algorithm_sleepmeter_proc(void)
         }
         #endif
 
-        //TracerInfo("_sensor_algorithm_sleepmeter_proc g_fSleepCalSeconds %d \r\n",NRF_LOG_FLOAT(g_fSleepCalSeconds));
-
-        //TracerInfo("_sensor_algorithm_sleepmeter_proc g_bSleepEnCnt %d \r\n",g_bSleepEnCnt);
 
         slpmtr_input.mpss[0] = (float)(((double)_wAccelData[0]*9.8)/1024);
         slpmtr_input.mpss[1] = (float)(((double)_wAccelData[1]*9.8)/1024);
@@ -2399,16 +2130,11 @@ static void _sensor_power_down_gryo(void)
 {
     LSM6DS3_ACC_GYRO_GetRawGyroData16(NULL, (i16_t *) _wGyroData);
     CC_GYRO_Set_ODR(LSM6DS3_ACC_GYRO_ODR_G_POWER_DOWN);
-    //nrf_gpio_cfg_input(14,NRF_GPIO_PIN_NOPULL);
 }
 
 static void _sensor_power_down_mag(void)
 {
-    //AKM_Data_Get(); // remarked by Samuel
     AK09912_MAG_SLEEP();
-    //nrf_gpio_cfg_input(AKM_I2C_DAT,NRF_GPIO_PIN_PULLUP);
-    //nrf_gpio_cfg_input(AKM_I2C_CLK,NRF_GPIO_PIN_PULLUP);
-    //nrf_gpio_cfg_input(15,NRF_GPIO_PIN_NOPULL);
 }
 #endif
 
@@ -3608,16 +3334,8 @@ bool _app_scheduler(void)
         }
         else
         {
-            //if (s_tVenusCB.eChargingState == eDEVICE_CHARGE_IN )
-            //{
-            //    VENUS_EVENT_ON(E_VENUS_EVENT_OLED_UPDATE_FACTORYRESET_START, eEvent_FACTORY_RESET_START);
-            //}
-            //else
-            {
-                VENUS_EVENT_ON(E_VENUS_EVENT_OLED_UPDATE_FACTORYRESET_STOP, eEvent_FACTORY_RESET_STOP);
-            }
+            VENUS_EVENT_ON(E_VENUS_EVENT_OLED_UPDATE_FACTORYRESET_STOP, eEvent_FACTORY_RESET_STOP);
         }
-
     }
 
     if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_OLED_UPDATE_FACTORYRESET_START))
@@ -3626,7 +3344,6 @@ bool _app_scheduler(void)
 
         if (CC_PageMgr_IsBlockingOLED())
         {
-             //TracerInfo(" OLED IS BLOCKING \r\n");
         }
         else
         {
@@ -3644,7 +3361,6 @@ bool _app_scheduler(void)
 
              }
         }
-
     }
 
 
@@ -3654,7 +3370,6 @@ bool _app_scheduler(void)
 
          if (CC_PageMgr_IsBlockingOLED())
          {
-              //TracerInfo(" OLED IS BLOCKING \r\n");
          }
          else
          {
@@ -3735,20 +3450,27 @@ bool _app_scheduler(void)
 
 
 
-void venus_algorithm_init()
+static void _AppAlgInit(void)
 {
-    FP_PED_8Bit_initialize();
-    //Init Swim algorithm and init MMI data
+    #ifdef LONGSIT_EN
+        CC_LongSit_Srv_Register();
+    #endif            
+
+    #ifdef SLEEP_EN
+        CC_SleepMonitor_Srv_Register();
+    #endif                
+
     CC_BLE_Cmd_GetGeneralInfo(&s_tVenusCB.stGeneralInfo,true);
+
+    FP_PED_8Bit_initialize();
+
     CC_Swim_Init(s_tVenusCB.stGeneralInfo.cSwim_Pool_Size,(band_location)s_tVenusCB.stGeneralInfo.bBandLocation);  // remarked for temp by Samuel
-    //init_gyro_cali_when_on(s_tVenusCB.wSwimCalData.Data);
-
-    // Calorie open
+    
     CC_CalorieBurn_Open();
-
-    //#ifdef LIFTARM_EN
+    
     s_tVenusCB.cLiftarmEn = CC_BLE_Cmd_GetLiftArmStatus();
-    if ( eEnable==s_tVenusCB.cLiftarmEn )
+
+    if (eEnable == s_tVenusCB.cLiftarmEn)
     {
         liftarm_open();
         s_tVenusCB.stGeneralInfo.bBandLocation = CC_BLE_Cmd_GetLiftArmBandSetting();
@@ -3758,264 +3480,126 @@ void venus_algorithm_init()
     {
         liftarm_close();     // default disable liftarm
     }
-    //#endif
-
-#ifdef LONGSIT_EN
-    CC_BLE_Cmd_GetLongSitTimeSetting(&s_tVenusCB.stLongSitAlgExecPeriod,true);
-    CC_LongSit_Srv_TimeSetting(&s_tVenusCB.stLongSitAlgExecPeriod);
-    CC_LongSit_Srv_PollingHandler();
-#endif
-
-
-#ifdef SLEEP_EN
-    g_fSleepCalSeconds = 0;
-    g_bSleepEnCnt =0;
-#endif
-
+    
+    #ifdef LONGSIT_EN
+        CC_BLE_Cmd_GetLongSitTimeSetting(&s_tVenusCB.stLongSitAlgExecPeriod,true);
+        CC_LongSit_Srv_TimeSetting(&s_tVenusCB.stLongSitAlgExecPeriod);
+        CC_LongSit_Srv_PollingHandler();
+    #endif
+    
+    #ifdef SLEEP_EN
+        g_fSleepCalSeconds = 0;
+        g_bSleepEnCnt =0;
+    #endif
 }
 
-
-void venus_platform_init(void)
+/******************************************************************************
+ * FUNCTION > _AppInit
+ ******************************************************************************/
+void    _AppInit(void)
 {
-    uint32_t ret;
-
-    drvi_RequestIrq(TOUCH_INT_PIN, TOUCH_int_handler, IRQ_TYPE_EDGE_FALLING);
-    drvi_EnableIrq(TOUCH_INT_PIN);
-#ifdef HRM_EN
-    drvi_RequestIrq(HRM_INT_PIN, HRM_int_handler, IRQ_TYPE_EDGE_FALLING);
-#endif
-    ACC_init();
-
-#if 0 // test acc/gyro
-    if(1)
-    {
-        CC_LSM6DSX_AccelPowerDown();
-        CC_LSM6DSX_GyroPowerDown();
-
-        CC_LSM6DSX_AccelPowerON(LSM6DS3_ACC_GYRO_ODR_XL_52Hz);
-        CC_LSM6DSX_GyroPowerON (LSM6DS3_ACC_GYRO_ODR_G_52Hz );
-
-        while(1)
-        {
-            LSM6DS3_ACC_GYRO_GetRawAccData(NULL, (i16_t *) _wAccelData);
-            LSM6DS3_ACC_GYRO_GetRawGyroData16(NULL, (i16_t *) _wGyroData);
-
-            TracerInfo("acc x: %d, y: %d, z: %d\r\n", _wAccelData[0], _wAccelData[1], _wAccelData[2]);
-            TracerInfo("gyro x: %d, y: %d, z: %d\r\n", _wGyroData[0], _wGyroData[1], _wGyroData[2]);
-
-             cc6801_ClockDelayMs(100);
-        }
-
-
-    }
-#endif
-
-    //GYR_Init(); // Not nessary if ACC_init() was done.
-    ret = MAG_Init();
-
-    if(MEMS_SUCCESS != ret)
-    {
-        TracerInfo("mag_init error: 0x%x\r\n", ret);
-
-         cc6801_ClockDelayMs(1000);
-    }
-#if 0 // test mag
-    else
-    {
-        CC_AK09912_MAG_SET_ODR(AK09912_MAG_DO_10_Hz);
-
-
-        while(1)
-        {
-            AKM_Data_Get();
-
-            TracerInfo("mag x: %d, y: %d, z: %d\r\n", s_tMagRaw.AXIS_X, s_tMagRaw.AXIS_Y, s_tMagRaw.AXIS_Z);
-
-        }
-    }
-#endif
-
-    CC_GYRO_Set_ODR(LSM6DS3_ACC_GYRO_ODR_G_POWER_DOWN);
-
-    app_displayoled_init();
-
-    app_displayoled_start();
-
-#ifdef DB_EN
-    ret = CC_Fds_init();
-
-    if(CC_SUCCESS != ret)
-        TracerInfo("fds_init error: 0x%x\r\n", ret);
-#endif
-}
-
-void venus_app_init(void)
-{
+    uint32_t    _dwRetCode = 0;
 
     app_multiple_timer_init();
-
+    
     app_Time_Init();
-
+    
     APP_SCHED_Init();
-#ifdef APP_SERV_MGR_EN
-    APP_SVCMGR_Init();
-#endif
+
+    #ifdef APP_SERV_MGR_EN
+        APP_SVCMGR_Init();
+    #endif
+
     s_tVenusCB.stSysCurTime = app_getSysTime();
-#ifdef HRM_EN
-    CC_AppSrv_HR_Init();
-#endif
 
-#ifdef LONGSIT_EN
-    CC_Longsit_Srv_TimerInit();
-#endif
-
+    #ifdef HRM_EN
+        CC_AppSrv_HR_Init();
+    #endif
+    
     CC_PageMgr_Init();
+    
+    #ifdef DB_EN
+        _dwRetCode = CC_Fds_init();
+        
+        if (CC_SUCCESS == _dwRetCode)
+            CC_DB_Init(DB_INIT_FROM_SYSTEM);
+    else
+        TracerInfo("fds_init error: 0x%x\r\n", _dwRetCode);
+    #endif
 
     CC_VENUS_OLEDGeneralOutTimerStart(5000);
 
+    _AppAlgInit();
 }
 
-void venus_ready_to_bootloader(void* param)
+/******************************************************************************
+ * FUNCTION > _PeripheralInit
+ ******************************************************************************/
+void    _PeripheralInit(void)
 {
-    //TracerInfo("venus_ready_to_bootloader!\r\n");
-#ifdef CFG_BLE_APP
-    appm_disconnect();
-#endif
+    uint32_t    _dwRetCode = 0;
+    
+    drvi_RequestIrq(TOUCH_INT_PIN, TOUCH_int_handler, IRQ_TYPE_EDGE_FALLING);
+    drvi_EnableIrq(TOUCH_INT_PIN);
+    
+    ACC_init();
+    CC_GYRO_Set_ODR(LSM6DS3_ACC_GYRO_ODR_G_POWER_DOWN);
+    
+    _dwRetCode = MAG_Init();
+    
+    if (MEMS_SUCCESS != _dwRetCode)
+        TracerInfo("mag_init error: 0x%x\r\n", _dwRetCode);
+
+    #ifdef HRM_EN
+        drvi_RequestIrq(HRM_INT_PIN, HRM_int_handler, IRQ_TYPE_EDGE_FALLING);
+    #endif
+    
+    app_displayoled_init();
+    app_displayoled_start();
 }
 
+/******************************************************************************
+ * FUNCTION > _PlatformInit
+ ******************************************************************************/
+void    _PlatformInit(void)
+{
+    sys_InitMain();
 
+    drvi_initialize();
+}
 
-
-/*
- * VENUS MAIN FUNCTION
- ****************************************************************************************
- */
-
+/******************************************************************************
+ * FUNCTION > Main
+ ******************************************************************************/
 int venus_main(void)
 {
-
-    TracerInfo("== Venus Main Start==\r\n");
-
-#ifdef CFG_BLE_APP
-    uint32_t error = 0;
-
-    GLOBAL_INT_STOP();
-#ifndef CFG_JUMP_TABLE_2
-    memset(((void *) JUMP_TABLE_2_BASE_ADDR), 0, 1024);
-#endif
-    memset (((void *) 0x40006000), 0, 8192);
-    memset (((void *) 0x20000048), 0, 0x820);
-    *((uint32_t *) 0x4000011C) = 0x00000008;
-    *((uint32_t *) 0x40000104) = (*((uint32_t *) 0x40000104) & 0xFFFFFE0) | 0x04;
-    //*((uint32_t *) 0x20000648) = 0x00;
-     //regCKGEN->bf.bleClkDiv = 0x04;
-
-    // Initialize RW SW stack
-    rwip_init(error);
-
     GLOBAL_INT_START();
 
-#ifdef SW_TIMER_BY_KERNEL
-    while(APPM_ADVERTISING != ke_state_get(TASK_APP))
-    {
-        rwip_schedule();
-    }
-#endif
-#endif
+    _PlatformInit();
+    _PeripheralInit();
 
+    _AppInit();
 
-#ifdef SM_TEST_EN
-    SM_Test();
-#endif
+    TracerInfo("\r\n===== [CC6801] SDK %s =====\r\n", SDK_FW_VERSION);
 
-
-    venus_platform_init();
-
-#ifdef DB_EN
-    CC_DB_Init(DB_INIT_FROM_SYSTEM);
-#endif
-
-    venus_app_init();
+    #ifdef CFG_BLE_APP
+        APP_BLEMGR_Init();
+    #endif
 
     application_timers_start();
 
-
-    s_tVenusCB.bAvg_BatLevel = 100;
-
-    s_tVenusCB.eSystemPwrState = eSysStateInit;
-
-    TracerInfo("> Venus While\r\n");
-#if 0
-    app_ccps_test_code();
-#endif
     while(1)
     {
-        switch (s_tVenusCB.eSystemPwrState)
-        {
-            case eSysStateInit:
+        #ifdef CFG_BLE_APP
+            rwip_schedule();
+            rwip_detect_disconnect_patch();
+            rwip_ignore_ll_conn_param_update_patch();
+        #endif
 
-                #ifdef LONGSIT_EN
-                CC_LongSit_Srv_Register();
-                #endif            
-                #ifdef SLEEP_EN
-                CC_SleepMonitor_Srv_Register();
-                #endif                
-                venus_algorithm_init();
-                #ifdef SWIM_CAL_EN
-                //if(false == s_tVenusCB.wSwimCalData.wVaildFlag)
-                  //  CC_Charge_Register(_SwimCal_Evt_Handler);
-                #endif
-
-                //CC_ChargePPR_PinStatInit();
-
-                #ifdef FORCE_HRS_TEST_EN
-                CC_HRM_PostHeartRateStrapModeEvent(1);
-                #endif
-                s_tVenusCB.eSystemPwrState = eSysStateNormal;
-                break;
-
-            case eSysStateNormal:
-#if 0 // test app loop time
-                //static uint32_t loop_cnt = 0;
-
-                static uint32_t old_tick = 0;
-                static uint32_t diff_time = 0;
-                static uint32_t max_diff_time = 0;
-                static uint8_t ignore = 0;
-
-                old_tick = Get_system_time_ms();
-#endif
-
-
-                _app_scheduler();
-                APP_SCHED_RunScheduler();
-#if 0 // test app loop time
-                diff_time = Get_system_time_ms() - old_tick;
-
-                if(ignore > 100)
-                {
-                     if(max_diff_time < diff_time)
-                          max_diff_time = diff_time;
-                }
-                else
-                     ignore++;
-
-                TracerInfo("%d / %d\r\n", diff_time, max_diff_time);
-#endif
-
-                #ifdef CFG_BLE_APP
-                    rwip_schedule();
-                    rwip_detect_disconnect_patch();
-                    rwip_ignore_ll_conn_param_update_patch();
-                #endif
-
-        }
-
+        _app_scheduler();
+        APP_SCHED_RunScheduler();
 
         __WFE();
-
     }
 }
-
-
 
