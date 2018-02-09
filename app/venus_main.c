@@ -1746,6 +1746,9 @@ uint32_t Get_system_time_ms(void)
 
 static void application_timers_start(void)
 {
+    
+    CC_VENUS_OLEDGeneralOutTimerStart(5000);
+
     sw_timer_start(m_rsc_meas_timer_id, SPEED_AND_CADENCE_MEAS_INTERVAL, NULL);
 
     sw_timer_start(s_tVenusTimerAccel, ACCEL_FIFO_MODE_LONG_INTERVAL, NULL);
@@ -3526,8 +3529,6 @@ void    _AppInit(void)
     else
         TracerInfo("fds_init error: 0x%x\r\n", _dwRetCode);
     #endif
-
-    CC_VENUS_OLEDGeneralOutTimerStart(5000);
 
     _AppAlgInit();
 }
