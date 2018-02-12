@@ -1994,7 +1994,7 @@ void _CC_DB_Save_SleepProc(slpmtr_output_t _stSleepResult)
 }
 #endif
 uint32_t g_dwSleepState = 0;
-uint32_T g_dwSleepStateCount =0;
+uint32_t g_dwSleepStateCount =0;
 uint32_t CC_GetSleepAlgorithmReport_State(void)
 {
     return g_dwSleepState;
@@ -3566,26 +3566,27 @@ void    _PlatformInit(void)
 {
     sys_InitMain();
 
+    GLOBAL_INT_START();
+
     drvi_initialize();
 }
 
 /******************************************************************************
  * FUNCTION > Main
  ******************************************************************************/
-int venus_main(void)
+int    venus_main(void)
 {
-    GLOBAL_INT_START();
-
     _PlatformInit();
     _PeripheralInit();
 
-    _AppInit();
-
-    TracerInfo("\r\n===== [CC6801] SDK %s =====\r\n", SDK_FW_VERSION);
 
     #ifdef CFG_BLE_APP
         APP_BLEMGR_Init();
     #endif
+
+    _AppInit();
+
+    TracerInfo("\r\n===== [CC6801] SDK %s =====\r\n", SDK_FW_VERSION);
 
     application_timers_start();
 
