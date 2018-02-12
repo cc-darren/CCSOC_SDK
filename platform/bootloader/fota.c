@@ -249,9 +249,9 @@ uint32_t FotaInit(T_FotaConfig *tpConfig)
     PartitionInfo.dwUserDataSize    = tpConfig->dwUserDataSize;
 
 #if defined(FSTORAGE_ENABLED) && FSTORAGE_ENABLED
-    ret_val = nrf_dfu_flash_init(true);
+    ret_val = FotaFlashInit(true);
 #else
-    ret_val = nrf_dfu_flash_init(false);
+    ret_val = FotaFlashInit(false);
 #endif
 
     if (ret_val)
@@ -260,7 +260,7 @@ uint32_t FotaInit(T_FotaConfig *tpConfig)
         return ret_val;
     }
 
-    nrf_dfu_settings_init();
+    BootloaderSettingInit();
 
     // Continue ongoing DFU operations
     // Note that this part does not rely on SoftDevice interaction

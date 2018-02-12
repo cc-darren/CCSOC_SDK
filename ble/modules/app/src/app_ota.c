@@ -43,6 +43,7 @@
 #endif
 #include "fota.h"
 #include "drvi_clock.h"
+#include "sw_timer.h"
 
 #if (DISPLAY_SUPPORT)
 #include "app_display.h"
@@ -54,6 +55,9 @@
  ****************************************************************************************
  */
 
+#ifndef BLE_OTA_BL_MODE_EN  
+SW_TIMER_DEF(s_tBleDisconnectToBLTimer);
+#endif
 /// Initial Temperature Value : 37c
 #define APP_OTA_TEMP_VALUE_INIT       (3700)
 /// Temperature Step
@@ -75,93 +79,6 @@ struct app_ota_env_tag app_ota_env;
  * LOCAL FUNCTION DEFINITIONS
  ****************************************************************************************
  */
-/*
-static void app_ota_temp_send(void)
-{
-    // Temperature Value
-    int32_t value = (int32_t)(app_ota_env.temp_value);
-
-    // The value is a float value, set the exponent
-    value |= 0xFE000000;
-
-    // Allocate the OTAT_TEMP_SEND_REQ message
-    struct otat_temp_send_req * req = KE_MSG_ALLOC(OTAT_TEMP_SEND_REQ,
-                                                    prf_get_task_from_id(TASK_ID_OTAT),
-                                                    TASK_APP,
-                                                    otat_temp_send_req);
-
-    // Stable => Temperature Measurement Char.
-    req->stable_meas = 0x01;
-
-    // Temperature Measurement Value
-    req->temp_meas.temp         = value;
-//    req->temp_meas.time_stamp = 0;
-    req->temp_meas.flags        = HTP_FLAG_CELSIUS | HTP_FLAG_TYPE;
-    req->temp_meas.type         = app_ota_env.temp_meas_type;
-
-    ke_msg_send(req);
-}
-
-void app_ota_period_meas_send(bool update_step, uint32_t step_data, bool update_hr, uint16_t hr_data, uint32_t calorie)
-{
-    // Allocate the OTAT_TEMP_SEND_REQ message
-    struct otat_period_meas_send_req * req = KE_MSG_ALLOC(OTAT_TEMP_SEND_REQ,
-                                                    prf_get_task_from_id(TASK_ID_OTAT),
-                                                    TASK_APP,
-                                                    otat_period_meas_send_req);
-                                                    
-    req->period_meas.vid = 0xCC;
-    req->period_meas.type = 0xF1;   // step 
-    req->period_meas.update_step_flag = update_step;
-    req->period_meas.step = step_data;
-    req->period_meas.type2 = 0xF2; // hr
-    req->period_meas.update_hr_flag = update_hr;
-    req->period_meas.hr = hr_data;
-    req->period_meas.calorie = calorie;
-                                              
-
-    ke_msg_send(req);
-}
-
-
-void app_ota_swim_meas_send(uint8_t swim_en, uint8_t style_type, uint32_t dwSwimCnt, uint32_t dwSwimLap, uint32_t dwTimestamp)
-{
-    // Allocate the OTAT_TEMP_SEND_REQ message
-    struct otat_swim_meas_send_req * req = KE_MSG_ALLOC(OTAT_TEMP_SWIM_MEAS_REQ,
-                                                    prf_get_task_from_id(TASK_ID_OTAT),
-                                                    TASK_APP,
-                                                    otat_swim_meas_send_req);
-
-    req->swim_meas.vid = 0xCC;
-    req->swim_meas.type = 0xF4;
-    req->swim_meas.is_Swim_En = swim_en;
-    req->swim_meas.style_type = style_type;
-    req->swim_meas.dwSwimCnt = dwSwimCnt;
-    req->swim_meas.dwSwimLap = dwSwimLap;
-    req->swim_meas.dwTimestamp = dwTimestamp;
-                                                     
-    ke_msg_send(req);
-}
-
-
-
-void app_ota_history_send(uint8_t id)
-{
-    // Allocate the OTAT_TEMP_SEND_REQ message
-    struct otat_history_send_req * req = KE_MSG_ALLOC(OTAT_TEMP_SEND_REQ,
-                                                    prf_get_task_from_id(TASK_ID_OTAT),
-                                                    TASK_APP,
-                                                    otat_history_send_req);
-
-    req->history_meas.vid = 0xCC;
-    req->history_meas.type = id;
-    req->history_meas.total = 0;
-    req->history_meas.rec_index = 0;    
-                                          
-
-    ke_msg_send(req);
-}
-*/
 
 //void app_ota_notify_send(uint8_t *tx_data)
 void app_ota_notify_send(uint8_t *tx_data, uint8_t length)
@@ -231,17 +148,7 @@ void app_ota_init(void)
 {
     // Reset the environment
     memset(&app_ota_env, 0, sizeof(app_ota_env));
-/*
-    // Initial measurement interval : 0s
-    app_ota_env.otat_meas_intv   = 0;
-    // Initial temperature value : 37.00 C
-    app_ota_env.temp_value       = APP_OTA_TEMP_VALUE_INIT;
-    // Initial temperature step : 0.20 C
-    app_ota_env.temp_step        = APP_OTA_TEMP_STEP_INIT;
-    // Initial temperature type : ARMPIT
-    app_ota_env.temp_meas_type   = 1;
-*/
-    //TODO: Add a state for the module
+
 }
 
 void app_ota_stop_timer (void)
@@ -293,168 +200,25 @@ void app_ota_enable_prf(uint8_t conidx)
     // Send the message
     ke_msg_send(req);
 }
-/*
 
-void app_ota_ctrl_pt_write(struct gattc_write_req_ind const * param)
-{
-#ifdef BLE_OTA_BL_MODE_EN    
-    fota_on_ctrl_pt_write(param);
-#endif    
-}
-
-void app_ota_pkt_write_cmd(struct gattc_write_req_ind const * param)
-{
-#ifdef BLE_OTA_BL_MODE_EN    
-    fota_on_write(param);
-#endif    
-}
-*/
-
-/**
- ****************************************************************************************
- * OTA Application Functions
- ****************************************************************************************
- */
-/*
-void app_ota_temp_inc(void)
-{
-    app_ota_env.temp_value += app_ota_env.temp_step;
-
-    #if (DISPLAY_SUPPORT)
-    app_display_update_temp_val_screen(app_ota_env.temp_value);
-    #endif //DISPLAY_SUPPORT
-
-    app_ota_temp_send();
-}
-
-void app_ota_temp_dec(void)
-{
-    app_ota_env.temp_value -= app_ota_env.temp_step;
-
-    #if (DISPLAY_SUPPORT)
-    app_display_update_temp_val_screen(app_ota_env.temp_value);
-    #endif //DISPLAY_SUPPORT
-
-    app_ota_temp_send();
-}
-
-void app_ota_temp_type_inc(void)
-{
-    app_ota_env.temp_meas_type = (uint8_t)(((int)app_ota_env.temp_meas_type + 1)%10);
-
-    #if (DISPLAY_SUPPORT)
-    app_ota_update_type_string(app_ota_env.temp_meas_type);
-    app_display_update_temp_type_screen(app_ota_env.temp_type_string);
-    #endif //DISPLAY_SUPPORT
-}
-
-void app_ota_temp_type_dec(void)
-{
-    if (((int)app_ota_env.temp_meas_type-1) < 0)
-    {
-        app_ota_env.temp_meas_type = 0x09;
-    }
-    else
-    {
-        app_ota_env.temp_meas_type = app_ota_env.temp_meas_type - 1;
-    }
-
-    #if DISPLAY_SUPPORT
-    app_ota_update_type_string(app_ota_env.temp_meas_type);
-    app_display_update_temp_type_screen(app_ota_env.temp_type_string);
-    #endif //DISPLAY_SUPPORT
-}
-*/
-/****************************************************************************************
- * MESSAGE HANDLERS
- ****************************************************************************************/
-
-/**
- ****************************************************************************************
- * @brief Handles measurement interval start indication from the Health Thermometer
- *        profile.
- *        Start or stop a timer following the value of the param intv.
- *
- * @param[in] msgid     Id of the message received.
- * @param[in] param     Pointer to the parameters of the message.
- * @param[in] dest_id   ID of the receiving task instance (TASK_GAP).
- * @param[in] src_id    ID of the sending task instance.
- *
- * @return If the message was consumed or not.
- ****************************************************************************************
- */
- /*
-static int otat_meas_intv_chg_req_ind_handler(ke_msg_id_t const msgid,
-                                          struct otat_meas_intv_chg_req_ind const *param,
-                                          ke_task_id_t const dest_id,
-                                          ke_task_id_t const src_id)
-{
-    // Store the received Measurement Interval value
-    app_ota_env.otat_meas_intv = param->intv;
-
-    // Check the new Measurement Interval Value
-    if (app_ota_env.otat_meas_intv != 0)
-    {
-        // Check if a Timer already exists
-        if (!app_ota_env.timer_enable)
-        {
-            // Set a Timer
-            ke_timer_set(APP_OTA_MEAS_INTV_TIMER, TASK_APP, app_ota_env.otat_meas_intv*100);
-            app_ota_env.timer_enable = true;
-        }
-        else
-        {
-            // Clear the previous timer
-            ke_timer_clear(APP_OTA_MEAS_INTV_TIMER, TASK_APP);
-            // Create a new timer with the received measurement interval
-            ke_timer_set(APP_OTA_MEAS_INTV_TIMER, TASK_APP, app_ota_env.otat_meas_intv*100);
-        }
-    }
-    else
-    {
-        // Check if a Timer exists
-        if (app_ota_env.timer_enable)
-        {
-            // Measurement Interval is 0, clear the timer
-            ke_timer_clear(APP_OTA_MEAS_INTV_TIMER, TASK_APP);
-            app_ota_env.timer_enable = false;
-        }
-    }
-
-    // Allocate the message
-    struct otat_meas_intv_chg_cfm * cfm = KE_MSG_ALLOC(OTAT_MEAS_INTV_CHG_CFM,
-                                                prf_get_task_from_id(TASK_ID_OTAT),
-                                                TASK_APP,
-                                                otat_meas_intv_chg_cfm);
-
-    // Set data
-    cfm->conidx = KE_IDX_GET(dest_id);
-    cfm->status = 0;
-
-    // Send the message
-    ke_msg_send(cfm);
-
-
-    return (KE_MSG_CONSUMED);
-}
-*/
-/*
-static int otat_temp_send_rsp_handler(ke_msg_id_t const msgid,
-                                        struct otat_temp_send_rsp const *param,
-                                        ke_task_id_t const dest_id,
-                                        ke_task_id_t const src_id)
-{
-    // Do nothing
-    return (KE_MSG_CONSUMED);
-}
-*/
-
+#ifndef BLE_OTA_BL_MODE_EN  
 static void _ready_to_bootloader(void)
 {
     //TracerInfo("_ready_to_bootloader!\r\n");
-#ifdef CFG_BLE_APP
-    appm_disconnect();
+
+    sw_timer_create(&s_tBleDisconnectToBLTimer,
+                      SW_TIMER_MODE_SINGLE_SHOT,
+                      app_ota_ble_disconnect);
+
+    sw_timer_start(s_tBleDisconnectToBLTimer, 300, NULL);
+
+}
 #endif
+
+void app_ota_ble_disconnect(void * p_context)
+{
+
+    appm_disconnect();
 }
 
 static int otat_packet_send_cmd_handler(ke_msg_id_t const msgid,
@@ -464,7 +228,7 @@ static int otat_packet_send_cmd_handler(ke_msg_id_t const msgid,
 {
 #ifdef BLE_OTA_BL_MODE_EN    
     fota_on_write(param);
-    cc6801_ClockDelayUs(400);
+    cc6801_ClockDelayUs(2000);
     
 /*
     uint8_t test_buff[15] = {0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0a,0x0b,0x0c,0x0d,0x0e,0x0f};
