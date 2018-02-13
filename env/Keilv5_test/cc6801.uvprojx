@@ -335,7 +335,7 @@
               <MiscControls></MiscControls>
               <Define>FPGA TESTCASE</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app\Display;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\service\tracer;..\..\service\fds;..\..\service\fstorage;..\..\service\experimental_section_vars;..\..\test;..\..\test\inc;..\..\service\ring_buffer</IncludePath>
+              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app\Display;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\service\tracer;..\..\service\fds;..\..\service\fstorage;..\..\service\experimental_section_vars;..\..\test;..\..\test\inc;..\..\service\ring_buffer;.\config</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -516,7 +516,7 @@
             <File>
               <FileName>arch_main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\init\src\arch_main.c</FilePath>
+              <FilePath>.\arch_main.c</FilePath>
             </File>
             <File>
               <FileName>system_init.c</FileName>
@@ -564,24 +564,9 @@
           <GroupName>service</GroupName>
           <Files>
             <File>
-              <FileName>app_fifo.c</FileName>
+              <FileName>ring_buffer.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\service\fifo\app_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_uart_fifo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\uart\app_uart_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>retarget.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\uart\retarget.c</FilePath>
-            </File>
-            <File>
-              <FileName>sw_timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\sw_timer\sw_timer.c</FilePath>
+              <FilePath>..\..\service\ring_buffer\ring_buffer.c</FilePath>
             </File>
             <File>
               <FileName>tracer.c</FileName>
@@ -589,9 +574,9 @@
               <FilePath>..\..\service\tracer\tracer.c</FilePath>
             </File>
             <File>
-              <FileName>ring_buffer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\ring_buffer\ring_buffer.c</FilePath>
+              <FileName>service_lib_M0.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\service\service_lib_M0.lib</FilePath>
             </File>
           </Files>
         </Group>
@@ -1123,7 +1108,7 @@
               <MiscControls></MiscControls>
               <Define>FPGA TESTCASE</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\platform\asic\6801;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\uart;..\..\service\tracer;..\..\test;..\..\test\inc;..\..\service\ring_buffer</IncludePath>
+              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\platform\asic\6801;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\uart;..\..\service\tracer;..\..\test;..\..\test\inc;..\..\service\ring_buffer;.\config</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1304,7 +1289,7 @@
             <File>
               <FileName>arch_main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\init\src\arch_main.c</FilePath>
+              <FilePath>.\arch_main.c</FilePath>
             </File>
             <File>
               <FileName>system_init.c</FileName>
@@ -1352,24 +1337,9 @@
           <GroupName>service</GroupName>
           <Files>
             <File>
-              <FileName>app_fifo.c</FileName>
+              <FileName>ring_buffer.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\service\fifo\app_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_uart_fifo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\uart\app_uart_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>retarget.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\uart\retarget.c</FilePath>
-            </File>
-            <File>
-              <FileName>sw_timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\sw_timer\sw_timer.c</FilePath>
+              <FilePath>..\..\service\ring_buffer\ring_buffer.c</FilePath>
             </File>
             <File>
               <FileName>tracer.c</FileName>
@@ -1377,9 +1347,9 @@
               <FilePath>..\..\service\tracer\tracer.c</FilePath>
             </File>
             <File>
-              <FileName>ring_buffer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\ring_buffer\ring_buffer.c</FilePath>
+              <FileName>service_lib_M0.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\service\service_lib_M0.lib</FilePath>
             </File>
           </Files>
         </Group>
@@ -1846,7 +1816,7 @@
               <MiscControls></MiscControls>
               <Define>EVB TESTCASE</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app\Display;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\service\tracer;..\..\service\fds;..\..\service\fstorage;..\..\service\experimental_section_vars;..\..\test;..\..\test\inc;..\..\service\ring_buffer</IncludePath>
+              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app\Display;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\service\tracer;..\..\service\fds;..\..\service\fstorage;..\..\service\experimental_section_vars;..\..\test;..\..\test\inc;..\..\service\ring_buffer;.\config</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -2027,7 +1997,7 @@
             <File>
               <FileName>arch_main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\init\src\arch_main.c</FilePath>
+              <FilePath>.\arch_main.c</FilePath>
             </File>
             <File>
               <FileName>system_init.c</FileName>
@@ -2075,24 +2045,9 @@
           <GroupName>service</GroupName>
           <Files>
             <File>
-              <FileName>app_fifo.c</FileName>
+              <FileName>ring_buffer.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\service\fifo\app_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_uart_fifo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\uart\app_uart_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>retarget.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\uart\retarget.c</FilePath>
-            </File>
-            <File>
-              <FileName>sw_timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\sw_timer\sw_timer.c</FilePath>
+              <FilePath>..\..\service\ring_buffer\ring_buffer.c</FilePath>
             </File>
             <File>
               <FileName>tracer.c</FileName>
@@ -2100,9 +2055,9 @@
               <FilePath>..\..\service\tracer\tracer.c</FilePath>
             </File>
             <File>
-              <FileName>ring_buffer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\ring_buffer\ring_buffer.c</FilePath>
+              <FileName>service_lib_M0.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\service\service_lib_M0.lib</FilePath>
             </File>
           </Files>
         </Group>
@@ -2634,7 +2589,7 @@
               <MiscControls></MiscControls>
               <Define>EVB TESTCASE</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\platform\asic\6801;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\uart;..\..\service\tracer;..\..\test;..\..\test\inc;..\..\service\ring_buffer</IncludePath>
+              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\platform\asic\6801;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\uart;..\..\service\tracer;..\..\test;..\..\test\inc;..\..\service\ring_buffer;.\config</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -2815,7 +2770,7 @@
             <File>
               <FileName>arch_main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\init\src\arch_main.c</FilePath>
+              <FilePath>.\arch_main.c</FilePath>
             </File>
             <File>
               <FileName>system_init.c</FileName>
@@ -2863,24 +2818,9 @@
           <GroupName>service</GroupName>
           <Files>
             <File>
-              <FileName>app_fifo.c</FileName>
+              <FileName>ring_buffer.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\service\fifo\app_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_uart_fifo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\uart\app_uart_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>retarget.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\uart\retarget.c</FilePath>
-            </File>
-            <File>
-              <FileName>sw_timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\sw_timer\sw_timer.c</FilePath>
+              <FilePath>..\..\service\ring_buffer\ring_buffer.c</FilePath>
             </File>
             <File>
               <FileName>tracer.c</FileName>
@@ -2888,9 +2828,9 @@
               <FilePath>..\..\service\tracer\tracer.c</FilePath>
             </File>
             <File>
-              <FileName>ring_buffer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\ring_buffer\ring_buffer.c</FilePath>
+              <FileName>service_lib_M0.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\service\service_lib_M0.lib</FilePath>
             </File>
           </Files>
         </Group>

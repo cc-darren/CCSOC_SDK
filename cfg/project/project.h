@@ -46,27 +46,11 @@ Head Block of The File
 // Sec 2: Constant Definitions, Imported Symbols, miscellaneous
 
 #if defined(FPGA) && FPGA
-    #if defined(BOOTLOADER) && BOOTLOADER
-        #include "project_bootloader_FPGA.h"
-    #elif defined(VENUS_WRISTBAND) && VENUS_WRISTBAND
-        #include "project_FPGA_Venus.h"
-    #elif defined(TESTCASE) && TESTCASE
-        #include "project_test_FPGA.h"
-    #else
-        #include "project_FPGA.h"
-    #endif
+    #include "config_FPGA.h"
 #elif defined(EVB) && EVB
-    #if defined(BOOTLOADER) && BOOTLOADER
-        #include "project_bootloader_EVB.h"
-    #elif defined(ZEUS_WRISTBAND) && ZEUS_WRISTBAND
-        #include "project_zeus_EVB.h"
-    #elif defined(TESTCASE) && TESTCASE
-        #include "project_test_EVB.h"
-    #else
-        #include "project_EVB.h"
-    #endif
+    #include "config_EVB.h"
 #elif defined(ASIC) && ASIC
-    #include "project_ASIC.h"
+    #include "config_ASIC.h"
 #else
     #error "There is no defined project. Please select one project!!"
 #endif

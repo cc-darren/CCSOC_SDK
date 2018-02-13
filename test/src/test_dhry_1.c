@@ -20,7 +20,7 @@
 #include "test_dhry.h"
 #include "cc6801_reg.h"
 #include "tracer.h"
-#include "sw_timer.h"
+#include "drvi_wktm.h"
 #include "clock.h"
 
 /* Global Variables: */
@@ -69,7 +69,7 @@ extern long     time();
 uint32_t clock(void)
 {
     uint32_t tick;
-    app_timer_cnt_get(&tick);
+    drvi_wktmCounterGet(SWT_IF_ID, &tick);
     return tick;
 }
 #define Too_Small_Time (2*HZ)
@@ -323,7 +323,6 @@ void dhry_main(void)
 #endif
 
   User_Time = End_Time - Begin_Time;
-  app_timer_cnt_diff_compute((uint32_t)End_Time, (uint32_t)Begin_Time, (uint32_t*)&User_Time);
 
 #if 1
   if (User_Time < Too_Small_Time)
