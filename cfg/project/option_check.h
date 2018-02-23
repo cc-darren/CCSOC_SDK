@@ -277,6 +277,13 @@
   #define ADC_IF IF_NULL
 #endif
 
+#if ((defined AUDIO_IF) && (AUDIO_IF))
+  #define AUDIO_IF_TYPE (AUDIO_IF&0xF0)
+  #define AUDIO_IF_ID   (AUDIO_IF&0x0F)
+#else
+  #define AUDIO_IF IF_NULL
+#endif
+
 #if defined(MODULE_TEST)
   #if ((defined TEST_SPI0_IF) && (TEST_SPI0_IF))
     #define TEST_SPI0_IF_TYPE (TEST_SPI0_IF&0xF0)
@@ -322,10 +329,10 @@
 #if ((ACC_IF==Interface_SPI2) || (MAG_IF==Interface_SPI2) || (GYR_IF==Interface_SPI2) || (OLED_IF==Interface_SPI2) || (TEST_SPI2_IF==Interface_SPI2))
   #define SPI2_INUSE  TRUE
 #endif
-#if ((ACC_IF==Interface_I2C0) || (MAG_IF==Interface_I2C0) || (GYR_IF==Interface_I2C0) || (OLED_IF==Interface_I2C0) || (PPG_IF==Interface_I2C0) || (ADC_IF==Interface_I2C0) || (TEST_I2C0_IF==Interface_I2C0))
+#if ((ACC_IF==Interface_I2C0) || (MAG_IF==Interface_I2C0) || (GYR_IF==Interface_I2C0) || (OLED_IF==Interface_I2C0) || (PPG_IF==Interface_I2C0) || (ADC_IF==Interface_I2C0) || (AUDIO_IF==Interface_I2C0) || (TEST_I2C0_IF==Interface_I2C0))
   #define I2C0_INUSE  TRUE
 #endif
-#if ((ACC_IF==Interface_I2C1) || (MAG_IF==Interface_I2C1) || (GYR_IF==Interface_I2C1) || (OLED_IF==Interface_I2C1) || (PPG_IF==Interface_I2C1) || (ADC_IF==Interface_I2C1) || (TEST_I2C1_IF==Interface_I2C1))
+#if ((ACC_IF==Interface_I2C1) || (MAG_IF==Interface_I2C1) || (GYR_IF==Interface_I2C1) || (OLED_IF==Interface_I2C1) || (PPG_IF==Interface_I2C1) || (ADC_IF==Interface_I2C1) || (AUDIO_IF==Interface_I2C1) || (TEST_I2C1_IF==Interface_I2C1))
   #define I2C1_INUSE  TRUE
 #endif
 #if ((TRACER_IF==Interface_UART0) || (HCI_IF==Interface_UART0) || (TEST_UART0_IF==Interface_UART0))
