@@ -30,8 +30,8 @@
 *
 ******************************************************************************/
 
-#ifndef _PROJECT_TEST_EVB_H_
-#define _PROJECT_TEST_EVB_H_
+#ifndef _PROJECT_UART_EVB_H_
+#define _PROJECT_UART_EVB_H_
 
 /******************************************************************************
 Head Block of The File
@@ -392,7 +392,7 @@ Declaration of External Variables & Functions
 //I2C parameters
 
 //UART parameters
-#define UART_LOOPBACK_TEST       1
+//#define UART_LOOPBACK_TEST       1
 
 
 /******************************************************************************
@@ -419,4 +419,4 @@ Declaration of static Global Variables & Functions
 // Sec 10: C Functions
 ******************************************************************************/
 
-#endif // _PROJECT_TEST_EVB_H_
+#endif // _PROJECT_UART_EVB_H_
