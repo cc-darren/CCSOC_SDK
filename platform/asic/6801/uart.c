@@ -108,31 +108,35 @@ void UART2_TXDMA_IRQHandler(void)
 
 static void cc6801_UartRxDmaEnable(U_regUARTDMA *pUartBase, uint8_t bEnable)
 {
-    pUartBase->bf.dma_rxen = bEnable;
+    uint32_t dwDmaWrEn = pUartBase->dw.dmaRxEn;
+
+    pUartBase->dw.dmaRxEn = ((dwDmaWrEn & ~UART_DMA_ENABLE_BIT) |
+                                 (bEnable & UART_DMA_ENABLE_BIT));
 }
 
 
 static void cc6801_UartTxDmaEnable(U_regUARTDMA *pUartBase, uint8_t bEnable)
 {
-    pUartBase->bf.dma_txen = bEnable;
-}
+    uint32_t dwDmaRdEn = pUartBase->dw.dmaTxEn;
 
-#if 0
-static void cc6801_UartTxDmaFlush(U_regUARTDMA *pUartBase, uint8_t bFlush)
-{
-    pUartBase->bf.tx_flush = bFlush;
-
+    pUartBase->dw.dmaTxEn = ((dwDmaRdEn & ~UART_DMA_ENABLE_BIT) |
+                                 (bEnable & UART_DMA_ENABLE_BIT));
 }
-#endif
 
 static void cc6801_UartRxIntEnable(U_regUARTDMA *pUartBase, uint8_t bEnable)
 {
-    pUartBase->bf.rx_dma_done_intr_en = bEnable;
+    uint32_t dwInt = pUartBase->dw.interrupt;
+
+    pUartBase->dw.interrupt = ((dwInt & ~UART_INT_RX_DONE_ENABLE_MASK) |
+                                (bEnable & UART_INT_RX_DONE_ENABLE_BIT));
 }
 
 static void cc6801_UartTxIntEnable(U_regUARTDMA *pUartBase, uint8_t bEnable)
 {
-    pUartBase->bf.tx_dma_done_intr_en = bEnable;
+    uint32_t dwInt = pUartBase->dw.interrupt;
+
+    pUartBase->dw.interrupt = ((dwInt & ~UART_INT_TX_DONE_ENABLE_MASK) |
+                             ((bEnable & UART_INT_TX_DONE_ENABLE_BIT) << 1));
 }
 
 static int cc6801_Uart0Xfer(void const * const pReg)
@@ -238,21 +242,33 @@ static int cc6801_Uart2Rcvr(void const * const pReg)
 static void cc6801_UartTxBufferSet(U_regUARTDMA * pUartBase,
                                     uint32_t dwTxBufAddr, uint8_t bLen)
 {
-    pUartBase->bf.dma_txbyte_num = bLen - 1;
+    uint32_t dwTxEndAddr = 0;
+    uint32_t dwByteNum = pUartBase->dw.dmaByteNum;
+
+    dwByteNum &= UART_DMA_RX_BYTENUM_MASK;
+    dwByteNum |= ((bLen - 1) << UART_DMA_TX_BYTENUM_SHIFT);
+    pUartBase->dw.dmaByteNum = dwByteNum;
     //DMA tx start address
-    pUartBase->bf.dma_txstrart_addr = dwTxBufAddr;
+    pUartBase->dw.dmaTxStart = (dwTxBufAddr & UART_DMA_START_ADDR_MASK);
     //DMA tx end address
-    pUartBase->bf.dma_txend_addr = dwTxBufAddr + (((bLen - 1) >> 2) << 2);
+    dwTxEndAddr = dwTxBufAddr + (((bLen - 1) >> 2) << 2);
+    pUartBase->dw.dmaTxEnd = (dwTxEndAddr & UART_DMA_END_ADDR_MASK);
 }
 
 static void cc6801_UartRxBufferSet(U_regUARTDMA *pUartBase,
                                     uint32_t dwRxBufAddr, uint8_t bLen)
 {
-    pUartBase->bf.dma_rxbyte_num = bLen - 1;
+    uint32_t dwRxEndAddr = 0;
+    uint32_t dwByteNum = pUartBase->dw.dmaByteNum;
+
+    dwByteNum &= UART_DMA_TX_BYTENUM_MASK;
+    dwByteNum |= bLen - 1;
+    pUartBase->dw.dmaByteNum = dwByteNum;
     //DMA rx start address
-    pUartBase->bf.dma_rxstrart_addr = dwRxBufAddr;
+    pUartBase->dw.dmaRxStart = (dwRxBufAddr & UART_DMA_START_ADDR_MASK);
     //DMA rx end address
-    pUartBase->bf.dma_rxend_addr = dwRxBufAddr + (((bLen - 1) >> 2) << 2);
+    dwRxEndAddr = dwRxBufAddr + (((bLen - 1) >> 2) << 2);
+    pUartBase->dw.dmaRxEnd = (dwRxEndAddr & UART_DMA_END_ADDR_MASK);
 }
 
 static uint8_t cc6801_ComputeFRS(uint32_t dwConfig)
@@ -506,7 +522,7 @@ int cc6801_UartTx(uint8_t bPortNum,
     while (*pTxBuf)
     {
         pUartCtrlBase->dw.bufTx = *pTxBuf++;
-        while(!pUartCtrlBase->bf.untbe);
+        while(!(pUartCtrlBase->dw.ictrl & 0x01));
     }
 
     return CC_SUCCESS;

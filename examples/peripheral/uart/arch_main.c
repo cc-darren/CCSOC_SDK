@@ -23,7 +23,7 @@
 
 extern void sys_InitMain(void);
 
-static uint16_t g_iuart0Done = 0;
+static volatile uint16_t g_iuart0Done = 0;
 
 static void test_Uart0EventHandler(T_UartEvent * p_event)
 {
