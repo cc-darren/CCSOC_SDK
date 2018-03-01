@@ -5,7 +5,7 @@
  * STANDARD SOFTWARE LICENSE AGREEMENT.
  *
  * Licensees are granted free, non-transferable use of the information.
- * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed
  * from the file.
  */
 
@@ -29,14 +29,40 @@
 *===========================================================================/
 *  20170206 PAT initial version
 ******************************************************************************/
-#include <stdio.h>
-#include "global.h"
-#include "cc6801_reg.h"
+#define TracerFormat(fmt) "I2S: " fmt
+
+#include "drvi_i2s.h"
+#include "i2s.h"
+#include "tracer.h"
+
+#define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
 
 volatile uint32_t g_dwI2S_RXDMA_INTR = 0;
 volatile uint32_t g_dwI2S_TXDMA_INTR = 0;
 
 T_callback  i2s_callback_handler = NULL;
+
+struct S_RateTable{
+    uint32_t dwRate;
+    uint8_t  bClkDiv;
+};
+
+struct S_RateTable sTableWS16[] =
+{
+    {16000, 0x7C},
+    {32000, 0x3D},
+    {48000, 0x29},
+    {96000, 0x14},
+};
+
+struct S_RateTable sTableWS32[] =
+{
+    {16000, 0x3D},
+    {32000, 0x1E},
+    {48000, 0x14},
+    {96000, 0x09},
+};
+
 
 void I2S_RXDMA_IRQHandler(void)
 {
@@ -61,40 +87,167 @@ void I2S_TXDMA_IRQHandler(void)
 
 void cc6801_I2sInit(T_callback handler)
 {
-    wr(I2S_CLK_CTRL_REG,      0x000F2909);      // I2S enabled, 16bit, 48Khz, Master
-    //wr(I2S_CLK_CTRL_REG,      0x001F2C09);    // I2S enabled, 32bit, master
-    //wr(I2S_CLK_CTRL_REG,      0x000F0100);    // I2S enabled, 16bit, slave
+    regI2S->i2sClkCtrl = 0;
+    regI2S->i2sRxCtrl = 0;
+    regI2S->i2sTxCtrl = 0x00143C00;    // TXST = 1, TXFIFOTHRES = 4
+                                       // [13-8] TxLR FIFO enable, DMA enable, INT disable,111100
 
-    //wr(I2S_RX_CTRL_REG,       ----------);    // for RX setting
-    wr(I2S_TX_CTRL_REG,       0x0014BC3D);      // [15-14] 16bit,10 , [6-2] 16bit,01111 , [1-0] I2S,01
-                                                // [13-8] TxLR FIFO enable, DMA enable, INT disable,111100
-    wr(I2S_INTR_REG,          0x00000000);      // interrupt disable
-    wr(I2S_DMA_TX_ENABLE_REG, 0x00000000);      // DMA disable
+    regI2S->i2sInt = 0;                // interrupt disable
+    regI2S->i2sDmaRxEn = 0;            // Rx DMA disable
+    regI2S->i2sDmaTxEn = 0;            // TxDMA disable
 
     i2s_callback_handler = handler;
 }
 
+int cc6801_I2sSetFormat(uint16_t wFmt)
+{
+    uint32_t dwClkCtrl = regI2S->i2sClkCtrl;
+    uint32_t dwTxCtrl = regI2S->i2sTxCtrl;
+
+    /* DAI mode */
+    dwTxCtrl &= ~CC6801_I2S_TXMOD_MASK;
+    switch (wFmt & DAI_FORMAT_MASK)
+    {
+        case DAI_FORMAT_RIGHT_J:
+            dwTxCtrl |= CC6801_I2S_TXMOD_RJM;
+            break;
+        case DAI_FORMAT_LEFT_J:
+            dwTxCtrl |= CC6801_I2S_TXMOD_LJM;
+            break;
+        default:
+            TracerInfo("Not support format%d, using default I2S format...\r\n", wFmt);
+        case DAI_FORMAT_I2S:
+            dwTxCtrl |= CC6801_I2S_TXMOD_I2S;
+            break;
+    }
+
+    /* DAI clock master masks */
+    dwClkCtrl &= ~CC6801_I2S_MS_MASK;
+    switch (wFmt & DAI_MASTER_MASK)
+    {
+        case DAI_CODEC_MASTER:
+            break;
+        default:
+            TracerInfo("Not support mode%d, using default master mode...\r\n");
+        case DAI_CODEC_SLAVE:
+            dwClkCtrl |= CC6801_I2S_MS_MASTER;
+            break;
+    }
+
+    regI2S->i2sClkCtrl |= dwClkCtrl;
+    regI2S->i2sTxCtrl |= dwTxCtrl;
+
+    return CC_SUCCESS;
+}
+
+static int cc6801_I2sRateValue(int iRate, uint8_t *pbValue)
+{
+    int iIdx;
+    struct S_RateTable *psRateTable;
+
+    uint32_t dwClkCtrl = regI2S->i2sClkCtrl;
+    uint32_t dwWordSelect = 0;
+    int iTableSize = 0;
+
+    dwWordSelect = (dwClkCtrl & CC6801_I2S_WSRES_MASK);
+
+    if (dwWordSelect == CC6801_I2S_WSRES_16)
+    {
+        psRateTable = sTableWS16;
+        iTableSize = ARRAY_SIZE(sTableWS16);
+    }
+    else if(dwWordSelect == CC6801_I2S_WSRES_16)
+    {
+        psRateTable = sTableWS32;
+        iTableSize = ARRAY_SIZE(sTableWS32);
+    }
+    else
+        return CC_ERROR_INVALID_PARAM;
+
+    for (iIdx = 0; iIdx < iTableSize; iIdx++) {
+        if (psRateTable[iIdx].dwRate >= iRate) {
+            *pbValue = psRateTable[iIdx].bClkDiv;
+            return CC_SUCCESS;
+        }
+    }
+    *pbValue = psRateTable[0].bClkDiv;
+    return CC_ERROR_INVALID_PARAM;
+}
+
+static int cc6801_I2sSetClkDiv(int iFrameRate)
+{
+    uint8_t bClkDiv = 0;
+    uint32_t dwClkCtrl = regI2S->i2sClkCtrl;
+
+    if (cc6801_I2sRateValue(iFrameRate, &bClkDiv) != CC_SUCCESS)
+        return CC_ERROR_INVALID_PARAM;
+
+    dwClkCtrl &= ~CC6801_I2S_CLKDIV_MASK;
+    dwClkCtrl |= bClkDiv << CC6801_I2S_CLKDIV_SHIFT;
+
+    regI2S->i2sClkCtrl |= dwClkCtrl;
+    return 0;
+}
+
+int cc6801_I2sHwParams(T_DaiHwParams *tpParams)
+{
+    uint32_t dwClkCtrl = regI2S->i2sClkCtrl;
+    uint32_t dwTxCtrl = regI2S->i2sTxCtrl;
+
+    dwClkCtrl &= ~CC6801_I2S_WSRES_MASK;
+    dwTxCtrl &= (~CC6801_I2S_TXALIGN_MASK | ~CC6801_I2S_TXRES_MASK);
+
+    switch (tpParams->iFormat)
+    {
+        case DAI_PCM_FORMAT_S8:
+            dwClkCtrl |= CC6801_I2S_WSRES_16;
+            dwTxCtrl |= (CC6801_I2S_TXALIGN_8LE | CC6801_I2S_TXRES_8);
+            break;
+        case DAI_PCM_FORMAT_S20_3LE:
+            dwClkCtrl |= CC6801_I2S_WSRES_32;
+            dwTxCtrl |= (CC6801_I2S_TXALIGN_24LE | CC6801_I2S_TXRES_20);
+            break;
+        case DAI_PCM_FORMAT_S24_LE:
+            dwClkCtrl |= CC6801_I2S_WSRES_32;
+            dwTxCtrl |= (CC6801_I2S_TXALIGN_24LE | CC6801_I2S_TXRES_24);
+            break;
+        default:
+            TracerInfo("Not support fomat%d, using default 16bits...\r\n", tpParams->iFormat);
+        case DAI_PCM_FORMAT_S16_LE:
+            dwClkCtrl |= CC6801_I2S_WSRES_16;
+            dwTxCtrl |= (CC6801_I2S_TXALIGN_16LE | CC6801_I2S_TXRES_16);
+            break;
+    }
+
+    regI2S->i2sClkCtrl |= dwClkCtrl;
+    regI2S->i2sTxCtrl |= dwTxCtrl;
+
+    cc6801_I2sSetClkDiv(tpParams->iRate);
+
+    return CC_SUCCESS;
+}
+
 void cc6801_I2sTxConfig(uint32_t dwDmaBufStart, uint32_t dwDmaBufEnd)
 {
-    wr(I2S_DMA_TX_START_REG, dwDmaBufStart);    //Tx start address
-    wr(I2S_DMA_TX_END_REG,   dwDmaBufEnd);      //Tx end address
+    regI2S->i2sDmaTxStartAddr = dwDmaBufStart;    //Tx start address
+    regI2S->i2sDmaTxEndAddr = dwDmaBufEnd;        //Tx end address
 }
 
 void cc6801_I2sRxConfig(uint32_t dwDmaBufStart, uint32_t dwDmaBufEnd)
 {
-    wr(I2S_DMA_RX_START_REG, dwDmaBufStart);    //Rx start address
-    wr(I2S_DMA_RX_END_REG,   dwDmaBufEnd);      //Rx end address
+    regI2S->i2sDmaRxStartAddr = dwDmaBufStart;    //Rx start address
+    regI2S->i2sDmaRxEndAddr = dwDmaBufEnd;        //Rx end address
 }
 
 void cc6801_I2sStart(uint16_t dwTxByte, uint16_t dwRxByte)
 {
-    wr(I2S_DMA_BYTE_REG,      (0 | ((dwTxByte-1) << 8) | (dwRxByte-1)));  //0:1byte, FF:256bytes
-    wr(I2S_INTR_REG,          0x00000003);                                // Tx/Rx interrupt enable
+    regI2S->i2sDmaByteCtrl = (0 | ((dwTxByte-1) << 8) | (dwRxByte-1));    //0:1byte, FF:256bytes
 
-    wr(I2S_DMA_TX_ENABLE_REG, 0x00000001);                                // Tx DMA enable
+    regI2S->i2sInt = 0x00000003;                // Tx/Rx interrupt enable
+    regI2S->i2sDmaTxEn = 0x00000001;            // Tx DMA enable
     NVIC_EnableIRQ(I2S_TXDMA_IRQn);
 
-    wr(I2S_DMA_RX_ENABLE_REG, 0x00000001);                                // Rx DMA enable
+    regI2S->i2sDmaRxEn = 0x00000001;            // Rx DMA enable
     NVIC_EnableIRQ(I2S_RXDMA_IRQn);
 }
 
@@ -103,7 +256,7 @@ void cc6801_I2sStop(void)
     NVIC_DisableIRQ(I2S_TXDMA_IRQn);
     NVIC_DisableIRQ(I2S_RXDMA_IRQn);
 
-    wr(I2S_INTR_REG, 0x00000000);                 //disable interrupt
-    wr(I2S_DMA_TX_ENABLE_REG, 0x00000000);        //stop transmiting data
-    wr(I2S_DMA_RX_ENABLE_REG, 0x00000000);        //stop receiving data
+    regI2S->i2sInt = 0x00000000;            //disable interrupt
+    regI2S->i2sDmaTxEn = 0x00000000;        //stop transmiting data
+    regI2S->i2sDmaRxEn = 0x00000000;        //stop receiving data
 }

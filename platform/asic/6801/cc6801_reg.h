@@ -1209,6 +1209,27 @@ typedef struct
     uint32_t dwDmaRdAddr;    
 }S_regEFLASH;
 
+typedef struct U_regI2S
+{
+    uint32_t i2sClkCtrl;
+    uint32_t i2sRxCtrl;
+    uint32_t i2sTxCtrl;
+    uint32_t i2sTxDataLeft;
+    uint32_t i2sTxDataRight;
+    uint32_t i2sRxDataLeft;
+    uint32_t i2sRxDataRight;
+    uint32_t i2sStatus;
+    uint32_t i2sInt;
+    uint32_t i2sDmaByteCtrl;
+    uint32_t i2sDmaRxStartAddr;
+    uint32_t i2sDmaRxEndAddr;
+    uint32_t i2sDmaRxEn;
+    uint32_t i2sDmaTxStartAddr;
+    uint32_t i2sDmaTxEndAddr;
+    uint32_t i2sDmaTxEn;
+    uint32_t i2sDmaRxCurrAddr;
+    uint32_t i2sDmaTxCurrAddr;
+}S_regI2S;
 
 typedef struct
 {
@@ -1256,6 +1277,7 @@ typedef struct
 #define regAES          ((U_regAES         *) AES_ADDR_BASE)
 #define regWDT          ((U_regWDT         *) WDT_ADDR_BASE)
 #define regEFLASH       ((S_regEFLASH      *) EF_ADDR_BASE)
+#define regI2S          ((S_regI2S         *) I2S_ADDR_BASE)
 
 #ifdef __cplusplus
 }
