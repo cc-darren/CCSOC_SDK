@@ -335,7 +335,7 @@
               <MiscControls>--no_inline --no_multifile -DMSC_CLOCK</MiscControls>
               <Define>FPGA</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app\Display;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\service\tracer;..\..\test;..\..\test\ext</IncludePath>
+              <IncludePath>.\config;..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app\Display;..\..\platform\init\inc;..\..\platform\asic\6801;..\..\platform\drvi;..\..\module\mems;..\..\module\oled;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\tracer;..\..\test;..\..\test\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -537,7 +537,7 @@
             <File>
               <FileName>arch_main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\init\src\arch_main.c</FilePath>
+              <FilePath>.\arch_main.c</FilePath>
             </File>
             <File>
               <FileName>system_init.c</FileName>
@@ -585,6 +585,16 @@
           <GroupName>oled</GroupName>
           <Files>
             <File>
+              <FileName>sh1107.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\module\oled\sh1107.c</FilePath>
+            </File>
+            <File>
+              <FileName>sh1107_128x32.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\module\oled\sh1107_128x32.c</FilePath>
+            </File>
+            <File>
               <FileName>ssd1306.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\module\oled\ssd1306.c</FilePath>
@@ -599,26 +609,6 @@
         <Group>
           <GroupName>service</GroupName>
           <Files>
-            <File>
-              <FileName>app_fifo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\fifo\app_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_uart_fifo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\uart\app_uart_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>retarget.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\uart\retarget.c</FilePath>
-            </File>
-            <File>
-              <FileName>sw_timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\sw_timer\sw_timer.c</FilePath>
-            </File>
             <File>
               <FileName>tracer.c</FileName>
               <FileType>1</FileType>
@@ -1139,7 +1129,7 @@
               <MiscControls></MiscControls>
               <Define>FPGA</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app\Display;..\..\platform\asic\6801;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\sw_timer;..\..\service\fifo;..\..\service\uart;..\..\service\tracer;..\..\test;..\..\test\ext</IncludePath>
+              <IncludePath>.\config;..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app\Display;..\..\platform\asic\6801;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\tracer;..\..\test;..\..\test\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1341,7 +1331,7 @@
             <File>
               <FileName>arch_main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\init\src\arch_main.c</FilePath>
+              <FilePath>.\arch_main.c</FilePath>
             </File>
             <File>
               <FileName>system_init.c</FileName>
@@ -1389,6 +1379,16 @@
           <GroupName>oled</GroupName>
           <Files>
             <File>
+              <FileName>sh1107.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\module\oled\sh1107.c</FilePath>
+            </File>
+            <File>
+              <FileName>sh1107_128x32.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\module\oled\sh1107_128x32.c</FilePath>
+            </File>
+            <File>
               <FileName>ssd1306.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\module\oled\ssd1306.c</FilePath>
@@ -1403,26 +1403,6 @@
         <Group>
           <GroupName>service</GroupName>
           <Files>
-            <File>
-              <FileName>app_fifo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\fifo\app_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_uart_fifo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\uart\app_uart_fifo.c</FilePath>
-            </File>
-            <File>
-              <FileName>retarget.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\uart\retarget.c</FilePath>
-            </File>
-            <File>
-              <FileName>sw_timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\service\sw_timer\sw_timer.c</FilePath>
-            </File>
             <File>
               <FileName>tracer.c</FileName>
               <FileType>1</FileType>
