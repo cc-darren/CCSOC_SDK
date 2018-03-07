@@ -31,8 +31,9 @@
 ; <h> Stack Configuration
 ;   <o> Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ; </h>
+#include "stackheap.h"
 
-Stack_Size      EQU     0x00000c00
+Stack_Size      EQU     SYS_STACK_SIZE
 
                 AREA    STACK, NOINIT, READWRITE, ALIGN=3
 Stack_Mem       SPACE   Stack_Size
@@ -43,7 +44,7 @@ __initial_sp
 ;   <o>  Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ; </h>
 
-Heap_Size       EQU     0x000004
+Heap_Size       EQU     SYS_HEAP_SIZE
 
                 AREA    HEAP, NOINIT, READWRITE, ALIGN=3
 __heap_base
