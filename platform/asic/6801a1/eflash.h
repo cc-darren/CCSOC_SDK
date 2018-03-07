@@ -1,13 +1,13 @@
-/******************************************************************************
-*  Copyright 2017, CloudChip, Inc.
-*  ---------------------------------------------------------------------------
-*  Statement:
-*  ----------
-*  This software is protected by Copyright and the information contained
-*  herein is confidential. The software may not be copied and the information
-*  contained herein may not be used or disclosed except with the written
-*  permission of CloudChip, Inc. (C) 2017
-******************************************************************************/
+/* Copyright (c) 2018 Cloudchip, Inc. All Rights Reserved.
+ *
+ * The information contained herein is property of Cloudchip, Inc.
+ * Terms and conditions of usage are described in detail in CLOUDCHIP
+ * STANDARD SOFTWARE LICENSE AGREEMENT.
+ *
+ * Licensees are granted free, non-transferable use of the information.
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * from the file.
+ */
 
 #ifndef _EFLASH_H_
 #define _EFLASH_H_
@@ -15,6 +15,7 @@
 #include "global.h"
 #include "cc6801_reg.h"
 
+typedef void (*fpEflash_Callback)(uint32_t sys_evt);
 
 //#define SCU_ICACHE_REG              (SCU_ADDR_BASE + 0x00000034)
     #define FLUSH_EN    0x00000001
@@ -58,15 +59,16 @@
 //#define EF_DMA_WADDR_REG            (EF_ADDR_BASE + 0x00000064) //RAM addr to write flash
 //#define EF_DMA_RADDR_REG            (EF_ADDR_BASE + 0x00000068) //RAM addr to read flash
 
-extern volatile uint32_t EFLASH_INTR;
 
 void cc6801_EflashInit(void);
 void cc6801_EflashFlush(void);
 BOOL cc6801_EflashEraseALL(void);
 BOOL cc6801_EflashErasePage(uint32_t adr);
 void cc6801_EflashProgram(uint32_t dwEflashAdr,unsigned char * pBufAdr,uint32_t dwBufSize);
+void cc6801_EflashRegisterCallback(fpEflash_Callback fpCB);
 
-//#define EFLASH_DMAMODE 1
+#define EFLASH_DMAMODE 0
+
 
 
 #endif

@@ -1,13 +1,13 @@
-/******************************************************************************
-*  Copyright 2017, CloudChip, Inc.
-*  ---------------------------------------------------------------------------
-*  Statement:
-*  ----------
-*  This software is protected by Copyright and the information contained
-*  herein is confidential. The software may not be copied and the information
-*  contained herein may not be used or disclosed except with the written
-*  permission of CloudChip, Inc. (C) 2017
-******************************************************************************/
+/* Copyright (c) 2018 Cloudchip, Inc. All Rights Reserved.
+ *
+ * The information contained herein is property of Cloudchip, Inc.
+ * Terms and conditions of usage are described in detail in CLOUDCHIP
+ * STANDARD SOFTWARE LICENSE AGREEMENT.
+ *
+ * Licensees are granted free, non-transferable use of the information.
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * from the file.
+ */
 
 /******************************************************************************
 *  Filename:
@@ -108,31 +108,35 @@ void UART2_TXDMA_IRQHandler(void)
 
 static void cc6801_UartRxDmaEnable(U_regUARTDMA *pUartBase, uint8_t bEnable)
 {
-    pUartBase->bf.dma_rxen = bEnable;
+    uint32_t dwDmaWrEn = pUartBase->dw.dmaRxEn;
+
+    pUartBase->dw.dmaRxEn = ((dwDmaWrEn & ~UART_DMA_ENABLE_BIT) |
+                                 (bEnable & UART_DMA_ENABLE_BIT));
 }
 
 
 static void cc6801_UartTxDmaEnable(U_regUARTDMA *pUartBase, uint8_t bEnable)
 {
-    pUartBase->bf.dma_txen = bEnable;
-}
+    uint32_t dwDmaRdEn = pUartBase->dw.dmaTxEn;
 
-#if 0
-static void cc6801_UartTxDmaFlush(U_regUARTDMA *pUartBase, uint8_t bFlush)
-{
-    pUartBase->bf.tx_flush = bFlush;
-
+    pUartBase->dw.dmaTxEn = ((dwDmaRdEn & ~UART_DMA_ENABLE_BIT) |
+                                 (bEnable & UART_DMA_ENABLE_BIT));
 }
-#endif
 
 static void cc6801_UartRxIntEnable(U_regUARTDMA *pUartBase, uint8_t bEnable)
 {
-    pUartBase->bf.rx_dma_done_intr_en = bEnable;
+    uint32_t dwInt = pUartBase->dw.interrupt;
+
+    pUartBase->dw.interrupt = ((dwInt & ~UART_INT_RX_DONE_ENABLE_MASK) |
+                                (bEnable & UART_INT_RX_DONE_ENABLE_BIT));
 }
 
 static void cc6801_UartTxIntEnable(U_regUARTDMA *pUartBase, uint8_t bEnable)
 {
-    pUartBase->bf.tx_dma_done_intr_en = bEnable;
+    uint32_t dwInt = pUartBase->dw.interrupt;
+
+    pUartBase->dw.interrupt = ((dwInt & ~UART_INT_TX_DONE_ENABLE_MASK) |
+                             ((bEnable & UART_INT_TX_DONE_ENABLE_BIT) << 1));
 }
 
 static int cc6801_Uart0Xfer(void const * const pReg)
@@ -238,21 +242,33 @@ static int cc6801_Uart2Rcvr(void const * const pReg)
 static void cc6801_UartTxBufferSet(U_regUARTDMA * pUartBase,
                                     uint32_t dwTxBufAddr, uint8_t bLen)
 {
-    pUartBase->bf.dma_txbyte_num = bLen - 1;
+    uint32_t dwTxEndAddr = 0;
+    uint32_t dwByteNum = pUartBase->dw.dmaByteNum;
+
+    dwByteNum &= UART_DMA_RX_BYTENUM_MASK;
+    dwByteNum |= ((bLen - 1) << UART_DMA_TX_BYTENUM_SHIFT);
+    pUartBase->dw.dmaByteNum = dwByteNum;
     //DMA tx start address
-    pUartBase->bf.dma_txstrart_addr = dwTxBufAddr;
+    pUartBase->dw.dmaTxStart = (dwTxBufAddr & UART_DMA_START_ADDR_MASK);
     //DMA tx end address
-    pUartBase->bf.dma_txend_addr = dwTxBufAddr + (((bLen - 1) >> 2) << 2);
+    dwTxEndAddr = dwTxBufAddr + (((bLen - 1) >> 2) << 2);
+    pUartBase->dw.dmaTxEnd = (dwTxEndAddr & UART_DMA_END_ADDR_MASK);
 }
 
 static void cc6801_UartRxBufferSet(U_regUARTDMA *pUartBase,
                                     uint32_t dwRxBufAddr, uint8_t bLen)
 {
-    pUartBase->bf.dma_rxbyte_num = bLen - 1;
+    uint32_t dwRxEndAddr = 0;
+    uint32_t dwByteNum = pUartBase->dw.dmaByteNum;
+
+    dwByteNum &= UART_DMA_TX_BYTENUM_MASK;
+    dwByteNum |= bLen - 1;
+    pUartBase->dw.dmaByteNum = dwByteNum;
     //DMA rx start address
-    pUartBase->bf.dma_rxstrart_addr = dwRxBufAddr;
+    pUartBase->dw.dmaRxStart = (dwRxBufAddr & UART_DMA_START_ADDR_MASK);
     //DMA rx end address
-    pUartBase->bf.dma_rxend_addr = dwRxBufAddr + (((bLen - 1) >> 2) << 2);
+    dwRxEndAddr = dwRxBufAddr + (((bLen - 1) >> 2) << 2);
+    pUartBase->dw.dmaRxEnd = (dwRxEndAddr & UART_DMA_END_ADDR_MASK);
 }
 
 static uint8_t cc6801_ComputeFRS(uint32_t dwConfig)
@@ -353,10 +369,18 @@ static int cc6801_UartBaudrateSet(T_UartPort *pUartPort)
         pUartCtrlBase->dw.ovr = 0x07;
         break;
       case UART_BAUDRATE_57600:
+        pUartCtrlBase->dw.baud = 0x2;
+        pUartCtrlBase->dw.psr = ((0xC << 3) | 0x0);
+        pUartCtrlBase->dw.ovr = 0x07;
+        break;
       default:
       case UART_BAUDRATE_115200:
         //FPGA DEMO setting, clk=16M
-        pUartCtrlBase->dw.baud = 0x05;
+        pUartCtrlBase->dw.baud = 0x05;    //based on 32MHz source
+        //pUartCtrlBase->dw.baud = 0x02;  //16MHz   //remove it after dynamically change clock enabled
+        //pUartCtrlBase->dw.baud = 0x0B;  //64MHz   //remove it after dynamically change clock enabled
+        //pUartCtrlBase->dw.baud = 0x08;  //48MHz   //remove it after dynamically change clock enabled
+
         pUartCtrlBase->dw.psr = ((0xC << 3) | 0x0);
         pUartCtrlBase->dw.ovr = 0x07;
         break;
@@ -369,16 +393,10 @@ void cc6801_UartConfigSet(T_UartPort *pUartPort)
 {
     T_cc6801UartPort port = g_tUartPort[pUartPort->bPortNum];
     U_regUARTCTRL *pUartCtrlBase = port.pCtrlReg;
-    uint8_t bFrs, bMdsl, bIntCtrl;
+    uint8_t bFrs = 0, bMdsl = 0, bIntCtrl = 0;
 
     bFrs = cc6801_ComputeFRS(pUartPort->dwConfig);
     cc6801_UartBaudrateSet(pUartPort);
-
-    bIntCtrl |= UART_CTRL_INT_ETI_ENABLE_MASK;
-    bIntCtrl |= UART_CTRL_INT_EEI_ENABLE_MASK;
-    bIntCtrl |= UART_CTRL_INT_ERI_ENABLE_MASK;
-
-    bMdsl |= UART_MDSL_RTS_ENABLE_MASK;
 
     if (pUartPort->dwConfig & UART_RTSCTS)
     {
@@ -386,8 +404,13 @@ void cc6801_UartConfigSet(T_UartPort *pUartPort)
         bMdsl |= UART_MDSL_FCE_ENABLE_MASK;
     }
 
-    bMdsl |= UART_MDSL_ETD_ENABLE_MASK;
-    bMdsl |= UART_MDSL_ERD_ENABLE_MASK;
+    bIntCtrl |= (UART_CTRL_INT_ETI_ENABLE_MASK |
+                 UART_CTRL_INT_EEI_ENABLE_MASK |
+                 UART_CTRL_INT_ERI_ENABLE_MASK);
+
+    bMdsl |= (UART_MDSL_RTS_ENABLE_MASK |
+              UART_MDSL_ETD_ENABLE_MASK |
+              UART_MDSL_ERD_ENABLE_MASK);
 
     pUartCtrlBase->dw.ictrl = bIntCtrl;
     pUartCtrlBase->dw.frs = bFrs;
@@ -499,7 +522,7 @@ int cc6801_UartTx(uint8_t bPortNum,
     while (*pTxBuf)
     {
         pUartCtrlBase->dw.bufTx = *pTxBuf++;
-        while(!pUartCtrlBase->bf.untbe);
+        while(!(pUartCtrlBase->dw.ictrl & 0x01));
     }
 
     return CC_SUCCESS;

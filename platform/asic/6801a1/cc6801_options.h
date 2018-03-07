@@ -1,13 +1,13 @@
-/******************************************************************************
-*  Copyright 2017, Cloudchip, Inc.
-*  ---------------------------------------------------------------------------
-*  Statement:
-*  ----------
-*  This software is protected by Copyright and the information contained
-*  herein is confidential. The software may not be copied and the information
-*  contained herein may not be used or disclosed except with the written
-*  permission of Cloudchip, Inc. (C) 2017
-******************************************************************************/
+/* Copyright (c) 2018 Cloudchip, Inc. All Rights Reserved.
+ *
+ * The information contained herein is property of Cloudchip, Inc.
+ * Terms and conditions of usage are described in detail in CLOUDCHIP
+ * STANDARD SOFTWARE LICENSE AGREEMENT.
+ *
+ * Licensees are granted free, non-transferable use of the information.
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * from the file.
+ */
 
 /******************************************************************************
 *  Filename:
@@ -59,6 +59,8 @@
 #define Interface_PWM0    0x50
 #define Interface_PWM1    0x51
 
+
+#define PIN_NULL 0xFF
 // GPIO Configuration List
 
 #define GPIO_MODE_GPIO          0

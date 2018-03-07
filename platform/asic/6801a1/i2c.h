@@ -1,13 +1,13 @@
-/******************************************************************************
-*  Copyright 2017, CloudChip, Inc.
-*  ---------------------------------------------------------------------------
-*  Statement:
-*  ----------
-*  This software is protected by Copyright and the information contained
-*  herein is confidential. The software may not be copied and the information
-*  contained herein may not be used or disclosed except with the written
-*  permission of CloudChip, Inc. (C) 2017
-******************************************************************************/
+/* Copyright (c) 2018 Cloudchip, Inc. All Rights Reserved.
+ *
+ * The information contained herein is property of Cloudchip, Inc.
+ * Terms and conditions of usage are described in detail in CLOUDCHIP
+ * STANDARD SOFTWARE LICENSE AGREEMENT.
+ *
+ * Licensees are granted free, non-transferable use of the information.
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * from the file.
+ */
 
 #ifndef _I2C_H_
 #define _I2C_H_
@@ -57,6 +57,13 @@
 #define I2C_DMA_ENABLE_BIT (1)
 #define I2C_DMA_ENABLE_MASK (I2C_DMA_ENABLE_BIT << 31)
 
+#define I2C_CONFIG_PRESCALER_SHIFT                     (16)
+#define I2C_CONFIG_PRESCALER_BIT                       (0xFFF)
+#define I2C_CONFIG_PRESCALER_MASK                      (I2C_CONFIG_PRESCALER_BIT << I2C_CONFIG_PRESCALER_SHIFT)
+
+#define I2C_CONFIG_CFGMASK_SHIFT                       (2)
+#define I2C_CONFIG_CFGMASK_BIT                         (0x3F)
+#define I2C_CONFIG_CFGMASK_MASK                        (I2C_CONFIG_CFGMASK_BIT << I2C_CONFIG_CFGMASK_SHIFT)
 
 #define I2C_ERR_NONE        0x00
 #define I2C_ERR_NO_ACK      0x01
@@ -74,10 +81,12 @@ typedef enum
 typedef struct
 {
     U_regI2C *pReg;
+    uint8_t bClkSrc;
+
     int (*fpI2cXfer)(U_regI2C * p_i2c);
 } cc6801_I2cMaster;
 
-int cc6801_I2cInit(uint8_t bBusNum);
+int cc6801_I2cInit(T_I2cDevice *tpDev);
 
 int cc6801_I2cFreqSet(uint8_t bBusNum, uint32_t dwFreq);
 

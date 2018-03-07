@@ -1,19 +1,41 @@
-/******************************************************************************
-*  Copyright 2017, CloudChip, Inc.
-*  ---------------------------------------------------------------------------
-*  Statement:
-*  ----------
-*  This software is protected by Copyright and the information contained
-*  herein is confidential. The software may not be copied and the information
-*  contained herein may not be used or disclosed except with the written
-*  permission of CloudChip, Inc. (C) 2017
-******************************************************************************/
+/* Copyright (c) 2018 Cloudchip, Inc. All Rights Reserved.
+ *
+ * The information contained herein is property of Cloudchip, Inc.
+ * Terms and conditions of usage are described in detail in CLOUDCHIP
+ * STANDARD SOFTWARE LICENSE AGREEMENT.
+ *
+ * Licensees are granted free, non-transferable use of the information.
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * from the file.
+ */
 
 #ifndef _UART_H
 #define _UART_H
 
 #include "global.h"
 #include "cc6801_reg.h"
+
+#define UART_INT_RX_DONE_DISABLE_BIT  (0)
+#define UART_INT_RX_DONE_DISABLE_MASK (UART_INT_RX_DONE_DISABLE_BIT)
+#define UART_INT_RX_DONE_ENABLE_BIT   (1)
+#define UART_INT_RX_DONE_ENABLE_MASK  (UART_INT_RX_DONE_ENABLE_BIT)
+
+#define UART_INT_TX_DONE_DISABLE_BIT  (0)
+#define UART_INT_TX_DONE_DISABLE_MASK (UART_INT_TX_DONE_DISABLE_BIT << 1)
+#define UART_INT_TX_DONE_ENABLE_BIT   (1)
+#define UART_INT_TX_DONE_ENABLE_MASK  (UART_INT_TX_DONE_ENABLE_BIT << 1)
+
+#define UART_DMA_TX_BYTENUM_SHIFT     (8)
+#define UART_DMA_TX_BYTENUM_MASK      ((0xFF << UART_DMA_TX_BYTENUM_SHIFT) | 0UL)
+#define UART_DMA_RX_BYTENUM_MASK      ((0xFF) | 0UL)
+
+#define UART_DMA_START_ADDR_MASK      ((0xFFFF) | 0UL)
+#define UART_DMA_END_ADDR_MASK        ((0xFFFF) | 0UL)
+
+#define UART_DMA_ENABLE_BIT           (0x01)
+#define UART_DMA_ENABLE_MASK          (UART_DMA_RX_ENABLE_BIT)
+#define UART_DMA_DISABLE_BIT          (0x00)
+#define UART_DMA_DISABLE_MASK         (UART_DMA_RX_DISABLE_BIT)
 
 #define UART_CTRL_INT_EFCI_DISABLE_BIT (0)    /* Flow control interrupt Disable */
 #define UART_CTRL_INT_EFCI_DISABLE_MASK (UART_CTRL_INT_EFCI_DISABLE_BIT << 4)

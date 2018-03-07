@@ -1,13 +1,13 @@
-/******************************************************************************
-*  Copyright 2017, CloudChip, Inc.
-*  ---------------------------------------------------------------------------
-*  Statement:
-*  ----------
-*  This software is protected by Copyright and the information contained
-*  herein is confidential. The software may not be copied and the information
-*  contained herein may not be used or disclosed except with the written
-*  permission of CloudChip, Inc. (C) 2017
-******************************************************************************/
+/* Copyright (c) 2018 Cloudchip, Inc. All Rights Reserved.
+ *
+ * The information contained herein is property of Cloudchip, Inc.
+ * Terms and conditions of usage are described in detail in CLOUDCHIP
+ * STANDARD SOFTWARE LICENSE AGREEMENT.
+ *
+ * Licensees are granted free, non-transferable use of the information.
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * from the file.
+ */
 
 /******************************************************************************
 *  Filename:
@@ -219,18 +219,18 @@ extern "C" {
 #define RTC_ALM_SEC_REG             (RTC_ADDR_BASE + 0x0000001c)
 #define RTC_ALM_MIN_REG             (RTC_ADDR_BASE + 0x00000020)
 #define RTC_ALM_HRS_REG             (RTC_ADDR_BASE + 0x00000024)
-#define RTC_ALM_DOM_REG             (RTC_ADDR_BASE + 0x00000028)
+#define RTC_ALM_DAY_REG             (RTC_ADDR_BASE + 0x00000028)
 #define RTC_ALM_MON_REG             (RTC_ADDR_BASE + 0x0000002c)
 
 #define RTC_ALM2_SEC_REG            (RTC_ADDR_BASE + 0x00000030)
 #define RTC_ALM2_MIN_REG            (RTC_ADDR_BASE + 0x00000034)
 #define RTC_ALM2_HRS_REG            (RTC_ADDR_BASE + 0x00000038)
-#define RTC_ALM2_DOM_REG            (RTC_ADDR_BASE + 0x0000003c)
+#define RTC_ALM2_DAY_REG            (RTC_ADDR_BASE + 0x0000003c)
 #define RTC_ALM2_MON_REG            (RTC_ADDR_BASE + 0x00000040)
 
-#define RTC_CTRLA_REG               (RTC_ADDR_BASE + 0x00000044)
-#define RTC_CTRLB_REG               (RTC_ADDR_BASE + 0x00000048)
-#define RTC_CTRLC_REG               (RTC_ADDR_BASE + 0x00000050)
+#define RTC_CTRL_REG                (RTC_ADDR_BASE + 0x00000044)
+#define RTC_FCAB_REG                (RTC_ADDR_BASE + 0x00000048)
+#define RTC_INTR_REG                (RTC_ADDR_BASE + 0x00000050)
 
 // CCU
 #define CCU_INTR_REG                (CCU_ADDR_BASE + 0x00000000)
@@ -290,6 +290,35 @@ extern "C" {
 #define AES_DMA_WADDR_REG           (AES_ADDR_BASE + 0x0000000c)
 #define AES_DMA_RADDR_REG           (AES_ADDR_BASE + 0x00000010)
 
+//DMIC
+#define DMIC_INTR_REG               (DMIC_ADDR_BASE + 0x00000000)
+#define DMIC_CTRL_REG               (DMIC_ADDR_BASE + 0x00000004)
+#define DMIC_DMA_BYTE_REG           (DMIC_ADDR_BASE + 0x00000008)
+#define DMIC_DMA_L_START_REG        (DMIC_ADDR_BASE + 0x0000000C)
+#define DMIC_DMA_L_END_REG          (DMIC_ADDR_BASE + 0x00000010)
+#define DMIC_DMA_R_START_REG        (DMIC_ADDR_BASE + 0x00000014)
+#define DMIC_DMA_R_END_REG          (DMIC_ADDR_BASE + 0x00000018)
+#define DMIC_DMA_ENABLE_REG         (DMIC_ADDR_BASE + 0x0000001C)
+#define DMIC_DMA_CURRENT_ADDR_REG   (DMIC_ADDR_BASE + 0x00000020)
+
+//I2S
+#define I2S_CLK_CTRL_REG            (I2S_ADDR_BASE + 0x00000000)
+#define I2S_RX_CTRL_REG             (I2S_ADDR_BASE + 0x00000004)
+#define I2S_TX_CTRL_REG             (I2S_ADDR_BASE + 0x00000008)
+#define I2S_TX_DATA_LEFT_REG        (I2S_ADDR_BASE + 0x0000000C)
+#define I2S_TX_DATA_RIGHT_REG       (I2S_ADDR_BASE + 0x00000010)
+#define I2S_RX_DATA_LEFT_REG        (I2S_ADDR_BASE + 0x00000014)
+#define I2S_RX_DATA_RIGHT_REG       (I2S_ADDR_BASE + 0x00000018)
+#define I2S_STATUS_REG              (I2S_ADDR_BASE + 0x0000001C)
+#define I2S_INTR_REG                (I2S_ADDR_BASE + 0x00000020)
+#define I2S_DMA_BYTE_REG            (I2S_ADDR_BASE + 0x00000024)
+#define I2S_DMA_RX_START_REG        (I2S_ADDR_BASE + 0x00000028)
+#define I2S_DMA_RX_END_REG          (I2S_ADDR_BASE + 0x0000002C)
+#define I2S_DMA_RX_ENABLE_REG       (I2S_ADDR_BASE + 0x00000030)
+#define I2S_DMA_TX_START_REG        (I2S_ADDR_BASE + 0x00000034)
+#define I2S_DMA_TX_END_REG          (I2S_ADDR_BASE + 0x00000038)
+#define I2S_DMA_TX_ENABLE_REG       (I2S_ADDR_BASE + 0x0000003C)
+#define I2S_DMA_RX_CURRENT_ADDR_REG (I2S_ADDR_BASE + 0x00000040)
 
 
 /******************************/
@@ -317,6 +346,181 @@ typedef union U_regSCU
         uint32_t chipIntEn;
         uint32_t chipIntSts;
     }dw;    //double word
+
+    struct
+    {
+        //0x00
+        uint32_t reserved0;
+        //0x04 ADC Parameter
+        uint32_t pdBgr:1;           //power down for Bang Gap Fule Gauge
+        uint32_t pdAdc:1;           //power down for ADC except BGFR
+        uint32_t adc_temp:1;        //0:ADC, 1:Temperature sensor
+        uint32_t reserved1:5;
+        uint32_t bgrSel:3;          //Fine tune for Bang Gap Fule Gauge
+        uint32_t reserved2:5;
+        uint32_t adc:7;             //ADC digital output
+        uint32_t reserved3:9;
+        //0x08 PLL Assert/De-assert
+        uint32_t pllReset:1;        //0:de-assert, 1:assert reset
+        uint32_t reserved4:31;
+        //0x0C PLL configuration
+        uint32_t divn:8;            //binary + 1, reference divider value
+        uint32_t divm:8;            //binary + 1, VCO divider value
+        uint32_t divc0:8;           //binary + 1, output divider value
+        uint32_t pd:1;              //power down
+        uint32_t bypass:1;          //PLL bypass
+        uint32_t reserved5:5;
+        uint32_t pllLock:1;         //0: PLL unlock, read only
+        //0x10 System clock configuration0
+        uint32_t sysClockDiv:5;     //System clock divider after source clock selection
+        uint32_t clkGenDiv:2;       //ClkGen divider after system clock, 00:bypass, 01:divider by 2, 10:divider by 4, 11:illegal
+        uint32_t reserved6:1;
+        uint32_t srcClkSel:1;       //Source Clock Selection, 0:XTAL, 1:PLL
+        uint32_t sysBypassDiv:1;    //System Bypass Divider, 0:no byass divider, 1:bypass divider
+        uint32_t pllEn:1;           //0:disable, 1:enable, self clear after enable
+        uint32_t genBypassDiv:1;    //Generated Bypass Divider, 0:no bypass divider, 1:bypass divider
+        uint32_t reserved7:20;
+        //0x14 System clock configuration1
+        uint32_t lowFreq:1;         //Low Freq Clock Selection, 0:32KHz, 1:High Freq from above config0
+        uint32_t reserved8:7;
+        uint32_t sysGatedClk:1;     //System Gated Clock, 0:disable, 1:enable
+        uint32_t hsGatedClk:1;      //Hardware Sequencer Gated Clock, 0:disable, 1:enable
+        uint32_t oscSel:1;          //Oscillator selection, 0: oscillator 32KHz, 1:Ring oscillator 40KHz
+        uint32_t osc32K:1;          //OSC 32KHz, 0:disable, 1:enable
+        uint32_t osc40K:1;          //Ring oscillator 40KHz, 0:disable, 1:enable
+        uint32_t dctrlGatedClk:1;   //DCTRL Gated Clock, 0:disable, 1:enable
+        uint32_t reserved9:18;
+        //0x18 reserved
+        uint32_t reserved10:32;
+        //0x1C Chip ID
+        uint32_t subVer:4;          //Sub Version
+        uint32_t mainVer:4;         //Main Version
+        uint32_t chipID:24;         //chip ID = 0x80
+        //0x20 Isolation Enable
+        uint32_t wdt_iso:1;         //0:isolation disable, 1:isolation enable
+        uint32_t rtc_iso:1;         //0:isolation disable, 1:isolation enable
+        uint32_t pwm0_iso:1;        //0:isolation disable, 1:isolation enable
+        uint32_t pwm1_iso:1;        //0:isolation disable, 1:isolation enable
+        uint32_t wkt0_iso:1;        //0:isolation disable, 1:isolation enable
+        uint32_t wkt1_iso:1;        //0:isolation disable, 1:isolation enable
+        uint32_t spi0_iso:1;        //0:isolation disable, 1:isolation enable
+        uint32_t spi1_iso:1;        //0:isolation disable, 1:isolation enable
+        uint32_t spi2_iso:1;        //0:isolation disable, 1:isolation enable
+        uint32_t uart0_iso:1;       //0:isolation disable, 1:isolation enable
+        uint32_t uart1_iso:1;       //0:isolation disable, 1:isolation enable
+        uint32_t uart2_iso:1;       //0:isolation disable, 1:isolation enable
+        uint32_t i2c0_iso:1;        //0:isolation disable, 1:isolation enable
+        uint32_t i2c1_iso:1;        //0:isolation disable, 1:isolation enable
+        uint32_t i2s_iso:1;         //0:isolation disable, 1:isolation enable
+        uint32_t dmic_iso:1;        //0:isolation disable, 1:isolation enable
+        uint32_t ble_iso:1;         //0:isolation disable, 1:isolation enable
+        uint32_t bleTimingGen_iso:1;//0:isolation disable, 1:isolation enable, BLE Timing Gen isolation
+        uint32_t ccu_iso:1;         //0:isolation disable, 1:isolation enable
+        uint32_t aes_iso:1;         //0:isolation disable, 1:isolation enable
+        uint32_t dRam_iso:1;        //0:isolation disable, 1:isolation enable, D_RAM isolation
+        uint32_t m0p_iso:1;         //0:isolation disable, 1:isolation enable
+        uint32_t m4_iso:1;          //0:isolation disable, 1:isolation enable
+        uint32_t ef_iso:1;          //0:isolation disable, 1:isolation enable, EF/I_Cache isolation
+        uint32_t dmu_iso:1;         //0:isolation disable, 1:isolation enable
+        uint32_t gpio_iso:1;        //0:isolation disable, 1:isolation enable
+        uint32_t clkGen_iso:1;      //0:isolation disable, 1:isolation enable
+        uint32_t testLogic_iso:1;   //0:isolation disable, 1:isolation enable
+        uint32_t reserved11:1;      //0:isolation disable, 1:isolation enable
+        uint32_t blePhy_iso:1;      //0:isolation disable, 1:isolation enable
+        uint32_t coreAo_iso:1;      //0:isolation disable, 1:isolation enable
+        uint32_t padNao_iso:1;      //0:isolation disable, 1:isolation enable
+        //0x24 Power Shut Off Enable
+        uint32_t wdt_off:1;         //0:power shut off disable, 1:power shut off enable
+        uint32_t rtc_off:1;         //0:power shut off disable, 1:power shut off enable
+        uint32_t pwm0_off:1;        //0:power shut off disable, 1:power shut off enable
+        uint32_t pwm1_off:1;        //0:power shut off disable, 1:power shut off enable
+        uint32_t wkt0_off:1;        //0:power shut off disable, 1:power shut off enable
+        uint32_t wkt1_off:1;        //0:power shut off disable, 1:power shut off enable
+        uint32_t spi0_off:1;        //0:power shut off disable, 1:power shut off enable
+        uint32_t spi1_off:1;        //0:power shut off disable, 1:power shut off enable
+        uint32_t spi2_off:1;        //0:power shut off disable, 1:power shut off enable
+        uint32_t uart0_off:1;       //0:power shut off disable, 1:power shut off enable
+        uint32_t uart1_off:1;       //0:power shut off disable, 1:power shut off enable
+        uint32_t uart2_off:1;       //0:power shut off disable, 1:power shut off enable
+        uint32_t i2c0_off:1;        //0:power shut off disable, 1:power shut off enable
+        uint32_t i2c1_off:1;        //0:power shut off disable, 1:power shut off enable
+        uint32_t i2s_off:1;         //0:power shut off disable, 1:power shut off enable
+        uint32_t dmic_off:1;        //0:power shut off disable, 1:power shut off enable
+        uint32_t ble_off:1;         //0:power shut off disable, 1:power shut off enable
+        uint32_t bleTimingGen_off:1;//0:power shut off disable, 1:power shut off enable
+        uint32_t ccu_off:1;         //0:power shut off disable, 1:power shut off enable
+        uint32_t aes_off:1;         //0:power shut off disable, 1:power shut off enable
+        uint32_t dRam_off:1;        //0:power shut off disable, 1:power shut off enable
+        uint32_t m0p_off:1;         //0:power shut off disable, 1:power shut off enable
+        uint32_t m4_off:1;          //0:power shut off disable, 1:power shut off enable
+        uint32_t ef_off:1;          //0:power shut off disable, 1:power shut off enable
+        uint32_t dmu_off:1;         //0:power shut off disable, 1:power shut off enable
+        uint32_t gpio_off:1;        //0:power shut off disable, 1:power shut off enable
+        uint32_t clkGen_off:1;      //0:power shut off disable, 1:power shut off enable
+        uint32_t testLogic_off:1;   //0:power shut off disable, 1:power shut off enable
+        uint32_t reserved12:1;      //0:power shut off disable, 1:power shut off enable
+        uint32_t blePhy_off:1;      //0:power shut off disable, 1:power shut off enable
+        uint32_t reserved13:2;      
+        //0x28 Retention Enable
+        uint32_t m0pRet:1;          //0:retention disable, 1:retention enable
+        uint32_t m4Ret:1;           //0:retention disable, 1:retention enable
+        uint32_t reserved14:30;
+        //0x2C External Auxilary Selection
+        uint32_t extAuxSel:2;       //External auxilary selection
+        uint32_t reserved15:30;
+        //0x30 Code Remap
+        uint32_t remap:1;           //0:disable, 1:enable, remap memory address 0x20000000 to 0x00
+        uint32_t reserved16:31;
+        //0x34 I-Cache Control/Booting Control
+        uint32_t flushEn:1;         //I-Cache flush enable, 0:disable, 1:enable
+        uint32_t reserved17:7;
+        uint32_t extFlashBoot:1;    //to indicate booting from external flash, Ready Only
+        uint32_t reserved18:1;
+        uint32_t pdm25:1;           //PDM25 control(optional), 0:rising edge without impact, 1:falling edge to enable
+        uint32_t reserved19:5;
+        uint32_t mcuSwReset:1;      //Software reset enable, 0:reset, 1:un-reset
+        uint32_t clkRstGenRst:1;    //0:reset, 1:un-reset
+        uint32_t reserved20:13;
+        uint32_t flushDone:1;       //I-Cache flush done, 0:not complete, 1:complete, Read Only
+        //0x38 Clock 32KHz calibration
+        uint32_t calib32K:26;       //Clock 32KHz calibration value
+        uint32_t reserved21:6;
+        //0x3C Chip Interrupt enable
+        uint32_t inten;             //apply to CPU non-mask interrupt, 0:disable, 1:enable, refer to 0x40 for bit definition
+        //0x40 Chip Interrupt status (all read only)
+        uint32_t reserved22:1;
+        uint32_t wdt_intSts:1;
+        uint32_t rtc_intSts:1;
+        uint32_t pwm0_intSts:1;
+        uint32_t pwm1_intSts:1;
+        uint32_t wktm0_intSts:1;
+        uint32_t wktm1_intSts:1;
+        uint32_t spi0_intSts:1;
+        uint32_t spi1_intSts:1;
+        uint32_t spi2_intSts:1;
+        uint32_t uart0Rx_intSts:1;
+        uint32_t uart0Tx_intSts:1;
+        uint32_t uart0Core_intSts:1;
+        uint32_t uart1Rx_intSts:1;
+        uint32_t uart1Tx_intSts:1;
+        uint32_t uart1Core_intSts:1;
+        uint32_t uart2Rx_intSts:1;
+        uint32_t uart2Tx_intSts:1;
+        uint32_t uart2Core_intSts:1;
+        uint32_t i2c0_intSts:1;
+        uint32_t i2c1_intSts:1;
+        uint32_t i2sRx_intSts:1;
+        uint32_t i2sTx_intSts:1;
+        uint32_t i2sCore_intSts:1;
+        uint32_t dmic_intSts:1;
+        uint32_t ble_intSts:1;
+        uint32_t gpio0_intSts:1;
+        uint32_t ccu_intSts:1;
+        uint32_t aes_intSts:1;
+        uint32_t dmu_intSts:1;
+        uint32_t reserved23:1;
+        uint32_t ef_intSts:1;
+    }bf;    //bit-field
 }U_regSCU;
 
 typedef union U_regCKGEN
@@ -1002,9 +1206,30 @@ typedef struct
     uint32_t dwTnvsTnvh1;
     uint32_t dwDmaCtrl;
     uint32_t dwDmaWrAddr;
-    uint32_t dwDmaRdAddr;
+    uint32_t dwDmaRdAddr;    
 }S_regEFLASH;
 
+typedef struct U_regI2S
+{
+    uint32_t i2sClkCtrl;
+    uint32_t i2sRxCtrl;
+    uint32_t i2sTxCtrl;
+    uint32_t i2sTxDataLeft;
+    uint32_t i2sTxDataRight;
+    uint32_t i2sRxDataLeft;
+    uint32_t i2sRxDataRight;
+    uint32_t i2sStatus;
+    uint32_t i2sInt;
+    uint32_t i2sDmaByteCtrl;
+    uint32_t i2sDmaRxStartAddr;
+    uint32_t i2sDmaRxEndAddr;
+    uint32_t i2sDmaRxEn;
+    uint32_t i2sDmaTxStartAddr;
+    uint32_t i2sDmaTxEndAddr;
+    uint32_t i2sDmaTxEn;
+    uint32_t i2sDmaRxCurrAddr;
+    uint32_t i2sDmaTxCurrAddr;
+}S_regI2S;
 
 typedef struct
 {
@@ -1052,6 +1277,7 @@ typedef struct
 #define regAES          ((U_regAES         *) AES_ADDR_BASE)
 #define regWDT          ((U_regWDT         *) WDT_ADDR_BASE)
 #define regEFLASH       ((S_regEFLASH      *) EF_ADDR_BASE)
+#define regI2S          ((S_regI2S         *) I2S_ADDR_BASE)
 
 #ifdef __cplusplus
 }
