@@ -335,7 +335,7 @@
               <MiscControls></MiscControls>
               <Define>FPGA TESTCASE</Define>
               <Undefine></Undefine>
-              <IncludePath>.\config;..\..\..\cfg\project;..\..\..\inc;..\..\..\inc\CMSIS;..\..\..\platform\init\inc;..\..\..\platform\asic\6801;..\..\..\platform\drvi;..\..\..\module\mems;..\..\..\module\oled;..\..\..\service\tracer</IncludePath>
+              <IncludePath>.\config;..\..\..\cfg\project;..\..\..\inc;..\..\..\inc\CMSIS;..\..\..\platform\init\inc;..\..\..\platform\asic\6801a0;..\..\..\platform\drvi;..\..\..\module\mems;..\..\..\module\oled;..\..\..\service\tracer</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -376,27 +376,27 @@
       </TargetOption>
       <Groups>
         <Group>
-          <GroupName>asic</GroupName>
+          <GroupName>6801a0</GroupName>
           <Files>
             <File>
               <FileName>clock.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\platform\asic\6801\clock.c</FilePath>
+              <FilePath>..\..\..\platform\asic\6801a0\clock.c</FilePath>
             </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\platform\asic\6801\gpio.c</FilePath>
+              <FilePath>..\..\..\platform\asic\6801a0\gpio.c</FilePath>
             </File>
             <File>
               <FileName>i2c.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\platform\asic\6801\i2c.c</FilePath>
+              <FilePath>..\..\..\platform\asic\6801a0\i2c.c</FilePath>
             </File>
             <File>
               <FileName>uart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\platform\asic\6801\uart.c</FilePath>
+              <FilePath>..\..\..\platform\asic\6801a0\uart.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -943,7 +943,7 @@
               <MiscControls></MiscControls>
               <Define>FPGA TESTCASE</Define>
               <Undefine></Undefine>
-              <IncludePath>.\config;..\..\..\cfg\project;..\..\..\inc;..\..\..\inc\CMSIS;..\..\..\platform\init\inc;..\..\..\platform\asic\6801;..\..\..\platform\drvi;..\..\..\module\mems;..\..\..\module\oled;..\..\..\service\tracer</IncludePath>
+              <IncludePath>.\config;..\..\..\cfg\project;..\..\..\inc;..\..\..\inc\CMSIS;..\..\..\platform\init\inc;..\..\..\platform\asic\6801a0;..\..\..\platform\drvi;..\..\..\module\mems;..\..\..\module\oled;..\..\..\service\tracer</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -984,27 +984,27 @@
       </TargetOption>
       <Groups>
         <Group>
-          <GroupName>asic</GroupName>
+          <GroupName>6801a0</GroupName>
           <Files>
             <File>
               <FileName>clock.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\platform\asic\6801\clock.c</FilePath>
+              <FilePath>..\..\..\platform\asic\6801a0\clock.c</FilePath>
             </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\platform\asic\6801\gpio.c</FilePath>
+              <FilePath>..\..\..\platform\asic\6801a0\gpio.c</FilePath>
             </File>
             <File>
               <FileName>i2c.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\platform\asic\6801\i2c.c</FilePath>
+              <FilePath>..\..\..\platform\asic\6801a0\i2c.c</FilePath>
             </File>
             <File>
               <FileName>uart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\platform\asic\6801\uart.c</FilePath>
+              <FilePath>..\..\..\platform\asic\6801a0\uart.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1486,7 +1486,7 @@
               <MiscControls></MiscControls>
               <Define>EVB TESTCASE</Define>
               <Undefine></Undefine>
-              <IncludePath>.\config;..\..\..\cfg\project;..\..\..\inc;..\..\..\inc\CMSIS;..\..\..\platform\init\inc;..\..\..\platform\asic\6801;..\..\..\platform\drvi;..\..\..\module\mems;..\..\..\module\oled;..\..\..\service\tracer</IncludePath>
+              <IncludePath>.\config;..\..\..\cfg\project;..\..\..\inc;..\..\..\inc\CMSIS;..\..\..\platform\init\inc;..\..\..\platform\asic\6801a0;..\..\..\platform\drvi;..\..\..\module\mems;..\..\..\module\oled;..\..\..\service\tracer</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1527,27 +1527,27 @@
       </TargetOption>
       <Groups>
         <Group>
-          <GroupName>asic</GroupName>
+          <GroupName>6801a0</GroupName>
           <Files>
             <File>
               <FileName>clock.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\platform\asic\6801\clock.c</FilePath>
+              <FilePath>..\..\..\platform\asic\6801a0\clock.c</FilePath>
             </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\platform\asic\6801\gpio.c</FilePath>
+              <FilePath>..\..\..\platform\asic\6801a0\gpio.c</FilePath>
             </File>
             <File>
               <FileName>i2c.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\platform\asic\6801\i2c.c</FilePath>
+              <FilePath>..\..\..\platform\asic\6801a0\i2c.c</FilePath>
             </File>
             <File>
               <FileName>uart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\platform\asic\6801\uart.c</FilePath>
+              <FilePath>..\..\..\platform\asic\6801a0\uart.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2094,7 +2094,7 @@
               <MiscControls></MiscControls>
               <Define>EVB TESTCASE</Define>
               <Undefine></Undefine>
-              <IncludePath>.\config;..\..\..\cfg\project;..\..\..\inc;..\..\..\inc\CMSIS;..\..\..\platform\init\inc;..\..\..\platform\asic\6801;..\..\..\platform\drvi;..\..\..\module\mems;..\..\..\module\oled;..\..\..\service\tracer</IncludePath>
+              <IncludePath>.\config;..\..\..\cfg\project;..\..\..\inc;..\..\..\inc\CMSIS;..\..\..\platform\init\inc;..\..\..\platform\asic\6801a0;..\..\..\platform\drvi;..\..\..\module\mems;..\..\..\module\oled;..\..\..\service\tracer</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -2135,27 +2135,27 @@
       </TargetOption>
       <Groups>
         <Group>
-          <GroupName>asic</GroupName>
+          <GroupName>6801a0</GroupName>
           <Files>
             <File>
               <FileName>clock.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\platform\asic\6801\clock.c</FilePath>
+              <FilePath>..\..\..\platform\asic\6801a0\clock.c</FilePath>
             </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\platform\asic\6801\gpio.c</FilePath>
+              <FilePath>..\..\..\platform\asic\6801a0\gpio.c</FilePath>
             </File>
             <File>
               <FileName>i2c.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\platform\asic\6801\i2c.c</FilePath>
+              <FilePath>..\..\..\platform\asic\6801a0\i2c.c</FilePath>
             </File>
             <File>
               <FileName>uart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\platform\asic\6801\uart.c</FilePath>
+              <FilePath>..\..\..\platform\asic\6801a0\uart.c</FilePath>
             </File>
           </Files>
         </Group>
