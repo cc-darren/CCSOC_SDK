@@ -6,17 +6,17 @@ SOC 0x10000000 0x40000  ; 256KB
 {
     STARTUP + 0
     {
-        *(VECTOR_IN_EFLASH, +First)
-        *(InRoot$$Sections)
+        *(VECTOR_TABLE, +First)
     }
 
-    BLE_JUMP_TABLE 0x10000200 FIXED 0x400
-    {
-        .ANY (jump_table_mem_area)
-    }
+;    BLE_JUMP_TABLE 0x10000200 FIXED 0x400
+;    {
+;        .ANY (jump_table_mem_area)
+;    }
 
     IMAGE_RO + 0
     {
+        *(InRoot$$Sections)
         .ANY (+RO)
     }
 
@@ -33,15 +33,5 @@ SOC 0x10000000 0x40000  ; 256KB
         ;*(ZI_IN_SYS_RAM)
         .ANY (+ZI)
     }
-
-    RET_RAM 0x20020000 ; Retention memory
-    {
-        *(VECTOR_IN_RET_RAM, +First)
-        ;*(IN_RET_RAM)
-        ;jump_table.o (heap_env_area)
-        ;jump_table.o (heap_db_area)
-        ;jump_table.o (heap_msg_area)
-    }
-
 }
 

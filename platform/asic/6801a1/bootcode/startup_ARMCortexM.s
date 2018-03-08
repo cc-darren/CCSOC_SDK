@@ -1,36 +1,14 @@
-;/**************************************************************************//**
-; * @file     startup_ARMCM0plus.s
-; * @brief    CMSIS Core Device Startup File for
-; *           ARMCM0plus Device Series
-; * @version  V5.00
-; * @date     02. March 2016
-; ******************************************************************************/
-;/*
-; * Copyright (c) 2009-2016 ARM Limited. All rights reserved.
-; *
-; * SPDX-License-Identifier: Apache-2.0
-; *
-; * Licensed under the Apache License, Version 2.0 (the License); you may
-; * not use this file except in compliance with the License.
-; * You may obtain a copy of the License at
-; *
-; * http://www.apache.org/licenses/LICENSE-2.0
-; *
-; * Unless required by applicable law or agreed to in writing, software
-; * distributed under the License is distributed on an AS IS BASIS, WITHOUT
-; * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-; * See the License for the specific language governing permissions and
-; * limitations under the License.
-; */
+;/******************************************************************************
+;*  Copyright 2018, CloudChip, Inc.
+;*  ---------------------------------------------------------------------------
+;*  Statement:
+;*  ----------
+;*  This software is protected by Copyright and the information contained
+;*  herein is confidential. The software may not be copied and the information
+;*  contained herein may not be used or disclosed except with the written
+;*  permission of CloudChip, Inc. (C) 2018
+;******************************************************************************/
 
-;/*
-;//-------- <<< Use Configuration Wizard in Context Menu >>> ------------------
-;*/
-
-
-; <h> Stack Configuration
-;   <o> Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
-; </h>
 #include "stackheap.h"
 
 Stack_Size      EQU     SYS_STACK_SIZE
@@ -38,11 +16,6 @@ Stack_Size      EQU     SYS_STACK_SIZE
                 AREA    STACK, NOINIT, READWRITE, ALIGN=3
 Stack_Mem       SPACE   Stack_Size
 __initial_sp
-
-
-; <h> Heap Configuration
-;   <o>  Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
-; </h>
 
 Heap_Size       EQU     SYS_HEAP_SIZE
 
@@ -61,12 +34,8 @@ __heap_limit
 
 
 ; Vector Table Mapped to Address 0 at Reset
-                AREA    VECTOR_IN_EFLASH, DATA, READONLY
-                DCD     __initial_sp              ; Top of Stack
-                DCD     Reset_Handler             ; Reset Handler
+                AREA    VECTOR_TABLE, DATA, READONLY
 
-; Vector Table Mapped to retention RAM for system wakeup
-                AREA    VECTOR_IN_RET_RAM, DATA, READONLY
                 EXPORT  __Vectors
                 EXPORT  __Vectors_End
                 EXPORT  __Vectors_Size
@@ -75,15 +44,15 @@ __Vectors       DCD     __initial_sp              ; Top of Stack
                 DCD     Reset_Handler             ; Reset Handler
                 DCD     NMI_Handler               ; NMI Handler
                 DCD     HardFault_Handler         ; Hard Fault Handler
-                DCD     0                         ; Reserved
-                DCD     0                         ; Reserved
-                DCD     0                         ; Reserved
+                DCD     MemManage_Handler         ; MPU Fault Handler		(valid only for M4)
+                DCD     BusFault_Handler          ; Bus Fault Handler	 	(valid only for M4)
+                DCD     UsageFault_Handler        ; Usage Fault Handler  	(valid only for M4)
                 DCD     0                         ; Reserved
                 DCD     0                         ; Reserved
                 DCD     0                         ; Reserved
                 DCD     0                         ; Reserved
                 DCD     SVC_Handler               ; SVCall Handler
-                DCD     0                         ; Reserved
+                DCD     DebugMon_Handler          ; Debug Monitor Handler	(valid only for M4)
                 DCD     0                         ; Reserved
                 DCD     PendSV_Handler            ; PendSV Handler
                 DCD     SysTick_Handler           ; SysTick Handler
@@ -126,9 +95,7 @@ __Vectors_End
 __Vectors_Size  EQU     __Vectors_End - __Vectors
 
                 AREA    |.text|, CODE, READONLY
-
 ; Reset Handler
-
 Reset_Handler   PROC
                 EXPORT  Reset_Handler             [WEAK]
                 IMPORT  sys_InitStartup
@@ -155,8 +122,28 @@ HardFault_Handler\
                 EXPORT  HardFault_Handler         [WEAK]
                 B       .
                 ENDP
+MemManage_Handler\
+                PROC
+                EXPORT  MemManage_Handler         [WEAK]
+                B       .
+                ENDP
+BusFault_Handler\
+                PROC
+                EXPORT  BusFault_Handler          [WEAK]
+                B       .
+                ENDP
+UsageFault_Handler\
+                PROC
+                EXPORT  UsageFault_Handler        [WEAK]
+                B       .
+                ENDP
 SVC_Handler     PROC
                 EXPORT  SVC_Handler               [WEAK]
+                B       .
+                ENDP
+DebugMon_Handler\
+                PROC
+                EXPORT  DebugMon_Handler          [WEAK]
                 B       .
                 ENDP
 PendSV_Handler  PROC
