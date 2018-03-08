@@ -156,9 +156,9 @@ void    APP_BLEMGR_Init(void)
 }
 
 /******************************************************************************
- * FUNCTION > APP_BLEMGR_IRQHandler
+ * FUNCTION > BLE_IRQHandler
  ******************************************************************************/
-void    APP_BLEMGR_IRQHandler(void)
+void    BLE_IRQHandler(void)
 {    
     rwble_isr();
 }
