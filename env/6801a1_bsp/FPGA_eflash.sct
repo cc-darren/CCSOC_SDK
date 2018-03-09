@@ -9,6 +9,11 @@ SOC 0x10000000 0x40000  ; 256KB
         *(VECTOR_TABLE, +First)
     }
 
+    HEADER + 0 FIXED                ;should always start from offset 0xC0
+    {
+        *(IMAGE_HEADER, +First)
+    }
+
 ;    BLE_JUMP_TABLE 0x10000200 FIXED 0x400
 ;    {
 ;        .ANY (jump_table_mem_area)
@@ -33,5 +38,18 @@ SOC 0x10000000 0x40000  ; 256KB
         ;*(ZI_IN_SYS_RAM)
         .ANY (+ZI)
     }
+    
+    OTA_BLK 0x1003E800 FIXED PADVALUE 0xFFFFFFFF 0x800
+    {
+        *(OTA_BLK_DATA, +First)
+    }
+    BLE_BLK 0x1003F000 FIXED PADVALUE 0xFFFFFFFF 0x800
+    {
+        *(BLE_BLK_DATA, +First)
+    }
+    PROTECT_BLK 0x1003F800 FIXED FILL 0xFFFFFFFF 0x800
+    {
+    }    
+
 }
 

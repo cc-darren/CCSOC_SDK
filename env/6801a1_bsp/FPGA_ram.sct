@@ -9,6 +9,11 @@ SOC 0x20000000 0x18000  ; 96KB
         *(VECTOR_TABLE, +First)
     }
 
+    HEADER + 0 FIXED                ;should always start from offset 0xC0
+    {
+        *(IMAGE_HEADER, +First)
+    }
+
 ;    BLE_JUMP_TABLE 0x20000200 FIXED 0x400
 ;    {
 ;        .ANY (jump_table_mem_area)

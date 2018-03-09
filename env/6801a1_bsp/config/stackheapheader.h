@@ -12,7 +12,7 @@
 /******************************************************************************
 *  Filename:
 *  ---------
-*  stackheap.h
+*  stackheapheader.h
 *
 *  Project:
 *  --------
@@ -32,13 +32,41 @@
 *
 ******************************************************************************/
 
-#ifndef _STACKHEAP_H_
-#define _STACKHEAP_H_
+#ifndef _STACKHEAPHEADER_H_
+#define _STACKHEAPHEADER_H_
 
 #define SYS_STACK_SIZE      0x800
 #define SYS_HEAP_SIZE       0x004
 
+//;*********************
+//;   App image header *
+//;*********************
+//Image FW version format: 0xAABBBCCC, AA=major, BBB=minor, CCC=update
+#define IMG_FW_MAJOR        0x01000000  
+#define IMG_FW_MINOR        0x00001000
+#define IMG_FW_UPDATE       0x00000001
 
-#endif //_STACKHEAP_H_
+#define IMG_ID              "6801"
+#define IMG_FW_VERSION      (IMG_FW_MAJOR+IMG_FW_MINOR+IMG_FW_UPDATE)
+#define IMG_FLAG1           0xFFFFFFFF
+#define IMG_FLAG2           0xFFFFFFFF
+
+//;****************
+//;   OTA Block   *
+//;****************
+#define OTA_ID              "OTA_"
+#define OTA_FLAG            0x00000000
+#define OTA_START_ADDR      0x00000000
+#define OTA_FILE_SIZE       0x00000000
+
+//;****************
+//;   BLE Block   *
+//;****************
+#define BLE_ID              "BLE_"
+#define BLE_FLAG            0x00000000
+#define BLE_RANDOM_KEY      0x12345678
+
+
+#endif //_STACKHEAPHEADER_H_
 
 

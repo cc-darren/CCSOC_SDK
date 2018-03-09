@@ -9,7 +9,7 @@
 ;*  permission of CloudChip, Inc. (C) 2018
 ;******************************************************************************/
 
-#include "stackheap.h"
+#include "stackheapheader.h"
 
 Stack_Size      EQU     SYS_STACK_SIZE
 
@@ -94,6 +94,41 @@ __Vectors_End
 
 __Vectors_Size  EQU     __Vectors_End - __Vectors
 
+;*********************
+;   App image header *
+;*********************
+                AREA    IMAGE_HEADER, DATA, READONLY
+                IMPORT  |Load$$LR$$SOC$$Length|
+
+                DCB     IMG_ID                      ;4 bytes image name
+                DCD     IMG_FW_VERSION              ;4 bytes version: 0xAABBBCCC, AA=major, BBB=minor, CCC=update
+                DCD     |Load$$LR$$SOC$$Length|     ;4 bytes image size
+                DCD     IMG_FLAG1                   ;4 bytes flag for future usage
+                DCD     IMG_FLAG2                   ;4 bytes flag for future usage
+
+;****************
+;   OTA Block   *
+;****************
+                AREA    OTA_BLK_DATA, DATA, READONLY
+
+                DCB     OTA_ID                      ;4 bytes OTA block ID
+                DCD     OTA_FLAG                    ;4 bytes OTA flag
+                DCD     OTA_START_ADDR              ;4 bytes start address
+                DCD     OTA_FILE_SIZE               ;4 bytes Image size to be programmed
+
+;****************
+;   BLE Block   *
+;****************
+                AREA    BLE_BLK_DATA, DATA, READONLY
+
+                DCB     BLE_ID                      ;4 bytes BLE block ID
+                DCD     BLE_FLAG                    ;4 bytes flag for future usage
+                DCD     BLE_RANDOM_KEY              ;4 bytes to store random key
+
+
+;****************
+;   Startup     *
+;****************
                 AREA    |.text|, CODE, READONLY
 ; Reset Handler
 Reset_Handler   PROC
@@ -109,7 +144,6 @@ Reset_Handler   PROC
                 BX      R0
 
                 ENDP
-
 
 ; Dummy Exception Handlers (infinite loops which can be modified)
 
@@ -226,9 +260,7 @@ EFLASH_IRQHandler
 
                 ENDP
 
-
                 ALIGN
-
 
 ; User Initial Stack & Heap
 
