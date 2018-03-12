@@ -89,7 +89,7 @@
             <nStopA1X>0</nStopA1X>
             <nStopA2X>0</nStopA2X>
           </AfterMake>
-          <SelectedForBatchBuild>0</SelectedForBatchBuild>
+          <SelectedForBatchBuild>1</SelectedForBatchBuild>
           <SVCSIdString></SVCSIdString>
         </TargetCommonOption>
         <CommonProperty>
@@ -478,6 +478,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\platform\asic\6801a1\wktm.c</FilePath>
             </File>
+            <File>
+              <FileName>system_init.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801a1\system_init.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -522,21 +527,6 @@
               <FileName>drvi_rtc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\drvi\drvi_rtc.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>init</GroupName>
-          <Files>
-            <File>
-              <FileName>arch_main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\arch_main.c</FilePath>
-            </File>
-            <File>
-              <FileName>system_init.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\init\src\system_init.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -663,6 +653,11 @@
               <FileType>2</FileType>
               <FilePath>..\..\platform\asic\6801a1\bootcode\startup_ARMCortexM.s</FilePath>
             </File>
+            <File>
+              <FileName>arch_main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\arch_main.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
@@ -749,7 +744,7 @@
             <nStopA1X>0</nStopA1X>
             <nStopA2X>0</nStopA2X>
           </AfterMake>
-          <SelectedForBatchBuild>0</SelectedForBatchBuild>
+          <SelectedForBatchBuild>1</SelectedForBatchBuild>
           <SVCSIdString></SVCSIdString>
         </TargetCommonOption>
         <CommonProperty>
@@ -1138,6 +1133,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\platform\asic\6801a1\wktm.c</FilePath>
             </File>
+            <File>
+              <FileName>system_init.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\platform\asic\6801a1\system_init.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1182,21 +1182,6 @@
               <FileName>drvi_rtc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\platform\drvi\drvi_rtc.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>init</GroupName>
-          <Files>
-            <File>
-              <FileName>arch_main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\arch_main.c</FilePath>
-            </File>
-            <File>
-              <FileName>system_init.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\init\src\system_init.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1322,6 +1307,11 @@
               <FileName>startup_ARMCortexM.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\..\platform\asic\6801a1\bootcode\startup_ARMCortexM.s</FilePath>
+            </File>
+            <File>
+              <FileName>arch_main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\arch_main.c</FilePath>
             </File>
           </Files>
         </Group>

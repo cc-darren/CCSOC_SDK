@@ -61,7 +61,7 @@ __Vectors       DCD     __initial_sp              ; Top of Stack
                 DCD     BLE_IRQHandler            ;
                 DCD     WDT_IRQHandler            ;
                 DCD     I2C0_M_IRQHandler         ;
-                DCD     SWI0_IRQHandler           ;
+                DCD     SPI3_M_IRQHandler         ;
                 DCD     WKTM0_IRQHandler          ;
                 DCD     WKTM1_IRQHandler          ;
                 DCD     UART0_RXDMA_IRQHandler    ;
@@ -78,16 +78,16 @@ __Vectors       DCD     __initial_sp              ; Top of Stack
                 DCD     UART1_IP_IRQHandler       ;
                 DCD     UART2_TXDMA_IRQHandler    ;
                 DCD     UART2_IP_IRQHandler       ;
-                DCD     SWI1_IRQHandler           ;
+                DCD     HS_IRQHandler             ;
                 DCD     PWM0_IRQHandler           ;
                 DCD     PWM1_IRQHandler           ;
                 DCD     RTC_IRQHandler            ;
-                DCD     DMU_IRQHandler            ;
+                DCD     VOICE_WKUP_IRQHandler     ;
                 DCD     I2S_RXDMA_IRQHandler      ;
                 DCD     I2S_TXDMA_IRQHandler      ;
                 DCD     I2S_IP_IRQHandler         ;
                 DCD     DMIC_IRQHandler           ;
-                DCD     CCU_IRQHandler            ;
+                DCD     AHBBRG_IRQHandler         ;
                 DCD     AES_IRQHandler            ;
                 DCD     EFLASH_IRQHandler         ;
 __Vectors_End
@@ -194,7 +194,7 @@ Default_Handler PROC
                 EXPORT  BLE_IRQHandler              [WEAK]
                 EXPORT  WDT_IRQHandler              [WEAK]
                 EXPORT  I2C0_M_IRQHandler           [WEAK]
-                EXPORT  SWI0_IRQHandler             [WEAK]
+                EXPORT  SPI3_M_IRQHandler           [WEAK]
                 EXPORT  WKTM0_IRQHandler            [WEAK]
                 EXPORT  WKTM1_IRQHandler            [WEAK]
                 EXPORT  UART0_RXDMA_IRQHandler      [WEAK]
@@ -211,23 +211,23 @@ Default_Handler PROC
                 EXPORT  UART1_IP_IRQHandler         [WEAK]
                 EXPORT  UART2_TXDMA_IRQHandler      [WEAK]
                 EXPORT  UART2_IP_IRQHandler         [WEAK]
-                EXPORT  SWI1_IRQHandler             [WEAK]
+                EXPORT  HS_IRQHandler               [WEAK]
                 EXPORT  PWM0_IRQHandler             [WEAK]
                 EXPORT  PWM1_IRQHandler             [WEAK]
                 EXPORT  RTC_IRQHandler              [WEAK]
-                EXPORT  DMU_IRQHandler              [WEAK]
+                EXPORT  VOICE_WKUP_IRQHandler       [WEAK]
                 EXPORT  I2S_RXDMA_IRQHandler        [WEAK]
                 EXPORT  I2S_TXDMA_IRQHandler        [WEAK]
                 EXPORT  I2S_IP_IRQHandler           [WEAK]
                 EXPORT  DMIC_IRQHandler             [WEAK]
-                EXPORT  CCU_IRQHandler              [WEAK]
+                EXPORT  AHBBRG_IRQHandler           [WEAK]
                 EXPORT  AES_IRQHandler              [WEAK]
                 EXPORT  EFLASH_IRQHandler           [WEAK]
 
 BLE_IRQHandler
 WDT_IRQHandler
 I2C0_M_IRQHandler
-SWI0_IRQHandler
+SPI3_M_IRQHandler
 WKTM0_IRQHandler
 WKTM1_IRQHandler
 UART0_RXDMA_IRQHandler
@@ -244,16 +244,16 @@ UART1_TXDMA_IRQHandler
 UART1_IP_IRQHandler
 UART2_TXDMA_IRQHandler
 UART2_IP_IRQHandler
-SWI1_IRQHandler
+HS_IRQHandler
 PWM0_IRQHandler
 PWM1_IRQHandler
 RTC_IRQHandler
-DMU_IRQHandler
+VOICE_WKUP_IRQHandler
 I2S_RXDMA_IRQHandler
 I2S_TXDMA_IRQHandler
 I2S_IP_IRQHandler
 DMIC_IRQHandler
-CCU_IRQHandler
+AHBBRG_IRQHandler
 AES_IRQHandler
 EFLASH_IRQHandler
                 B       .
