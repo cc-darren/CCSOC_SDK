@@ -88,13 +88,14 @@ void I2S_TXDMA_IRQHandler(void)
 void cc6801_I2sInit(T_callback handler)
 {
     regI2S->i2sClkCtrl = 0;
-    regI2S->i2sRxCtrl = 0;
+    regI2S->i2sRxCtrl = 0x00143C00;
     regI2S->i2sTxCtrl = 0x00143C00;    // TXST = 1, TXFIFOTHRES = 4
                                        // [13-8] TxLR FIFO enable, DMA enable, INT disable,111100
 
     regI2S->i2sInt = 0;                // interrupt disable
     regI2S->i2sDmaRxEn = 0;            // Rx DMA disable
-    regI2S->i2sDmaTxEn = 0;            // TxDMA disable
+    regI2S->i2sDmaTxEn = 0;            // Tx DMA disable
+    regI2S->i2sDmaByteCtrl = 0;
 
     i2s_callback_handler = handler;
 }
@@ -103,21 +104,26 @@ int cc6801_I2sSetFormat(uint16_t wFmt)
 {
     uint32_t dwClkCtrl = regI2S->i2sClkCtrl;
     uint32_t dwTxCtrl = regI2S->i2sTxCtrl;
+    uint32_t dwRxCtrl = regI2S->i2sRxCtrl;
 
     /* DAI mode */
     dwTxCtrl &= ~CC6801_I2S_TXMOD_MASK;
+    dwRxCtrl &= ~CC6801_I2S_TXMOD_MASK;
     switch (wFmt & DAI_FORMAT_MASK)
     {
         case DAI_FORMAT_RIGHT_J:
             dwTxCtrl |= CC6801_I2S_TXMOD_RJM;
+            dwRxCtrl |= CC6801_I2S_TXMOD_RJM;
             break;
         case DAI_FORMAT_LEFT_J:
             dwTxCtrl |= CC6801_I2S_TXMOD_LJM;
+            dwRxCtrl |= CC6801_I2S_TXMOD_LJM;
             break;
         default:
             TracerInfo("Not support format%d, using default I2S format...\r\n", wFmt);
         case DAI_FORMAT_I2S:
             dwTxCtrl |= CC6801_I2S_TXMOD_I2S;
+            dwRxCtrl |= CC6801_I2S_TXMOD_I2S;
             break;
     }
 
@@ -136,6 +142,7 @@ int cc6801_I2sSetFormat(uint16_t wFmt)
 
     regI2S->i2sClkCtrl |= dwClkCtrl;
     regI2S->i2sTxCtrl |= dwTxCtrl;
+    regI2S->i2sRxCtrl |= dwRxCtrl;
 
     return CC_SUCCESS;
 }
@@ -156,7 +163,7 @@ static int cc6801_I2sRateValue(int iRate, uint8_t *pbValue)
         psRateTable = sTableWS16;
         iTableSize = ARRAY_SIZE(sTableWS16);
     }
-    else if(dwWordSelect == CC6801_I2S_WSRES_16)
+    else if(dwWordSelect == CC6801_I2S_WSRES_32)
     {
         psRateTable = sTableWS32;
         iTableSize = ARRAY_SIZE(sTableWS32);
@@ -184,6 +191,7 @@ static int cc6801_I2sSetClkDiv(int iFrameRate)
 
     dwClkCtrl &= ~CC6801_I2S_CLKDIV_MASK;
     dwClkCtrl |= bClkDiv << CC6801_I2S_CLKDIV_SHIFT;
+    dwClkCtrl |= CC6801_I2S_CLKEN_ENABLE;
 
     regI2S->i2sClkCtrl |= dwClkCtrl;
     return 0;
@@ -193,34 +201,46 @@ int cc6801_I2sHwParams(T_DaiHwParams *tpParams)
 {
     uint32_t dwClkCtrl = regI2S->i2sClkCtrl;
     uint32_t dwTxCtrl = regI2S->i2sTxCtrl;
+    uint32_t dwRxCtrl = regI2S->i2sRxCtrl;
 
     dwClkCtrl &= ~CC6801_I2S_WSRES_MASK;
     dwTxCtrl &= (~CC6801_I2S_TXALIGN_MASK | ~CC6801_I2S_TXRES_MASK);
+    dwRxCtrl &= (~CC6801_I2S_TXALIGN_MASK | ~CC6801_I2S_TXRES_MASK);
 
     switch (tpParams->iFormat)
     {
         case DAI_PCM_FORMAT_S8:
             dwClkCtrl |= CC6801_I2S_WSRES_16;
             dwTxCtrl |= (CC6801_I2S_TXALIGN_8LE | CC6801_I2S_TXRES_8);
+            dwRxCtrl |= (CC6801_I2S_TXALIGN_8LE | CC6801_I2S_TXRES_8);
             break;
         case DAI_PCM_FORMAT_S20_3LE:
             dwClkCtrl |= CC6801_I2S_WSRES_32;
             dwTxCtrl |= (CC6801_I2S_TXALIGN_24LE | CC6801_I2S_TXRES_20);
+            dwRxCtrl |= (CC6801_I2S_TXALIGN_24LE | CC6801_I2S_TXRES_20);
             break;
         case DAI_PCM_FORMAT_S24_LE:
             dwClkCtrl |= CC6801_I2S_WSRES_32;
             dwTxCtrl |= (CC6801_I2S_TXALIGN_24LE | CC6801_I2S_TXRES_24);
+            dwRxCtrl |= (CC6801_I2S_TXALIGN_24LE | CC6801_I2S_TXRES_24);
+            break;
+        case DAI_PCM_FORMAT_S24_BE:
+            dwClkCtrl |= CC6801_I2S_WSRES_32;
+            dwTxCtrl |= (CC6801_I2S_TXALIGN_24BE | CC6801_I2S_TXRES_24);
+            dwRxCtrl |= (CC6801_I2S_TXALIGN_24BE | CC6801_I2S_TXRES_24);
             break;
         default:
             TracerInfo("Not support fomat%d, using default 16bits...\r\n", tpParams->iFormat);
         case DAI_PCM_FORMAT_S16_LE:
             dwClkCtrl |= CC6801_I2S_WSRES_16;
             dwTxCtrl |= (CC6801_I2S_TXALIGN_16LE | CC6801_I2S_TXRES_16);
+            dwRxCtrl |= (CC6801_I2S_TXALIGN_16LE | CC6801_I2S_TXRES_16);
             break;
     }
 
     regI2S->i2sClkCtrl |= dwClkCtrl;
     regI2S->i2sTxCtrl |= dwTxCtrl;
+    regI2S->i2sRxCtrl |= dwRxCtrl;
 
     cc6801_I2sSetClkDiv(tpParams->iRate);
 
@@ -239,16 +259,18 @@ void cc6801_I2sRxConfig(uint32_t dwDmaBufStart, uint32_t dwDmaBufEnd)
     regI2S->i2sDmaRxEndAddr = dwDmaBufEnd;        //Rx end address
 }
 
-void cc6801_I2sStart(uint16_t dwTxByte, uint16_t dwRxByte)
+void cc6801_I2sStart(uint8_t bTxByte, uint8_t bRxByte)
 {
-    regI2S->i2sDmaByteCtrl = (0 | ((dwTxByte-1) << 8) | (dwRxByte-1));    //0:1byte, FF:256bytes
+    regI2S->i2sDmaByteCtrl = (0 | ((bTxByte-1) << 8) | (bRxByte-1));    //0:1byte, FF:256bytes
 
     regI2S->i2sInt = 0x00000003;                // Tx/Rx interrupt enable
-    regI2S->i2sDmaTxEn = 0x00000001;            // Tx DMA enable
-    NVIC_EnableIRQ(I2S_TXDMA_IRQn);
 
     regI2S->i2sDmaRxEn = 0x00000001;            // Rx DMA enable
+    regI2S->i2sDmaTxEn = 0x00000001;            // Tx DMA enable
+
     NVIC_EnableIRQ(I2S_RXDMA_IRQn);
+    NVIC_EnableIRQ(I2S_TXDMA_IRQn);
+
 }
 
 void cc6801_I2sStop(void)

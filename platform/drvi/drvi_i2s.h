@@ -76,9 +76,9 @@ __forceinline void drvi_I2sRxConfig(uint32_t dwDmaBufStart, uint32_t dwDmaBufEnd
     cc6801_I2sRxConfig(dwDmaBufStart, dwDmaBufEnd);
 }
 
-__forceinline void drvi_I2sStart(uint16_t dwTxByte, uint16_t dwRxByte)
+__forceinline void drvi_I2sStart(uint8_t bTxByte, uint8_t bRxByte)
 {
-    cc6801_I2sStart(dwTxByte, dwRxByte);
+    cc6801_I2sStart(bTxByte, bRxByte);
 }
 
 __forceinline void drvi_I2sStop(void)
