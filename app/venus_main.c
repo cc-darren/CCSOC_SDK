@@ -5,7 +5,7 @@
  * STANDARD SOFTWARE LICENSE AGREEMENT.
  *
  * Licensees are granted free, non-transferable use of the information.
- * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed
  * from the file.
  */
 
@@ -96,6 +96,17 @@
 #ifdef SLEEP_EN
     #include "CC_SleepMonitor_Service.h"
     #include "CC_Slpmtr.h"
+#endif
+
+#ifdef EMWIN_ENABLE
+#include "dialog.h"
+#include "GUI.h"
+#include "WM.h"
+#endif
+
+#ifdef JDI_OLED_ENABLE
+#include "JDI_LPM010M297B.h"
+#include "GUIDRV_Template.h"
 #endif
 
 #define APP_TIMER_PRESCALER        0
@@ -370,7 +381,7 @@ typedef struct
 
     //////// APPLICATION :: LONGSIT MONITOR   /////////////////////////////////////////
     db_sys_longsit_t stLongSitAlgExecPeriod;
-    
+
 
     //////// APPLICATION :: SWIM CAL   /////////////////////////////////////////
     eSwim_Cal_State_t eSwimCalState;
@@ -1746,7 +1757,7 @@ uint32_t Get_system_time_ms(void)
 
 static void application_timers_start(void)
 {
-    
+
     CC_VENUS_OLEDGeneralOutTimerStart(5000);
 
     sw_timer_start(m_rsc_meas_timer_id, SPEED_AND_CADENCE_MEAS_INTERVAL, NULL);
@@ -1873,15 +1884,15 @@ void CC_DB_Save_EndSleepService_Info(void)
     s_tVenusCB.stDBSleep.detect_time.min = g_stLast_Record_StartTime.minutes;
     s_tVenusCB.stDBSleep.detect_time.sec= g_stLast_Record_StartTime.seconds;
     s_tVenusCB.stDBSleep.detect_time.sleep_state = g_dwLast_SleepStage;
-    
+
     // state duration
     s_tVenusCB.stDBSleep.period.exec_time_second = (uint32_t)(g_fSleepCalSeconds - g_qwStateProcTime);
     // state exet time
     s_tVenusCB.stDBSleep.period.period_min = (uint16_t)((unsigned long long)g_fSleepCalSeconds / 60);
 
-         
+
    	if(CC_SUCCESS != CC_Save_Record(eSleep, (uint32_t*)&s_tVenusCB.stDBSleep, sizeof(db_sleep_t)))
-    		TracerInfo("HRM_DB_Save_Err\r\n"); 
+    		TracerInfo("HRM_DB_Save_Err\r\n");
 
     // Resest all Ram data
     memset(&g_stInit_Algo_Time,0x00,sizeof(app_date_time_t));
@@ -1890,7 +1901,7 @@ void CC_DB_Save_EndSleepService_Info(void)
     g_qwStateProcTime = 0;
     g_dwLast_SleepStage =0;
 
-    }       
+    }
 
 #if 0
 uint32_t g_dwDeubgSleepRecordFaile = false;
@@ -1917,7 +1928,7 @@ void _CC_DB_Save_SleepProc(slpmtr_output_t _stSleepResult)
     s_tVenusCB.stDBSleep.period.exec_time_second = (uint32_t)(_stSleepResult.time - g_qwLast_Record_ExecTime);
     // state exec time
     s_tVenusCB.stDBSleep.period.period_min = (uint16_t)(_stSleepResult.time / 60);
-        
+
 
     #if 1
     TracerInfo("Record time %d %d %d %d %d %d\r\n",s_tVenusCB.stDBSleep.detect_time.year,
@@ -1929,10 +1940,10 @@ void _CC_DB_Save_SleepProc(slpmtr_output_t _stSleepResult)
     TracerInfo("Record state = %d duration=%d period %d\r\n",s_tVenusCB.stDBSleep.detect_time.sleep_state,
                                                     s_tVenusCB.stDBSleep.period.exec_time_second,
                                                      s_tVenusCB.stDBSleep.period.period_min);
-        
+
     TracerInfo("Record time Test dayofweek %d\r\n",g_stLast_Record_StartTime.dayofweek);
     #endif
-        
+
     // Step 2 .Save this new Record to DB
     if(CC_SUCCESS != CC_Save_Record(eSleep, (uint32_t*)&s_tVenusCB.stDBSleep, sizeof(db_sleep_t)))
     {
@@ -1945,7 +1956,7 @@ void _CC_DB_Save_SleepProc(slpmtr_output_t _stSleepResult)
 
     // b. put the new state to ram
     g_dwLast_SleepStage = _stSleepResult.NewStage;
- 
+
     // c. Calculate the new state "START time"
 
     app_interval_t _stTimeInterval;
@@ -2021,12 +2032,12 @@ void _sensor_algorithm_sleepmeter_proc(void)
 {
 
     slpmtr_input_t slpmtr_input;
-    slpmtr_output_t slpmtr_output;    
+    slpmtr_output_t slpmtr_output;
 
     //if ((++g_bSleepEnCnt % 11)  == 0)
      g_bSleepEnCnt+=19.23077f;
     if (g_bSleepEnCnt >=250.0f)
-    {    
+    {
         g_bSleepEnCnt = g_bSleepEnCnt-250.0f;
         g_fSleepCalSeconds+=0.25f;
 
@@ -2045,11 +2056,11 @@ void _sensor_algorithm_sleepmeter_proc(void)
 
         #if 0
         TracerInfo("slpmtr_detect input.mpss[0]=%d, nput.mpss[1]=%d, nput.mpss[2]=%d\r\n",
-                                                slpmtr_input.mpss[0], 
+                                                slpmtr_input.mpss[0],
                                                 slpmtr_input.mpss[1],
                                                 slpmtr_input.mpss[2]);
         #endif
-        
+
         slpmtr_detect(&slpmtr_input, g_fSleepCalSeconds, &slpmtr_output);
 
 #ifdef LOG_SLEEP_MONITOR_RAW_DATA
@@ -2084,11 +2095,11 @@ void _sensor_algorithm_sleepmeter_proc(void)
             g_dwSleepState = slpmtr_output.NewStage;
            _CC_DB_Save_SleepProc(slpmtr_output);
            TracerInfo("CCSleep_onStateChange OldStage=%d, NewStage=%d \r\n",
-                                            slpmtr_output.OldStage, 
+                                            slpmtr_output.OldStage,
                                             slpmtr_output.NewStage);
            TracerInfo("CCSleep_onStateChange period=%d, time=%d \r\n",slpmtr_output.period, slpmtr_output.time);
         }
-    }        
+    }
 
     #if 0
     if (g_bSleepEnCnt == 50)
@@ -2109,7 +2120,7 @@ eStete_t CC_Get_LongsitEnState(void)
 #ifdef LONGSIT_EN
 void CC_Longsit_PostOLedUpdate(void)
 {
-    VENUS_EVENT_ON(E_VENUS_EVENT_OLED_UPDATE_LONGSIT, eEvent_LONGSIT); 
+    VENUS_EVENT_ON(E_VENUS_EVENT_OLED_UPDATE_LONGSIT, eEvent_LONGSIT);
 }
 
 void CC_Longsit_Post_TO_HRM_CHECKWEAR(void)
@@ -2454,9 +2465,9 @@ void _sensor_accel_gyro_on_change(void)
             //_CC_DB_Save_SwimmingEnd();
             //_DumpSensorRegisterMap(); //test!!!
             CC_VENUS_AccelTimerFifoModeStart();
-#ifdef LONGSIT_EN            
+#ifdef LONGSIT_EN
 			CC_Longsit_Srv_Enable();
-#endif            
+#endif
 #ifdef SLEEP_EN
             //Disable sleep monitor when swimming mode
             CC_SleepMonitor_Srv_Enable();
@@ -2723,11 +2734,11 @@ void _sensor_accel_gyro_on_change(void)
                 CC_VENUS_SwimTimerFifoModeStart();
 #ifdef LONGSIT_EN
 		        CC_Longsit_Srv_Disable();
-#endif                
+#endif
 #ifdef SLEEP_EN
                 //Disable sleep monitor when swimming mode
                 CC_SleepMonitor_Srv_Disable();
-#endif             
+#endif
 
         }
         else
@@ -2791,7 +2802,7 @@ void CC_SYS_FactoryReset_Handler(void)
     //System data reset
     CC_BLE_Cmd_GetGeneralInfo(&s_tVenusCB.stGeneralInfo,true);
     CC_AppSrv_HR_ResetLimited(s_tVenusCB.stGeneralInfo.cAge);
-    
+
     CC_CalorieInfoSetting();
 
     CC_BLE_Cmd_GetUnitInfo(&s_tVenusCB.stUnitInfo,true);
@@ -3080,17 +3091,17 @@ bool _app_scheduler(void)
 //#ifdef INCALL_NOTIFY_EN
              CC_Incommingcall_onNotified();
 //#endif
-             
+
              //check incommingsms
 //#ifdef INSMS_EN
              CC_Incommingsms_onNotified();
 //#endif
-             
+
              //init long sig
 #ifdef LONGSIT_EN
              CC_Longsit_Srv_LowPowerStateChange(s_tVenusCB.cLongsitEn, s_tVenusCB.bIsLowPower);
 #endif
-             
+
 #ifdef LIFTARM_EN
              if (eEnable ==s_tVenusCB.cLiftarmEn)
              {
@@ -3098,16 +3109,16 @@ bool _app_scheduler(void)
                  {
                      liftarm_open();
                      liftarm_set_hangconfig(s_tVenusCB.stGeneralInfo.bBandLocation);
-                 }  
+                 }
              }
              else
              {
                  liftarm_close();
              }
-             
+
              CC_VENUS_AccelTimerStop();
              CC_VENUS_AccelTimerReset();
-             CC_VENUS_AccelTimerFifoModeStart();                                    
+             CC_VENUS_AccelTimerFifoModeStart();
 #endif
 
          }
@@ -3171,9 +3182,9 @@ bool _app_scheduler(void)
                  CC_DB_Init(CC_DB_Get_Init_Type());
 
              CC_DB_Set_Init_Done();
-#ifdef SLEEP_EN								
+#ifdef SLEEP_EN
              CC_SleepMonitor_Srv_Enable_SleepService(eEnable);
-#endif		             
+#endif
          }
 
          CC_DB_System_Check_Request_And_Save();
@@ -3187,14 +3198,14 @@ bool _app_scheduler(void)
     if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_LONGSITEVENT) )
     {
         if (eEnable==s_tVenusCB.cLongsitEn)
-        {   
+        {
             #ifdef LONGSIT_EN
             CC_LongSit_Srv_PollingHandler();
-            
+
             if( eSysStateNormal==s_tVenusCB.eSystemPwrState)
                 CC_Longsit_Srv_handle(s_tVenusCB.dwPedTotalStepCount);
             #endif
-        }    
+        }
         VENUS_EVENT_OFF(E_VENUS_EVENT_LONGSITEVENT);
         _bScheduleOperating =true;
     }
@@ -3303,22 +3314,22 @@ bool _app_scheduler(void)
     if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_LONGSIT_LAUNCH_HRM_TO_CHECK_WEAR) )
     {
         TracerInfo("\r\n<E_VENUS_EVENT_LONGSIT_LAUNCH_HRM_TO_CHECK_WEAR>\r\n");
-        CC_LongSit_Srv_Idle_CheckWearProc();    
+        CC_LongSit_Srv_Idle_CheckWearProc();
         VENUS_EVENT_OFF(E_VENUS_EVENT_LONGSIT_LAUNCH_HRM_TO_CHECK_WEAR);
-        
+
         _bScheduleOperating = true;
     }
 
-#ifdef UTILITY_EN    
+#ifdef UTILITY_EN
     if (VENUS_EVENT_IS_ON(E_VENUS_EVENT_LONGSIT_LAUNCH_1MIN_TO_MONITOR_MOTION) )
     {
         TracerInfo("\r\n<E_VENUS_EVENT_LONGSIT_LAUNCH_1MIN_TO_MONITOR_MOTION>\r\n");
-        CC_LongSit_Srv_Idle_MonitorMotionHanlder();    
+        CC_LongSit_Srv_Idle_MonitorMotionHanlder();
         VENUS_EVENT_OFF(E_VENUS_EVENT_LONGSIT_LAUNCH_1MIN_TO_MONITOR_MOTION);
-        
+
         _bScheduleOperating = true;
     }
-#endif    
+#endif
 #endif
 
 #ifdef FACTORY_RESET
@@ -3457,20 +3468,20 @@ static void _AppAlgInit(void)
 {
     #ifdef LONGSIT_EN
         CC_LongSit_Srv_Register();
-    #endif            
+    #endif
 
     #ifdef SLEEP_EN
         CC_SleepMonitor_Srv_Register();
-    #endif                
+    #endif
 
     CC_BLE_Cmd_GetGeneralInfo(&s_tVenusCB.stGeneralInfo,true);
 
     FP_PED_8Bit_initialize();
 
     CC_Swim_Init(s_tVenusCB.stGeneralInfo.cSwim_Pool_Size,(band_location)s_tVenusCB.stGeneralInfo.bBandLocation);  // remarked for temp by Samuel
-    
+
     CC_CalorieBurn_Open();
-    
+
     s_tVenusCB.cLiftarmEn = CC_BLE_Cmd_GetLiftArmStatus();
 
     if (eEnable == s_tVenusCB.cLiftarmEn)
@@ -3483,13 +3494,13 @@ static void _AppAlgInit(void)
     {
         liftarm_close();     // default disable liftarm
     }
-    
+
     #ifdef LONGSIT_EN
         CC_BLE_Cmd_GetLongSitTimeSetting(&s_tVenusCB.stLongSitAlgExecPeriod,true);
         CC_LongSit_Srv_TimeSetting(&s_tVenusCB.stLongSitAlgExecPeriod);
         CC_LongSit_Srv_PollingHandler();
     #endif
-    
+
     #ifdef SLEEP_EN
         g_fSleepCalSeconds = 0;
         g_bSleepEnCnt =0;
@@ -3504,9 +3515,9 @@ void    _AppInit(void)
     uint32_t    _dwRetCode = 0;
 
     app_multiple_timer_init();
-    
+
     app_Time_Init();
-    
+
     APP_SCHED_Init();
 
     #ifdef APP_SERV_MGR_EN
@@ -3518,12 +3529,18 @@ void    _AppInit(void)
     #ifdef HRM_EN
         CC_AppSrv_HR_Init();
     #endif
+
     
+    #ifdef EMWIN_ENABLE     
+    GUI_Init();
+    MainTask();
+    #else
     CC_PageMgr_Init();
-    
+    #endif
+
     #ifdef DB_EN
         _dwRetCode = CC_Fds_init();
-        
+
         if (CC_SUCCESS == _dwRetCode)
             CC_DB_Init(DB_INIT_FROM_SYSTEM);
     else
@@ -3539,22 +3556,22 @@ void    _AppInit(void)
 void    _PeripheralInit(void)
 {
     uint32_t    _dwRetCode = 0;
-    
+
     drvi_RequestIrq(TOUCH_INT_PIN, TOUCH_int_handler, IRQ_TYPE_EDGE_FALLING);
     drvi_EnableIrq(TOUCH_INT_PIN);
-    
+
     ACC_init();
     CC_GYRO_Set_ODR(LSM6DS3_ACC_GYRO_ODR_G_POWER_DOWN);
-    
+
     _dwRetCode = MAG_Init();
-    
+
     if (MEMS_SUCCESS != _dwRetCode)
         TracerInfo("mag_init error: 0x%x\r\n", _dwRetCode);
 
     #ifdef HRM_EN
         drvi_RequestIrq(HRM_INT_PIN, HRM_int_handler, IRQ_TYPE_EDGE_FALLING);
     #endif
-    
+
     app_displayoled_init();
     app_displayoled_start();
 }
@@ -3590,6 +3607,7 @@ int    venus_main(void)
 
     application_timers_start();
 
+
     while(1)
     {
         #ifdef CFG_BLE_APP
@@ -3598,9 +3616,20 @@ int    venus_main(void)
             rwip_ignore_ll_conn_param_update_patch();
         #endif
 
+        #ifndef EMWIN_ENABLE
         _app_scheduler();
+        #endif
+
         APP_SCHED_RunScheduler();
 
+        #ifdef EMWIN_ENABLE
+        WM_Exec();
+        if ( true == APP_Gui_Get_DrawFlag())
+        {
+          JDI_End_Draw();
+          APP_Gui_Set_DrawFlag(false);
+        }
+        #endif
         __WFE();
     }
 }

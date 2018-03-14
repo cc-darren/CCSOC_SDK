@@ -16,7 +16,7 @@
         <TargetCommonOption>
           <Device>ARMCM0P</Device>
           <Vendor>ARM</Vendor>
-          <PackID>ARM.CMSIS.5.0.1</PackID>
+          <PackID>ARM.CMSIS.5.0.0</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000,0x00020000) IROM(0x00000000,0x00040000) CPUTYPE("Cortex-M0+") CLOCK(12000000) ESEL ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -126,6 +126,47 @@
             <HexOffset>0</HexOffset>
             <Oh166RecLen>16</Oh166RecLen>
           </OPTHX>
+          <Simulator>
+            <UseSimulator>0</UseSimulator>
+            <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
+            <RunToMain>1</RunToMain>
+            <RestoreBreakpoints>1</RestoreBreakpoints>
+            <RestoreWatchpoints>1</RestoreWatchpoints>
+            <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
+            <RestoreFunctions>1</RestoreFunctions>
+            <RestoreToolbox>1</RestoreToolbox>
+            <LimitSpeedToRealTime>0</LimitSpeedToRealTime>
+            <RestoreSysVw>1</RestoreSysVw>
+          </Simulator>
+          <Target>
+            <UseTarget>1</UseTarget>
+            <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
+            <RunToMain>1</RunToMain>
+            <RestoreBreakpoints>1</RestoreBreakpoints>
+            <RestoreWatchpoints>1</RestoreWatchpoints>
+            <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
+            <RestoreFunctions>0</RestoreFunctions>
+            <RestoreToolbox>1</RestoreToolbox>
+            <RestoreTracepoints>1</RestoreTracepoints>
+            <RestoreSysVw>1</RestoreSysVw>
+          </Target>
+          <RunDebugAfterBuild>0</RunDebugAfterBuild>
+          <TargetSelection>0</TargetSelection>
+          <SimDlls>
+            <CpuDll></CpuDll>
+            <CpuDllArguments></CpuDllArguments>
+            <PeripheralDll></PeripheralDll>
+            <PeripheralDllArguments></PeripheralDllArguments>
+            <InitializationFile></InitializationFile>
+          </SimDlls>
+          <TargetDlls>
+            <CpuDll></CpuDll>
+            <CpuDllArguments></CpuDllArguments>
+            <PeripheralDll></PeripheralDll>
+            <PeripheralDllArguments></PeripheralDllArguments>
+            <InitializationFile></InitializationFile>
+            <Driver>BIN\UL2CM3.DLL</Driver>
+          </TargetDlls>
         </DebugOption>
         <Utilities>
           <Flash1>
@@ -329,8 +370,6 @@
             <v6LangP>0</v6LangP>
             <vShortEn>1</vShortEn>
             <vShortWch>1</vShortWch>
-            <v6Lto>0</v6Lto>
-            <v6WtE>0</v6WtE>
             <VariousControls>
               <MiscControls>--preinclude ..\..\cfg\project\project.h  --preinclude ..\..\inc\global.h  </MiscControls>
               <Define>FPGA VENUS_WRISTBAND APPLICATION</Define>
@@ -1254,10 +1293,8 @@
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
-                    <vShortEn>2</vShortEn>
-                    <vShortWch>2</vShortWch>
-                    <v6Lto>0</v6Lto>
-                    <v6WtE>0</v6WtE>
+                    <vShortEn>0</vShortEn>
+                    <vShortWch>0</vShortWch>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -1308,10 +1345,8 @@
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
-                    <vShortEn>2</vShortEn>
-                    <vShortWch>2</vShortWch>
-                    <v6Lto>0</v6Lto>
-                    <v6WtE>0</v6WtE>
+                    <vShortEn>0</vShortEn>
+                    <vShortWch>0</vShortWch>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -1321,6 +1356,11 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
+            </File>
+            <File>
+              <FileName>JDI_LPM010M297B.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\module\oled\JDI_LPM010M297B\JDI_LPM010M297B.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1364,6 +1404,91 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>emWin_Config</GroupName>
+          <Files>
+            <File>
+              <FileName>GUIConf.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\Config\GUIConf.c</FilePath>
+            </File>
+            <File>
+              <FileName>LCDConf.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\Config\LCDConf.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>emWin_Lib</GroupName>
+          <Files>
+            <File>
+              <FileName>GUI_CM0_L.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\app\emWin\Lib\GUI_CM0_L.lib</FilePath>
+            </File>
+            <File>
+              <FileName>GUI_CM4F_L.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\app\emWin\Lib\GUI_CM4F_L.lib</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>emWin_GUI_X</GroupName>
+          <Files>
+            <File>
+              <FileName>GUI_X.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\GUI_X\GUI_X.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>emWin_Drv</GroupName>
+          <Files>
+            <File>
+              <FileName>GUIDRV_Template.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\Drv\GUIDRV_Template.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>emWin_WindowsApp</GroupName>
+          <Files>
+            <File>
+              <FileName>GUIDEMO_Start.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\WinApp\GUIDEMO_Start.c</FilePath>
+            </File>
+            <File>
+              <FileName>WindowDLG_Window1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\WinApp\WindowDLG_Window1.c</FilePath>
+            </File>
+            <File>
+              <FileName>WindowDLG_Window2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\WinApp\WindowDLG_Window2.c</FilePath>
+            </File>
+            <File>
+              <FileName>WindowDLG_Window4.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\WinApp\WindowDLG_Window4.c</FilePath>
+            </File>
+            <File>
+              <FileName>WindowDLG_Window5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\WinApp\WindowDLG_Window5.c</FilePath>
+            </File>
+            <File>
+              <FileName>WindowDLG-Window3.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\WinApp\WindowDLG-Window3.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>::CMSIS</GroupName>
           <GroupOption>
             <CommonProperty>
@@ -1401,10 +1526,8 @@
                 <useXO>2</useXO>
                 <v6Lang>0</v6Lang>
                 <v6LangP>0</v6LangP>
-                <vShortEn>2</vShortEn>
-                <vShortWch>2</vShortWch>
-                <v6Lto>0</v6Lto>
-                <v6WtE>0</v6WtE>
+                <vShortEn>0</vShortEn>
+                <vShortWch>0</vShortWch>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -1470,10 +1593,8 @@
                 <useXO>2</useXO>
                 <v6Lang>0</v6Lang>
                 <v6LangP>0</v6LangP>
-                <vShortEn>2</vShortEn>
-                <vShortWch>2</vShortWch>
-                <v6Lto>0</v6Lto>
-                <v6WtE>0</v6WtE>
+                <vShortEn>0</vShortEn>
+                <vShortWch>0</vShortWch>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -1512,7 +1633,7 @@
         <TargetCommonOption>
           <Device>ARMCM4_FP</Device>
           <Vendor>ARM</Vendor>
-          <PackID>ARM.CMSIS.5.0.1</PackID>
+          <PackID>ARM.CMSIS.5.0.0</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000,0x00020000) IROM(0x00000000,0x00040000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ESEL ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -1622,6 +1743,47 @@
             <HexOffset>0</HexOffset>
             <Oh166RecLen>16</Oh166RecLen>
           </OPTHX>
+          <Simulator>
+            <UseSimulator>0</UseSimulator>
+            <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
+            <RunToMain>1</RunToMain>
+            <RestoreBreakpoints>1</RestoreBreakpoints>
+            <RestoreWatchpoints>1</RestoreWatchpoints>
+            <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
+            <RestoreFunctions>1</RestoreFunctions>
+            <RestoreToolbox>1</RestoreToolbox>
+            <LimitSpeedToRealTime>0</LimitSpeedToRealTime>
+            <RestoreSysVw>1</RestoreSysVw>
+          </Simulator>
+          <Target>
+            <UseTarget>1</UseTarget>
+            <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
+            <RunToMain>1</RunToMain>
+            <RestoreBreakpoints>1</RestoreBreakpoints>
+            <RestoreWatchpoints>1</RestoreWatchpoints>
+            <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
+            <RestoreFunctions>0</RestoreFunctions>
+            <RestoreToolbox>1</RestoreToolbox>
+            <RestoreTracepoints>1</RestoreTracepoints>
+            <RestoreSysVw>1</RestoreSysVw>
+          </Target>
+          <RunDebugAfterBuild>0</RunDebugAfterBuild>
+          <TargetSelection>0</TargetSelection>
+          <SimDlls>
+            <CpuDll></CpuDll>
+            <CpuDllArguments></CpuDllArguments>
+            <PeripheralDll></PeripheralDll>
+            <PeripheralDllArguments></PeripheralDllArguments>
+            <InitializationFile></InitializationFile>
+          </SimDlls>
+          <TargetDlls>
+            <CpuDll></CpuDll>
+            <CpuDllArguments></CpuDllArguments>
+            <PeripheralDll></PeripheralDll>
+            <PeripheralDllArguments></PeripheralDllArguments>
+            <InitializationFile></InitializationFile>
+            <Driver>BIN\UL2CM3.DLL</Driver>
+          </TargetDlls>
         </DebugOption>
         <Utilities>
           <Flash1>
@@ -1825,8 +1987,6 @@
             <v6LangP>1</v6LangP>
             <vShortEn>1</vShortEn>
             <vShortWch>1</vShortWch>
-            <v6Lto>0</v6Lto>
-            <v6WtE>0</v6WtE>
             <VariousControls>
               <MiscControls>--preinclude ..\..\cfg\project\project.h --preinclude ..\..\inc\global.h</MiscControls>
               <Define>FPGA VENUS_WRISTBAND APPLICATION</Define>
@@ -2750,10 +2910,8 @@
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
-                    <vShortEn>2</vShortEn>
-                    <vShortWch>2</vShortWch>
-                    <v6Lto>0</v6Lto>
-                    <v6WtE>0</v6WtE>
+                    <vShortEn>0</vShortEn>
+                    <vShortWch>0</vShortWch>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -2804,10 +2962,8 @@
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
-                    <vShortEn>2</vShortEn>
-                    <vShortWch>2</vShortWch>
-                    <v6Lto>0</v6Lto>
-                    <v6WtE>0</v6WtE>
+                    <vShortEn>0</vShortEn>
+                    <vShortWch>0</vShortWch>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -2817,6 +2973,11 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
+            </File>
+            <File>
+              <FileName>JDI_LPM010M297B.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\module\oled\JDI_LPM010M297B\JDI_LPM010M297B.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2860,6 +3021,91 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>emWin_Config</GroupName>
+          <Files>
+            <File>
+              <FileName>GUIConf.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\Config\GUIConf.c</FilePath>
+            </File>
+            <File>
+              <FileName>LCDConf.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\Config\LCDConf.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>emWin_Lib</GroupName>
+          <Files>
+            <File>
+              <FileName>GUI_CM0_L.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\app\emWin\Lib\GUI_CM0_L.lib</FilePath>
+            </File>
+            <File>
+              <FileName>GUI_CM4F_L.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\app\emWin\Lib\GUI_CM4F_L.lib</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>emWin_GUI_X</GroupName>
+          <Files>
+            <File>
+              <FileName>GUI_X.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\GUI_X\GUI_X.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>emWin_Drv</GroupName>
+          <Files>
+            <File>
+              <FileName>GUIDRV_Template.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\Drv\GUIDRV_Template.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>emWin_WindowsApp</GroupName>
+          <Files>
+            <File>
+              <FileName>GUIDEMO_Start.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\WinApp\GUIDEMO_Start.c</FilePath>
+            </File>
+            <File>
+              <FileName>WindowDLG_Window1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\WinApp\WindowDLG_Window1.c</FilePath>
+            </File>
+            <File>
+              <FileName>WindowDLG_Window2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\WinApp\WindowDLG_Window2.c</FilePath>
+            </File>
+            <File>
+              <FileName>WindowDLG_Window4.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\WinApp\WindowDLG_Window4.c</FilePath>
+            </File>
+            <File>
+              <FileName>WindowDLG_Window5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\WinApp\WindowDLG_Window5.c</FilePath>
+            </File>
+            <File>
+              <FileName>WindowDLG-Window3.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\WinApp\WindowDLG-Window3.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>::CMSIS</GroupName>
           <GroupOption>
             <CommonProperty>
@@ -2897,10 +3143,8 @@
                 <useXO>2</useXO>
                 <v6Lang>0</v6Lang>
                 <v6LangP>0</v6LangP>
-                <vShortEn>2</vShortEn>
-                <vShortWch>2</vShortWch>
-                <v6Lto>0</v6Lto>
-                <v6WtE>0</v6WtE>
+                <vShortEn>0</vShortEn>
+                <vShortWch>0</vShortWch>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -2943,7 +3187,7 @@
         <TargetCommonOption>
           <Device>ARMCM0P</Device>
           <Vendor>ARM</Vendor>
-          <PackID>ARM.CMSIS.5.0.1</PackID>
+          <PackID>ARM.CMSIS.5.0.0</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000,0x00020000) IROM(0x00000000,0x00040000) CPUTYPE("Cortex-M0+") CLOCK(12000000) ESEL ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -3053,6 +3297,47 @@
             <HexOffset>0</HexOffset>
             <Oh166RecLen>16</Oh166RecLen>
           </OPTHX>
+          <Simulator>
+            <UseSimulator>1</UseSimulator>
+            <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
+            <RunToMain>1</RunToMain>
+            <RestoreBreakpoints>1</RestoreBreakpoints>
+            <RestoreWatchpoints>1</RestoreWatchpoints>
+            <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
+            <RestoreFunctions>1</RestoreFunctions>
+            <RestoreToolbox>1</RestoreToolbox>
+            <LimitSpeedToRealTime>0</LimitSpeedToRealTime>
+            <RestoreSysVw>1</RestoreSysVw>
+          </Simulator>
+          <Target>
+            <UseTarget>0</UseTarget>
+            <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
+            <RunToMain>0</RunToMain>
+            <RestoreBreakpoints>1</RestoreBreakpoints>
+            <RestoreWatchpoints>1</RestoreWatchpoints>
+            <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
+            <RestoreFunctions>0</RestoreFunctions>
+            <RestoreToolbox>1</RestoreToolbox>
+            <RestoreTracepoints>1</RestoreTracepoints>
+            <RestoreSysVw>1</RestoreSysVw>
+          </Target>
+          <RunDebugAfterBuild>0</RunDebugAfterBuild>
+          <TargetSelection>4</TargetSelection>
+          <SimDlls>
+            <CpuDll></CpuDll>
+            <CpuDllArguments></CpuDllArguments>
+            <PeripheralDll></PeripheralDll>
+            <PeripheralDllArguments></PeripheralDllArguments>
+            <InitializationFile></InitializationFile>
+          </SimDlls>
+          <TargetDlls>
+            <CpuDll></CpuDll>
+            <CpuDllArguments></CpuDllArguments>
+            <PeripheralDll></PeripheralDll>
+            <PeripheralDllArguments></PeripheralDllArguments>
+            <InitializationFile>.\Map_eflash_App_only.ini</InitializationFile>
+            <Driver>Segger\JL2CM3.dll</Driver>
+          </TargetDlls>
         </DebugOption>
         <Utilities>
           <Flash1>
@@ -3256,13 +3541,11 @@
             <v6LangP>0</v6LangP>
             <vShortEn>1</vShortEn>
             <vShortWch>1</vShortWch>
-            <v6Lto>0</v6Lto>
-            <v6WtE>0</v6WtE>
             <VariousControls>
               <MiscControls>--preinclude ..\..\cfg\project\project.h  --preinclude ..\..\inc\global.h  </MiscControls>
               <Define>EVB ZEUS_WRISTBAND APPLICATION</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\ble\ip\ble\profiles\htp;..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\cfg;..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app;..\..\platform\asic\6801a0;..\..\platform\bootloader;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\crc32;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\sw_timer;..\..\service\tracer;..\..\service\uart;..\..\service\fds;..\..\algo\CC_Library\Inc;..\..\algo\CC_Library\Src\Inc;..\..\algo\CC_Swimming\Inc;..\..\app\HeartRate;..\..\module\ppg;..\..\ble\modules\app\src;..\..\ble\modules\common\api;..\..\app\Display;..\..\ble\ip\ble\profiles\ota\otac\api;..\..\ble\ip\ble\profiles\ota\otat\api;..\..\ble\ip\ble\profiles\ota;..\..\ble\ip\ble\profiles\ota\otac\src;..\..\ble\ip\ble\profiles\ota\otat\src;..\..\app\DataBase;..\..\app\scheduler;..\..\app\AppService\inc;..\..\app\SensorController\inc;..\..\app\svc_mgr;..\..\ble\ip\ble\profiles\ccps\api;..\..\ble\ip\ble\profiles\ccps\src;..\..\app\ble_mgr;..\..\app\sdk\ble\profiles\ccps;..\..\service\fds;..\..\app\Vibration;..\..\app\utility;.\config</IncludePath>
+              <IncludePath>..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\ble\ip\ble\profiles\htp;..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\cfg;..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app;..\..\platform\asic\6801a0;..\..\platform\bootloader;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\crc32;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\sw_timer;..\..\service\tracer;..\..\service\uart;..\..\service\fds;..\..\algo\CC_Library\Inc;..\..\algo\CC_Library\Src\Inc;..\..\algo\CC_Swimming\Inc;..\..\app\HeartRate;..\..\module\ppg;..\..\ble\modules\app\src;..\..\ble\modules\common\api;..\..\app\Display;..\..\ble\ip\ble\profiles\ota\otac\api;..\..\ble\ip\ble\profiles\ota\otat\api;..\..\ble\ip\ble\profiles\ota;..\..\ble\ip\ble\profiles\ota\otac\src;..\..\ble\ip\ble\profiles\ota\otat\src;..\..\app\DataBase;..\..\app\scheduler;..\..\app\AppService\inc;..\..\app\SensorController\inc;..\..\app\svc_mgr;..\..\ble\ip\ble\profiles\ccps\api;..\..\ble\ip\ble\profiles\ccps\src;..\..\app\ble_mgr;..\..\app\sdk\ble\profiles\ccps;..\..\service\fds;..\..\app\Vibration;..\..\app\utility;.\config;..\..\module\oled\JDI_LPM010M297B;..\..\app\emWin\Config;..\..\app\emWin\Include;..\..\app\emWin\Drv;..\..\app\emWin\GUI_X;..\..\app\emWin\WinApp</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -4171,10 +4454,8 @@
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
-                    <vShortEn>2</vShortEn>
-                    <vShortWch>2</vShortWch>
-                    <v6Lto>0</v6Lto>
-                    <v6WtE>0</v6WtE>
+                    <vShortEn>0</vShortEn>
+                    <vShortWch>0</vShortWch>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -4225,10 +4506,8 @@
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
-                    <vShortEn>2</vShortEn>
-                    <vShortWch>2</vShortWch>
-                    <v6Lto>0</v6Lto>
-                    <v6WtE>0</v6WtE>
+                    <vShortEn>0</vShortEn>
+                    <vShortWch>0</vShortWch>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -4248,6 +4527,11 @@
               <FileName>sh1107_128x32.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\module\oled\sh1107_128x32.c</FilePath>
+            </File>
+            <File>
+              <FileName>JDI_LPM010M297B.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\module\oled\JDI_LPM010M297B\JDI_LPM010M297B.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4291,6 +4575,110 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>emWin_Config</GroupName>
+          <Files>
+            <File>
+              <FileName>GUIConf.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\Config\GUIConf.c</FilePath>
+            </File>
+            <File>
+              <FileName>LCDConf.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\Config\LCDConf.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>emWin_Lib</GroupName>
+          <Files>
+            <File>
+              <FileName>GUI_CM0_L.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\app\emWin\Lib\GUI_CM0_L.lib</FilePath>
+            </File>
+            <File>
+              <FileName>GUI_CM4F_L.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\app\emWin\Lib\GUI_CM4F_L.lib</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds/>
+              </FileOption>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>emWin_GUI_X</GroupName>
+          <Files>
+            <File>
+              <FileName>GUI_X.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\GUI_X\GUI_X.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>emWin_Drv</GroupName>
+          <Files>
+            <File>
+              <FileName>GUIDRV_Template.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\Drv\GUIDRV_Template.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>emWin_WindowsApp</GroupName>
+          <Files>
+            <File>
+              <FileName>GUIDEMO_Start.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\WinApp\GUIDEMO_Start.c</FilePath>
+            </File>
+            <File>
+              <FileName>WindowDLG_Window1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\WinApp\WindowDLG_Window1.c</FilePath>
+            </File>
+            <File>
+              <FileName>WindowDLG_Window2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\WinApp\WindowDLG_Window2.c</FilePath>
+            </File>
+            <File>
+              <FileName>WindowDLG_Window4.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\WinApp\WindowDLG_Window4.c</FilePath>
+            </File>
+            <File>
+              <FileName>WindowDLG_Window5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\WinApp\WindowDLG_Window5.c</FilePath>
+            </File>
+            <File>
+              <FileName>WindowDLG-Window3.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\WinApp\WindowDLG-Window3.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>::CMSIS</GroupName>
           <GroupOption>
             <CommonProperty>
@@ -4328,10 +4716,8 @@
                 <useXO>2</useXO>
                 <v6Lang>0</v6Lang>
                 <v6LangP>0</v6LangP>
-                <vShortEn>2</vShortEn>
-                <vShortWch>2</vShortWch>
-                <v6Lto>0</v6Lto>
-                <v6WtE>0</v6WtE>
+                <vShortEn>0</vShortEn>
+                <vShortWch>0</vShortWch>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -4397,10 +4783,8 @@
                 <useXO>2</useXO>
                 <v6Lang>0</v6Lang>
                 <v6LangP>0</v6LangP>
-                <vShortEn>2</vShortEn>
-                <vShortWch>2</vShortWch>
-                <v6Lto>0</v6Lto>
-                <v6WtE>0</v6WtE>
+                <vShortEn>0</vShortEn>
+                <vShortWch>0</vShortWch>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -4439,7 +4823,7 @@
         <TargetCommonOption>
           <Device>ARMCM4_FP</Device>
           <Vendor>ARM</Vendor>
-          <PackID>ARM.CMSIS.5.0.1</PackID>
+          <PackID>ARM.CMSIS.5.0.0</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000,0x00020000) IROM(0x00000000,0x00040000) CPUTYPE("Cortex-M4") FPU2 CLOCK(12000000) ESEL ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -4549,6 +4933,47 @@
             <HexOffset>0</HexOffset>
             <Oh166RecLen>16</Oh166RecLen>
           </OPTHX>
+          <Simulator>
+            <UseSimulator>0</UseSimulator>
+            <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
+            <RunToMain>1</RunToMain>
+            <RestoreBreakpoints>1</RestoreBreakpoints>
+            <RestoreWatchpoints>1</RestoreWatchpoints>
+            <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
+            <RestoreFunctions>1</RestoreFunctions>
+            <RestoreToolbox>1</RestoreToolbox>
+            <LimitSpeedToRealTime>0</LimitSpeedToRealTime>
+            <RestoreSysVw>1</RestoreSysVw>
+          </Simulator>
+          <Target>
+            <UseTarget>1</UseTarget>
+            <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
+            <RunToMain>1</RunToMain>
+            <RestoreBreakpoints>1</RestoreBreakpoints>
+            <RestoreWatchpoints>1</RestoreWatchpoints>
+            <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
+            <RestoreFunctions>0</RestoreFunctions>
+            <RestoreToolbox>1</RestoreToolbox>
+            <RestoreTracepoints>1</RestoreTracepoints>
+            <RestoreSysVw>1</RestoreSysVw>
+          </Target>
+          <RunDebugAfterBuild>0</RunDebugAfterBuild>
+          <TargetSelection>3</TargetSelection>
+          <SimDlls>
+            <CpuDll></CpuDll>
+            <CpuDllArguments></CpuDllArguments>
+            <PeripheralDll></PeripheralDll>
+            <PeripheralDllArguments></PeripheralDllArguments>
+            <InitializationFile></InitializationFile>
+          </SimDlls>
+          <TargetDlls>
+            <CpuDll></CpuDll>
+            <CpuDllArguments></CpuDllArguments>
+            <PeripheralDll></PeripheralDll>
+            <PeripheralDllArguments></PeripheralDllArguments>
+            <InitializationFile>.\Map_eflash_App_only.ini</InitializationFile>
+            <Driver>Segger\JL2CM3.dll</Driver>
+          </TargetDlls>
         </DebugOption>
         <Utilities>
           <Flash1>
@@ -4752,13 +5177,11 @@
             <v6LangP>1</v6LangP>
             <vShortEn>1</vShortEn>
             <vShortWch>1</vShortWch>
-            <v6Lto>0</v6Lto>
-            <v6WtE>0</v6WtE>
             <VariousControls>
               <MiscControls>--preinclude ..\..\cfg\project\project.h --preinclude ..\..\inc\global.h</MiscControls>
               <Define>EVB ZEUS_WRISTBAND APPLICATION</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\ble\ip\ble\profiles\htp;..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\service\tracer;..\..\cfg;..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app;..\..\platform\asic\6801a0;..\..\platform\bootloader;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\crc32;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\sw_timer;..\..\service\uart;..\..\algo\CC_Library\Inc;..\..\algo\CC_Swimming\Inc;..\..\algo\HRM_Library;..\..\app\Display;..\..\app\HeartRate;..\..\module\ppg;..\..\algo\CC_Library\Src\Inc;..\..\ble\modules\app\src;..\..\ble\ip\ble\profiles\ota\otat;..\..\ble\ip\ble\profiles\ota\otat\api;..\..\ble\ip\ble\profiles\ota\otat\src;..\..\app\DataBase;..\..\service\fds;..\..\app\scheduler;..\..\app\SensorController\inc;..\..\app\AppService\inc;..\..\app\svc_mgr;..\..\ble\ip\ble\profiles\ccps\api;..\..\ble\ip\ble\profiles\ccps\src;..\..\app\ble_mgr;..\..\app\sdk\ble\profiles\ccps;..\..\app\sdk\database;..\..\app\DataBase;..\..\app\Vibration;..\..\app\utility;.\config</IncludePath>
+              <IncludePath>..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\ble\ip\ble\profiles\htp;..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\service\tracer;..\..\cfg;..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app;..\..\platform\asic\6801a0;..\..\platform\bootloader;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\crc32;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\sw_timer;..\..\service\uart;..\..\algo\CC_Library\Inc;..\..\algo\CC_Swimming\Inc;..\..\algo\HRM_Library;..\..\app\Display;..\..\app\HeartRate;..\..\module\ppg;..\..\algo\CC_Library\Src\Inc;..\..\ble\modules\app\src;..\..\ble\ip\ble\profiles\ota\otat;..\..\ble\ip\ble\profiles\ota\otat\api;..\..\ble\ip\ble\profiles\ota\otat\src;..\..\app\DataBase;..\..\service\fds;..\..\app\scheduler;..\..\app\SensorController\inc;..\..\app\AppService\inc;..\..\app\svc_mgr;..\..\ble\ip\ble\profiles\ccps\api;..\..\ble\ip\ble\profiles\ccps\src;..\..\app\ble_mgr;..\..\app\sdk\ble\profiles\ccps;..\..\app\sdk\database;..\..\app\DataBase;..\..\app\Vibration;..\..\app\utility;.\config;..\..\module\oled\JDI_LPM010M297B;..\..\app\emWin\Config;..\..\app\emWin\Drv;..\..\app\emWin\Include;..\..\app\emWin\WinApp</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -5667,10 +6090,8 @@
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
-                    <vShortEn>2</vShortEn>
-                    <vShortWch>2</vShortWch>
-                    <v6Lto>0</v6Lto>
-                    <v6WtE>0</v6WtE>
+                    <vShortEn>0</vShortEn>
+                    <vShortWch>0</vShortWch>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -5721,10 +6142,8 @@
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
-                    <vShortEn>2</vShortEn>
-                    <vShortWch>2</vShortWch>
-                    <v6Lto>0</v6Lto>
-                    <v6WtE>0</v6WtE>
+                    <vShortEn>0</vShortEn>
+                    <vShortWch>0</vShortWch>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -5744,6 +6163,11 @@
               <FileName>sh1107_128x32.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\module\oled\sh1107_128x32.c</FilePath>
+            </File>
+            <File>
+              <FileName>JDI_LPM010M297B.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\module\oled\JDI_LPM010M297B\JDI_LPM010M297B.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -5787,6 +6211,110 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>emWin_Config</GroupName>
+          <Files>
+            <File>
+              <FileName>GUIConf.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\Config\GUIConf.c</FilePath>
+            </File>
+            <File>
+              <FileName>LCDConf.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\Config\LCDConf.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>emWin_Lib</GroupName>
+          <Files>
+            <File>
+              <FileName>GUI_CM0_L.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\app\emWin\Lib\GUI_CM0_L.lib</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds/>
+              </FileOption>
+            </File>
+            <File>
+              <FileName>GUI_CM4F_L.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\app\emWin\Lib\GUI_CM4F_L.lib</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>emWin_GUI_X</GroupName>
+          <Files>
+            <File>
+              <FileName>GUI_X.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\GUI_X\GUI_X.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>emWin_Drv</GroupName>
+          <Files>
+            <File>
+              <FileName>GUIDRV_Template.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\Drv\GUIDRV_Template.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>emWin_WindowsApp</GroupName>
+          <Files>
+            <File>
+              <FileName>GUIDEMO_Start.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\WinApp\GUIDEMO_Start.c</FilePath>
+            </File>
+            <File>
+              <FileName>WindowDLG_Window1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\WinApp\WindowDLG_Window1.c</FilePath>
+            </File>
+            <File>
+              <FileName>WindowDLG_Window2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\WinApp\WindowDLG_Window2.c</FilePath>
+            </File>
+            <File>
+              <FileName>WindowDLG_Window4.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\WinApp\WindowDLG_Window4.c</FilePath>
+            </File>
+            <File>
+              <FileName>WindowDLG_Window5.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\WinApp\WindowDLG_Window5.c</FilePath>
+            </File>
+            <File>
+              <FileName>WindowDLG-Window3.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\WinApp\WindowDLG-Window3.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>::CMSIS</GroupName>
           <GroupOption>
             <CommonProperty>
@@ -5824,10 +6352,8 @@
                 <useXO>2</useXO>
                 <v6Lang>0</v6Lang>
                 <v6LangP>0</v6LangP>
-                <vShortEn>2</vShortEn>
-                <vShortWch>2</vShortWch>
-                <v6Lto>0</v6Lto>
-                <v6WtE>0</v6WtE>
+                <vShortEn>0</vShortEn>
+                <vShortWch>0</vShortWch>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -5893,7 +6419,7 @@
       <file attr="config" category="sourceAsm" condition="ARMCC" name="Device\ARM\ARMCM0plus\Source\ARM\startup_ARMCM0plus.s" version="1.0.0">
         <instance index="0">RTE\Device\ARMCM0P\startup_ARMCM0plus.s</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="ARM" Cversion="1.0.1" condition="ARMCM0+ CMSIS"/>
-        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.0.1"/>
+        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.0.0"/>
         <targetInfos>
           <targetInfo name="EVB_M0p"/>
           <targetInfo name="FPGA_M0p"/>
@@ -5902,7 +6428,7 @@
       <file attr="config" category="sourceC" name="Device\ARM\ARMCM0plus\Source\system_ARMCM0plus.c" version="1.0.0">
         <instance index="0">RTE\Device\ARMCM0P\system_ARMCM0plus.c</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="ARM" Cversion="1.0.1" condition="ARMCM0+ CMSIS"/>
-        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.0.1"/>
+        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.0.0"/>
         <targetInfos>
           <targetInfo name="EVB_M0p"/>
           <targetInfo name="FPGA_M0p"/>
@@ -5911,7 +6437,7 @@
       <file attr="config" category="sourceAsm" condition="ARMCC" name="Device\ARM\ARMCM4\Source\ARM\startup_ARMCM4.s" version="1.0.0">
         <instance index="0">RTE\Device\ARMCM4_FP\startup_ARMCM4.s</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="ARM" Cversion="1.0.1" condition="ARMCM4 CMSIS"/>
-        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.0.1"/>
+        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.0.0"/>
         <targetInfos>
           <targetInfo name="EVB_M4f"/>
           <targetInfo name="FPGA_M4f"/>
@@ -5920,7 +6446,7 @@
       <file attr="config" category="sourceC" name="Device\ARM\ARMCM4\Source\system_ARMCM4.c" version="1.0.0">
         <instance index="0">RTE\Device\ARMCM4_FP\system_ARMCM4.c</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="ARM" Cversion="1.0.1" condition="ARMCM4 CMSIS"/>
-        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.0.1"/>
+        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.0.0"/>
         <targetInfos>
           <targetInfo name="EVB_M4f"/>
           <targetInfo name="FPGA_M4f"/>

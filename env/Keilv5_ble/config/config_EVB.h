@@ -65,6 +65,13 @@ Head Block of The File
 ***************************************************/
 #define ASIC                    CC6801
 
+// EMWIN AND JDI
+#define nEMWIN_ENABLE
+
+#ifdef EMWIN_ENABLE
+#define JDI_OLED_ENABLE
+#endif
+
 //find and include project options from the asic you chose
 #include "asic_options.h"
 
@@ -134,6 +141,7 @@ Head Block of The File
 
 
 
+#ifndef EMWIN_ENABLE
 /**************************************************
 *   Choose OLED model and config OLED interface
 *   (pick one GYRO sensor from module_supported.h)
@@ -147,6 +155,10 @@ Head Block of The File
 ***************************************************/
 #define MODULE_OLED             OLED_SOLOMON_SH1107
 #define OLED_IF                 UseInterface(SPI,2)
+#else
+#define MODULE_OLED              OLED_SOLOMON_SH1107//OLED_JDI_LPM010M297B
+#define OLED_IF                 UseInterface(SPI,2)
+#endif
 
 /**************************************************
 *   Choose PPG model and config PPG interface
@@ -232,8 +244,14 @@ Head Block of The File
 #define SPIM0_CLOCK             (1000000)
 #define SPIM1_CONFIG            (SPI_MODE_3)
 #define SPIM1_CLOCK             (10000000)
+
+#ifndef EMWIN_ENABLE
 #define SPIM2_CONFIG            (SPI_MODE_3)
 #define SPIM2_CLOCK             (8000000)
+#else
+#define SPIM2_CONFIG            (SPI_MODE_0 | SPI_CS_HIGH)
+#define SPIM2_CLOCK             (2000000)
+#endif
 
 
 /******************************************************************************************************************
@@ -345,11 +363,19 @@ Head Block of The File
 
 
 // GPIO Pin Group6
+#ifndef EMWIN_ENABLE
 #define GPIO_MODE_PINGROUP6                  GPIO_MODE_SPI_4WIRE
 #define GPIO24_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
 #define GPIO25_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
 #define GPIO26_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
 #define GPIO27_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#else
+#define GPIO_MODE_PINGROUP6                  GPIO_MODE_GPIO
+#define GPIO24_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
+#define GPIO25_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
+#define GPIO26_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
+#define GPIO27_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
+#endif
 
 // GPIO Pin Group7
 #define GPIO_MODE_PINGROUP7                  GPIO_MODE_I2S_MASTER
@@ -690,7 +716,7 @@ typedef enum
     eSwimCalInvaild,
 }eSwim_Cal_State_t;
 
-typedef enum 
+typedef enum
 {
     eLongsitNoResult = 0,
     eLongsitNoWear =1,

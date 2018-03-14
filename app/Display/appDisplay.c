@@ -5,7 +5,7 @@
  * STANDARD SOFTWARE LICENSE AGREEMENT.
  *
  * Licensees are granted free, non-transferable use of the information.
- * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed
  * from the file.
  */
 
@@ -169,7 +169,9 @@ void app_displayoled_init(void)
         f_displayoled()->display_tmrcnt =0;
         f_displayoled()->ePwr_curstate=E_OLED_PWRSTATE_INIT;
 
+        #ifndef EMWIN_ENABLE
         oled_Init();
+        #endif
 
 
     }
