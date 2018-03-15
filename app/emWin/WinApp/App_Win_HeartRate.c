@@ -9,8 +9,7 @@
  * from the file.
  */
 
-// USER START (Optionally insert additional includes)
-// USER END
+#ifdef EMWIN_ENABLE
 
 #include "DIALOG.h"
 #include "APP_Win_Global.h"
@@ -146,11 +145,11 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 		WM_RestartTimer(pMsg->Data.v, 100);
 		if(TimeD<=APP_WIM_TIMER_TIMEOUT) TimeD++;
 		if(TimeD!=APP_WIM_TIMER_TIMEOUT) break;
-		//APP_SendMessage(ID_USER_TIMER_TIMEOUT, 0);
+		APP_SendMessage(ID_USER_TIMER_TIMEOUT, 0);
 		TimeD = 0;
 		break;
   case WM_TOUCH:
-	  //APP_SendMessage(ID_USER_SLIDE_NEXT, 0);
+	  APP_SendMessage(ID_USER_SLIDE_NEXT, 0);
 	  break;
   default:
     WM_DefaultProc(pMsg);
@@ -181,3 +180,6 @@ WM_HWIN CreateWindow_HeartRate(void) {
 // USER END
 
 /*************************** End of file ****************************/
+
+#endif
+

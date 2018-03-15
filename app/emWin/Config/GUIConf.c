@@ -42,6 +42,8 @@ Purpose     : Display controller initialization
 ---------------------------END-OF-HEADER------------------------------
 */
 
+#ifdef EMWIN_ENABLE
+
 #include "GUI.h"
 //Jason add
 #include "Global.h"
@@ -90,3 +92,5 @@ void GUI_X_Config(void) {
 }
 
 /*************************** End of file ****************************/
+
+#endif

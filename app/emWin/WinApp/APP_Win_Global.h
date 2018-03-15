@@ -9,6 +9,8 @@
  * from the file.
  */
 
+#ifdef EMWIN_ENABLE
+
 #ifndef __APP_WM_GLOBAL_H__
 #define __APP_WM_GLOBAL_H__
 #include "DIALOG.h"
@@ -38,3 +40,6 @@ extern WM_HWIN CreateWindow_Battery(void);
 
 
 #endif // __APP_WM_GLOBAL_H__
+
+#endif
+

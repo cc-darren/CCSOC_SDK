@@ -43,6 +43,8 @@ Purpose     : Template driver, could be used as starting point for new
 ---------------------------END-OF-HEADER------------------------------
 */
 
+#ifdef EMWIN_ENABLE
+
 #include <stddef.h>
 
 #include "LCD_Private.h"
@@ -880,3 +882,4 @@ const GUI_DEVICE_API GUIDRV_Template_API = {
 };
 
 /*************************** End of file ****************************/
+#endif

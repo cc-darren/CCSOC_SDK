@@ -42,6 +42,8 @@ Purpose     : Config / System dependent externals for GUI
 ---------------------------END-OF-HEADER------------------------------
 */
 
+#ifdef EMWIN_ENABLE
+
 #include "GUI.h"
 #include "global.h"
 
@@ -56,7 +58,6 @@ volatile GUI_TIMER_TIME OS_TimeMS;
 
 
 SW_TIMER_DEF(s_tAPP_Emwin_Timer_Ticks);
-
 
 static void APP_WIM_Timer_Callback(void * p_context)
 {
@@ -174,3 +175,5 @@ void GUI_X_InitOS(void)    {  }
 void GUI_X_Unlock(void)    {  }
 void GUI_X_Lock(void)      {  }
 unsigned long  GUI_X_GetTaskId(void) { return 1; }
+
+#endif

@@ -1,3 +1,13 @@
+/* Copyright (c) 2018 Cloudchip, Inc. All Rights Reserved.
+ *
+ * The information contained herein is property of Cloudchip, Inc.
+ * Terms and conditions of usage are described in detail in CLOUDCHIP
+ * STANDARD SOFTWARE LICENSE AGREEMENT.
+ *
+ * Licensees are granted free, non-transferable use of the information.
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed
+ * from the file.
+ */
 
 #ifdef EMWIN_ENABLE
 
@@ -36,13 +46,13 @@ static int dwWin_PreIndex = 0;
 static int APP_Launch_NewWindow(void)
 {
 	int bRet = 0;
-    if (hActiveWindow[0] != WM_HBKWIN)    
-    {    
+    if (hActiveWindow[0] != WM_HBKWIN)
+    {
         WM_DeleteWindow(hActiveWindow[0]);
         GUI_SetBkColor(GUI_BLACK);
         GUI_Clear();
-    }    
-    
+    }
+
 	hActiveWindow[0] = APP_WM_TABLE[dwWin_Index]();
 	if (0 == hActiveWindow[0])
 		return -1;
@@ -130,7 +140,7 @@ static void _cbBackGround(WM_MESSAGE* pMsg) {
 	case ID_USER_SLIDE_NEXT:
 	case ID_USER_TOUCH:
 	case ID_USER_TIMER_TIMEOUT:
-    case WM_TOUCH:    
+    case WM_TOUCH:
 		APP_Win_Switch_Handler(pMsg->MsgId, pMsg->hWinSrc, pMsg->Data.v);
 		break;
 	default: WM_DefaultProc(pMsg); break;
@@ -167,3 +177,4 @@ void MainTask(void)
 
 }
 #endif
+

@@ -41,7 +41,7 @@ File        : LCDConf.c
 Purpose     : Display controller configuration (single layer)
 ---------------------------END-OF-HEADER------------------------------
 */
-
+#ifdef EMWIN_ENABLE
 #include "GUI.h"
 #include "GUIDRV_Template.h"
 #ifndef WIN32
@@ -264,3 +264,4 @@ int LCD_X_DisplayDriver(unsigned LayerIndex, unsigned Cmd, void * pData)
 }
 
 /*************************** End of file ****************************/
+#endif
