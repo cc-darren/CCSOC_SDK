@@ -5,7 +5,7 @@
  * STANDARD SOFTWARE LICENSE AGREEMENT.
  *
  * Licensees are granted free, non-transferable use of the information.
- * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed
  * from the file.
  */
 
@@ -158,8 +158,8 @@ extern "C" {
 #define CKGEN_BLECLKSEL_REG         (CKGEN_ADDR_BASE + 0x0000001c)
 
 // GPIO
-#define GPIO_PAD_OUT_REG            (GPIO_ADDR_BASE + 0x00000000)
-#define GPIO_PAD_IN_REG             (GPIO_ADDR_BASE + 0x00000004)
+#define GPIO_PAD_IN_REG             (GPIO_ADDR_BASE + 0x00000000)
+#define GPIO_PAD_OUT_REG            (GPIO_ADDR_BASE + 0x00000004)
 #define GPIO_PAD_OE_REG             (GPIO_ADDR_BASE + 0x00000008)
 #define GPIO_INTR_PRIO_REG          (GPIO_ADDR_BASE + 0x0000000c)
 #define GPIO_INTR_EN_REG            (GPIO_ADDR_BASE + 0x00000010)
@@ -460,7 +460,7 @@ typedef union U_regSCU
         uint32_t testLogic_off:1;   //0:power shut off disable, 1:power shut off enable
         uint32_t reserved12:1;      //0:power shut off disable, 1:power shut off enable
         uint32_t blePhy_off:1;      //0:power shut off disable, 1:power shut off enable
-        uint32_t reserved13:2;      
+        uint32_t reserved13:2;
         //0x28 Retention Enable
         uint32_t m0pRet:1;          //0:retention disable, 1:retention enable
         uint32_t m4Ret:1;           //0:retention disable, 1:retention enable
@@ -1206,7 +1206,7 @@ typedef struct
     uint32_t dwTnvsTnvh1;
     uint32_t dwDmaCtrl;
     uint32_t dwDmaWrAddr;
-    uint32_t dwDmaRdAddr;    
+    uint32_t dwDmaRdAddr;
 }S_regEFLASH;
 
 typedef struct U_regI2S
