@@ -38,6 +38,7 @@
  ******************************************************************************/
 #include "scheduler.h"
 #include "APP_Win_Global.h"
+#include "APP_Win_Utility.h"
 #include "DIALOG.h"
 #include "tracer.h"
 

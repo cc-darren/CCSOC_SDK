@@ -1457,34 +1457,39 @@
           <GroupName>emWin_WindowsApp</GroupName>
           <Files>
             <File>
-              <FileName>GUIDEMO_Start.c</FileName>
+              <FileName>APP_Win_Background.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\WinApp\GUIDEMO_Start.c</FilePath>
+              <FilePath>..\..\app\emWin\WinApp\APP_Win_Background.c</FilePath>
             </File>
             <File>
-              <FileName>WindowDLG_Window1.c</FileName>
+              <FileName>App_Win_Battery.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\WinApp\WindowDLG_Window1.c</FilePath>
+              <FilePath>..\..\app\emWin\WinApp\App_Win_Battery.c</FilePath>
             </File>
             <File>
-              <FileName>WindowDLG_Window2.c</FileName>
+              <FileName>App_Win_Clock.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\WinApp\WindowDLG_Window2.c</FilePath>
+              <FilePath>..\..\app\emWin\WinApp\App_Win_Clock.c</FilePath>
             </File>
             <File>
-              <FileName>WindowDLG_Window4.c</FileName>
+              <FileName>APP_Win_DeviceInfo.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\WinApp\WindowDLG_Window4.c</FilePath>
+              <FilePath>..\..\app\emWin\WinApp\APP_Win_DeviceInfo.c</FilePath>
             </File>
             <File>
-              <FileName>WindowDLG_Window5.c</FileName>
+              <FileName>App_Win_HeartRate.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\WinApp\WindowDLG_Window5.c</FilePath>
+              <FilePath>..\..\app\emWin\WinApp\App_Win_HeartRate.c</FilePath>
             </File>
             <File>
-              <FileName>WindowDLG-Window3.c</FileName>
+              <FileName>App_Win_Ped.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\WinApp\WindowDLG-Window3.c</FilePath>
+              <FilePath>..\..\app\emWin\WinApp\App_Win_Ped.c</FilePath>
+            </File>
+            <File>
+              <FileName>App_Win_Utility.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\WinApp\App_Win_Utility.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3074,34 +3079,39 @@
           <GroupName>emWin_WindowsApp</GroupName>
           <Files>
             <File>
-              <FileName>GUIDEMO_Start.c</FileName>
+              <FileName>APP_Win_Background.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\WinApp\GUIDEMO_Start.c</FilePath>
+              <FilePath>..\..\app\emWin\WinApp\APP_Win_Background.c</FilePath>
             </File>
             <File>
-              <FileName>WindowDLG_Window1.c</FileName>
+              <FileName>App_Win_Battery.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\WinApp\WindowDLG_Window1.c</FilePath>
+              <FilePath>..\..\app\emWin\WinApp\App_Win_Battery.c</FilePath>
             </File>
             <File>
-              <FileName>WindowDLG_Window2.c</FileName>
+              <FileName>App_Win_Clock.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\WinApp\WindowDLG_Window2.c</FilePath>
+              <FilePath>..\..\app\emWin\WinApp\App_Win_Clock.c</FilePath>
             </File>
             <File>
-              <FileName>WindowDLG_Window4.c</FileName>
+              <FileName>APP_Win_DeviceInfo.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\WinApp\WindowDLG_Window4.c</FilePath>
+              <FilePath>..\..\app\emWin\WinApp\APP_Win_DeviceInfo.c</FilePath>
             </File>
             <File>
-              <FileName>WindowDLG_Window5.c</FileName>
+              <FileName>App_Win_HeartRate.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\WinApp\WindowDLG_Window5.c</FilePath>
+              <FilePath>..\..\app\emWin\WinApp\App_Win_HeartRate.c</FilePath>
             </File>
             <File>
-              <FileName>WindowDLG-Window3.c</FileName>
+              <FileName>App_Win_Ped.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\WinApp\WindowDLG-Window3.c</FilePath>
+              <FilePath>..\..\app\emWin\WinApp\App_Win_Ped.c</FilePath>
+            </File>
+            <File>
+              <FileName>App_Win_Utility.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\WinApp\App_Win_Utility.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4647,34 +4657,39 @@
           <GroupName>emWin_WindowsApp</GroupName>
           <Files>
             <File>
-              <FileName>GUIDEMO_Start.c</FileName>
+              <FileName>APP_Win_Background.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\WinApp\GUIDEMO_Start.c</FilePath>
+              <FilePath>..\..\app\emWin\WinApp\APP_Win_Background.c</FilePath>
             </File>
             <File>
-              <FileName>WindowDLG_Window1.c</FileName>
+              <FileName>App_Win_Battery.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\WinApp\WindowDLG_Window1.c</FilePath>
+              <FilePath>..\..\app\emWin\WinApp\App_Win_Battery.c</FilePath>
             </File>
             <File>
-              <FileName>WindowDLG_Window2.c</FileName>
+              <FileName>App_Win_Clock.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\WinApp\WindowDLG_Window2.c</FilePath>
+              <FilePath>..\..\app\emWin\WinApp\App_Win_Clock.c</FilePath>
             </File>
             <File>
-              <FileName>WindowDLG_Window4.c</FileName>
+              <FileName>APP_Win_DeviceInfo.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\WinApp\WindowDLG_Window4.c</FilePath>
+              <FilePath>..\..\app\emWin\WinApp\APP_Win_DeviceInfo.c</FilePath>
             </File>
             <File>
-              <FileName>WindowDLG_Window5.c</FileName>
+              <FileName>App_Win_HeartRate.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\WinApp\WindowDLG_Window5.c</FilePath>
+              <FilePath>..\..\app\emWin\WinApp\App_Win_HeartRate.c</FilePath>
             </File>
             <File>
-              <FileName>WindowDLG-Window3.c</FileName>
+              <FileName>App_Win_Ped.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\WinApp\WindowDLG-Window3.c</FilePath>
+              <FilePath>..\..\app\emWin\WinApp\App_Win_Ped.c</FilePath>
+            </File>
+            <File>
+              <FileName>App_Win_Utility.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\WinApp\App_Win_Utility.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -6283,34 +6298,39 @@
           <GroupName>emWin_WindowsApp</GroupName>
           <Files>
             <File>
-              <FileName>GUIDEMO_Start.c</FileName>
+              <FileName>APP_Win_Background.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\WinApp\GUIDEMO_Start.c</FilePath>
+              <FilePath>..\..\app\emWin\WinApp\APP_Win_Background.c</FilePath>
             </File>
             <File>
-              <FileName>WindowDLG_Window1.c</FileName>
+              <FileName>App_Win_Battery.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\WinApp\WindowDLG_Window1.c</FilePath>
+              <FilePath>..\..\app\emWin\WinApp\App_Win_Battery.c</FilePath>
             </File>
             <File>
-              <FileName>WindowDLG_Window2.c</FileName>
+              <FileName>App_Win_Clock.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\WinApp\WindowDLG_Window2.c</FilePath>
+              <FilePath>..\..\app\emWin\WinApp\App_Win_Clock.c</FilePath>
             </File>
             <File>
-              <FileName>WindowDLG_Window4.c</FileName>
+              <FileName>APP_Win_DeviceInfo.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\WinApp\WindowDLG_Window4.c</FilePath>
+              <FilePath>..\..\app\emWin\WinApp\APP_Win_DeviceInfo.c</FilePath>
             </File>
             <File>
-              <FileName>WindowDLG_Window5.c</FileName>
+              <FileName>App_Win_HeartRate.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\WinApp\WindowDLG_Window5.c</FilePath>
+              <FilePath>..\..\app\emWin\WinApp\App_Win_HeartRate.c</FilePath>
             </File>
             <File>
-              <FileName>WindowDLG-Window3.c</FileName>
+              <FileName>App_Win_Ped.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\WinApp\WindowDLG-Window3.c</FilePath>
+              <FilePath>..\..\app\emWin\WinApp\App_Win_Ped.c</FilePath>
+            </File>
+            <File>
+              <FileName>App_Win_Utility.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\WinApp\App_Win_Utility.c</FilePath>
             </File>
           </Files>
         </Group>
