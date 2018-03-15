@@ -102,6 +102,7 @@
 #include "dialog.h"
 #include "GUI.h"
 #include "WM.h"
+    #include "APP_Win_Utility.h"
 #endif
 
 #ifdef JDI_OLED_ENABLE
@@ -957,11 +958,14 @@ void TOUCH_Handler(void)
 
 static void cc_touch_debounce_timeout(void * p_context)
 {
-
-
     if (0x00 == drvi_GpioRead(TOUCH_INT_PIN))
     {
+        #ifdef EMWIN_ENABLE
+            APP_WIN_PostEvent_TOUCH();
+            s_tVenusCB.cTouchDebounceFlag=0;
+        #else
         VENUS_EVENT_ON(E_VENUS_EVENT_TOUCH_INT ,eEvent_None);
+        #endif
     }
     else
     {
@@ -3623,7 +3627,7 @@ int    venus_main(void)
         APP_SCHED_RunScheduler();
 
         #ifdef EMWIN_ENABLE
-        WM_Exec();
+        GUI_Exec();
         if ( true == APP_Gui_Get_DrawFlag())
         {
           JDI_End_Draw();

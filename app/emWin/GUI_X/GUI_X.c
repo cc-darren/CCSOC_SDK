@@ -44,12 +44,45 @@ Purpose     : Config / System dependent externals for GUI
 
 #include "GUI.h"
 #include "global.h"
+
+#include "APP_Win_Global.h"
+#include "sw_timer.h"
+
 /*********************************************************************
 *
 *       Global data
 */
-//volatile GUI_TIMER_TIME OS_TimeMS;
-volatile int32_t OS_TimeMS;
+volatile GUI_TIMER_TIME OS_TimeMS;
+
+
+SW_TIMER_DEF(s_tAPP_Emwin_Timer_Ticks);
+
+
+static void APP_WIM_Timer_Callback(void * p_context)
+{
+
+    uint32_t _dwTimerCnt = APP_WIM_TIMER_TICK;
+
+    OS_TimeMS += _dwTimerCnt;
+
+    if (OS_TimeMS >= 0x7ffffff0)
+        OS_TimeMS = 0;
+
+}
+
+
+void APP_WIM_CreateTimer(void)
+{
+
+    sw_timer_create(&s_tAPP_Emwin_Timer_Ticks,
+                     SW_TIMER_MODE_REPEATED,
+                     APP_WIM_Timer_Callback);
+
+    sw_timer_start(s_tAPP_Emwin_Timer_Ticks, 10, NULL);
+}
+
+
+//extern volatile int32_t OS_TimeMS;
 
 /*********************************************************************
 *
@@ -62,12 +95,8 @@ volatile int32_t OS_TimeMS;
   1 ms.
 */
 
-//GUI_TIMER_TIME GUI_X_GetTime(void) {
-int GUI_X_GetTime(void)
+GUI_TIMER_TIME GUI_X_GetTime(void) 
 {
-  OS_TimeMS++;
-  if (OS_TimeMS >= 0x7fffffff)
-        OS_TimeMS = 0;
   return OS_TimeMS;
 }
 

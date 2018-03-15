@@ -22,6 +22,9 @@
 // USER END
 
 #include "DIALOG.h"
+#include "APP_Win_Global.h"
+#include "App_Win_Utility.h"
+#include "Tracer.h"
 
 /*********************************************************************
 *
@@ -32,19 +35,6 @@
 #define ID_WINDOW_0 (GUI_ID_USER + 0x00)
 #define ID_TEXT_0 (GUI_ID_USER + 0x01)
 #define ID_IMAGE_0 (GUI_ID_USER + 0x02)
-#define ID_BUTTON_0 (GUI_ID_USER + 0x03)
-#define ID_BUTTON_1 (GUI_ID_USER + 0x04)
-#define ID_BUTTON_2 (GUI_ID_USER + 0x05)
-#define ID_BUTTON_3 (GUI_ID_USER + 0x06)
-
-
-
-//User define
-#define PAGE_CLOCK					(GUI_ID_USER + 0xD0)
-#define PAGE_PEDO					(GUI_ID_USER + 0xD1)
-#define PAGE_HR						(GUI_ID_USER + 0xD2)
-#define PAGE_BATTERY				(GUI_ID_USER + 0xD3)
-#define PAGE_PEDO_DISTANCE			(GUI_ID_USER + 0xD4)
 
 #define ID_USER_SLIDE_RETURE		(GUI_ID_USER + 0xE1)
 #define ID_USER_SLIDE_UP			(GUI_ID_USER + 0xE2)
@@ -93,12 +83,9 @@ static const U8 _acImage_0[463] = {
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { WINDOW_CreateIndirect, "Window", ID_WINDOW_0, 0, 0, 208, 208, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "Text", ID_TEXT_0, 69, 28, 120, 20, 0, 0x0, 0 },
-  { IMAGE_CreateIndirect, "Image", ID_IMAGE_0, 69, 82, 50, 52, 0, 0, 0 },
-  { BUTTON_CreateIndirect, "Button", ID_BUTTON_0, 7, 164, 53, 20, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "Button", ID_BUTTON_1, 60, 143, 80, 20, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "Button", ID_BUTTON_2, 61, 186, 80, 20, 0, 0x0, 0 },
-  { BUTTON_CreateIndirect, "Button", ID_BUTTON_3, 145, 167, 58, 20, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "Text", ID_TEXT_0, 20, 60, 172, 100, 0, 0x0, 0 },
+  { IMAGE_CreateIndirect, "Image", ID_IMAGE_0, 69, 112, 50, 52, 0, 0, 0 },
+
   // USER START (Optionally insert additional widgets)
   // USER END
 };
@@ -109,14 +96,6 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 *
 **********************************************************************
 */
-
-static void APP_SendMessage(unsigned int _cMessageId, unsigned int _cPageId)
-{
-	WM_MESSAGE Message;
-	Message.MsgId = _cMessageId;
-	Message.Data.v = _cPageId;
-	WM_SendMessage(WM_HBKWIN, &Message);
-}
 
 /*********************************************************************
 *
@@ -142,10 +121,13 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
   const void * pData;
   WM_HWIN      hItem;
   U32          FileSize;
-  int          NCode;
-  int          Id;
+
   // USER START (Optionally insert additional variables)
   // USER END
+
+   TracerInfo("[APP_WIN_Clock] Msg Id = %d\r\n",pMsg->MsgId);
+
+
 
   switch (pMsg->MsgId) {
   case WM_INIT_DIALOG:
@@ -156,97 +138,26 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     pData = _GetImageById(ID_IMAGE_0_IMAGE_0, &FileSize);
     IMAGE_SetBMP(hItem, pData, FileSize);
 
-    // USER START (Optionally insert additional code for further widget initialization)
-	hItem = pMsg->hWin;
-	hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_0);
-	BUTTON_SetText(hItem, "Return");
-
-	hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_1);
-	BUTTON_SetText(hItem, "Up");
-
-	hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_2);
-	BUTTON_SetText(hItem, "Down");
-	hItem = WM_GetDialogItem(pMsg->hWin, ID_BUTTON_3);
-	BUTTON_SetText(hItem, "Next");
-
 	hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_0);
-	TEXT_SetText(hItem, "BATTERY");
+	TEXT_SetText(hItem, "18:00");
+	TEXT_SetFont(hItem, &GUI_FontD48);//GUI_Font32B_ASCII);
 	TEXT_SetTextColor(hItem, GUI_RED);
     break;
   case WM_PAINT:
 	  GUI_SetBkColor(GUI_BLACK);
 	  GUI_Clear();
-    break;
-  case WM_NOTIFY_PARENT:
-    Id    = WM_GetId(pMsg->hWinSrc);
-    NCode = pMsg->Data.v;
-    switch(Id) {
-    case ID_BUTTON_0: // Notifications sent by 'Button'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-		APP_SendMessage(ID_USER_SLIDE_RETURE, PAGE_BATTERY);
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_BUTTON_1: // Notifications sent by 'Button'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_BUTTON_2: // Notifications sent by 'Button'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    case ID_BUTTON_3: // Notifications sent by 'Button'
-      switch(NCode) {
-      case WM_NOTIFICATION_CLICKED:
-        // USER START (Optionally insert code for reacting on notification message)
-        // USER END
-        break;
-      case WM_NOTIFICATION_RELEASED:
-		  APP_SendMessage(ID_USER_SLIDE_NEXT, PAGE_BATTERY);
-        break;
-      // USER START (Optionally insert additional code for further notification handling)
-      // USER END
-      }
-      break;
-    // USER START (Optionally insert additional code for further Ids)
-    // USER END
-    }
-    break;
-  // USER START (Optionally insert additional message handling)
-  case WM_TIMER://?…å??‡ç?æ´??„å?æ½”å?è¡„è™´
+	break;
+
+  case WM_TIMER:
 		WM_RestartTimer(pMsg->Data.v, 100);
-		if(TimeD<=30) TimeD++;
-		if(TimeD!=30) break;
-		APP_SendMessage(ID_USER_TIMER_TIMEOUT, PAGE_CLOCK);
+		if(TimeD<=APP_WIM_TIMER_TIMEOUT) TimeD++;
+		if(TimeD!=APP_WIM_TIMER_TIMEOUT) break;
+		APP_SendMessage(ID_USER_TIMER_TIMEOUT, 0);
 		TimeD = 0;
-  // USER END
+		break;
+  case WM_TOUCH:
+		APP_SendMessage(ID_USER_SLIDE_NEXT, 0);
+		 break;
   default:
     WM_DefaultProc(pMsg);
     break;
@@ -263,16 +174,15 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 *
 *       CreateWindow
 */
-WM_HWIN CreateWindow4(void);
-WM_HWIN CreateWindow4(void) {
-  WM_HWIN hWin;
+WM_HWIN CreateWindow_Clock(void);
+WM_HWIN CreateWindow_Clock(void) {
+	WM_HWIN hWin;
 
-  hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
-  WM_CreateTimer(hWin, 0, 100, 0);
-  TimeD = 0;
-  return hWin;
+	hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
+	WM_CreateTimer(hWin, 0, 100, 0);
+	TimeD = 0;
+	return hWin;
 }
-
 // USER START (Optionally insert additional public code)
 // USER END
 

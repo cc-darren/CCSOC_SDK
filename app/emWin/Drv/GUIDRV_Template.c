@@ -176,6 +176,7 @@ static void _SetPixelIndex(GUI_DEVICE * pDevice, int x, int y, LCD_PIXELINDEX Pi
       //
       //Jason
 
+      #if 0  
       if ((xPhys == 69) && (yPhys == 28))
       {
         TracerInfo("== draw wedget ==\r\n");
@@ -188,6 +189,7 @@ static void _SetPixelIndex(GUI_DEVICE * pDevice, int x, int y, LCD_PIXELINDEX Pi
 
       if (PixelIndex == 0x04)
           TracerInfo("== draw wedget Red ==\r\n");
+      #endif
       APP_Gui_Set_DrawFlag(true);
       JDI_PutPixel(xPhys,yPhys,PixelIndex<<1);
 
