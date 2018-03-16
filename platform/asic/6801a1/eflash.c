@@ -33,7 +33,6 @@
 #include "drvi_eflash.h"
 #include "eflash.h"
 #include <stddef.h>
-#include "tracer.h"
 
 #if (defined FSTORAGE_ENABLED) && (FSTORAGE_ENABLED)
 #include "fstorage.h"
@@ -132,7 +131,7 @@ void cc6801_EflashInit(void)
     NVIC_EnableIRQ(EFLASH_IRQn);
 }
 
-IN_RET_RAM_BEGIN
+IN_SYS_RAM_BEGIN
 void cc6801_EflashFlush(void) 
 {
     uint32_t tdata;
@@ -147,7 +146,7 @@ void cc6801_EflashFlush(void)
     GLOBAL_INT_START();
 
 }
-IN_RET_RAM_END
+IN_SYS_RAM_END
 
 BOOL cc6801_EflashEraseALL(void)
 {

@@ -302,42 +302,68 @@ void cc6801_RtcRegisterCallback(T_RtcCallback rtcCB)
 static uint32_t CheckAlarm(T_Alarm * pAlarmData)
 {
     uint32_t errcode;
-    uint32_t day;
+    uint32_t dom;
     uint32_t isLeapYear;
     uint32_t dwYear;
-    uint32_t dwTmp;
+    uint32_t dwTmpCTRLReg;
     
     
     errcode = 0;
     //check sec
-    if (pAlarmData->sec > 59) 
-        errcode |= RTC_ERR_SEC;
-    //check min
-    if (pAlarmData->min > 59) 
-        errcode |= RTC_ERR_MIN;
-    //check hour
-    rd(RTC_CTRL_REG, dwTmp);
-    if (pAlarmData->h24 == RTC_HOUR_24H)
+    if (pAlarmData->sec >= 60)
     {
-        if (((dwTmp&RTC_CTRL_REG_HF_24)==0) || (pAlarmData->hour > 24))
+        pAlarmData->sec -= 60;
+        pAlarmData->min += 1;
+    }
+    //check min
+    if (pAlarmData->min >= 60)
+    {
+        pAlarmData->min -= 60;
+        pAlarmData->hour += 1;
+    }
+    //check hour
+    rd(RTC_CTRL_REG, dwTmpCTRLReg);
+
+    if (pAlarmData->h24==RTC_CTRL_REG_HF_24)
+    {
+        if ((dwTmpCTRLReg&RTC_CTRL_REG_HF_24)==0)
         {
             errcode |= RTC_ERR_HOUR;
         }
-    }
-    else if ((pAlarmData->h24 == RTC_HOUR_AM)||(pAlarmData->h24 == RTC_HOUR_PM))
-    {
-        if ((dwTmp&RTC_CTRL_REG_HF_24)||(pAlarmData->hour > 12))
+        else
         {
-            errcode |= RTC_ERR_HOUR;
+            if (pAlarmData->hour >= 24)
+            {
+                pAlarmData->hour -= 24;
+                pAlarmData->day +=1;
+            }
         }
     }
     else
     {
-         errcode |= RTC_ERR_HOUR;
+        if ((dwTmpCTRLReg&RTC_CTRL_REG_HF_24)==1)
+        {
+            errcode |= RTC_ERR_HOUR;
+        }
+        else if (pAlarmData->h24==RTC_HOUR_AM)
+        {
+            if (pAlarmData->hour >=12)
+            {
+                pAlarmData->hour -= 12;
+                pAlarmData->h24 = RTC_HOUR_PM;
+            }
+        }
+        else if (pAlarmData->h24==RTC_HOUR_PM)
+        {
+            if (pAlarmData->hour >=12)
+            {
+                pAlarmData->hour -= 12;
+                pAlarmData->day += 1;
+            }
+        }
     }
-    //check month
-    if (pAlarmData->month > 12) 
-        errcode |= RTC_ERR_MONTH;
+
+    
     
     //check month day
     rd(RTC_YRS_REG,dwYear);
@@ -347,12 +373,21 @@ static uint32_t CheckAlarm(T_Alarm * pAlarmData)
     else
          isLeapYear = 0; 
 
-    day = mdays[pAlarmData->month-1];
+    dom = mdays[pAlarmData->month-1];
     if (pAlarmData->month ==2)
-        day += isLeapYear;
+        dom += isLeapYear;
 
-    if (pAlarmData->day > day) 
-        errcode |= RTC_ERR_DAY;
+    if (pAlarmData->day > dom)
+    {
+        pAlarmData->day -= dom;
+        pAlarmData->month += 1;
+    }
+
+    //check month
+    if (pAlarmData->month > 12)
+    {
+        pAlarmData->month -= 12;
+    }
 
     return errcode;
 }

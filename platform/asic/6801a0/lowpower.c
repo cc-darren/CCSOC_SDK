@@ -7,11 +7,6 @@
 
 extern E_ClockSupported g_dwCurrentClock;
 
-//uint32_t dwPDNCmdCnt;
-//uint32_t dwDR0CmdCnt;
-//uint32_t dwDR1CmdCnt;
-//uint32_t dwDR2CmdCnt;
-
 struct {
     uint32_t dwPin;
     uint32_t dwIF;
@@ -25,9 +20,7 @@ typedef struct _DataRamCmd_t{
 } DataRamCmd_t;
 
 
-IN_RET_RAM_BEGIN
 uint32_t g_dwPeripheralState;
-IN_RET_RAM_END
 
 
 
@@ -72,25 +65,25 @@ uint32_t cc6801_LowPower_SetWakeupSource(Lowpower_WakeUp_t SetID,uint32_t dwPinN
     return SUCCESS;
 }
 
-IN_RET_RAM_BEGIN
+
 void EnterAndLeaveWFI(void)
 {
     __wfi();
     drvi_ClockSysClkAdjust(g_dwCurrentClock);
 }
-IN_RET_RAM_END
+
 
 void cc6801_LowPower_Sleep(Lowpower_PowerMode_t lpMode)
 {
-    DataRamCmd_t tPRDList;
-    DataRamCmd_t tDrList[3];
-IN_RET_RAM_BEGIN
-    DataRamCmd_t tWakeupList;
-    uint32_t mlpCmdList[256];
-IN_RET_RAM_END
+//    DataRamCmd_t tPRDList;
+//    DataRamCmd_t tDrList[3];
+
+//    DataRamCmd_t tWakeupList;
+//    uint32_t mlpCmdList[256];
 
 
-    uint32_t tmpdata,tmp_SCU_CLKCFG1_REG;
+
+    uint32_t tmpdata;
     
 
     //0x40002200, sleep mode, clock source and mode selection

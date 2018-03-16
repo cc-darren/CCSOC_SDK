@@ -33,7 +33,6 @@
 #include "drvi_eflash.h"
 #include "eflash.h"
 #include <stddef.h>
-#include "tracer.h"
 
 #if (defined FSTORAGE_ENABLED) && (FSTORAGE_ENABLED)
 #include "fstorage.h"
