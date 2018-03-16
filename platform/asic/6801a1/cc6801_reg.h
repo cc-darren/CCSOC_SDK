@@ -49,30 +49,17 @@ extern "C" {
 #define setbit(x,y) *((volatile unsigned int *)(x)) |= y
 #define clrbit(x,y) *((volatile unsigned int *)(x)) &= (~y)
 
-
-//// clock
-#define CLK32K_PERIOD_DIV2          ((1000000000/32768)/2)
-#define CLK48M_PERIOD_DIV2          (10.416)
-#define CLKPLL_PERIOD_DIV2          (10/2)
-#define CLK20M_PERIOD_DIV2          (50/2)
-
-
-// mem
+// Memory
 #define ROM_ADDR_BASE               0x00000000
 #define ROM_SIZE                    0x00020000  // 128KB
 #define EF_BASE                     0x10000000
 #define EF_SIZE                     0x10040000  // 256KB
 #define SYSRAM_ADDR_BASE            0x20000000
-#define SYSRAM_SIZE                 0x00018000  // 96KB
-#define DATARAM_ADDR_BASE           0x20020000
-#define DATARAM_SIZE                0x00002000  // 8KB
+#define SYSRAM_SIZE                 0x0002A000  // 168KB
+//#define DATARAM_ADDR_BASE           0x20020000
+//#define DATARAM_SIZE                0x00002000  // 8KB
 
-// mem read write test
-#define SYSRAM_TEST_ADDR_BASE       0x20010000
-
-// io
-#define REG_SIZE                    0x00000100  // 256B
-#define BLE_REG_SIZE                0x00020000  // 8k use 16k
+// Register
 #define SCU_ADDR_BASE               0x40000000
 #define CKGEN_ADDR_BASE             0x40000100
 #define GPIO_ADDR_BASE              0x40000200
@@ -81,28 +68,27 @@ extern "C" {
 #define PWM1_ADDR_BASE              0x40000500
 #define WKTM0_ADDR_BASE             0x40000600
 #define WKTM1_ADDR_BASE             0x40000700
-
 #define RTC_ADDR_BASE               0x40000800
 #define I2S_ADDR_BASE               0x40000900
 #define DMIC_ADDR_BASE              0x40000a00
 #define SPI0_ADDR_BASE              0x40000b00
 #define SPI1_ADDR_BASE              0x40000c00
 #define SPI2_ADDR_BASE              0x40000d00
+#define SPI3_ADDR_BASE              0x40001500
 #define UART0_ADDR_BASE             0x40000e00
 #define UART1_ADDR_BASE             0x40000f00
-
 #define UART2_ADDR_BASE             0x40001000
 #define I2C0_ADDR_BASE              0x40001100
 #define I2C1_ADDR_BASE              0x40001200
 #define DMU_ADDR_BASE               0x40001300
-
+#define AOCKGEN_ADDR_BASE           0x40001400
 #define EF_ADDR_BASE                0x40002000
-//#define OTP_ADDR_BASE               0x40002100
+#define BLEPHY_ADDR_BASE            0x40002100
 #define HS_ADDR_BASE                0x40002200
 #define PMU_ADDR_BASE               0x40002300
 #define AES_ADDR_BASE               0x40002400
 #define CCU_ADDR_BASE               0x40002500
-
+#define VWU_ADDR_BASE               0x40002600
 #define BLE_ADDR_BASE               0x40004000
 
 // EF
@@ -340,11 +326,13 @@ typedef union U_regSCU
         uint32_t shutOff;
         uint32_t retentionEn;
         uint32_t extAuxSel;
-        uint32_t codeRemap;
+        uint32_t reserved2;
         uint32_t cacheBootCtrl;
         uint32_t clk32Calib;
         uint32_t chipIntEn;
         uint32_t chipIntSts;
+        uint32_t shutOffAckSts;
+        uint32_t productKey;
     }dw;    //double word
 
     struct
@@ -641,6 +629,67 @@ typedef union U_regCKGEN
     }bf;    //bit-field
 }U_regCKGEN;
 
+typedef union U_regGPIO
+{
+    struct
+    {
+        uint32_t input;
+        uint32_t output;
+        uint32_t outputEn;
+        uint32_t intPolarity;       //0:high, 1:low
+        uint32_t intEn;             //0:disable, 1:enable
+        uint32_t intSts;
+        uint32_t intTrig;
+        uint32_t pinmux;
+        uint32_t intType;           //0:level change, 1:single edge
+        uint32_t puEn;              //0:disable, 1:enable
+        uint32_t portModeSel;
+        //See S_regGPIOnew for new a1 GPIO registers
+    }dw;    //double word
+}U_regGPIO;
+
+typedef struct
+{
+    uint32_t pad0InEn;
+    uint32_t pad1InEn;
+    uint32_t pad0DrvStrength;
+    uint32_t pad1DrvStrength;
+    uint32_t specialPadInEn;
+    uint32_t specialPadDrvStrength;
+} S_regGPIOnew;
+
+
+typedef union U_regWDT
+{
+    struct
+    {
+        uint32_t interrupt;
+        uint32_t ctrl;
+        uint32_t intCounter;
+        uint32_t rstCounter;
+        uint32_t counter;
+    }dw;    //double word
+
+    struct
+    {
+        uint32_t intEn:1;           //0:disable, 1:enable
+        uint32_t reserved0:15;
+        uint32_t intSts:1;          //write 1 clear
+        uint32_t reserved1:15;
+
+        uint32_t wdtEn:1;           //0:disable, 1:enable
+        uint32_t timerSel:1;        //0:disable, 1:enable
+        uint32_t rstEn:1;           //0:disable, 1:enable
+        uint32_t reserved2:5;
+        uint32_t prescaler:8;       //0,1:no pre-scaler, 2~255: pre-scaler
+        uint32_t reserved3:16;
+
+        uint32_t intCounter;
+        uint32_t rstCounter;
+        uint32_t counter;           //read counter value
+    }bf;    //bit-field
+}U_regWDT;
+
 typedef union U_regPWMWKTM
 {
     struct
@@ -800,46 +849,76 @@ typedef union U_regRTC
     }bf;    //bit-field
 }U_regRTC;
 
+typedef struct
+{
+    uint32_t i2sClkCtrl;
+    uint32_t i2sRxCtrl;
+    uint32_t i2sTxCtrl;
+    uint32_t i2sTxDataLeft;
+    uint32_t i2sTxDataRight;
+    uint32_t i2sRxDataLeft;
+    uint32_t i2sRxDataRight;
+    uint32_t i2sStatus;
+    uint32_t i2sInt;
+    uint32_t i2sDmaByteCtrl;
+    uint32_t i2sDmaRxStartAddr;
+    uint32_t i2sDmaRxEndAddr;
+    uint32_t i2sDmaRxEn;
+    uint32_t i2sDmaTxStartAddr;
+    uint32_t i2sDmaTxEndAddr;
+    uint32_t i2sDmaTxEn;
+    uint32_t i2sDmaRxCurrAddr;
+    uint32_t i2sDmaTxCurrAddr;
+}S_regI2S;
 
-typedef union U_regGPIO
+typedef union U_regSPI
 {
     struct
     {
-        uint32_t input;
-        uint32_t output;
-        uint32_t outputEn;
-        uint32_t intPolarity;       //0:high, 1:low
-        uint32_t intEn;             //0:disable, 1:enable
-        uint32_t intSts;
-        uint32_t intTrig;
-        uint32_t pinmux;
-        uint32_t intType;           //0:level change, 1:single edge
-        uint32_t puEn;              //0:disable, 1:enable
-        uint32_t portModeSel;
+        uint32_t spiInt;
+        uint32_t spiCtrl;
+        uint32_t DmaCtrl;
+        uint32_t wAddr;
+        uint32_t rAddr;
+        uint32_t bit9Mode;
+        uint32_t dummyCycle;
     }dw;    //double word
 
     struct
     {
-        uint32_t input;
-        uint32_t output;
-        uint32_t outputEn;
-        uint32_t intAct;
-        uint32_t intEn;
-        uint32_t intSts;
-        uint32_t intTrig;
-        uint32_t pinmux;
-        uint32_t intType;
-        uint32_t puEn;
-        uint32_t pmSel7:4;
-        uint32_t pmSel6:4;
-        uint32_t pmSel5:4;
-        uint32_t pmSel4:4;
-        uint32_t pmSel3:4;
-        uint32_t pmSel2:4;
-        uint32_t pmSel1:4;
-        uint32_t pmSel0:4;
+        //SPI interrupt:0x00
+        uint32_t  event_int_en:1;
+        uint32_t  error_int_en:1;
+        uint32_t  reserved0:14;
+        uint32_t  event_int_status:1;
+        uint32_t  error_int_status:1;
+        uint32_t  reserved1:14;
+        //SPI control:0x04
+        uint32_t  cpha:1;
+        uint32_t  cpol:1;
+        uint32_t  reserved2:6;
+        uint32_t  cs:2;
+        uint32_t  cs_polarity:1;
+        uint32_t  reserved3:13;
+        uint32_t  spi_m_en:1;
+        uint32_t  reserved4:7;
+        //SPI DMA control:0x08
+        uint32_t  total_wbyte:8;
+        uint32_t  total_rbyte:8;
+        uint32_t  op_mode:2;
+        uint32_t  wbyte_swap:1;
+        uint32_t  rbyte_swap:1;
+        uint32_t  reserved5:4;
+        uint32_t  spi_m_dma_en:1;
+        uint32_t  reserved6:7;
+        //DMA start write address:0x0C
+        uint32_t  dma_str_waddr:17;
+        uint32_t  reserved7:15;
+        //DMA start read address:0x10
+        uint32_t  dma_str_raddr:17;
+        uint32_t  reserved8:15;
     }bf;    //bit-field
-}U_regGPIO;
+}U_regSPI;
 
 typedef union U_regUARTDMA
 {
@@ -1063,52 +1142,61 @@ typedef union U_regI2C
     }bf;    //bit-field
 }U_regI2C;
 
-typedef union U_regSPI
+typedef struct
 {
-    struct
-    {
-        uint32_t spiInt;
-        uint32_t spiCtrl;
-        uint32_t DmaCtrl;
-        uint32_t wAddr;
-        uint32_t rAddr;
-    }dw;    //double word
+    uint32_t reserved0;
+    uint32_t clkCfg1;
+    uint32_t clkCfg2;
+    uint32_t reserved1[2];
+    uint32_t clkEn;
+    uint32_t swReset;
+}S_regAOCKGEN;
 
-    struct
-    {
-        //SPI interrupt:0x00
-        uint32_t  event_int_en:1;
-        uint32_t  error_int_en:1;
-        uint32_t  reserved0:14;
-        uint32_t  event_int_status:1;
-        uint32_t  error_int_status:1;
-        uint32_t  reserved1:14;
-        //SPI control:0x04
-        uint32_t  cpha:1;
-        uint32_t  cpol:1;
-        uint32_t  reserved2:6;
-        uint32_t  cs:2;
-        uint32_t  cs_polarity:1;
-        uint32_t  reserved3:13;
-        uint32_t  spi_m_en:1;
-        uint32_t  reserved4:7;
-        //SPI DMA control:0x08
-        uint32_t  total_wbyte:8;
-        uint32_t  total_rbyte:8;
-        uint32_t  op_mode:2;
-        uint32_t  wbyte_swap:1;
-        uint32_t  rbyte_swap:1;
-        uint32_t  reserved5:4;
-        uint32_t  spi_m_dma_en:1;
-        uint32_t  reserved6:7;
-        //DMA start write address:0x0C
-        uint32_t  dma_str_waddr:17;
-        uint32_t  reserved7:15;
-        //DMA start read address:0x10
-        uint32_t  dma_str_raddr:17;
-        uint32_t  reserved8:15;
-    }bf;    //bit-field
-}U_regSPI;
+typedef struct
+{
+    uint32_t dwInterrupt;
+    uint32_t dwCtrl;
+    uint32_t dwIndirStart;
+    uint32_t dwProgBuf1;
+    uint32_t dwProgBuf2;
+    uint32_t dwProgBuf3;
+    uint32_t dwProgBuf4;
+    uint32_t dwAccessCtrl;
+    uint32_t dwRdBuf1;
+    uint32_t dwRdBuf2;
+    uint32_t dwRedundancy;
+    uint32_t dwProtect;
+    uint32_t dwPadding[5];
+    uint32_t dwTcpsTadhTah;
+    uint32_t dwTwkTpgs;
+    uint32_t dwTrcvTnvh;
+    uint32_t dwTprog;
+    uint32_t dwTerase;
+    uint32_t dwTme;
+    uint32_t dwTnvsTnvh1;
+    uint32_t dwDmaCtrl;
+    uint32_t dwDmaWrAddr;
+    uint32_t dwDmaRdAddr;
+}S_regEFLASH;
+
+typedef struct
+{
+    uint32_t dwConfig;
+    uint32_t dwStatus;
+    uint32_t dwDrPdn;
+    uint32_t dwDr0Pup;
+    uint32_t dwDr0Pup1;
+    uint32_t dwDr1Pup;
+    uint32_t dwDr1Pup1;
+    uint32_t dwDr2Pup;
+    uint32_t dwDr2Pup1;
+    uint32_t dwPdnIsoPso;
+    uint32_t dwPdnLdo;
+    uint32_t dwPmuLdoTrim;
+    uint32_t dwPmuDcdcReg;
+    uint32_t dwDr3Pup;
+    uint32_t dwRetRamCtrl;
+}S_regHS;
 
 typedef union U_regAES
 {
@@ -1151,85 +1239,17 @@ typedef union U_regAES
     }bf;    //bit-field
 }U_regAES;
 
-typedef union U_regWDT
-{
-    struct
-    {
-        uint32_t interrupt;
-        uint32_t ctrl;
-        uint32_t intCounter;
-        uint32_t rstCounter;
-        uint32_t counter;
-    }dw;    //double word
-
-    struct
-    {
-        uint32_t intEn:1;           //0:disable, 1:enable
-        uint32_t reserved0:15;
-        uint32_t intSts:1;          //write 1 clear
-        uint32_t reserved1:15;
-
-        uint32_t wdtEn:1;           //0:disable, 1:enable
-        uint32_t timerSel:1;        //0:disable, 1:enable
-        uint32_t rstEn:1;           //0:disable, 1:enable
-        uint32_t reserved2:5;
-        uint32_t prescaler:8;       //0,1:no pre-scaler, 2~255: pre-scaler
-        uint32_t reserved3:16;
-
-        uint32_t intCounter;
-        uint32_t rstCounter;
-        uint32_t counter;           //read counter value
-    }bf;    //bit-field
-}U_regWDT;
-
 typedef struct
 {
     uint32_t dwInterrupt;
-    uint32_t dwCtrl;
-    uint32_t dwIndirStart;
-    uint32_t dwProgBuf1;
-    uint32_t dwProgBuf2;
-    uint32_t dwProgBuf3;
-    uint32_t dwProgBuf4;
-    uint32_t dwAccessCtrl;
-    uint32_t dwRdBuf1;
-    uint32_t dwRdBuf2;
-    uint32_t dwRedundancy;
-    uint32_t dwProtect;
-    uint32_t dwPadding[5];
-    uint32_t dwTcpsTadhTah;
-    uint32_t dwTwkTpgs;
-    uint32_t dwTrcvTnvh;
-    uint32_t dwTprog;
-    uint32_t dwTerase;
-    uint32_t dwTme;
-    uint32_t dwTnvsTnvh1;
-    uint32_t dwDmaCtrl;
-    uint32_t dwDmaWrAddr;
-    uint32_t dwDmaRdAddr;
-}S_regEFLASH;
+    uint32_t dwDeltaCnt;
+    uint32_t dwFineDeltaCnt;
+}S_regCCU;
 
-typedef struct U_regI2S
+typedef struct
 {
-    uint32_t i2sClkCtrl;
-    uint32_t i2sRxCtrl;
-    uint32_t i2sTxCtrl;
-    uint32_t i2sTxDataLeft;
-    uint32_t i2sTxDataRight;
-    uint32_t i2sRxDataLeft;
-    uint32_t i2sRxDataRight;
-    uint32_t i2sStatus;
-    uint32_t i2sInt;
-    uint32_t i2sDmaByteCtrl;
-    uint32_t i2sDmaRxStartAddr;
-    uint32_t i2sDmaRxEndAddr;
-    uint32_t i2sDmaRxEn;
-    uint32_t i2sDmaTxStartAddr;
-    uint32_t i2sDmaTxEndAddr;
-    uint32_t i2sDmaTxEn;
-    uint32_t i2sDmaRxCurrAddr;
-    uint32_t i2sDmaTxCurrAddr;
-}S_regI2S;
+    uint32_t none;
+}S_regVMU;
 
 typedef struct
 {
@@ -1262,6 +1282,7 @@ typedef struct
 #define regWKTM1        ((U_regPWMWKTM     *) WKTM1_ADDR_BASE)
 #define regGPIO0        ((U_regGPIO        *) GPIO_ADDR_BASE)
 #define regGPIO1        ((U_regGPIO        *) (GPIO_ADDR_BASE + 0x0000002c))
+#define regGPIOnew      ((S_regGPIOnew     *) (GPIO_ADDR_BASE + 0x00000058))
 #define regUART0DMA     ((U_regUARTDMA     *) UART0_ADDR_BASE)
 #define regUART0CTRL    ((U_regUARTCTRL    *) (UART0_ADDR_BASE + 0x00000080))
 #define regUART1DMA     ((U_regUARTDMA     *) UART1_ADDR_BASE)
@@ -1271,12 +1292,17 @@ typedef struct
 #define regSPI0         ((U_regSPI         *) SPI0_ADDR_BASE)
 #define regSPI1         ((U_regSPI         *) SPI1_ADDR_BASE)
 #define regSPI2         ((U_regSPI         *) SPI2_ADDR_BASE)
+#define regSPI3         ((U_regSPI         *) SPI3_ADDR_BASE)
 #define regRTC          ((U_regRTC         *) RTC_ADDR_BASE)
 #define regI2C0         ((U_regI2C         *) I2C0_ADDR_BASE)
 #define regI2C1         ((U_regI2C         *) I2C1_ADDR_BASE)
-#define regAES          ((U_regAES         *) AES_ADDR_BASE)
-#define regWDT          ((U_regWDT         *) WDT_ADDR_BASE)
+#define regAOCKGEN      ((S_regAOCKGEN     *) AOCKGEN_ADDR_BASE)
 #define regEFLASH       ((S_regEFLASH      *) EF_ADDR_BASE)
+#define regHS           ((S_regHS          *) HS_ADDR_BASE)
+#define regAES          ((U_regAES         *) AES_ADDR_BASE)
+#define regCCU          ((S_regCCU         *) CCU_ADDR_BASE)
+#define regVWU          ((S_regVWU         *) VWU_ADDR_BASE)
+#define regWDT          ((U_regWDT         *) WDT_ADDR_BASE)
 #define regI2S          ((S_regI2S         *) I2S_ADDR_BASE)
 
 #ifdef __cplusplus
