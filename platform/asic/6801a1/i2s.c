@@ -107,23 +107,23 @@ int cc6801_I2sSetFormat(uint16_t wFmt)
     uint32_t dwRxCtrl = regI2S->i2sRxCtrl;
 
     /* DAI mode */
-    dwTxCtrl &= ~CC6801_I2S_TXMOD_MASK;
-    dwRxCtrl &= ~CC6801_I2S_TXMOD_MASK;
+    dwTxCtrl &= ~CC6801_I2S_MOD_MASK;
+    dwRxCtrl &= ~CC6801_I2S_MOD_MASK;
     switch (wFmt & DAI_FORMAT_MASK)
     {
         case DAI_FORMAT_RIGHT_J:
-            dwTxCtrl |= CC6801_I2S_TXMOD_RJM;
-            dwRxCtrl |= CC6801_I2S_TXMOD_RJM;
+            dwTxCtrl |= CC6801_I2S_MOD_RJM;
+            dwRxCtrl |= CC6801_I2S_MOD_RJM;
             break;
         case DAI_FORMAT_LEFT_J:
-            dwTxCtrl |= CC6801_I2S_TXMOD_LJM;
-            dwRxCtrl |= CC6801_I2S_TXMOD_LJM;
+            dwTxCtrl |= CC6801_I2S_MOD_LJM;
+            dwRxCtrl |= CC6801_I2S_MOD_LJM;
             break;
         default:
             TracerInfo("Not support format%d, using default I2S format...\r\n", wFmt);
         case DAI_FORMAT_I2S:
-            dwTxCtrl |= CC6801_I2S_TXMOD_I2S;
-            dwRxCtrl |= CC6801_I2S_TXMOD_I2S;
+            dwTxCtrl |= CC6801_I2S_MOD_I2S;
+            dwRxCtrl |= CC6801_I2S_MOD_I2S;
             break;
     }
 
@@ -204,37 +204,37 @@ int cc6801_I2sHwParams(T_DaiHwParams *tpParams)
     uint32_t dwRxCtrl = regI2S->i2sRxCtrl;
 
     dwClkCtrl &= ~CC6801_I2S_WSRES_MASK;
-    dwTxCtrl &= (~CC6801_I2S_TXALIGN_MASK | ~CC6801_I2S_TXRES_MASK);
-    dwRxCtrl &= (~CC6801_I2S_TXALIGN_MASK | ~CC6801_I2S_TXRES_MASK);
+    dwTxCtrl &= (~CC6801_I2S_ALIGN_MASK | ~CC6801_I2S_RES_MASK);
+    dwRxCtrl &= (~CC6801_I2S_ALIGN_MASK | ~CC6801_I2S_RES_MASK);
 
     switch (tpParams->iFormat)
     {
         case DAI_PCM_FORMAT_S8:
             dwClkCtrl |= CC6801_I2S_WSRES_16;
-            dwTxCtrl |= (CC6801_I2S_TXALIGN_8LE | CC6801_I2S_TXRES_8);
-            dwRxCtrl |= (CC6801_I2S_TXALIGN_8LE | CC6801_I2S_TXRES_8);
+            dwTxCtrl |= (CC6801_I2S_ALIGN_8LE | CC6801_I2S_RES_8);
+            dwRxCtrl |= (CC6801_I2S_ALIGN_8LE | CC6801_I2S_RES_8);
             break;
         case DAI_PCM_FORMAT_S20_3LE:
             dwClkCtrl |= CC6801_I2S_WSRES_32;
-            dwTxCtrl |= (CC6801_I2S_TXALIGN_24LE | CC6801_I2S_TXRES_20);
-            dwRxCtrl |= (CC6801_I2S_TXALIGN_24LE | CC6801_I2S_TXRES_20);
+            dwTxCtrl |= (CC6801_I2S_ALIGN_24LE | CC6801_I2S_RES_20);
+            dwRxCtrl |= (CC6801_I2S_ALIGN_24LE | CC6801_I2S_RES_20);
             break;
         case DAI_PCM_FORMAT_S24_LE:
             dwClkCtrl |= CC6801_I2S_WSRES_32;
-            dwTxCtrl |= (CC6801_I2S_TXALIGN_24LE | CC6801_I2S_TXRES_24);
-            dwRxCtrl |= (CC6801_I2S_TXALIGN_24LE | CC6801_I2S_TXRES_24);
+            dwTxCtrl |= (CC6801_I2S_ALIGN_24LE | CC6801_I2S_RES_24);
+            dwRxCtrl |= (CC6801_I2S_ALIGN_24LE | CC6801_I2S_RES_24);
             break;
         case DAI_PCM_FORMAT_S24_BE:
             dwClkCtrl |= CC6801_I2S_WSRES_32;
-            dwTxCtrl |= (CC6801_I2S_TXALIGN_24BE | CC6801_I2S_TXRES_24);
-            dwRxCtrl |= (CC6801_I2S_TXALIGN_24BE | CC6801_I2S_TXRES_24);
+            dwTxCtrl |= (CC6801_I2S_ALIGN_24BE | CC6801_I2S_RES_24);
+            dwRxCtrl |= (CC6801_I2S_ALIGN_24BE | CC6801_I2S_RES_24);
             break;
         default:
             TracerInfo("Not support fomat%d, using default 16bits...\r\n", tpParams->iFormat);
         case DAI_PCM_FORMAT_S16_LE:
             dwClkCtrl |= CC6801_I2S_WSRES_16;
-            dwTxCtrl |= (CC6801_I2S_TXALIGN_16LE | CC6801_I2S_TXRES_16);
-            dwRxCtrl |= (CC6801_I2S_TXALIGN_16LE | CC6801_I2S_TXRES_16);
+            dwTxCtrl |= (CC6801_I2S_ALIGN_16LE | CC6801_I2S_RES_16);
+            dwRxCtrl |= (CC6801_I2S_ALIGN_16LE | CC6801_I2S_RES_16);
             break;
     }
 
