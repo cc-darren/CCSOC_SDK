@@ -49,6 +49,8 @@ Head Block of The File
     #include "config_FPGA.h"
 #elif defined(EVB) && EVB
     #include "config_EVB.h"
+#elif defined(EVB_QFN60L) && EVB_QFN60L
+    #include "config_EVB_QFN60L.h"
 #elif defined(ASIC) && ASIC
     #include "config_ASIC.h"
 #else

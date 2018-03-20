@@ -51,9 +51,9 @@
 #endif //_OLED_SHARE_TYPE_
 
 #define OLED_SH1107_SPI                              OLED_IF_ID
-#define OLED_SH1107_PWR                              GPIO_PIN_41//GPIO_PIN_15
-#define OLED_SH1107_RST                              GPIO_PIN_23//GPIO_PIN_31
-#define OLED_SH1107_DC                               GPIO_PIN_40//GPIO_PIN_14
+#define OLED_SH1107_PWR                              OLED_PWR_PIN
+#define OLED_SH1107_RST                              OLED_RST_PIN
+#define OLED_SH1107_DC                               OLED_DC_PIN
 
 #define SH1107_LCDWIDTH                              128
 #define SH1107_LCDHEIGHT                             32
