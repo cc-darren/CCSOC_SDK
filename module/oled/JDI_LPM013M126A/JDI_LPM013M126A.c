@@ -8,14 +8,14 @@
  * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed
  * from the file.
  */
-#ifdef JDI_OLED_ENABLE_208x208
+#ifdef JDI_OLED_ENABLE_176x176
 
 #include <string.h>
 #include <stdio.h>
 #include "LCDConf.h"
 
 
-#include "JDI_LPM010M297B.h"
+#include "JDI_LPM013M126A.h"
 #include "gpio.h"
 #include "drvi_gpio.h"
 #include "drvi_spi.h"
@@ -60,7 +60,7 @@ uint8_t g_aScreenBuff[YSIZE_PHYS][XSIZE_PHYS];
 bool g_aScreenY_Flag[YSIZE_PHYS];
 uint8_t g_aScreenBuff_1Bit[YSIZE_PHYS][XSIZE_PHYS/8];
 static uint8_t s_ucUpdateEn = 0;
-extern unsigned char _acHeart[2704];
+
 void Display_NoUpdatMode(void)
 {
     uint8_t _bdata[2] = {0};
@@ -124,9 +124,9 @@ void JDI_PlotData_4BitMode(void)
     for (int i =1 ;i <=YSIZE_PHYS;i++)
     {
         if ( true == g_aScreenY_Flag[i-1])
-    {
-        _bBuffer[0] = 0x90;
-        _bBuffer[1] = i;
+        {
+            _bBuffer[0] = 0x90;
+            _bBuffer[1] = i;
             memcpy(&_bBuffer[2],&g_aScreenBuff[(i-1)][0],XSIZE_PHYS*sizeof(char));
             drvi_SpiWrite(SPI_PORT,_bBuffer,2+XSIZE_PHYS+2); // mode 2bytes + YPHYS + dummy 2bytes
             g_aScreenY_Flag[i-1] = false;
@@ -237,7 +237,6 @@ void Display_All_BLACKColor(void)
 
 void JDI_PutPixel(uint8_t xPhys, uint8_t yPhys, uint8_t PixelIndex)
 {
-
     g_aScreenY_Flag[yPhys]= true;
 
     if (xPhys %2 ==0)
@@ -333,7 +332,7 @@ void JDI_LCD_Init(void)
     //JDILCD_DELAY(100);
     LCD_EXTCOM_SET;
     #endif
-    
+
 
 }
 

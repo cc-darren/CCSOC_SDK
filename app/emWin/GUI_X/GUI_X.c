@@ -47,7 +47,7 @@ Purpose     : Config / System dependent externals for GUI
 #include "GUI.h"
 #include "global.h"
 
-#include "APP_Win_Global.h"
+#include "app_win_global.h"
 #include "sw_timer.h"
 
 /*********************************************************************

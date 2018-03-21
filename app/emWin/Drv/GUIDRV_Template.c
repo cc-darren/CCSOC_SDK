@@ -52,8 +52,18 @@ Purpose     : Template driver, could be used as starting point for new
 #include "LCD_SIM.h"
 #include "LCD_ConfDefaults.h"
 #include "Tracer.h"
+#include "GUIDRV_Template.h"
 
+#ifdef JDI_DRAW_WIHTTIMER
+#include "sw_timer.h"
+#include "app_win_utility.h"
+#endif
+#ifdef JDI_OLED_ENABLE_208x208
 #include "JDI_LPM010M297B.h"
+#endif
+#ifdef JDI_OLED_ENABLE_176x176
+#include "JDI_LPM013M126A.h"
+#endif
 
 /*********************************************************************
 *
@@ -109,6 +119,9 @@ Purpose     : Template driver, could be used as starting point for new
 //
 #define DRIVER_CONTEXT DRIVER_CONTEXT_TEMPLATE
 
+#ifdef JDI_DRAW_WIHTTIMER
+SW_TIMER_DEF(s_tAPP_Emwin_Timer_DrawWindow);
+#endif
 /*********************************************************************
 *
 *       Types
@@ -123,17 +136,7 @@ typedef struct {
   int BitsPerPixel;
 } DRIVER_CONTEXT;
 
-
 uint8_t g_bGuiDrawFlag = 0;
-void APP_Gui_Set_DrawFlag(uint8_t _bState)
-{
-    g_bGuiDrawFlag = _bState;
-}
-
-uint8_t APP_Gui_Get_DrawFlag(void)
-{
-    return g_bGuiDrawFlag;
-}
 
 /*********************************************************************
 *
@@ -141,6 +144,25 @@ uint8_t APP_Gui_Get_DrawFlag(void)
 *
 **********************************************************************
 */
+#ifdef JDI_DRAW_WIHTTIMER
+
+static void GUIDRV_Timer_DrawWindow_Callback(void * p_context)
+{
+    APP_WIN_PostEvent_DrawWindow();
+    APP_Gui_Set_DrawFlag(false);
+}
+
+static void GUIDRV_DrawWindow_TimerStart(uint32_t _dwTime)
+{
+    sw_timer_start(s_tAPP_Emwin_Timer_DrawWindow, _dwTime, NULL);
+}
+
+static void GUIDRV_DrawWindow_TimerStop(void)
+{
+    sw_timer_stop(s_tAPP_Emwin_Timer_DrawWindow);
+}
+#endif
+
 /*********************************************************************
 *
 *       _SetPixelIndex
@@ -192,11 +214,7 @@ static void _SetPixelIndex(GUI_DEVICE * pDevice, int x, int y, LCD_PIXELINDEX Pi
       if (PixelIndex == 0x04)
           TracerInfo("== draw wedget Red ==\r\n");
       #endif
-      APP_Gui_Set_DrawFlag(true);
-      JDI_PutPixel(xPhys,yPhys,PixelIndex<<1);
-
-
-
+      JDI_PutPixel(xPhys,yPhys,PixelIndex);
     }
     #if (LCD_MIRROR_X == 0) && (LCD_MIRROR_Y == 0) && (LCD_SWAP_XY == 0)
       #undef xPhys
@@ -272,6 +290,21 @@ static void _FillRect(GUI_DEVICE * pDevice, int x0, int y0, int x1, int y1) {
   LCD_PIXELINDEX PixelIndex;
   int x;
 
+#ifdef JDI_DRAW_WIHTTIMER
+  if ( true == APP_Gui_Get_DrawFlag())
+  {
+    GUIDRV_DrawWindow_TimerStop();
+    GUIDRV_DrawWindow_TimerStart(10);
+  }
+  else
+  {
+    GUIDRV_DrawWindow_TimerStart(10);
+    APP_Gui_Set_DrawFlag(true);
+  }
+#else
+    APP_Gui_Set_DrawFlag(true);
+#endif
+
   PixelIndex = LCD__GetColorIndex();
   //TracerInfo("== _FillRect ==\r\n");
   if (GUI_pContext->DrawMode & LCD_DRAWMODE_XOR) {
@@ -315,8 +348,20 @@ static void _DrawBitLine1BPP(GUI_DEVICE * pDevice, int x, int y, U8 const * p, i
   Index0 = *(pTrans + 0);
   Index1 = *(pTrans + 1);
   x += Diff;
-
-  TracerInfo("== _DrawBitLine1BPP ==\r\n");
+#ifdef JDI_DRAW_WIHTTIMER
+  if ( true == APP_Gui_Get_DrawFlag())
+  {
+  	GUIDRV_DrawWindow_TimerStop();
+  	GUIDRV_DrawWindow_TimerStart(10);
+  }
+  else
+  {
+  	GUIDRV_DrawWindow_TimerStart(10);
+  	APP_Gui_Set_DrawFlag(true);
+  }
+#else
+  	APP_Gui_Set_DrawFlag(true);
+#endif
   switch (GUI_pContext->DrawMode & (LCD_DRAWMODE_TRANS | LCD_DRAWMODE_XOR)) {
   case 0:
     do {
@@ -880,6 +925,34 @@ const GUI_DEVICE_API GUIDRV_Template_API = {
   _GetDevData,
   _GetRect,
 };
+
+
+/*********************************************************************
+*
+*       Global functions
+*
+**********************************************************************
+*/
+void APP_Gui_Set_DrawFlag(uint8_t _bState)
+{
+    g_bGuiDrawFlag = _bState;
+}
+
+uint8_t APP_Gui_Get_DrawFlag(void)
+{
+    return g_bGuiDrawFlag;
+}
+
+#ifdef JDI_DRAW_WIHTTIMER
+void GUIDRV_DrawWindow_CreateTimer(void)
+{
+
+    sw_timer_create(&s_tAPP_Emwin_Timer_DrawWindow,
+                     SW_TIMER_MODE_SINGLE_SHOT,
+                     GUIDRV_Timer_DrawWindow_Callback);
+
+}
+#endif
 
 /*************************** End of file ****************************/
 #endif

@@ -44,8 +44,16 @@ Purpose     : Display controller configuration (single layer)
 #ifdef EMWIN_ENABLE
 #include "GUI.h"
 #include "GUIDRV_Template.h"
+#include "LCDConf.h"
 #ifndef WIN32
+  #ifdef JDI_OLED_ENABLE_208x208
   #include "JDI_LPM010M297B.h"
+#endif
+
+  #ifdef JDI_OLED_ENABLE_176x176
+  #include "JDI_LPM013M126A.h"
+  #endif
+#include "Tracer.h"
 #endif
 
 
@@ -59,10 +67,10 @@ Purpose     : Display controller configuration (single layer)
 //
 // Physical display size
 //
-#define XSIZE_PHYS    208
-#define YSIZE_PHYS    104
-#define VXSIZE_PHYS   208
-#define VYSIZE_PHYS   208
+//#define XSIZE_PHYS    208
+//#define YSIZE_PHYS    104
+//#define VXSIZE_PHYS   208
+//#define VYSIZE_PHYS   208
 
 //
 // Color conversion
@@ -110,6 +118,36 @@ Purpose     : Display controller configuration (single layer)
 **********************************************************************
 */
 
+/*********************************************************************
+*
+*       Static code
+*
+**********************************************************************
+*/
+static LCD_PIXELINDEX _Color2Index_User(LCD_COLOR Color) {
+  /* Add code for converting the RGB value to an index value for the hardware */
+  int r,g,b;
+  r = (Color>>(0))  &8;
+  g = (Color>>(8+4))  &4;
+  b = (Color>>(16)) &2;
+
+  //TracerInfo("_Color2Index_User = %d\r\n",r+g+b);
+  return (r+g+b);
+}
+static LCD_COLOR _Index2Color_User(LCD_PIXELINDEX Index) {
+  /* Add code for converting the index value into an RGB value */
+  //TracerInfo("_Index2Color_User = %d\r\n",Index);
+  return ((LCD_COLOR)Index)*0x00001111;
+
+}
+static LCD_PIXELINDEX _GetIndexMask_User(void) {
+  return 0x0f;
+}
+const LCD_API_COLOR_CONV LCD_API_ColorConv_User = {
+  _Color2Index_User,
+  _Index2Color_User,
+  _GetIndexMask_User
+};
 
 
 /********************************************************************
@@ -123,6 +161,10 @@ Purpose     : Display controller configuration (single layer)
 #ifndef WIN32
 static void _InitController(void) {
     JDI_LCD_Init();
+
+    #ifdef JDI_DRAW_WIHTTIMER
+    GUIDRV_DrawWindow_CreateTimer();
+    #endif
 }
 #endif
 
@@ -145,13 +187,14 @@ void LCD_X_Config(void) {
 
     //GUI_MULTIBUF_Config(NUM_BUFFERS);
     /* Set display driver and color conversion for 1st layer */
-    GUI_DEVICE_CreateAndLink(DISPLAY_DRIVER, COLOR_CONVERSION, 0, 0);
+    //GUI_DEVICE_CreateAndLink(DISPLAY_DRIVER, COLOR_CONVERSION, 0, 0);
+    GUI_DEVICE_CreateAndLink(DISPLAY_DRIVER, &LCD_API_ColorConv_User, 0, 0);
     /* Display driver configuration */
 
     LCD_SetSizeEx    (0, XSIZE_PHYS,   YSIZE_PHYS);
     LCD_SetVSizeEx   (0, VXSIZE_PHYS,  VYSIZE_PHYS);
 
-    GUI_SetOrientation(GUI_SWAP_XY);
+    //GUI_SetOrientation(GUI_SWAP_XY);
 }
 
 /*********************************************************************

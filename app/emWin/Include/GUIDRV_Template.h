@@ -74,6 +74,10 @@ extern const GUI_DEVICE_API GUIDRV_Template_API;
 extern void APP_Gui_Set_DrawFlag(uint8_t _bState);
 extern uint8_t APP_Gui_Get_DrawFlag(void);
 
+#ifdef JDI_DRAW_WIHTTIMER
+extern void GUIDRV_DrawWindow_CreateTimer(void);
+#endif
+
 #endif
 
 /*************************** End of file ****************************/

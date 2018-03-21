@@ -102,12 +102,14 @@
 #include "dialog.h"
 #include "GUI.h"
 #include "WM.h"
-    #include "APP_Win_Utility.h"
-#endif
-
-#ifdef JDI_OLED_ENABLE
-#include "JDI_LPM010M297B.h"
+#include "app_win_utility.h"
 #include "GUIDRV_Template.h"
+#ifdef JDI_OLED_ENABLE_208x208
+#include "JDI_LPM010M297B.h"
+#endif
+#ifdef JDI_OLED_ENABLE_176x176
+#include "JDI_LPM013M126A.h"
+#endif
 #endif
 
 #define APP_TIMER_PRESCALER        0
@@ -3628,13 +3630,39 @@ int    venus_main(void)
 
         #ifdef EMWIN_ENABLE
         GUI_Exec();
+        #ifndef JDI_DRAW_WIHTTIMER
         if ( true == APP_Gui_Get_DrawFlag())
         {
           JDI_End_Draw();
           APP_Gui_Set_DrawFlag(false);
         }
         #endif
+        #endif
         __WFE();
+
+        #ifdef EMWIN_ENABLE
+        static uint32_t dwTemp = 0;
+        dwTemp++;
+        static uint32_t dwTempPedCnt = 0;
+        if (dwTemp == 100)
+        {
+            uint32_t fifo_len;
+            int16_t wacc_data[FIFO_DEPTH_T/2];
+            uint32_t size_in_bytes;
+            if(E_SEN_ERROR_NONE != CC_SenMgr_Acc_GetData(E_SEN_USER_ID_PEDO, wacc_data, &size_in_bytes))
+                TracerInfo("CC_SenMgr_Acc_GetData fail!\r\n");
+
+            fifo_len = size_in_bytes/(2*3); // to 16bits xyz => sampls numbers
+
+
+            //TracerInfo("size_in_bytes: %d\r\n", size_in_bytes);
+            dwTemp = 0;
+
+            APP_WIN_PostEvent_PedReport(dwTempPedCnt);
+
+            dwTempPedCnt++;
+        }
+        #endif
     }
 }
 

@@ -69,7 +69,17 @@ Head Block of The File
 #define nEMWIN_ENABLE
 
 #ifdef EMWIN_ENABLE
-#define JDI_OLED_ENABLE
+#define JDI_OLED_176x176
+#define nJDI_OLED_208x208
+
+#ifdef JDI_OLED_176x176
+#define JDI_OLED_ENABLE_176x176
+#endif
+#ifdef JDI_OLED_208x208
+#define JDI_OLED_ENABLE_208x208
+#endif
+
+#define JDI_DRAW_WIHTTIMER
 #endif
 
 //find and include project options from the asic you chose

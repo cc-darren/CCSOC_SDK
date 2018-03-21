@@ -12,8 +12,9 @@
 #ifdef EMWIN_ENABLE
 
 #include "DIALOG.h"
-#include "APP_Win_Global.h"
-#include "App_Win_Utility.h"
+#include "app_win_global.h"
+#include "app_win_utility.h"
+#include "Tracer.h"
 
 /*********************************************************************
 *
@@ -23,14 +24,9 @@
 */
 #define ID_WINDOW_0 (GUI_ID_USER + 0x00)
 #define ID_TEXT_0 (GUI_ID_USER + 0x01)
-#define ID_TEXT_1 (GUI_ID_USER + 0x02)
-#define ID_IMAGE_0 (GUI_ID_USER + 0x03)
+#define ID_IMAGE_0 (GUI_ID_USER + 0x02)
 
-#define ID_USER_SLIDE_RETURE		(GUI_ID_USER + 0xE1)
-#define ID_USER_SLIDE_UP			(GUI_ID_USER + 0xE2)
-#define ID_USER_SLIDE_DOWN			(GUI_ID_USER + 0xE3)
-#define ID_USER_SLIDE_NEXT			(GUI_ID_USER + 0xE4)
-#define ID_USER_TIMER_TIMEOUT		(GUI_ID_USER + 0xE5)
+
 
 static int TimeD = 0;
 
@@ -73,8 +69,7 @@ static const U8 _acImage_0[463] = {
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { WINDOW_CreateIndirect, "Window", ID_WINDOW_0, 0, 0, 208, 208, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "Text", ID_TEXT_0, 30, 40, 160, 100, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "Text", ID_TEXT_1, 30, 72, 160, 100, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "Text", ID_TEXT_0, 20, 60, 172, 100, 0, 0x0, 0 },
   { IMAGE_CreateIndirect, "Image", ID_IMAGE_0, 69, 112, 50, 52, 0, 0, 0 },
 
   // USER START (Optionally insert additional widgets)
@@ -102,6 +97,26 @@ static const void * _GetImageById(U32 Id, U32 * pSize) {
 }
 
 // USER START (Optionally insert additional static code)
+static void Text_User_Callback(WM_MESSAGE * pMsg)
+{
+    WM_HWIN      hItem;
+    switch (pMsg->MsgId)
+    {
+        case WM_PRE_PAINT:
+            TracerInfo("APP_WIN_PED WM_PRE_PAINT  \r\n");
+            //JDI_Start_Draw();
+            break;
+        case WM_POST_PAINT:
+            TracerInfo("APP_WIN_PED WM_POST_PAINT  \r\n");
+            //JDI_End_Draw();
+            break;
+      default:
+        TEXT_Callback(pMsg);
+        break;
+    }
+}
+
+
 // USER END
 
 /*********************************************************************
@@ -112,10 +127,9 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
   const void * pData;
   WM_HWIN      hItem;
   U32          FileSize;
+  WM_MESSAGE    _tMsg;
 
-  // USER START (Optionally insert additional variables)
-  // USER END
-
+   TracerInfo("[APP_WIN_Clock] Msg Id = %d\r\n",pMsg->MsgId);
   switch (pMsg->MsgId) {
   case WM_INIT_DIALOG:
     //
@@ -126,30 +140,29 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     IMAGE_SetBMP(hItem, pData, FileSize);
 
 	hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_0);
-	TEXT_SetFont(hItem, &GUI_Font32B_ASCII);
-	TEXT_SetText(hItem, "Device Info");
-	TEXT_SetTextColor(hItem, GUI_CYAN);
-
-	hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_1);
-	TEXT_SetFont(hItem, &GUI_Font32B_ASCII);
-	TEXT_SetText(hItem, "v0.000.001");
-	TEXT_SetTextColor(hItem, GUI_CYAN);
+	TEXT_SetText(hItem, "18:00");
+	TEXT_SetFont(hItem, &GUI_FontD48);//GUI_Font32B_ASCII);
+	TEXT_SetTextColor(hItem, GUI_RED);
+    WM_SetCallback(hItem, Text_User_Callback);
     break;
   case WM_PAINT:
-	GUI_SetBkColor(GUI_BLACK);
-	GUI_Clear();
+	  GUI_SetBkColor(GUI_CYAN);
+	  GUI_Clear();
 	break;
 
   case WM_TIMER:
 		WM_RestartTimer(pMsg->Data.v, 100);
 		if(TimeD<=APP_WIM_TIMER_TIMEOUT) TimeD++;
 		if(TimeD!=APP_WIM_TIMER_TIMEOUT) break;
-		APP_SendMessage(ID_USER_TIMER_TIMEOUT, 0);
+
+        _tMsg.MsgId  = WM_MSG_ID_CC_TIMER_TIMEOUT;
+        WM_SendToParent(pMsg->hWin, &_tMsg);
 		TimeD = 0;
 		break;
   case WM_TOUCH:
-	  APP_SendMessage(ID_USER_SLIDE_NEXT, 0);
-		break;
+        _tMsg.MsgId  = WM_MSG_ID_CC_WINDOW_NEXT;
+        WM_SendToParent(pMsg->hWin, &_tMsg);
+		 break;
   default:
     WM_DefaultProc(pMsg);
     break;
@@ -166,17 +179,15 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 *
 *       CreateWindow
 */
-WM_HWIN CreateWindow_DeviceInfo(void);
-WM_HWIN CreateWindow_DeviceInfo(void) {
+WM_HWIN CreateWindow_Clock(void);
+WM_HWIN CreateWindow_Clock(void) {
 	WM_HWIN hWin;
 
 	hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
-	WM_CreateTimer(hWin, 0, 100, 0);
+	//WM_CreateTimer(hWin, 0, 100, 0);
 	TimeD = 0;
 	return hWin;
 }
-
-
 // USER START (Optionally insert additional public code)
 // USER END
 

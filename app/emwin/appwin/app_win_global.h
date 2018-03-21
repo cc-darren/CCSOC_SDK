@@ -33,7 +33,7 @@ extern WM_HWIN CreateWindow_Battery(void);
 #define APP_WM_HEARTRATE			CreateWindow_HeartRate
 #define APP_WM_BATTERY				CreateWindow_Battery
 #define APP_WM_DEVICEINFO			CreateWindow_DeviceInfo
-#define APP_WM_ENDOFWIN				((const fpApp_Window) 0xFFFFFFFF)
+#define APP_WM_ENDOFWIN				((fpApp_Window) 0xFFFFFFFF)
 #define APP_WM_NULL  				0
 
 

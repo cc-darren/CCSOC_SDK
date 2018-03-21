@@ -9,16 +9,24 @@
  * from the file.
  */
 
-#ifdef EMWIN_ENABLE
+#ifdef JDI_OLED_ENABLE_176x176
 
-#include "APP_Win_Global.h"
-#include "DIALOG.h"
+#ifndef _JDI_LCD_DRV_
+#define _JDI_LCD_DRV_
 
-extern void    APP_WIN_HookScheduler(void);
+#include "global.h"
 
-extern void    APP_SendMessage(int nMsgID, void *vpData);
+void JDI_LCD_Init(void);
+void JDI_Demo(void);
+void JDI_Start_Draw(void);
+void JDI_End_Draw(void);
+void JDI_PutPixel(uint8_t xPhys, uint8_t yPhys, uint8_t PixelIndex);
+unsigned int JDI_GetPixel(uint8_t xPhys, uint8_t yPhys);
 
-extern void    APP_WIN_PostEvent_TOUCH(void);
+void JDI_Demo(void);
+
+#endif
+
 
 #endif
 

@@ -282,6 +282,14 @@ typedef struct {
 #define WM_WIDGET                   0x0300  /* 256 messages reserved for Widget messages */
 #define WM_USER                     0x0400  /* Reserved for user messages ... (Keep the same as WIN32) */
 
+#define WM_MSG_ID_CC_PED_REPORT     (WM_USER + 0x0001)
+#define WM_MSG_ID_CC_WINDOW_RETURN  (WM_USER + 0x0002)
+#define WM_MSG_ID_CC_WINDOW_UP      (WM_USER + 0x0003)
+#define WM_MSG_ID_CC_WINDOW_DOWN    (WM_USER + 0x0004)
+#define WM_MSG_ID_CC_WINDOW_NEXT    (WM_USER + 0x0005)
+#define WM_MSG_ID_CC_TIMER_TIMEOUT  (WM_USER + 0x0006)
+
+
 /*********************************************************************
 *
 *       Motion messages
@@ -399,6 +407,7 @@ struct WM_MESSAGE {
     const void * p;            /* Some messages need more info ... Pointer is declared "const" because some systems (M16C) have 4 byte const, byte 2 byte default ptrs */
     int v;
     GUI_COLOR Color;
+	U32	d;
   } Data;
 };
 

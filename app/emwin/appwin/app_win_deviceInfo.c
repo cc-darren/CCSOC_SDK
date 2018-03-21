@@ -12,8 +12,8 @@
 #ifdef EMWIN_ENABLE
 
 #include "DIALOG.h"
-#include "APP_Win_Global.h"
-#include "App_Win_Utility.h"
+#include "app_win_global.h"
+#include "app_win_utility.h"
 
 /*********************************************************************
 *
@@ -26,11 +26,7 @@
 #define ID_TEXT_1 (GUI_ID_USER + 0x02)
 #define ID_IMAGE_0 (GUI_ID_USER + 0x03)
 
-#define ID_USER_SLIDE_RETURE		(GUI_ID_USER + 0xE1)
-#define ID_USER_SLIDE_UP			(GUI_ID_USER + 0xE2)
-#define ID_USER_SLIDE_DOWN			(GUI_ID_USER + 0xE3)
-#define ID_USER_SLIDE_NEXT			(GUI_ID_USER + 0xE4)
-#define ID_USER_TIMER_TIMEOUT		(GUI_ID_USER + 0xE5)
+
 
 static int TimeD = 0;
 
@@ -72,10 +68,11 @@ static const U8 _acImage_0[463] = {
 *       _aDialogCreate
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
-	{ WINDOW_CreateIndirect, "Window", ID_WINDOW_0, 0, 0, 208, 208, 0, 0x0, 0 },
-	{ TEXT_CreateIndirect, "Text", ID_TEXT_0, 20, 40, 180, 100, 0, 0x0, 0 },
-	{ TEXT_CreateIndirect, "Text", ID_TEXT_1, 90, 72, 120, 100, 0, 0x0, 0 },
-	{ IMAGE_CreateIndirect, "Image", ID_IMAGE_0, 69, 112, 50, 52, 0, 0, 0 },
+  { WINDOW_CreateIndirect, "Window", ID_WINDOW_0, 0, 0, 208, 208, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "Text", ID_TEXT_0, 30, 40, 160, 100, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "Text", ID_TEXT_1, 30, 72, 160, 100, 0, 0x0, 0 },
+  { IMAGE_CreateIndirect, "Image", ID_IMAGE_0, 69, 112, 50, 52, 0, 0, 0 },
+
   // USER START (Optionally insert additional widgets)
   // USER END
 };
@@ -86,7 +83,6 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
 *
 **********************************************************************
 */
-
 
 /*********************************************************************
 *
@@ -112,9 +108,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
   const void * pData;
   WM_HWIN      hItem;
   U32          FileSize;
-
-  // USER START (Optionally insert additional variables)
-  // USER END
+  WM_MESSAGE    _tMsg;
 
   switch (pMsg->MsgId) {
   case WM_INIT_DIALOG:
@@ -127,30 +121,32 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 
 	hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_0);
 	TEXT_SetFont(hItem, &GUI_Font32B_ASCII);
-	TEXT_SetText(hItem, "HEART RATE");
-	TEXT_SetTextColor(hItem, GUI_RED);
-
+	TEXT_SetText(hItem, "Device Info");
+	TEXT_SetTextColor(hItem, GUI_CYAN);
 
 	hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_1);
 	TEXT_SetFont(hItem, &GUI_Font32B_ASCII);
-	TEXT_SetText(hItem, "0");
-	TEXT_SetTextColor(hItem, GUI_RED);
+	TEXT_SetText(hItem, "v0.000.001");
+	TEXT_SetTextColor(hItem, GUI_CYAN);
     break;
   case WM_PAINT:
-	  GUI_SetBkColor(GUI_BLACK);
-	  GUI_Clear();
-    break;
+	GUI_SetBkColor(GUI_BLACK);
+	GUI_Clear();
+	break;
 
   case WM_TIMER:
 		WM_RestartTimer(pMsg->Data.v, 100);
 		if(TimeD<=APP_WIM_TIMER_TIMEOUT) TimeD++;
 		if(TimeD!=APP_WIM_TIMER_TIMEOUT) break;
-		APP_SendMessage(ID_USER_TIMER_TIMEOUT, 0);
+
+        _tMsg.MsgId  = WM_MSG_ID_CC_TIMER_TIMEOUT;
+        WM_SendToParent(pMsg->hWin, &_tMsg);
 		TimeD = 0;
 		break;
   case WM_TOUCH:
-	  APP_SendMessage(ID_USER_SLIDE_NEXT, 0);
-	  break;
+        _tMsg.MsgId  = WM_MSG_ID_CC_WINDOW_NEXT;
+        WM_SendToParent(pMsg->hWin, &_tMsg);
+		break;
   default:
     WM_DefaultProc(pMsg);
     break;
@@ -167,8 +163,8 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 *
 *       CreateWindow
 */
-WM_HWIN CreateWindow_HeartRate(void);
-WM_HWIN CreateWindow_HeartRate(void) {
+WM_HWIN CreateWindow_DeviceInfo(void);
+WM_HWIN CreateWindow_DeviceInfo(void) {
 	WM_HWIN hWin;
 
 	hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
@@ -176,6 +172,8 @@ WM_HWIN CreateWindow_HeartRate(void) {
 	TimeD = 0;
 	return hWin;
 }
+
+
 // USER START (Optionally insert additional public code)
 // USER END
 
