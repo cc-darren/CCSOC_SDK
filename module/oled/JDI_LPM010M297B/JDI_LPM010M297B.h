@@ -9,6 +9,8 @@
  * from the file.
  */
 
+#ifdef JDI_OLED_ENABLE_208x208
+
 #ifndef _JDI_LCD_DRV_
 #define _JDI_LCD_DRV_
 
@@ -22,5 +24,7 @@ void JDI_PutPixel(uint8_t xPhys, uint8_t yPhys, uint8_t PixelIndex);
 unsigned int JDI_GetPixel(uint8_t xPhys, uint8_t yPhys);
 
 void JDI_Demo(void);
+
+#endif
 
 #endif
