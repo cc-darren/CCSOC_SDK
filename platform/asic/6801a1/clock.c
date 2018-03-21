@@ -5,7 +5,7 @@
  * STANDARD SOFTWARE LICENSE AGREEMENT.
  *
  * Licensees are granted free, non-transferable use of the information.
- * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed
  * from the file.
  */
 
@@ -73,6 +73,8 @@ Declaration of Global Variables & Functions
     E_ClockSupported g_dwCurrentClock = CLOCK_48;
 #elif (SYSTEM_CLOCK_MHZ == 64)
     E_ClockSupported g_dwCurrentClock = CLOCK_64;
+#elif (SYSTEM_CLOCK_MHZ == 96)
+    E_ClockSupported g_dwCurrentClock = CLOCK_96;
 #else
     #error "System clock defined in project.h is not supported"
 #endif
@@ -93,7 +95,7 @@ Declaration of static Global Variables & Functions
             //XTAL=48MHz, 48/3=16MHz, we don't need to use PLL
             (16000000),
             (PLL_BYPASS_MASK|PLL_POWER_DOWN_MASK|DIVCO_BYPASS_MASK|DIVM_BYPASS_MASK|DIVN_BYPASS_MASK),
-            (PLL_DISABLE_MASK|SELECT_XTAL_MASK|SYS_DIV_3_MASK),
+            (SELECT_XTAL_MASK|DCDC_GEN_CLK_DIV2_MASK|SYS_DIV_3_MASK),
             //(RET_RAM_CLK_EN_MASK|OSC_40K_DIS_MASK|OSC_32K_EN_MASK|SELECT_OSC_32K_MASK|HS_CLK_EN_MASK|CPU_CLK_EN_MASK|FREQ_HIGH_MASK),
             cc6801_ClockDelayUs_16MHz
         },
@@ -103,7 +105,7 @@ Declaration of static Global Variables & Functions
             //XTAL=48MHz, 48/2=24MHz, we don't need to use PLL
             (24000000),
             (PLL_BYPASS_MASK|PLL_POWER_DOWN_MASK|DIVCO_BYPASS_MASK|DIVM_BYPASS_MASK|DIVN_BYPASS_MASK),
-            (PLL_DISABLE_MASK|SELECT_XTAL_MASK|SYS_DIV_2_MASK),
+            (SELECT_XTAL_MASK|DCDC_GEN_CLK_DIV2_MASK|SYS_DIV_2_MASK),
             //(RET_RAM_CLK_EN_MASK|OSC_40K_DIS_MASK|OSC_32K_EN_MASK|SELECT_OSC_32K_MASK|HS_CLK_EN_MASK|CPU_CLK_EN_MASK|FREQ_HIGH_MASK),
             cc6801_ClockDelayUs_24MHz
         },
@@ -113,7 +115,7 @@ Declaration of static Global Variables & Functions
             //XTAL=48MHz, must enable PLL
             (32000000),
             (PLL_USE_MASK|PLL_POWER_UP_MASK|DIVCO_32MHZ_MASK|DIVM_32MHZ_MASK|DIVN_32MHZ_MASK),
-            (PLL_ENABLE_MASK|SELECT_PLL_MASK|SYS_DIV_0_MASK),
+            (SELECT_PLL_MASK|DCDC_GEN_CLK_DIV2_MASK|SYS_DIV_0_MASK),
             //(RET_RAM_CLK_EN_MASK|OSC_40K_DIS_MASK|OSC_32K_EN_MASK|SELECT_OSC_32K_MASK|HS_CLK_EN_MASK|CPU_CLK_EN_MASK|FREQ_HIGH_MASK),
             cc6801_ClockDelayUs_32MHz
         },
@@ -123,7 +125,7 @@ Declaration of static Global Variables & Functions
             //XTAL=48MHz, 48/1=48MHz, we don't need to use PLL
             (48000000),
             (PLL_BYPASS_MASK|PLL_POWER_DOWN_MASK|DIVCO_BYPASS_MASK|DIVM_BYPASS_MASK|DIVN_BYPASS_MASK),
-            (PLL_DISABLE_MASK|SELECT_XTAL_MASK|SYS_DIV_0_MASK),
+            (SELECT_XTAL_MASK|DCDC_GEN_CLK_DIV2_MASK|SYS_DIV_0_MASK),
             //(RET_RAM_CLK_EN_MASK|OSC_40K_DIS_MASK|OSC_32K_EN_MASK|SELECT_OSC_32K_MASK|HS_CLK_EN_MASK|CPU_CLK_EN_MASK|FREQ_HIGH_MASK),
             cc6801_ClockDelayUs_48MHz
         },
@@ -133,9 +135,19 @@ Declaration of static Global Variables & Functions
             //XTAL=48MHz, must enable PLL
             (64000000),
             (PLL_USE_MASK|PLL_POWER_UP_MASK|DIVCO_64MHZ_MASK|DIVM_64MHZ_MASK|DIVN_64MHZ_MASK),
-            (PLL_ENABLE_MASK|SELECT_PLL_MASK|SYS_DIV_0_MASK),
+            (SELECT_PLL_MASK|DCDC_GEN_CLK_DIV2_MASK|SYS_DIV_0_MASK),
             //(RET_RAM_CLK_EN_MASK|OSC_40K_DIS_MASK|OSC_32K_EN_MASK|SELECT_OSC_32K_MASK|HS_CLK_EN_MASK|CPU_CLK_EN_MASK|FREQ_HIGH_MASK),
             cc6801_ClockDelayUs_64MHz
+        },
+
+        //96MHz
+        {
+            //XTAL=48MHz, must enable PLL
+            (96000000),
+            (PLL_USE_MASK|PLL_POWER_UP_MASK|DIVCO_96MHZ_MASK|DIVM_96MHZ_MASK|DIVN_96MHZ_MASK),
+            (SELECT_PLL_MASK|DCDC_GEN_CLK_DIV4_MASK|SYS_DIV_0_MASK),
+            //(RET_RAM_CLK_EN_MASK|OSC_40K_DIS_MASK|OSC_32K_EN_MASK|SELECT_OSC_32K_MASK|HS_CLK_EN_MASK|CPU_CLK_EN_MASK|FREQ_HIGH_MASK),
+            cc6801_ClockDelayUs_96MHz
         },
     };
 
@@ -146,6 +158,7 @@ Declaration of static Global Variables & Functions
         {EF_32M_TCPS_TADH_TAH, EF_32M_TWK_TPGS, EF_32M_TRCV_TNVH, EF_32M_TPROG, EF_32M_TERASE, EF_32M_TME, EF_32M_TNVS_TNVH1},
         {EF_48M_TCPS_TADH_TAH, EF_48M_TWK_TPGS, EF_48M_TRCV_TNVH, EF_48M_TPROG, EF_48M_TERASE, EF_48M_TME, EF_48M_TNVS_TNVH1},
         {EF_64M_TCPS_TADH_TAH, EF_64M_TWK_TPGS, EF_64M_TRCV_TNVH, EF_64M_TPROG, EF_64M_TERASE, EF_64M_TME, EF_64M_TNVS_TNVH1},
+        {EF_96M_TCPS_TADH_TAH, EF_96M_TWK_TPGS, EF_96M_TRCV_TNVH, EF_96M_TPROG, EF_96M_TERASE, EF_96M_TME, EF_96M_TNVS_TNVH1},
     };
 #else
     #error "XTAL clock defined in project.h is not supported by clock table"
@@ -190,7 +203,7 @@ static void cc6801_ClockSysClkSet(T_ClockConfig *pClk)
     if(dwNewPLL)    // -> with PLL
     {
         //make sure CPU run at XTAL(48MHz)
-        regSCU->dw.clkConfig0 = (PLL_DISABLE_MASK|SELECT_XTAL_MASK|SYS_DIV_0_MASK);
+        regSCU->dw.clkConfig0 = (SELECT_XTAL_MASK|DCDC_GEN_CLK_DIV2_MASK|SYS_DIV_0_MASK);
         //Power up PLL(but bypass)
         regSCU->dw.pllConfig = (pClk->dwPllCfg | PLL_BYPASS_MASK);
         //Release PLL reset
@@ -619,6 +632,26 @@ loop64
     bx      lr
 }
 
+/******************************************************************************
+FUNCTION
+  cc6801_ClockDelayUs_96MHz
+
+DESCRIPTION
+  Implement blocked delay function in micro-second unit.
+
+  Becuse we support dynamically clock change, delay function must be also changed when clock is changed.
+  We provide us delay function for every clock setting.
+  When application call delay function, it will be directed to proper function by function pointer stored in table
+
+PARAMETERS
+    number of us
+RETURNS
+    none
+******************************************************************************/
+static void __INLINE cc6801_ClockDelayUs_96MHz(volatile uint32_t _us)
+{
+    cc6801_ClockDelayUs_48MHz((_us<<1));
+}
 /******************************************************************************
 FUNCTION
   cc6801_ClockDelayUs

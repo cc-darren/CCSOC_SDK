@@ -5,7 +5,7 @@
  * STANDARD SOFTWARE LICENSE AGREEMENT.
  *
  * Licensees are granted free, non-transferable use of the information.
- * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed
  * from the file.
  */
 
@@ -45,6 +45,13 @@ Head Block of The File
 
 // Sec 2: Constant Definitions, Imported Symbols, miscellaneous
 
+/***************************************************
+Offset Address : 0x08 PLL Reset
+***************************************************/
+#define PLL_ASSERT_RESET_BIT            1UL
+#define PLL_ASSERT_RESET_MASK           (PLL_ASSERT_RESET_BIT)
+#define PLL_DEASSERT_RESET_BIT          0UL
+#define PLL_DEASSERT_RESET_MASK         (PLL_DEASSERT_RESET_BIT)
 
 /***************************************************
 Offset Address : 0x0C PLL Configuration
@@ -147,34 +154,36 @@ Offset Address : 0x0C PLL Configuration
 /***************************************************
 Offset Address : 0x10 System Clock Configuration0
 ***************************************************/
-#define SYS_DIV_0_BIT                   0                               //divide by 1
+#define SYS_DIV_0_BIT                   0UL                             //divide by 1
 #define SYS_DIV_0_MASK                  (SYS_DIV_0_BIT)
-#define SYS_DIV_2_BIT                   2                               //divide by 2
+#define SYS_DIV_2_BIT                   2UL                             //divide by 2
 #define SYS_DIV_2_MASK                  (SYS_DIV_2_BIT)
-#define SYS_DIV_3_BIT                   3                               //divide by 3
+#define SYS_DIV_3_BIT                   3UL                             //divide by 3
 #define SYS_DIV_3_MASK                  (SYS_DIV_3_BIT)
+
+#define DCDC_GEN_CLK_DIV2_BIT           1UL                             //1: divided by 2, cpu clock is less than or equal to 64Mhz
+#define DCDC_GEN_CLK_DIV2_MASK          (DCDC_GEN_CLK_DIV2_BIT<<5)
+#define DCDC_GEN_CLK_DIV4_BIT           2UL                             //2: divided by 4, cpu clock is bigger than 64MHz
+#define DCDC_GEN_CLK_DIV4_MASK          (DCDC_GEN_CLK_DIV4_BIT<<5)
 
 #define SELECT_PLL_BIT                  1UL
 #define SELECT_PLL_MASK                 (SELECT_PLL_BIT<<8)
 #define SELECT_XTAL_BIT                 0UL
 #define SELECT_XTAL_MASK                (SELECT_XTAL_BIT<<8)
 
-//#define SYS_DIV_BYPASS_BIT              1                               //1: bypass divider
-//#define SYS_DIV_BYPASS_MASK             (SYS_DIV_BYPASS_BIT<<9)
-//#define SYS_DIV_USE_BIT                 0                               //0: use divider
-//#define SYS_DIV_USE_MASK                (SYS_DIV_USE_BIT<<9)
-
-#define PLL_ENABLE_BIT                  1UL                               //1: enable PLL
-#define PLL_ENABLE_MASK                 (PLL_ENABLE_BIT<<10)
-#define PLL_DISABLE_BIT                 0UL                               //0: disable PLL
-#define PLL_DISABLE_MASK                (PLL_DISABLE_BIT<<10)
+//#define PLL_ENABLE_BIT                  1UL                               //1: enable PLL
+//#define PLL_ENABLE_MASK                 (PLL_ENABLE_BIT<<10)
+//#define PLL_DISABLE_BIT                 0UL                               //0: disable PLL
+//#define PLL_DISABLE_MASK                (PLL_DISABLE_BIT<<10)
 
 /***************************************************
 Offset Address : 0x14 System Clock Configuration1
 ***************************************************/
-#define FREQ_HIGH_BIT                   1                               //1: high frequence
+#define FREQ_2M_BIT                     0                               //00: 2MHz RC osc (default)
+#define FREQ_2M_MASK                    (FREQ_2M_BIT)
+#define FREQ_HIGH_BIT                   1                               //x1: high frequence
 #define FREQ_HIGH_MASK                  (FREQ_HIGH_BIT)
-#define FREQ_32K_BIT                    0                               //0: use 32K clock
+#define FREQ_32K_BIT                    2                               //1x: use 32K clock
 #define FREQ_32K_MASK                   (FREQ_32K_BIT)
 
 //cpu clock must be enabled always by FW ?
@@ -182,28 +191,28 @@ Offset Address : 0x14 System Clock Configuration1
 #define CPU_CLK_EN_MASK                 (CPU_CLK_EN_BIT<<8)
 
 //no need to disable HS clock
-#define HS_CLK_EN_BIT                   1                               //1: CPU/BUS clock enable
+#define HS_CLK_EN_BIT                   1                               //1: HS clock enable
 #define HS_CLK_EN_MASK                  (HS_CLK_EN_BIT<<9)
 
-#define SELECT_OSC_32K_BIT              0                               //0: 32KHz oscillator
-#define SELECT_OSC_32K_MASK             (SELECT_OSC_32K_BIT<<10)
-#define SELECT_OSC_40K_BIT              1                               //1: 40KHz ring oscillator
-#define SELECT_OSC_40K_MASK             (SELECT_OSC_40K_BIT<<10)
+//#define SELECT_OSC_32K_BIT              0                               //0: 32KHz oscillator
+//#define SELECT_OSC_32K_MASK             (SELECT_OSC_32K_BIT<<10)
+//#define SELECT_OSC_40K_BIT              1                               //1: 40KHz ring oscillator
+//#define SELECT_OSC_40K_MASK             (SELECT_OSC_40K_BIT<<10)
 
 //no need to disable 32K osc
-#define OSC_32K_EN_BIT                  1                               //1: enable OSC 32KHz
-#define OSC_32K_EN_MASK                 (OSC_32K_EN_BIT<<11)
+//#define OSC_32K_EN_BIT                  1                               //1: enable OSC 32KHz
+//#define OSC_32K_EN_MASK                 (OSC_32K_EN_BIT<<11)
 
 //no need to enable 40K osc
-#define OSC_40K_DIS_BIT                 0                               //0: disable OSC 40KHz
-#define OSC_40K_DIS_MASK                (OSC_40K_DIS_BIT<<12)
+//#define OSC_40K_DIS_BIT                 0                               //0: disable OSC 40KHz
+//#define OSC_40K_DIS_MASK                (OSC_40K_DIS_BIT<<12)
 
 //no need to disable retention RAM clock
 #define RET_RAM_CLK_EN_BIT              1                               //1: enable retention ram clock
 #define RET_RAM_CLK_EN_MASK             (RET_RAM_CLK_EN_BIT<<13)
 
 //clk_cfg1 has same value for every clock setting
-#define SCU_CLK_CFG1    (RET_RAM_CLK_EN_MASK|OSC_40K_DIS_MASK|OSC_32K_EN_MASK|SELECT_OSC_32K_MASK|HS_CLK_EN_MASK|CPU_CLK_EN_MASK|FREQ_HIGH_MASK)
+#define SCU_CLK_CFG1    (RET_RAM_CLK_EN_MASK|HS_CLK_EN_MASK|CPU_CLK_EN_MASK|FREQ_HIGH_MASK)
 
 
 /***************************************************
@@ -212,97 +221,112 @@ eFlash setting for different clock
 #define EF_TADH             3       //no need to change for different clock
 
 #if defined(FPGA) && FPGA
-#define EF_16M_TAH          2
+#define EF_16M_TAH              2
 #else
-#define EF_16M_TAH          1
+#define EF_16M_TAH              1
 #endif
-#define EF_16M_TNVS         80
-#define EF_16M_TPGS         160
-#define EF_16M_TWK          32
-#define EF_16M_TNVH         80
-#define EF_16M_TRCV         160
-#define EF_16M_TPROG        128
-#define EF_16M_TCPS         3
-#define EF_16M_TERASE       1600000
-#define EF_16M_TME          1600000
-#define EF_16M_TNVH1        1600
+#define EF_16M_TNVS             80
+#define EF_16M_TPGS             160
+#define EF_16M_TWK              32
+#define EF_16M_TNVH             80
+#define EF_16M_TRCV             160
+#define EF_16M_TPROG            128
+#define EF_16M_TCPS             3
+#define EF_16M_TERASE           1600000
+#define EF_16M_TME              1600000
+#define EF_16M_TNVH1            1600
 #define EF_16M_TCPS_TADH_TAH    ((EF_16M_TCPS<<24)|(EF_TADH<<16)|(EF_16M_TAH))
 #define EF_16M_TWK_TPGS         ((EF_16M_TWK <<16)|(EF_16M_TPGS))
 #define EF_16M_TRCV_TNVH        ((EF_16M_TRCV<<16)|(EF_16M_TNVH))
 #define EF_16M_TNVS_TNVH1       ((EF_16M_TNVS<<16)|(EF_16M_TNVH1))
 
 #if defined(FPGA) && FPGA
-#define EF_24M_TAH          2
+#define EF_24M_TAH              2
 #else
-#define EF_24M_TAH          1
+#define EF_24M_TAH              1
 #endif
-#define EF_24M_TNVS         120
-#define EF_24M_TPGS         240
-#define EF_24M_TWK          48
-#define EF_24M_TNVH         120
-#define EF_24M_TRCV         240
-#define EF_24M_TPROG        192
-#define EF_24M_TCPS         3
-#define EF_24M_TERASE       1920000
-#define EF_24M_TME          1920000
-#define EF_24M_TNVH1        2400
+#define EF_24M_TNVS             120
+#define EF_24M_TPGS             240
+#define EF_24M_TWK              48
+#define EF_24M_TNVH             120
+#define EF_24M_TRCV             240
+#define EF_24M_TPROG            192
+#define EF_24M_TCPS             3
+#define EF_24M_TERASE           1920000
+#define EF_24M_TME              1920000
+#define EF_24M_TNVH1            2400
 #define EF_24M_TCPS_TADH_TAH    ((EF_24M_TCPS<<24)|(EF_TADH<<16)|(EF_24M_TAH))
 #define EF_24M_TWK_TPGS         ((EF_24M_TWK <<16)|(EF_24M_TPGS))
 #define EF_24M_TRCV_TNVH        ((EF_24M_TRCV<<16)|(EF_24M_TNVH))
 #define EF_24M_TNVS_TNVH1       ((EF_24M_TNVS<<16)|(EF_24M_TNVH1))
 
 #if defined(FPGA) && FPGA
-#define EF_32M_TAH          2
+#define EF_32M_TAH              2
 #else
-#define EF_32M_TAH          1
+#define EF_32M_TAH              1
 #endif
-#define EF_32M_TNVS         160
-#define EF_32M_TPGS         320
-#define EF_32M_TWK          64
-#define EF_32M_TNVH         160
-#define EF_32M_TRCV         320
-#define EF_32M_TPROG        256
-#define EF_32M_TCPS         3
-#define EF_32M_TERASE       3200000
-#define EF_32M_TME          3200000
-#define EF_32M_TNVH1        3200
+#define EF_32M_TNVS             160
+#define EF_32M_TPGS             320
+#define EF_32M_TWK              64
+#define EF_32M_TNVH             160
+#define EF_32M_TRCV             320
+#define EF_32M_TPROG            256
+#define EF_32M_TCPS             3
+#define EF_32M_TERASE           3200000
+#define EF_32M_TME              3200000
+#define EF_32M_TNVH1            3200
 #define EF_32M_TCPS_TADH_TAH    ((EF_32M_TCPS<<24)|(EF_TADH<<16)|(EF_32M_TAH))
 #define EF_32M_TWK_TPGS         ((EF_32M_TWK <<16)|(EF_32M_TPGS))
 #define EF_32M_TRCV_TNVH        ((EF_32M_TRCV<<16)|(EF_32M_TNVH))
 #define EF_32M_TNVS_TNVH1       ((EF_32M_TNVS<<16)|(EF_32M_TNVH1))
 
-#define EF_48M_TAH          2
-#define EF_48M_TNVS         240
-#define EF_48M_TPGS         480
-#define EF_48M_TWK          96
-#define EF_48M_TNVH         240
-#define EF_48M_TRCV         480
-#define EF_48M_TPROG        384
-#define EF_48M_TCPS         3
-#define EF_48M_TERASE       3840000
-#define EF_48M_TME          3840000
-#define EF_48M_TNVH1        4800
+#define EF_48M_TAH              2
+#define EF_48M_TNVS             240
+#define EF_48M_TPGS             480
+#define EF_48M_TWK              96
+#define EF_48M_TNVH             240
+#define EF_48M_TRCV             480
+#define EF_48M_TPROG            384
+#define EF_48M_TCPS             3
+#define EF_48M_TERASE           3840000
+#define EF_48M_TME              3840000
+#define EF_48M_TNVH1            4800
 #define EF_48M_TCPS_TADH_TAH    ((EF_48M_TCPS<<24)|(EF_TADH<<16)|(EF_48M_TAH))
 #define EF_48M_TWK_TPGS         ((EF_48M_TWK <<16)|(EF_48M_TPGS))
 #define EF_48M_TRCV_TNVH        ((EF_48M_TRCV<<16)|(EF_48M_TNVH))
 #define EF_48M_TNVS_TNVH1       ((EF_48M_TNVS<<16)|(EF_48M_TNVH1))
 
-#define EF_64M_TAH          2
-#define EF_64M_TNVS         320
-#define EF_64M_TPGS         640
-#define EF_64M_TWK          128
-#define EF_64M_TNVH         320
-#define EF_64M_TRCV         640
-#define EF_64M_TPROG        512
-#define EF_64M_TCPS         3
-#define EF_64M_TERASE       6400000
-#define EF_64M_TME          6400000
-#define EF_64M_TNVH1        6400
+#define EF_64M_TAH              2
+#define EF_64M_TNVS             320
+#define EF_64M_TPGS             640
+#define EF_64M_TWK              128
+#define EF_64M_TNVH             320
+#define EF_64M_TRCV             640
+#define EF_64M_TPROG            512
+#define EF_64M_TCPS             3
+#define EF_64M_TERASE           6400000
+#define EF_64M_TME              6400000
+#define EF_64M_TNVH1            6400
 #define EF_64M_TCPS_TADH_TAH    ((EF_64M_TCPS<<24)|(EF_TADH<<16)|(EF_64M_TAH))
 #define EF_64M_TWK_TPGS         ((EF_64M_TWK <<16)|(EF_64M_TPGS))
 #define EF_64M_TRCV_TNVH        ((EF_64M_TRCV<<16)|(EF_64M_TNVH))
 #define EF_64M_TNVS_TNVH1       ((EF_64M_TNVS<<16)|(EF_64M_TNVH1))
 
+#define EF_96M_TAH              3
+#define EF_96M_TNVS             480
+#define EF_96M_TPGS             960
+#define EF_96M_TWK              192
+#define EF_96M_TNVH             480
+#define EF_96M_TRCV             960
+#define EF_96M_TPROG            768
+#define EF_96M_TCPS             3
+#define EF_96M_TERASE           7680000
+#define EF_96M_TME              7680000
+#define EF_96M_TNVH1            9600
+#define EF_96M_TCPS_TADH_TAH    ((EF_96M_TCPS<<24)|(EF_TADH<<16)|(EF_96M_TAH))
+#define EF_96M_TWK_TPGS         ((EF_96M_TWK <<16)|(EF_96M_TPGS))
+#define EF_96M_TRCV_TNVH        ((EF_96M_TRCV<<16)|(EF_96M_TNVH))
+#define EF_96M_TNVS_TNVH1       ((EF_96M_TNVS<<16)|(EF_96M_TNVH1))
 
 
 /******************************************************************************
@@ -326,6 +350,7 @@ typedef enum
     CLOCK_32,
     CLOCK_48,
     CLOCK_64,
+    CLOCK_96,
     CLOCK_TOTAL_SUPPORTED
 }E_ClockSupported;
 
@@ -371,6 +396,7 @@ static __ASM void __INLINE cc6801_ClockDelayUs_24MHz(volatile uint32_t);
 static __ASM void __INLINE cc6801_ClockDelayUs_32MHz(volatile uint32_t);
 static __ASM void __INLINE cc6801_ClockDelayUs_48MHz(volatile uint32_t);
 static __ASM void __INLINE cc6801_ClockDelayUs_64MHz(volatile uint32_t);
+static __ASM void __INLINE cc6801_ClockDelayUs_96MHz(volatile uint32_t);
 
 /******************************************************************************
 // Sec 10: C Functions
