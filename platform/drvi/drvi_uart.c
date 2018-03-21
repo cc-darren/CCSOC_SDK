@@ -17,20 +17,22 @@ int drvi_UartInit(void)
     T_UartPort tUartPort;
     int iResult = 0;
 
+    cc6801_UartInit();
+
     #if defined UART0_INUSE && (UART0_INUSE)
     tUartPort.bPortNum = 0;
     tUartPort.dwConfig = UART0_CONFIG;
-    cc6801_UartInit(&tUartPort);
+    cc6801_UartConfigSet(&tUartPort);
     #endif
     #if defined UART1_INUSE && (UART1_INUSE)
     tUartPort.bPortNum = 1;
     tUartPort.dwConfig = UART1_CONFIG;
-    cc6801_UartInit(&tUartPort);
+    cc6801_UartConfigSet(&tUartPort);
     #endif
     #if defined UART2_INUSE && (UART2_INUSE)
     tUartPort.bPortNum = 2;
     tUartPort.dwConfig = UART2_CONFIG;
-    cc6801_UartInit(&tUartPort);
+    cc6801_UartConfigSet(&tUartPort);
     #endif
 
     return iResult;

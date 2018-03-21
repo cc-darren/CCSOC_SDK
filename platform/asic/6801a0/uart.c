@@ -30,8 +30,18 @@
 *  20170206 PAT initial version
 ******************************************************************************/
 
+#include "clock.h"
 #include "uart.h"
 #include "drvi_uart.h"
+
+#define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
+
+static int cc6801_Uart0Xfer(void const * const pReg);
+static int cc6801_Uart1Xfer(void const * const pReg);
+static int cc6801_Uart2Xfer(void const * const pReg);
+static int cc6801_Uart0Rcvr(void const * const pReg);
+static int cc6801_Uart1Rcvr(void const * const pReg);
+static int cc6801_Uart2Rcvr(void const * const pReg);
 
 volatile uint32_t UART0_RXDM_INTR = 0;
 volatile uint32_t UART0_TXDM_INTR = 0;
@@ -40,7 +50,55 @@ volatile uint32_t UART1_TXDM_INTR = 0;
 volatile uint32_t UART2_RXDM_INTR = 0;
 volatile uint32_t UART2_TXDM_INTR = 0;
 
-T_cc6801UartPort g_tUartPort[UART_TOTAL_SUPPORTED] = {0};
+extern E_ClockSupported g_dwCurrentClock;
+E_ClockSupported g_dwUartClock;
+
+T_cc6801UartPort g_tUartPort[UART_TOTAL_SUPPORTED] =
+{
+    {(void *)regUART0DMA, (void *)regUART0CTRL, cc6801_Uart0Xfer, cc6801_Uart0Rcvr},
+    {(void *)regUART1DMA, (void *)regUART1CTRL, cc6801_Uart1Xfer, cc6801_Uart1Rcvr},
+    {(void *)regUART2DMA, (void *)regUART2CTRL, cc6801_Uart2Xfer, cc6801_Uart2Rcvr},
+};
+
+struct S_BaudrateTable
+{
+    uint8_t  bBaudRate;
+    uint8_t  bOVR;
+    uint8_t  bDIV;
+    uint8_t  bPSR;
+};
+
+struct S_BaudrateTable sBrTable16M[] =
+{
+    {UART_BAUDRATE_1200,   0x0C, 0xC9, 0x0A},
+    {UART_BAUDRATE_2400,   0x0B, 0x64, 0x0B},
+    {UART_BAUDRATE_4800,   0x0B, 0xC9, 0x02},
+    {UART_BAUDRATE_9600,   0x0E, 0x21, 0x06},
+    {UART_BAUDRATE_14400,  0x0F, 0x24, 0x03},
+    {UART_BAUDRATE_19200,  0x07, 0x21, 0x06},
+    {UART_BAUDRATE_38400,  0x00, 0x19, 0x01},
+    {UART_BAUDRATE_57600,  0x0A, 0x1B, 0x01},
+    {UART_BAUDRATE_115200, 0x0A, 0x0D, 0x01},
+    {UART_BAUDRATE_230400, 0x0A, 0x01, 0x06},
+    {UART_BAUDRATE_460800, 0x07, 0x01, 0x04},
+    {UART_BAUDRATE_921600, 0x09, 0x01, 0x01},
+};
+
+struct S_BaudrateTable sBrTable24M[] =
+{
+    {UART_BAUDRATE_1200,   0x00, 0x7C, 0x13},
+    {UART_BAUDRATE_2400,   0x00, 0x7C, 0x09},
+    {UART_BAUDRATE_4800,   0x00, 0x7D, 0x04},
+    {UART_BAUDRATE_9600,   0x0A, 0xF9, 0x01},
+    {UART_BAUDRATE_14400,  0x0B, 0x64, 0x02},
+    {UART_BAUDRATE_19200,  0x0A, 0x7D, 0x01},
+    {UART_BAUDRATE_38400,  0x0A, 0x18, 0x04},
+    {UART_BAUDRATE_57600,  0x07, 0x10, 0x06},
+    {UART_BAUDRATE_115200, 0x0D, 0x0F, 0x01},
+    {UART_BAUDRATE_230400, 0x0D, 0x07, 0x01},
+    {UART_BAUDRATE_460800, 0x0D, 0x03, 0x01},
+    {UART_BAUDRATE_921600, 0x0D, 0x01, 0x01},
+};
 
 static void cc6801_RxDone(uint8_t bIdx, uint8_t bBytes)
 {
@@ -238,7 +296,6 @@ static int cc6801_Uart2Rcvr(void const * const pReg)
     return CC_SUCCESS;
 }
 
-
 static void cc6801_UartTxBufferSet(U_regUARTDMA * pUartBase,
                                     uint32_t dwTxBufAddr, uint8_t bLen)
 {
@@ -312,91 +369,61 @@ static uint8_t cc6801_ComputeFRS(uint32_t dwConfig)
 
 static int cc6801_UartBaudrateSet(T_UartPort *pUartPort)
 {
-    T_cc6801UartPort port = g_tUartPort[pUartPort->bPortNum];
-    U_regUARTCTRL *pUartCtrlBase = port.pCtrlReg;
+    U_regUARTCTRL *pUartCtrlBase;
     uint32_t dwBaud;
+
+    struct S_BaudrateTable *psBrTable;
+    int iTableSize = 0;
+    int iIdx = 0;
+
+    pUartCtrlBase = (U_regUARTCTRL *)g_tUartPort[pUartPort->bPortNum].pCtrlReg;
+
+    if (g_dwUartClock == CLOCK_16)
+    {
+        psBrTable = sBrTable16M;
+        iTableSize = ARRAY_SIZE(sBrTable16M);
+    }
+    else if(g_dwUartClock == CLOCK_24)
+    {
+        psBrTable = sBrTable24M;
+        iTableSize = ARRAY_SIZE(sBrTable24M);
+    }
+    else
+        return CC_ERROR_INVALID_PARAM;
 
     dwBaud = pUartPort->dwConfig & UART_BAUDRATE;
 
-    switch (dwBaud)
+    for (iIdx = 0; iIdx < iTableSize; iIdx++)
     {
-      case UART_BAUDRATE_1200:
-        pUartCtrlBase->dw.baud = 0x40;
-        pUartCtrlBase->dw.psr = ((0x3 << 3) | 0x3);
-        pUartCtrlBase->dw.ovr = 0x0;
-        break;
-      case UART_BAUDRATE_1800:
-        pUartCtrlBase->dw.baud = 0x40;
-        pUartCtrlBase->dw.psr = ((0x1 << 3) | 0x3);
-        pUartCtrlBase->dw.ovr = 0x0;
-        break;
-      case UART_BAUDRATE_4800:
-        pUartCtrlBase->dw.baud = 0xA0;
-        pUartCtrlBase->dw.psr = ((0x1 << 3) | 0x1);
-        pUartCtrlBase->dw.ovr = 0x0;
-        break;
-      case UART_BAUDRATE_9600:
-        //FPGA DEMO setting, clk=16M
-        pUartCtrlBase->dw.baud = 0x53;
-        pUartCtrlBase->dw.psr = ((0x4 << 3) | 0x0);
-        pUartCtrlBase->dw.ovr = 0x0;
-        break;
-//      case UART_BAUDRATE_14400:
-//        break;
-      case UART_BAUDRATE_19200:
-        pUartCtrlBase->dw.baud = 0xA7;
-        pUartCtrlBase->dw.psr = ((0x1 << 3) | 0x0);
-        pUartCtrlBase->dw.ovr = 0x0A;
-        break;
-      case UART_BAUDRATE_38400:
-        pUartCtrlBase->dw.baud = 0x53;
-        pUartCtrlBase->dw.psr = ((0x1 << 3) | 0x0);
-        pUartCtrlBase->dw.ovr = 0x0A;
-        break;
-      case UART_BAUDRATE_230400:
-        pUartCtrlBase->dw.baud = 0x0A;
-        pUartCtrlBase->dw.psr = ((0xC << 3) | 0x0);
-        pUartCtrlBase->dw.ovr = 0x07;
-        break;
-      case UART_BAUDRATE_460800:
-        pUartCtrlBase->dw.baud = 0x14;
-        pUartCtrlBase->dw.psr = ((0xC << 3) | 0x0);
-        pUartCtrlBase->dw.ovr = 0x07;
-        break;
-      case UART_BAUDRATE_921600:
-        pUartCtrlBase->dw.baud = 0x28;
-        pUartCtrlBase->dw.psr = ((0xC << 3) | 0x0);
-        pUartCtrlBase->dw.ovr = 0x07;
-        break;
-      case UART_BAUDRATE_57600:
-        pUartCtrlBase->dw.baud = 0x2;
-        pUartCtrlBase->dw.psr = ((0xC << 3) | 0x0);
-        pUartCtrlBase->dw.ovr = 0x07;
-        break;
-      default:
-      case UART_BAUDRATE_115200:
-        //FPGA DEMO setting, clk=16M
-        pUartCtrlBase->dw.baud = 0x05;    //based on 32MHz source
-        //pUartCtrlBase->dw.baud = 0x02;  //16MHz   //remove it after dynamically change clock enabled
-        //pUartCtrlBase->dw.baud = 0x0B;  //64MHz   //remove it after dynamically change clock enabled
-        //pUartCtrlBase->dw.baud = 0x08;  //48MHz   //remove it after dynamically change clock enabled
-
-        pUartCtrlBase->dw.psr = ((0xC << 3) | 0x0);
-        pUartCtrlBase->dw.ovr = 0x07;
-        break;
+        if (psBrTable[iIdx].bBaudRate == dwBaud)
+        {
+            pUartCtrlBase->dw.ovr  = psBrTable[iIdx].bOVR;
+            pUartCtrlBase->dw.baud = psBrTable[iIdx].bDIV;
+            pUartCtrlBase->dw.psr  = (psBrTable[iIdx].bPSR << 3);
+            return CC_SUCCESS;
+        }
     }
 
-    return CC_SUCCESS;
+    pUartCtrlBase->dw.ovr  = 0;
+    pUartCtrlBase->dw.baud = 0;
+    pUartCtrlBase->dw.psr  = 0;
+
+    return CC_ERROR_INVALID_PARAM;
 }
 
-void cc6801_UartConfigSet(T_UartPort *pUartPort)
+int cc6801_UartConfigSet(T_UartPort *pUartPort)
 {
     T_cc6801UartPort port = g_tUartPort[pUartPort->bPortNum];
     U_regUARTCTRL *pUartCtrlBase = port.pCtrlReg;
     uint8_t bFrs = 0, bMdsl = 0, bIntCtrl = 0;
+    uint8_t bIdx = 0;
+    int result = 0;
+
+    result = cc6801_UartBaudrateSet(pUartPort);
+    if (CC_SUCCESS != result)
+        return result;
 
     bFrs = cc6801_ComputeFRS(pUartPort->dwConfig);
-    cc6801_UartBaudrateSet(pUartPort);
 
     if (pUartPort->dwConfig & UART_RTSCTS)
     {
@@ -416,6 +443,11 @@ void cc6801_UartConfigSet(T_UartPort *pUartPort)
     pUartCtrlBase->dw.frs = bFrs;
     pUartCtrlBase->dw.mdsl = bMdsl;
 
+    bIdx = pUartPort->bPortNum;
+    cc6801_UartTxIntEnable(g_tUartPort[bIdx].pDmaReg, 1);
+    cc6801_UartRxIntEnable(g_tUartPort[bIdx].pDmaReg, 1);
+
+    return CC_SUCCESS;
 }
 
 void cc6801_UartRxDoneRegister(uint8_t bIdx, fpUartRxDone RxCallBack)
@@ -424,42 +456,50 @@ void cc6801_UartRxDoneRegister(uint8_t bIdx, fpUartRxDone RxCallBack)
         g_tUartPort[bIdx].fbRxDoneHandler = RxCallBack;
 }
 
-int cc6801_UartInit(T_UartPort *pUartPort)
+static void cc6801_UartClkDivSet(void)
 {
-    uint8_t bIdx = 0;
+    uint32_t dwClkCfg = 0;
+    uint8_t bClkDiv = 0;
+
+    switch (g_dwCurrentClock)
+    {
+        case CLOCK_16:
+            bClkDiv = 1;
+            g_dwUartClock = CLOCK_16;
+            break;
+        case CLOCK_24:
+            bClkDiv = 1;
+            g_dwUartClock = CLOCK_24;
+            break;
+        case CLOCK_32:
+            bClkDiv = 2;
+            g_dwUartClock = CLOCK_16;
+            break;
+        case CLOCK_48:
+            bClkDiv = 2;
+            g_dwUartClock = CLOCK_24;
+            break;
+        case CLOCK_64:
+            bClkDiv = 4;
+            g_dwUartClock = CLOCK_16;
+            break;
+        default:
+            bClkDiv = 1;
+            g_dwUartClock = CLOCK_24;
+            break;
+    }
+
+    dwClkCfg = regCKGEN->dw.clkCfg3;
+    dwClkCfg &= ~(0x1F);
+    dwClkCfg |= bClkDiv;
+    regCKGEN->dw.clkCfg3 = dwClkCfg;
+}
+
+int cc6801_UartInit(void)
+{
     int error = CC_SUCCESS;
 
-    bIdx = pUartPort->bPortNum;
-
-    if (UART_0 == bIdx)
-    {
-        g_tUartPort[bIdx].pDmaReg = (void *)regUART0DMA,
-        g_tUartPort[bIdx].pCtrlReg = (void *)regUART0CTRL,
-        g_tUartPort[bIdx].fpUartXfer = cc6801_Uart0Xfer;
-        g_tUartPort[bIdx].fpUartRcvr = cc6801_Uart0Rcvr;
-    }
-    else if(UART_1 == bIdx)
-    {
-        g_tUartPort[bIdx].pDmaReg = (void *)regUART1DMA,
-        g_tUartPort[bIdx].pCtrlReg = (void *)regUART1CTRL,
-        g_tUartPort[bIdx].fpUartXfer = cc6801_Uart1Xfer;
-        g_tUartPort[bIdx].fpUartRcvr = cc6801_Uart1Rcvr;
-    }
-    else if(UART_2 == bIdx)
-    {
-        g_tUartPort[bIdx].pDmaReg = (void *)regUART2DMA,
-        g_tUartPort[bIdx].pCtrlReg = (void *)regUART2CTRL,
-        g_tUartPort[bIdx].fpUartXfer = cc6801_Uart2Xfer;
-        g_tUartPort[bIdx].fpUartRcvr = cc6801_Uart2Rcvr;
-    }
-    else
-    {
-    }
-
-    cc6801_UartConfigSet(pUartPort);
-
-    cc6801_UartTxIntEnable(g_tUartPort[bIdx].pDmaReg, 1);
-    cc6801_UartRxIntEnable(g_tUartPort[bIdx].pDmaReg, 1);
+    cc6801_UartClkDivSet();
 
     return error;
 }

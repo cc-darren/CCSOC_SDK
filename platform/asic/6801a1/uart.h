@@ -146,9 +146,9 @@ typedef struct
     void (*fbRxDoneHandler)(T_UartEvent *p_event);
 } T_cc6801UartPort;
 
-int cc6801_UartInit(T_UartPort *pUartPort);
+int cc6801_UartInit(void);
 
-void cc6801_UartConfigSet(T_UartPort *pUartPort);
+int cc6801_UartConfigSet(T_UartPort *pUartPort);
 
 void cc6801_UartRxDoneRegister(uint8_t bIdx, fpUartRxDone RxCallBack);
 

@@ -77,6 +77,8 @@ static void UartInit(void)
 
 int main(void)
 {
+    __align(4) uint8_t cr;
+
     //Must be first in main()
     sys_InitMain();
 
@@ -96,8 +98,6 @@ int main(void)
     while(1)
     {
 #ifndef UART_LOOPBACK_TEST
-        uint8_t cr;
-
         g_iuart0Done = 0;
         drvi_UartRx(TRACER_IF_ID, &cr, 1);
         while(!g_iuart0Done);
