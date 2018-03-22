@@ -43,8 +43,10 @@
 #include "tracer.h"
 #include "scheduler.h"
 #include "rwip.h"
+#include "app_ota.h"
+#ifdef APPLICATION
 #include "sdk_ccps.h"
-
+#endif
 /*
  * DEFINES
  ****************************************************************************************
@@ -82,10 +84,48 @@ static int ccps_packet_send_cmd_handler(ke_msg_id_t const msgid,
                                         ke_task_id_t const src_id)
 {
 
+
+    S_App_CC_Messages *ptAppCCMessage = (S_App_CC_Messages *) param->value;
+    
+
+    if(ptAppCCMessage->len >= SIZE_OF_CC_MSG_HDR)
+    {
+        switch(ptAppCCMessage->type)
+        {
+            case E_CCPS_FTYPE_OTA: 
+            
+                APP_OTA_MsgHandler(ptAppCCMessage);
+                
+                break;
+    
+            default:
+                break;
+        }
+    }
+
+    
+
+#if 0   // for SDK only
     sdk_ccps_rx_req_data(param->value, param->length);
+#endif
 
     return (KE_MSG_CONSUMED);
 }
+
+
+#ifdef BOOTLOADER
+static int ccps_packet_send_image_handler(ke_msg_id_t const msgid,
+                                        struct ccps_packet_send_image const *param,
+                                        ke_task_id_t const dest_id,
+                                        ke_task_id_t const src_id)
+{
+
+    
+    APP_OTA_Image_Write(param->value, param->length);
+    
+    return (KE_MSG_CONSUMED);
+}
+#endif
 
 
 static int ccps_cfg_indntf_ind_handler(ke_msg_id_t const msgid,
@@ -241,7 +281,9 @@ const struct ke_msg_handler app_ccps_msg_handler_list[] =
 
     {CCPS_PACKET_SEND_CMD,          (ke_msg_func_t)ccps_packet_send_cmd_handler},       
     {CCPS_CFG_INDNTF_IND,           (ke_msg_func_t)ccps_cfg_indntf_ind_handler},
-
+    #ifdef BOOTLOADER
+    {CCPS_PACKET_SEND_IMAGE,        (ke_msg_func_t)ccps_packet_send_image_handler},           
+    #endif
 };
 
 const struct ke_state_handler app_ccps_table_handler =
@@ -250,3 +292,4 @@ const struct ke_state_handler app_ccps_table_handler =
 #endif //BLE_APP_REPORT
 
 /// @} APP
+

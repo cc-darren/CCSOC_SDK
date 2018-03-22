@@ -17,32 +17,15 @@
 
 #ifdef CFG_BLE_APP
 
-#ifdef CFG_JUMP_TABLE_2
-#define JUMP_TABLE_BASE_ADDR            0x10000200
-#define JUMP_TABLE2_SIZE  (75)
-
-extern const uint32_t volatile *const jump_table_base;
-extern uint32_t * jump_table2_base[JUMP_TABLE2_SIZE] __attribute__((section("jump_table2_mem_area")));
-
-#else
-
-#define JUMP_TABLE_SIZE    (256)
-#define JUMP_TABLE_2_BASE_ADDR            0x20017C00
-
-extern const uint32_t * const jump_table_base[JUMP_TABLE_SIZE] __attribute__((section("jump_table_mem_area")));
-extern uint32_t volatile *const jump_table2_base;
-#endif
+#define JUMP_TABLE_SWITCH_ADDRESS        (0x10000200)
+#define JUMP_TABLE_TOTAL                 (256)
+#define JUMP_TABLE_SIZE                  (1024)
 
 
-
-#else
-extern uint32_t volatile *const jump_table_base;
-extern uint32_t volatile *const jump_table2_base;
-#endif
+extern const uint32_t * const jump_table_base[JUMP_TABLE_TOTAL] __attribute__((section("jump_table_mem_area")));
 
 #define jump_table_struct (uint32_t)jump_table_base
-#define jump_table2_struct (uint32_t)jump_table2_base
-
+#endif
 
 
 /// @} BT Stack Configuration

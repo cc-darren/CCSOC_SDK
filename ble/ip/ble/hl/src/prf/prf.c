@@ -545,7 +545,7 @@ static const struct prf_task_cbs * prf_itf_get(uint16_t task_id)
 
         #if (BLE_OTA_TARGET)
         case TASK_ID_OTAT:
-            prf_cbs = otat_prf_itf_get();
+            //prf_cbs = otat_prf_itf_get(); // Not used now
             break;
         #endif //(BLE_OTA_TARGET)
 
@@ -570,17 +570,6 @@ void prf_init(bool reset)
 {
     uint8_t i;
 
-#ifndef CFG_JUMP_TABLE_2
-    
-
-    if(jump_table2_struct[JT_POS_FUNC_PRF_INIT] != 0)
-    {   //TracerInfo("prf_init1\r\n");     
-        typedef void (*my_function)(bool reset);
-
-        ((my_function) (jump_table2_struct[JT_POS_FUNC_PRF_INIT]))(reset);
-        return;
-    }
-#endif
 
     if(!reset)
     {
@@ -632,16 +621,6 @@ uint8_t prf_add_profile(struct gapm_profile_task_add_cmd * params, ke_task_id_t*
     uint8_t i;
     uint8_t status = GAP_ERR_NO_ERROR;
 
-#ifndef CFG_JUMP_TABLE_2
-   
-    if(jump_table2_struct[JT_POS_FUNC_PRF_ADD_PROFILE] != 0)
-    {
-        typedef uint8_t (*my_function)(struct gapm_profile_task_add_cmd * params, ke_task_id_t* prf_task);
-        //TracerInfo("prf_add_profile1\r\n");
-
-        return((my_function) (jump_table2_struct[JT_POS_FUNC_PRF_ADD_PROFILE]))(params, prf_task);
-    }
-#endif
 
     // retrieve profile callback
     const struct prf_task_cbs * cbs = prf_itf_get(params->prf_task_id);
@@ -702,19 +681,7 @@ void prf_create(uint8_t conidx)
     uint8_t i;
     /* simple connection creation handler, nothing to do. */
 
-#ifndef CFG_JUMP_TABLE_2
-    
 
-    if(jump_table2_struct[JT_POS_FUNC_PRF_CREATE] != 0)
-    {
-        typedef void (*my_function)(uint8_t conidx);
-        //TracerInfo("prf_create1\r\n");
-
-        ((my_function) (jump_table2_struct[JT_POS_FUNC_PRF_CREATE]))(conidx);
-
-        return;
-    }
-#endif
 
     // execute create function of each profiles
     for(i = 0; i < BLE_NB_PROFILES ; i++)
@@ -734,19 +701,7 @@ void prf_cleanup(uint8_t conidx, uint8_t reason)
 {
     uint8_t i;
     /* simple connection creation handler, nothing to do. */
-#ifndef CFG_JUMP_TABLE_2
-    
 
-    if(jump_table2_struct[JT_POS_FUNC_PRF_CLEANUP] != 0)
-    {
-        typedef void (*my_function)(uint8_t conidx, uint8_t reason);
-        //TracerInfo("prf_cleanup1\r\n");
-
-        ((my_function) (jump_table2_struct[JT_POS_FUNC_PRF_CLEANUP]))(conidx, reason); 
-
-        return;
-    }
-#endif
 
     // execute create function of each profiles
     for(i = 0; i < BLE_NB_PROFILES ; i++)
@@ -811,19 +766,6 @@ ke_task_id_t prf_get_id_from_task(ke_msg_id_t task)
     uint8_t idx = KE_IDX_GET(task);
     uint8_t i;
     
-#ifndef CFG_JUMP_TABLE_2
-    
-
-    if(jump_table2_struct[JT_POS_FUNC_PRF_GET_ID_FROM_TASK] != 0)
-    {
-        typedef ke_task_id_t (*my_function)(ke_msg_id_t task);
-        //TracerInfo("prf_get_id_from_task1\r\n");
-
-        return ((my_function) (jump_table2_struct[JT_POS_FUNC_PRF_GET_ID_FROM_TASK]))(task); 
-
-    }
-#endif
-
     
     task = KE_TYPE_GET(task);
 
@@ -847,18 +789,6 @@ ke_task_id_t prf_get_task_from_id(ke_msg_id_t id)
     uint8_t idx = KE_IDX_GET(id);
     uint8_t i;
     
-#ifndef CFG_JUMP_TABLE_2
-    
-
-    if(jump_table2_struct[JT_POS_FUNC_PRF_GET_TASK_FROM_ID] != 0)
-    {
-        typedef ke_task_id_t (*my_function)(ke_msg_id_t id);
-        //TracerInfo("prf_get_task_from_id1\r\n");
-
-        return ((my_function) (jump_table2_struct[JT_POS_FUNC_PRF_GET_TASK_FROM_ID]))(id); 
-       
-    }
-#endif
    
     id = KE_TYPE_GET(id);
 

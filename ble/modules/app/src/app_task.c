@@ -75,8 +75,8 @@
 #include "am0_app.h"             // Audio Mode 0 Application
 #endif //defined(BLE_APP_AM0)
 
-#if (BLE_APP_OTA)
 #include "app_ota.h"               // OTA Module Definition
+#if (BLE_APP_OTA)
 #include "otat_task.h"
 #endif //(BLE_APP_OTA)
 
@@ -556,6 +556,11 @@ static int gapc_disconnect_ind_handler(ke_msg_id_t const msgid,
     if(APPM_CONNECTED != ke_state_get(TASK_APP))
         return (KE_MSG_CONSUMED);
 
+    if(true == APP_OTA_RebootIsReady())
+    {
+        NVIC_SystemReset();
+    }
+
     // Go to the ready state
     ke_state_set(TASK_APP, APPM_READY);
 
@@ -574,13 +579,6 @@ static int gapc_disconnect_ind_handler(ke_msg_id_t const msgid,
     appm_start_advertising();
     #endif //(!BLE_APP_HID)
 
-    #if (BLE_APP_OTA)
-    // Stop interval timer
-    app_ota_stop_timer();
-    #endif //(BLE_APP_OTA)
-		
-    if(true == s_dfu_settings.enter_buttonless_dfu)
-         NVIC_SystemReset();
 
     return (KE_MSG_CONSUMED);
 }
@@ -707,10 +705,9 @@ static int appm_msg_handler(ke_msg_id_t const msgid,
         case (TASK_ID_OTAT):
         {
             // Call the OTA Module
-            msg_pol = appm_get_handler(&app_ota_table_handler, msgid, param, src_id);
+            //msg_pol = appm_get_handler(&app_ota_table_handler, msgid, param, src_id); // not used now
         } break;
-#endif //(BLE_APP_HT)
-
+#endif //(BLE_APP_OTA)
 #if (BLE_APP_CCPS)
         case (TASK_ID_CCPS):
         {
@@ -741,34 +738,6 @@ static int appm_msg_handler(ke_msg_id_t const msgid,
 }
 
 
-
-
-#if 0 // RW Gross Timer Test by Samuel
-#include "tracer.h"
-
-static int app_timer_handler(ke_msg_id_t const msgid,
-                                   void const *param,
-                                   ke_task_id_t const dest_id,
-                                   ke_task_id_t const src_id)
-{
-    
-    static uint32_t timer_cnt = 0;
-
-    static bool gpio_toggle = 0;
-
-    gpio_toggle ^= 1;
-    drvi_GpioWrite(GPIO_PIN_38, gpio_toggle);
-
-    // Clear the previous timer
-    ke_timer_clear(APP_TIMER_TEST_TIMER, TASK_APP);
-    // Create a new timer with the received measurement interval
-    ke_timer_set(APP_TIMER_TEST_TIMER, TASK_APP, 1); // 10 ms
-            
-//    TracerInfo("timer_cnt: %d\r\n", ++timer_cnt);
-
-    return (KE_MSG_CONSUMED);
-}
-#endif
 
 
 #ifdef SW_TIMER_BY_KERNEL

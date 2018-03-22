@@ -38,106 +38,6 @@ uint32_t rwip_heap_msg[RWIP_CALC_HEAP_LEN(RWIP_HEAP_MSG_SIZE)]   __attribute__((
 uint32_t rwip_heap_db[RWIP_CALC_HEAP_LEN(RWIP_HEAP_DB_SIZE)]     __attribute__((section("heap_db_area"), zero_init));
 
 
-#ifdef CFG_JUMP_TABLE_2
-
-const uint32_t volatile * const jump_table_base = ((uint32_t*)JUMP_TABLE_BASE_ADDR);
-
-
-// jump table from RAM
-uint32_t* jump_table2_base[] __attribute__((section("jump_table2_mem_area"))) =
-{    
-        /* 000 */ (uint32_t *) 0,
-        /* 001 */ (uint32_t *) 0,
-#if BLE_APP_PRESENT
-        /* 002 */ (uint32_t *) appm_init,
-#else
-        /* 002 */ (uint32_t *) 0,
-#endif
-        /* 003 */ (uint32_t *) rf_init,
-        /* 004 */ (uint32_t *) 0,
-        /* 005 */ (uint32_t *) 0,
-        /* 006 */ (uint32_t *) rwip_eif_get,
-    #if (BLE_PROFILES)
-        /* 007 */ (uint32_t *) prf_init,
-        /* 008 */ (uint32_t *) prf_create,
-        /* 009 */ (uint32_t *) prf_add_profile,
-        /* 010 */ (uint32_t *) prf_cleanup,
-        /* 011 */ (uint32_t *) prf_get_id_from_task,
-        /* 012 */ (uint32_t *) prf_get_task_from_id,
-    #else
-        /* 007 */ (uint32_t *) 0,
-        /* 008 */ (uint32_t *) 0,
-        /* 009 */ (uint32_t *) 0,
-        /* 010 */ (uint32_t *) 0,
-        /* 011 */ (uint32_t *) 0,
-        /* 012 */ (uint32_t *) 0,
-    #endif
-        /* 013 */ (uint32_t *) 0,
-        /* 014 */ (uint32_t *) 0,
-        /* 015 */ (uint32_t *) 0,
-        /* 016 */ (uint32_t *) 0,
-        /* 017 */ (uint32_t *) 0,
-        /* 018 */ (uint32_t *) 0,
-        /* 019 */ (uint32_t *) 0,
-        /* 020 */ (uint32_t *) 0,
-        /* 021 */ (uint32_t *) 0,
-        /* 022 */ (uint32_t *) 0,
-        /* 023 */ (uint32_t *) 0,
-        /* 024 */ (uint32_t *) 0,
-        /* 025 */ (uint32_t *) 0,
-        /* 026 */ (uint32_t *) 0,
-        /* 027 */ (uint32_t *) 0,
-        /* 028 */ (uint32_t *) 0,
-        /* 029 */ (uint32_t *) 0,
-        /* 030 */ (uint32_t *) 0,
-        /* 031 */ (uint32_t *) 0,
-        /* 032 */ (uint32_t *) 0,
-        /* 033 */ (uint32_t *) 0,
-        /* 034 */ (uint32_t *) 0,
-        /* 035 */ (uint32_t *) 0,
-        /* 036 */ (uint32_t *) 0,
-        /* 037 */ (uint32_t *) 0,
-        /* 038 */ (uint32_t *) 0,
-        /* 039 */ (uint32_t *) 0,
-        /* 040 */ (uint32_t *) 0,
-        /* 041 */ (uint32_t *) 0,
-        /* 042 */ (uint32_t *) 0,
-        /* 043 */ (uint32_t *) 0,
-        /* 044 */ (uint32_t *) 0,
-        /* 045 */ (uint32_t *) 0,
-        /* 046 */ (uint32_t *) 0,
-        /* 047 */ (uint32_t *) 0,
-        /* 048 */ (uint32_t *) 0,
-        /* 049 */ (uint32_t *) 0,
-        /* 050 */ (uint32_t *) 0,
-        /* 051 */ (uint32_t *) 0, 
-        /* 052 */ (uint32_t *) 0, 
-        /* 053 */ (uint32_t *) 0, 
-        /* 054 */ (uint32_t *) 0, 
-        /* 055 */ (uint32_t *) 0, 
-        /* 056 */ (uint32_t *) 0, 
-        /* 057 */ (uint32_t *) 0, 
-        /* 058 */ (uint32_t *) 0, 
-        /* 059 */ (uint32_t *) 0,
-        /* 060 */ (uint32_t *) 0,    
-        /* 061 */ (uint32_t *) &rwip_heap_env[0],
-        /* 062 */ (uint32_t *) RWIP_HEAP_ENV_SIZE,
-        /* 063 */ (uint32_t *) &rwip_heap_db[0],
-        /* 064 */ (uint32_t *) RWIP_HEAP_DB_SIZE,
-        /* 065 */ (uint32_t *) &rwip_heap_msg[0],
-        /* 066 */ (uint32_t *) RWIP_HEAP_MSG_SIZE,
-        /* 067 */ (uint32_t *) &rwip_heap_non_ret[0],
-        /* 068 */ (uint32_t *) RWIP_HEAP_NON_RET_SIZE,
-
-
-
-};
-
-#else // Disable Jump table 1 from flash 
-
-
-
-
 
 #if (BLE_CENTRAL && BLE_CHNL_ASSESS)
 /// Default Channel Assessment Timer duration (1s - Multiple of 10ms)
@@ -161,36 +61,6 @@ uint32_t* jump_table2_base[] __attribute__((section("jump_table2_mem_area"))) =
 #define MAX_SLEEP_DURATION_EXTERNAL_WAKEUP      0x3E80  //10s
 #endif //DEEP_SLEEP
 
-#if 0
-/// Kernel Message Heap
-#define RWIP_HEAP_MSG_SIZE         (  BT_HEAP_MSG_SIZE_      + \
-                                    BLE_HEAP_MSG_SIZE_     + \
-                                    BLEHL_HEAP_MSG_SIZE_      )
-
-/// Number of link in kernel environment
-#define KE_NB_LINK_IN_HEAP_ENV   4
-
-
-/// Size of Environment heap
-//#define RWIP_HEAP_ENV_SIZE         10
-
-( BT_HEAP_ENV_SIZE_         + \
-                                     ( BLE_HEAP_ENV_SIZE_      + \
-                                       BLEHL_HEAP_ENV_SIZE_ )    \
-                                     * KE_NB_LINK_IN_HEAP_ENV )
-
-/// Size of Attribute database heap
-#define RWIP_HEAP_DB_SIZE         (  BLEHL_HEAP_DB_SIZE  )
-
-/// Size of non retention heap - 512 bytes per ble link plus 4096 bytes for data throughput should be sufficient and should be tuned
-#if (BLE_EMB_PRESENT || BLE_HOST_PRESENT)
-#define RWIP_HEAP_NON_RET_SIZE    (( 512 * BLE_CONNECTION_MAX ) + 4096)
-#else
-#define RWIP_HEAP_NON_RET_SIZE    ( 1024 )
-#endif
-#endif
-
-uint32_t volatile *const jump_table2_base = ((uint32_t*)JUMP_TABLE_2_BASE_ADDR);
 
 
 void _func_dummy(void)
@@ -201,9 +71,191 @@ void _func_dummy(void)
 
 void lld_sleep_compensate(void);
 void lld_sleep_init(void);
-uint32_t lld_sleep_us_2_lpcycles(uint32_t us); // rwip_us_2_lpcycles
-uint32_t lld_sleep_lpcycles_2_us(uint32_t lpcycles); // rwip_sleep_lpcycles_2_us
+uint32_t lld_sleep_us_2_lpcycles(uint32_t us);
+uint32_t lld_sleep_lpcycles_2_us(uint32_t lpcycles); 
+/*
+typedef void (*generic_jumptable_callback)(void);
+typedef void (*rf_init_jumptable_callback)(struct rwip_rf_api);
+typedef struct rwip_eif_api* (*eifget_jumptable_callback)(uint8_t);
+typedef void (*prf_init_jumptable_callback)(bool);
+typedef void (*prf_create_jumptable_callback)(bool);
+typedef uint8_t (*prf_add_profile_jumptable_callback)(struct gapm_profile_task_add_cmd *, ke_task_id_t*);
+typedef void (*prf_cleanup_jumptable_callback)(uint8_t, uint8_t);
+typedef ke_task_id_t (*prf_get_id_from_task_jumptable_callback)(ke_msg_id_t);
+typedef ke_task_id_t (*prf_get_task_from_id_jumptable_callback)(ke_msg_id_t);
+*/
 
+
+void  appm_init_switch(void)
+{   
+    typedef void (*appm_init_jumptable_callback)(void);
+    
+    ((appm_init_jumptable_callback) (jump_table_base[JT_POS_FUNC_APPM_INIT]))(); 
+}
+
+void  rf_init_switch(struct rwip_rf_api *api)
+{
+    typedef void (*rf_init_jumptable_callback)(struct rwip_rf_api*);
+    
+    ((rf_init_jumptable_callback) (jump_table_base[JT_POS_FUNC_RF_INIT]))(api); 
+}
+
+struct rwip_eif_api*  rwip_eif_get_switch(uint8_t type)
+{
+    typedef struct rwip_eif_api* (*eif_get_jumptable_callback)(uint8_t);
+    
+    return ((eif_get_jumptable_callback) (jump_table_base[JT_POS_FUNC_EIF_GET]))(type); 
+}
+
+void  prf_init_switch(bool reset)
+{
+    typedef void (*prf_init_jumptable_callback)(bool);
+
+    ((prf_init_jumptable_callback) (jump_table_base[JT_POS_FUNC_PRF_INIT]))(reset); 
+}
+
+void  prf_create_switch(uint8_t conidx)
+{
+    typedef void (*prf_create_jumptable_callback)(bool);
+    
+    ((prf_create_jumptable_callback) (jump_table_base[JT_POS_FUNC_PRF_CREATE]))(conidx); 
+}
+
+uint8_t  prf_add_profile_switch(struct gapm_profile_task_add_cmd * params, ke_task_id_t* prf_task)
+{
+    typedef uint8_t (*prf_add_profile_jumptable_callback)(struct gapm_profile_task_add_cmd *, ke_task_id_t*);
+    
+    return ((prf_add_profile_jumptable_callback) (jump_table_base[JT_POS_FUNC_PRF_ADD_PROFILE]))(params, prf_task); 
+}
+
+void  prf_cleanup_switch(uint8_t conidx, uint8_t reason)
+{
+    typedef void (*prf_cleanup_jumptable_callback)(uint8_t, uint8_t);
+    
+    ((prf_cleanup_jumptable_callback) (jump_table_base[JT_POS_FUNC_PRF_CLEANUP]))(conidx, reason); 
+}
+
+ke_task_id_t  prf_get_id_from_task_switch(ke_msg_id_t task)
+{
+    typedef ke_task_id_t (*prf_get_id_from_task_jumptable_callback)(ke_msg_id_t);
+    
+    return ((prf_get_id_from_task_jumptable_callback) (jump_table_base[JT_POS_FUNC_PRF_GET_ID_FROM_TASK]))(task); 
+}
+
+ke_msg_id_t  prf_get_task_from_id_switch(ke_msg_id_t id)
+{
+
+    typedef ke_task_id_t (*prf_get_task_from_id_jumptable_callback)(ke_msg_id_t);
+
+    return ((prf_get_task_from_id_jumptable_callback) (jump_table_base[JT_POS_FUNC_PRF_GET_TASK_FROM_ID]))(id); 
+}
+
+
+const uint32_t* jump_table_switch_base[] __attribute__((section("jump_table_switch_mem_area"))) =
+{
+    #if BLE_APP_PRESENT
+        /* 000 */ (const uint32_t *) TASK_APP,
+    #else
+        /* 000 */ (const uint32_t *) TASK_AHI,
+    #endif
+
+        /* 001 */ (const uint32_t *) _func_dummy,
+
+    #if BLE_APP_PRESENT
+        /* 002 */ (const uint32_t *) appm_init_switch,
+    #else
+        /* 002 */ (const uint32_t *) _func_dummy,
+    #endif
+
+        /* 003 */ (const uint32_t *) rf_init_switch,
+        /* 004 */ (const uint32_t *) _func_dummy,
+        /* 005 */ (const uint32_t *) _func_dummy,
+        /* 006 */ (const uint32_t *) rwip_eif_get_switch,
+
+    #if (BLE_PROFILES)
+        /* 007 */ (const uint32_t *) prf_init_switch,
+        /* 008 */ (const uint32_t *) prf_create_switch,
+        /* 009 */ (const uint32_t *) prf_add_profile_switch,
+        /* 010 */ (const uint32_t *) prf_cleanup_switch,
+        /* 011 */ (const uint32_t *) prf_get_id_from_task_switch,
+        /* 012 */ (const uint32_t *) prf_get_task_from_id_switch,
+    #else
+        /* 007 */ (const uint32_t *) _func_dummy,
+        /* 008 */ (const uint32_t *) _func_dummy,
+        /* 009 */ (const uint32_t *) _func_dummy,
+        /* 010 */ (const uint32_t *) _func_dummy,
+        /* 011 */ (const uint32_t *) _func_dummy,
+        /* 012 */ (const uint32_t *) _func_dummy,
+    #endif
+
+        /* 013 */ (const uint32_t *) 0,
+        /* 014 */ (const uint32_t *) 0,
+        /* 015 */ (const uint32_t *) 0,
+        /* 016 */ (const uint32_t *) 0,
+        /* 017 */ (const uint32_t *) 0,
+        /* 018 */ (const uint32_t *) 0,
+        /* 019 */ (const uint32_t *) 0,
+        /* 020 */ (const uint32_t *) 0,
+        /* 021 */ (const uint32_t *) 0,
+        /* 022 */ (const uint32_t *) 0,
+        /* 023 */ (const uint32_t *) 0,
+        /* 024 */ (const uint32_t *) 0,
+        /* 025 */ (const uint32_t *) 0,
+        /* 026 */ (const uint32_t *) 0,
+        /* 027 */ (const uint32_t *) 0,
+        /* 028 */ (const uint32_t *) 0,
+        /* 029 */ (const uint32_t *) 0,
+        /* 030 */ (const uint32_t *) 0,
+        /* 031 */ (const uint32_t *) 0,
+        /* 032 */ (const uint32_t *) 0,
+        /* 033 */ (const uint32_t *) 0,
+        /* 034 */ (const uint32_t *) 0,
+        /* 035 */ (const uint32_t *) 0,
+        /* 036 */ (const uint32_t *) 0,
+        /* 037 */ (const uint32_t *) 0,
+        /* 038 */ (const uint32_t *) 0,
+        /* 039 */ (const uint32_t *) 0,
+        /* 040 */ (const uint32_t *) 0,
+        /* 041 */ (const uint32_t *) 0,
+        /* 042 */ (const uint32_t *) 0,
+        /* 043 */ (const uint32_t *) 0,
+        /* 044 */ (const uint32_t *) 0,
+        /* 045 */ (const uint32_t *) 0,
+        /* 046 */ (const uint32_t *) 0,
+        /* 047 */ (const uint32_t *) 0,
+#if (BLE_CENTRAL && BLE_CHNL_ASSESS)        
+        /* 048 */ (const uint32_t *) LLM_UTIL_CH_ASSES_DFLT_TIMER_DUR,
+        /* 049 */ (const uint32_t *) LLM_UTIL_CH_ASSES_DFLT_REASS_CNT,
+        /* 050 */ (const uint32_t *) LLM_UTIL_CH_ASSES_DFLT_MIN_THR,
+#else
+        /* 048 */ (const uint32_t *) 0,
+        /* 049 */ (const uint32_t *) 0,
+        /* 050 */ (const uint32_t *) 0,
+#endif
+        /* 051 */ (const uint32_t *) 0, // lld_evt_init_func
+        /* 052 */ (const uint32_t *) 0, // lld_init_func
+        /* 053 */ (const uint32_t *) 0, // lld_test_stop_func
+        /* 054 */ (const uint32_t *) 0, // lld_test_mode_tx_func
+        /* 055 */ (const uint32_t *) 0, // lld_test_mode_rx_func
+        /* 056 */ (const uint32_t *) 0, // llm_encryption_done_func
+        /* 057 */ (const uint32_t *) 0, // ke_task_init_func
+        /* 058 */ (const uint32_t *) 0, // ke_timer_init_func
+#if (DEEP_SLEEP)        
+        /* 059 */ (const uint32_t *) MAX_SLEEP_DURATION_PERIODIC_WAKEUP,
+        /* 060 */ (const uint32_t *) MAX_SLEEP_DURATION_EXTERNAL_WAKEUP,
+#else
+        /* 059 */ (const uint32_t *) 0,
+        /* 060 */ (const uint32_t *) 0,
+#endif        
+        /* 061 */ (const uint32_t *) &rwip_heap_env[0],
+        /* 062 */ (const uint32_t *) RWIP_HEAP_ENV_SIZE,
+        /* 063 */ (const uint32_t *) &rwip_heap_db[0],
+        /* 064 */ (const uint32_t *) RWIP_HEAP_DB_SIZE,
+        /* 065 */ (const uint32_t *) &rwip_heap_msg[0],
+        /* 066 */ (const uint32_t *) RWIP_HEAP_MSG_SIZE,
+        /* 067 */ (const uint32_t *) &rwip_heap_non_ret[0],
+        /* 068 */ (const uint32_t *) RWIP_HEAP_NON_RET_SIZE,    
+};
 
 
 const uint32_t* const jump_table_base[] __attribute__((section("jump_table_mem_area"))) =
@@ -312,13 +364,11 @@ const uint32_t* const jump_table_base[] __attribute__((section("jump_table_mem_a
         /* 068 */ (const uint32_t *) RWIP_HEAP_NON_RET_SIZE,
 };
 
-#endif
 
 
 
 #else // ndef CFG_BLE_APP
 
 uint32_t volatile *const jump_table_base = 0;
-uint32_t volatile *const jump_table2_base = 0;
 
 #endif

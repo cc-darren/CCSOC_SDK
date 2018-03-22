@@ -20,14 +20,14 @@
 
 #include "rwip_config.h"     // SW configuration
 
-#if (BLE_APP_OTA)
+//#if (BLE_APP_OTA)
 
 /*
  * INCLUDE FILES
  ****************************************************************************************
  */
 
-#include "app_ota.h"                  // Health Thermometer Application Definitions
+#include "app_ota.h"                  
 #include "app.h"                     // Application Definitions
 #include "app_task.h"                // application task definitions
 #include "otat_task.h"               // health thermometer functions
@@ -38,348 +38,1075 @@
 
 #include "co_math.h"
 #include "ke_timer.h"
-#ifdef BLE_OTA_BL_MODE_EN
-#include "fota_ble_handler.h"
-#endif
-#include "fota.h"
 #include "drvi_clock.h"
 #include "sw_timer.h"
-
-#if (DISPLAY_SUPPORT)
-#include "app_display.h"
-#include "display.h"
-#endif //DISPLAY_SUPPORT
+#include "tracer.h"
+#include "crc32.h"
+#include "app_ccps.h"
+#include "ota_handling.h"
+#ifdef CC_OTA_SELF_TEST
+#include "scheduler.h"
+#endif
 
 /*
  * DEFINES
  ****************************************************************************************
  */
-
-#ifndef BLE_OTA_BL_MODE_EN  
-SW_TIMER_DEF(s_tBleDisconnectToBLTimer);
-#endif
-/// Initial Temperature Value : 37c
-#define APP_OTA_TEMP_VALUE_INIT       (3700)
-/// Temperature Step
-#define APP_OTA_TEMP_STEP_INIT        (10)
-/// Measurement Interval Value Min
-#define APP_OTA_MEAS_INTV_MIN         (1)
-/// Measurement Interval Value Max
-#define APP_OTA_MEAS_INTV_MAX         (30)
-
-/*
- * GLOBAL VARIABLE DEFINITIONS
- ****************************************************************************************
- */
-
-/// health thermometer application environment structure
-struct app_ota_env_tag app_ota_env;
-
-/*
- * LOCAL FUNCTION DEFINITIONS
- ****************************************************************************************
- */
-
-//void app_ota_notify_send(uint8_t *tx_data)
-void app_ota_notify_send(uint8_t *tx_data, uint8_t length)
-{
-    // Allocate the OTAT_TEMP_SEND_REQ message
-    struct otat_notify_send_req * req = KE_MSG_ALLOC(OTAT_CTRL_PT_SEND_NOTIFY,
-                                                    prf_get_task_from_id(TASK_ID_OTAT),
-                                                    TASK_APP,
-                                                    otat_notify_send_req);
-
-
-    req->lenth = length;
-    memcpy(req->eArray, tx_data, length);
-                                             
-
-    ke_msg_send(req);
-}
-
-#if (DISPLAY_SUPPORT)
-static void app_ota_update_type_string(uint8_t temp_type)
-{
-    switch (temp_type)
-    {
-        case 0:
-            strcpy(app_ota_env.temp_type_string, "NONE");
-            break;
-        case 1:
-            strcpy(app_ota_env.temp_type_string, "ARMPIT");
-            break;
-        case 2:
-            strcpy(app_ota_env.temp_type_string, "BODY");
-            break;
-        case 3:
-            strcpy(app_ota_env.temp_type_string, "EAR");
-            break;
-        case 4:
-            strcpy(app_ota_env.temp_type_string, "FINGER");
-            break;
-        case 5:
-            strcpy(app_ota_env.temp_type_string, "GASTRO-INT");
-            break;
-        case 6:
-            strcpy(app_ota_env.temp_type_string, "MOUTH");
-            break;
-        case 7:
-            strcpy(app_ota_env.temp_type_string, "RECTUM");
-            break;
-        case 8:
-            strcpy(app_ota_env.temp_type_string, "TOE");
-            break;
-        case 9:
-            strcpy(app_ota_env.temp_type_string, "TYMPANUM");
-            break;
-        default:
-            strcpy(app_ota_env.temp_type_string, "UNKNOWN");
-            break;
-    }
-}
+#ifdef BOOTLOADER
+#define OTA_ENC_CODE_SIZE       20
 #endif
 
-/*
- * GLOBAL FUNCTION DEFINITIONS
- ****************************************************************************************
- */
-
-void app_ota_init(void)
-{
-    // Reset the environment
-    memset(&app_ota_env, 0, sizeof(app_ota_env));
-
-}
-
-void app_ota_stop_timer (void)
-{
-    // Stop the timer used for the measurement interval if enabled
-    if (app_ota_env.timer_enable)
-    {
-        ke_timer_clear(APP_OTA_MEAS_INTV_TIMER, TASK_APP);
-        app_ota_env.timer_enable = false;
-    }
-}
-
-void app_ota_add_otas(void)
-{
-    struct otat_db_cfg* db_cfg;
-    // Allocate the OTAT_CREATE_DB_REQ
-    struct gapm_profile_task_add_cmd *req = KE_MSG_ALLOC_DYN(GAPM_PROFILE_TASK_ADD_CMD,
-                                                  TASK_GAPM, TASK_APP,
-                                                  gapm_profile_task_add_cmd, sizeof(struct otat_db_cfg));
-    // Fill message
-    req->operation = GAPM_PROFILE_TASK_ADD;
-    req->sec_lvl = PERM(SVC_AUTH, ENABLE);
-    req->prf_task_id = TASK_ID_OTAT;
-    req->app_task = TASK_APP;
-    req->start_hdl = 0;
-
-    // Set parameters
-    db_cfg = (struct otat_db_cfg* ) req->param;
-    // All features are supported
-    db_cfg->features = OTAT_ALL_FEAT_SUP;
-
-    // Send the message
-    ke_msg_send(req);
-}
-
-void app_ota_enable_prf(uint8_t conidx)
-{
-    // Allocate the message
-    struct otat_enable_req * req = KE_MSG_ALLOC(OTAT_ENABLE_REQ,
-                                                prf_get_task_from_id(TASK_ID_OTAT),
-                                                TASK_APP,
-                                                otat_enable_req);
-
-    // Fill in the parameter structure
-    req->conidx        = conidx;
-    // NTF/IND initial status - Disabled
-    req->ntf_ind_cfg   = PRF_CLI_STOP_NTFIND;
-
-    // Send the message
-    ke_msg_send(req);
-}
-
-#ifndef BLE_OTA_BL_MODE_EN  
-static void _ready_to_bootloader(void)
-{
-    //TracerInfo("_ready_to_bootloader!\r\n");
-
-    sw_timer_create(&s_tBleDisconnectToBLTimer,
-                      SW_TIMER_MODE_SINGLE_SHOT,
-                      app_ota_ble_disconnect);
-
-    sw_timer_start(s_tBleDisconnectToBLTimer, 300, NULL);
-
-}
+#ifdef CC_OTA_SELF_TEST
+#define OTA_TEST_NB_OF_CHUNK        (6)
+#define OTA_TEST_IMAGE_SIZE (OTA_CHUNK_SIZE * OTA_TEST_NB_OF_CHUNK)
 #endif
 
-void app_ota_ble_disconnect(void * p_context)
-{
-
-    appm_disconnect();
-}
-
-static int otat_packet_send_cmd_handler(ke_msg_id_t const msgid,
-                                        struct otat_packet_send_cmd const *param,
-                                        ke_task_id_t const dest_id,
-                                        ke_task_id_t const src_id)
-{
-#ifdef BLE_OTA_BL_MODE_EN    
-    fota_on_write(param);
-    cc6801_ClockDelayUs(2000);
-    
-/*
-    uint8_t test_buff[15] = {0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0a,0x0b,0x0c,0x0d,0x0e,0x0f};
-    app_ota_notify_send(test_buff, 16);
-    app_ota_notify_send((uint8_t*)param->value, param->length);
-*/    
-#else
-        uint8_t  buffer[3]; 
-        uint8_t  index = 0;
-    
-        buffer[index++] = 0x20;//OP_RESPONSE_CODE;
-        
-        // Encode the Request Op code
-        buffer[index++] = 0x01;//OP_CODE_CREATE_OBJECT;
-        
-        // Encode the Response Value.
-        buffer[index++] = 0x01;//RET_CODE_SUCCESS;
-    
-        app_ota_notify_send(buffer, index);
-
-        // Ready to enter bootloader mode:
-#if FSTORAGE_ENABLED == 1
-        FotaFlashInit(true);
-#else
-        FotaFlashInit(false);
-#endif        
-        BootloaderSettingInit();
-        EnterBootloader((T_callback)_ready_to_bootloader);
-#endif 
-    return (KE_MSG_CONSUMED);
-}
-
-#ifdef BLE_OTA_BL_MODE_EN  
-static int otat_ctrl_pt_send_req_handler(ke_msg_id_t const msgid,
-                                        struct otat_packet_send_cmd const *param,
-                                        ke_task_id_t const dest_id,
-                                        ke_task_id_t const src_id)
-{
-
-    fota_on_ctrl_pt_write(param);
-
-
-    return (KE_MSG_CONSUMED);
-}
-#endif
-
-static int otat_cfg_indntf_ind_handler(ke_msg_id_t const msgid,
-                                        struct otat_cfg_indntf_ind const *param,
-                                        ke_task_id_t const dest_id,
-                                        ke_task_id_t const src_id)
-{
-    // Do nothing
-
-    return (KE_MSG_CONSUMED);
-}
-
-/**
- ****************************************************************************************
- * @brief Handles health thermometer timer
- *
- * @param[in] msgid     Id of the message received.
- * @param[in] param     Pointer to the parameters of the message.
- * @param[in] dest_id   ID of the receiving task instance (TASK_GAP).
- * @param[in] src_id    ID of the sending task instance.
- *
- * @return If the message was consumed or not.
- ****************************************************************************************
- */
-static int app_ota_meas_intv_timer_handler(ke_msg_id_t const msgid,
-                                          void const *param,
-                                          ke_task_id_t const dest_id,
-                                          ke_task_id_t const src_id)
-{
-    // Random generation of a temperature value
-    uint32_t rand_temp_step;
-    // Sign used to know if the temperature will be increased or decreased
-    int8_t sign;
-
-    // Generate temperature step
-    rand_temp_step = (uint32_t)(co_rand_word()%20);
-    // Increase or decrease the temperature value
-    sign = (int8_t)(rand_temp_step & 0x00000001);
-
-    if (!sign)
-    {
-        sign = -1;
-    }
-
-    app_ota_env.temp_value += sign*rand_temp_step;
-
-    // Send the new temperature
-    //app_ota_temp_send();
-
-    #if (DISPLAY_SUPPORT)
-    app_display_update_temp_val_screen(app_ota_env.temp_value);
-    #endif //DISPLAY_SUPPORT
-
-    // Reset the Timer (Measurement Interval is not 0 if we are here)
-    ke_timer_set(APP_OTA_MEAS_INTV_TIMER, TASK_APP, app_ota_env.otat_meas_intv*100);
-
-    return (KE_MSG_CONSUMED);
-}
-
-/**
- ****************************************************************************************
- * @brief Handles health thermometer timer
- *
- * @param[in] msgid     Id of the message received.
- * @param[in] param     Pointer to the parameters of the message.
- * @param[in] dest_id   ID of the receiving task instance (TASK_GAP).
- * @param[in] src_id    ID of the sending task instance.
- *
- * @return If the message was consumed or not.
- ****************************************************************************************
- */
-static int app_ota_msg_handler(ke_msg_id_t const msgid,
-                              void const *param,
-                              ke_task_id_t const dest_id,
-                              ke_task_id_t const src_id)
-{
-    // Do nothing
-
-    return (KE_MSG_CONSUMED);
-}
 
 /*
  * LOCAL VARIABLE DEFINITIONS
  ****************************************************************************************
  */
 
-/// Default State handlers definition
-const struct ke_msg_handler app_ota_msg_handler_list[] =
+#ifdef BOOTLOADER
+// encryption:
+const static uint8_t bEncKey[OTA_ENC_CODE_SIZE] = {0x86, 0x16, 0x9d, 0xda, 0x59, 0x48, 0x99, 0x2b, 0xcc, 0x4b, 0x23, 0x82, 0x37, 0xb7, 0xb6, 0xc2, 0xbb, 0x71, 0xf6, 0x1c};
+static uint8_t bEncIndex;
+
+// ota buffer:
+uint8_t bOTADataInChunk[OTA_CHUNK_SIZE] __attribute__((aligned(4)));
+
+// config. settings. from peer
+S_App_OTA_PeerConfig sAppOTAPeerConfig;
+
+static uint32_t dwOTADataOffset;
+static bool blIsCheckCRCInChunk;
+static bool blIsCheckCRCInFlash;
+static bool blImageIsConfirmed;
+#endif
+static bool blIsReadytoReboot;
+
+
+
+#ifdef CC_OTA_SELF_TEST
+static uint8_t baOTATestImage[OTA_TEST_IMAGE_SIZE];
+static uint32_t dwOTATestImageCRC;
+#endif
+
+
+
+/*
+ * LOCAL FUNCTION DEFINITIONS
+ ****************************************************************************************
+ */
+
+
+#ifdef CC_OTA_SELF_TEST
+void   APP_OTA_SelfTest_EventHandler(S_AppSchedEvent *tEvent);
+
+
+void    APP_OTA_PostEvent_SlaveRequest(uint8_t *data, uint16_t size)
 {
-    // Note: first message is latest message checked by kernel so default is put on top.
-    {KE_MSG_DEFAULT_HANDLER,        (ke_msg_func_t)app_ota_msg_handler},
+    S_AppSchedEvent     _tEvent;
+        
+    _tEvent.eModuleID     = E_APP_SCHED_MODID_OTA_SELFTEST_MGR;
+    _tEvent.bEventID      = E_APP_OTA_ST_EVENT_SLAVE_REQUEST;
+    _tEvent.wDataByteSize = size;
+    _tEvent.vpData = ((void *) malloc(_tEvent.wDataByteSize));
 
-//  {OTAT_ENABLE_RSP,               (ke_msg_func_t)otat_enable_rsp_handler},
-//    {OTAT_TEMP_SEND_RSP,            (ke_msg_func_t)otat_temp_send_rsp_handler},
-//    {OTAT_MEAS_INTV_CHG_REQ_IND,    (ke_msg_func_t)otat_meas_intv_chg_req_ind_handler},
-    {OTAT_PACKET_SEND_CMD,          (ke_msg_func_t)otat_packet_send_cmd_handler},
-#ifdef BLE_OTA_BL_MODE_EN        
-    {OTAT_CTRL_PT_SEND_REQ,          (ke_msg_func_t)otat_ctrl_pt_send_req_handler},
-#endif        
-    {OTAT_CFG_INDNTF_IND,           (ke_msg_func_t)otat_cfg_indntf_ind_handler},
+    memcpy(_tEvent.vpData, data, size);
+    
+    APP_SCHED_PostEvent(&_tEvent);
+}
+#endif
 
-    {APP_OTA_MEAS_INTV_TIMER,        (ke_msg_func_t)app_ota_meas_intv_timer_handler},
-};
 
-const struct ke_state_handler app_ota_table_handler =
-    {&app_ota_msg_handler_list[0], (sizeof(app_ota_msg_handler_list)/sizeof(struct ke_msg_handler))};
+void app_ota_notify_send(uint8_t *tx_data, uint8_t length)
+{
+                                            
+#ifdef CC_OTA_SELF_TEST
+    APP_OTA_PostEvent_SlaveRequest(tx_data, length);    
+#else
+    app_ccps_notify_send(tx_data, length);
+#endif
+}
 
-#endif //BLE_APP_OTA
+
+/*
+ * GLOBAL FUNCTION DEFINITIONS
+ ****************************************************************************************
+ */
+
+
+void app_ota_init(void)
+{
+    #ifdef BOOTLOADER
+    blImageIsConfirmed = false;
+    #endif
+    
+    ota_handling_init();
+    
+#ifdef CC_OTA_SELF_TEST
+
+    APP_SCHED_RegEventHandler(E_APP_SCHED_MODID_OTA_SELFTEST_MGR, APP_OTA_SelfTest_EventHandler);
+
+
+   for(uint32_t i = 0; i < OTA_TEST_IMAGE_SIZE; i++)
+        baOTATestImage[i] = (i % 256);
+
+    // calculate crc in file
+    dwOTATestImageCRC = crc32_compute(baOTATestImage, OTA_TEST_IMAGE_SIZE, NULL);
+#endif
+
+}
+
+
+static void APP_OTA_Reboot_Set(void)
+{
+
+    blIsReadytoReboot = true;
+}
+
+
+bool APP_OTA_RebootIsReady(void)
+{
+    
+    return blIsReadytoReboot;
+}
+
+
+
+
+/*
+ * OTA Response
+ ****************************************************************************************
+ */
+
+static void APP_OTA_Start_Rsp(uint8_t result)
+{
+    
+    S_App_CC_Messages tx_msg;                    
+    S_CCPS_OTA_START_RSP tx_rsp;
+
+
+    // Generic Ack for CMD_START
+    tx_msg.len      = SIZE_OF_CC_MSG_HDR;
+    tx_msg.type     = E_CCPS_FTYPE_OTA;
+    tx_msg.op       = E_CCPS_OPCODE_OTA_CMD_START | 0x80;    
+
+    app_ota_notify_send((uint8_t*)&tx_msg, (tx_msg.len + SIZE_OF_CC_MSG_LEN)); 
+
+
+    // RSP_START
+    tx_rsp.result   = result;
+
+    tx_msg.len      = sizeof(S_CCPS_OTA_START_RSP) + SIZE_OF_CC_MSG_HDR;
+    tx_msg.type     = E_CCPS_FTYPE_OTA;
+    tx_msg.op       = E_CCPS_OPCODE_OTA_RSP_START;    
+    memcpy(tx_msg.data, &tx_rsp, sizeof(S_CCPS_OTA_START_RSP));
+
+    app_ota_notify_send((uint8_t*)&tx_msg, (tx_msg.len + SIZE_OF_CC_MSG_LEN)); 
+}
+
+
+static void APP_OTA_Stop_Rsp(void)
+{
+    
+    S_App_CC_Messages tx_msg;                    
+
+    // Generic Ack for CMD_STOP
+    tx_msg.len      = SIZE_OF_CC_MSG_HDR;
+    tx_msg.type     = E_CCPS_FTYPE_OTA;
+    tx_msg.op       = E_CCPS_OPCODE_OTA_CMD_STOP | 0x80;    
+
+    app_ota_notify_send((uint8_t*)&tx_msg, (tx_msg.len + SIZE_OF_CC_MSG_LEN)); 
+}
+
+
+static void APP_OTA_Reconnect_Rsp(void)
+{
+    
+    S_App_CC_Messages tx_msg;                    
+
+    // Generic Ack for CMD_RECONNECT
+    tx_msg.len      = SIZE_OF_CC_MSG_HDR;
+    tx_msg.type     = E_CCPS_FTYPE_OTA;
+    tx_msg.op       = E_CCPS_OPCODE_OTA_CMD_RECONNECT | 0x80;    
+
+    app_ota_notify_send((uint8_t*)&tx_msg, (tx_msg.len + SIZE_OF_CC_MSG_LEN)); 
+}
+
+
+#ifdef BOOTLOADER
+static void APP_OTA_Config_Rsp(uint8_t  result,      S_App_OTA_LocalConfig  *pLocalConfig)
+{
+    
+    S_App_CC_Messages tx_msg;                    
+    S_CCPS_OTA_CONFIG_RSP tx_rsp;
+
+
+    // Generic Ack for CMD_CONFIG
+    tx_msg.len      = SIZE_OF_CC_MSG_HDR;
+    tx_msg.type     = E_CCPS_FTYPE_OTA;
+    tx_msg.op       = E_CCPS_OPCODE_OTA_CMD_CONFIG | 0x80;    
+
+    app_ota_notify_send((uint8_t*)&tx_msg, (tx_msg.len + SIZE_OF_CC_MSG_LEN)); 
+
+
+    // RSP_CONFIG
+    tx_rsp.result           = result;
+
+    if(E_CCPS_OTA_CONFIG_RSP_SUCCESS == result)
+    {
+        tx_rsp.signuature       = pLocalConfig->signature;
+        tx_rsp.chunk_size       = pLocalConfig->chunk_size;
+        tx_rsp.chunk_offset     = pLocalConfig->chunk_offset;
+    }
+    else
+    {
+        tx_rsp.signuature       = 0;
+        tx_rsp.chunk_size       = 0;
+        tx_rsp.chunk_offset     = 0;
+    }
+    
+    tx_msg.len      = sizeof(S_CCPS_OTA_CONFIG_RSP) + SIZE_OF_CC_MSG_HDR;
+    tx_msg.type     = E_CCPS_FTYPE_OTA;
+    tx_msg.op       = E_CCPS_OPCODE_OTA_RSP_CONFIG;    
+    memcpy(tx_msg.data, &tx_rsp, sizeof(S_CCPS_OTA_CONFIG_RSP));
+
+    app_ota_notify_send((uint8_t*)&tx_msg, (tx_msg.len + SIZE_OF_CC_MSG_LEN)); 
+}
+
+
+
+static void APP_OTA_Chunk_Offset_Rsp(uint8_t result)
+{
+    
+    S_App_CC_Messages tx_msg;                    
+    S_CCPS_OTA_CHUNK_OFFSET_RSP tx_rsp;
+
+
+    // Generic Ack for CMD_OFFSET
+    tx_msg.len      = SIZE_OF_CC_MSG_HDR;
+    tx_msg.type     = E_CCPS_FTYPE_OTA;
+    tx_msg.op       = E_CCPS_OPCODE_OTA_CMD_OFFSET | 0x80;    
+
+    app_ota_notify_send((uint8_t*)&tx_msg, (tx_msg.len + SIZE_OF_CC_MSG_LEN)); 
+
+    // RSP_OFFSET
+    tx_rsp.result   = result;
+
+    tx_msg.len      = sizeof(S_CCPS_OTA_CHUNK_OFFSET_RSP) + SIZE_OF_CC_MSG_HDR;
+    tx_msg.type     = E_CCPS_FTYPE_OTA;
+    tx_msg.op       = E_CCPS_OPCODE_OTA_RSP_OFFSET;    
+    memcpy(tx_msg.data, &tx_rsp, sizeof(S_CCPS_OTA_CHUNK_OFFSET_RSP));
+
+    app_ota_notify_send((uint8_t*)&tx_msg, (tx_msg.len + SIZE_OF_CC_MSG_LEN)); 
+}
+
+
+static void APP_OTA_CRC_Rsp(uint32_t crc)
+{
+    
+    S_App_CC_Messages tx_msg;                    
+    S_CCPS_OTA_CRC_RSP tx_rsp;
+
+
+    // Generic Ack for CMD_CRC
+    tx_msg.len      = SIZE_OF_CC_MSG_HDR;
+    tx_msg.type     = E_CCPS_FTYPE_OTA;
+    tx_msg.op       = E_CCPS_OPCODE_OTA_CMD_CRC | 0x80;    
+
+    app_ota_notify_send((uint8_t*)&tx_msg, (tx_msg.len + SIZE_OF_CC_MSG_LEN)); 
+
+    // RSP_CRC
+    tx_rsp.crc      = crc;
+
+    tx_msg.len      = sizeof(S_CCPS_OTA_CRC_RSP) + SIZE_OF_CC_MSG_HDR;
+    tx_msg.type     = E_CCPS_FTYPE_OTA;
+    tx_msg.op       = E_CCPS_OPCODE_OTA_RSP_CRC;    
+    memcpy(tx_msg.data, &tx_rsp, sizeof(S_CCPS_OTA_CRC_RSP));
+
+    app_ota_notify_send((uint8_t*)&tx_msg, (tx_msg.len + SIZE_OF_CC_MSG_LEN)); 
+}
+
+
+static void APP_OTA_CRC_Confirm_Rsp(void)
+{
+    
+    S_App_CC_Messages tx_msg;                      
+
+    // Generic Ack for CMD_CRC_CONFIRM
+    tx_msg.len      = SIZE_OF_CC_MSG_HDR;
+    tx_msg.type     = E_CCPS_FTYPE_OTA;
+    tx_msg.op       = E_CCPS_OPCODE_OTA_CMD_CRC_CONFIRM | 0x80;    
+
+    app_ota_notify_send((uint8_t*)&tx_msg, (tx_msg.len + SIZE_OF_CC_MSG_LEN)); 
+}
+#endif
+
+
+
+
+
+/*
+ * OTA Handler
+ ****************************************************************************************
+ */
+
+
+void APP_OTA_MsgHandler(S_App_CC_Messages *msg)
+{
+
+
+    //TracerInfo("Rx OTA Messge Type: 0x%x\r\n", msg->op ); 
+
+
+    switch(msg->op)
+    {
+        
+        case E_CCPS_OPCODE_OTA_CMD_START:      
+        {
+            
+            TracerInfo("\r\nRx OTA CMD_START\r\n"); 
+
+            //app_ota_init();
+            
+            #ifdef BOOTLOADER
+            
+            APP_OTA_Start_Rsp(E_CCPS_OTA_START_RSP_SUCCESS);           
+            
+            #else           
+            
+            ota_set_mode_enabled();  
+               
+            APP_OTA_Start_Rsp(E_CCPS_OTA_START_RSP_RECONNECT);            
+            #endif
+
+        }break;
+
+
+        #ifdef BOOTLOADER
+        case E_CCPS_OPCODE_OTA_CMD_CONFIG:
+        {
+            
+            S_CCPS_OTA_CONFIG_REQ  *ptData = (S_CCPS_OTA_CONFIG_REQ *) msg->data;
+            S_App_OTA_LocalConfig  *pLocalConfig;
+
+
+            TracerInfo("\r\nRx OTA CMD_CONFIG\r\n"); 
+
+            
+            ota_get_local_config(&pLocalConfig);
+
+            // save remote parameters in RAM
+            sAppOTAPeerConfig.signature   = ptData->signature;
+            sAppOTAPeerConfig.file_size   = ptData->file_size;
+            sAppOTAPeerConfig.file_crc    = ptData->file_crc;            
+            sAppOTAPeerConfig.prog_addr   = ptData->prog_addr;   
+            sAppOTAPeerConfig.enc         = ptData->enc;         
+
+            TracerInfo("File Info:\r\n");
+            TracerInfo("signature: 0x%04x\r\n", sAppOTAPeerConfig.signature);
+            TracerInfo("file_size: 0x%04x\r\n", sAppOTAPeerConfig.file_size);
+            TracerInfo("file_crc: 0x%04x\r\n",  sAppOTAPeerConfig.file_crc);
+            TracerInfo("prog_addr: 0x%04x\r\n", sAppOTAPeerConfig.prog_addr);            
+            TracerInfo("enc: %d\r\n",           sAppOTAPeerConfig.enc);
+
+
+          
+            if(true == ota_check_config_is_ok(&sAppOTAPeerConfig))
+            {                        
+                APP_OTA_Config_Rsp(E_CCPS_OTA_CONFIG_RSP_SUCCESS, pLocalConfig);             
+            }
+            else
+            {
+                APP_OTA_Config_Rsp(E_CCPS_OTA_CONFIG_RSP_NOT_ACCEPTED, pLocalConfig);  
+            }
+
+        }break;
+
+
+        case E_CCPS_OPCODE_OTA_CMD_OFFSET:
+        {
+            
+            S_CCPS_OTA_CHUNK_OFFSET_CMD *ptData = (S_CCPS_OTA_CHUNK_OFFSET_CMD *) msg->data;
+
+
+            TracerInfo("\r\nRx OTA CMD_OFFSET\r\n");
+
+
+            sAppOTAPeerConfig.chunk_offset = ptData->chunk_offset; 
+
+
+            if(0 == ptData->chunk_offset)
+            {
+                //TracerInfo("ota_save_all_peer_config\r\n");
+                
+
+                ota_save_all_peer_config(&sAppOTAPeerConfig);
+
+                ota_clr_image_valid_state();
+
+                ota_flash_erase_fw_space();    
+
+
+                TracerInfo("prog_addr: 0x%04x\r\n",    sAppOTAPeerConfig.prog_addr);         
+                TracerInfo("file_size: 0x%04x\r\n",    sAppOTAPeerConfig.file_size);
+                TracerInfo("file_crc: 0x%04x\r\n",     sAppOTAPeerConfig.file_crc);
+                TracerInfo("signature: 0x%04x\r\n",    sAppOTAPeerConfig.signature);
+                TracerInfo("chunk_offset: 0x%04x\r\n", sAppOTAPeerConfig.chunk_offset);              
+                TracerInfo("enc: %d\r\n",              sAppOTAPeerConfig.enc);                
+            }
+            else
+                TracerInfo("chunk_offset: 0x%04x\r\n", sAppOTAPeerConfig.chunk_offset);
+
+            
+            
+            dwOTADataOffset  = 0;
+            
+            bEncIndex   = ota_get_prog_image_offset() % OTA_ENC_CODE_SIZE;
+
+           
+            // Assume OK:
+            APP_OTA_Chunk_Offset_Rsp(E_CCPS_OTA_CHUNK_OFFSET_RSP_OK);          
+            
+        }break;
+
+
+        case E_CCPS_OPCODE_OTA_CMD_CRC:
+        {
+            
+            S_CCPS_OTA_CRC_CMD *ptData = (S_CCPS_OTA_CRC_CMD *) msg->data;
+
+
+            TracerInfo("\r\nRx OTA CMD_CRC\r\n");
+            
+
+            if(E_CCPS_OTA_CRC_REQ_CHUNK == ptData->area)
+            {
+                uint32_t crc, data_size;                    
+
+                blIsCheckCRCInChunk = true;
+
+                data_size = dwOTADataOffset;
+
+                crc = crc32_compute(bOTADataInChunk, data_size, NULL);
+
+                TracerInfo("CRC in Chunk: 0x%04x, data_offset: %d\r\n", crc, dwOTADataOffset);
+                
+
+                APP_OTA_CRC_Rsp(crc); 
+
+            }
+            else if(E_CCPS_OTA_CRC_REQ_FILE == ptData->area)
+            {
+
+                uint32_t crc;
+                
+                blIsCheckCRCInFlash = true;
+                
+                crc = ota_get_file_crc();
+                
+                TracerInfo("CRC in Flash: 0x%04x\r\n", crc);
+                
+
+                APP_OTA_CRC_Rsp(crc);
+                
+            }
+           
+            
+
+        }break;
+
+
+        case E_CCPS_OPCODE_OTA_CMD_CRC_CONFIRM:
+        {
+
+
+            S_CCPS_OTA_CRC_CONFIRM_REQ *ptData = (S_CCPS_OTA_CRC_CONFIRM_REQ *) msg->data;
+
+
+            TracerInfo("\r\nRx OTA CMD_CRC_CONFIRM\r\n");
+            
+
+            if(E_CCPS_OTA_CRC_CONFIRM_OK == ptData->result)
+            {
+
+                if(true == blIsCheckCRCInChunk)
+                {
+                    
+                    uint32_t data_size = dwOTADataOffset;
+                    
+                    blIsCheckCRCInChunk = false;              
+
+                    ota_save_chunk_offset(sAppOTAPeerConfig.chunk_offset);
+                    
+                    ota_flash_write_chunk_data(bOTADataInChunk, data_size);
+
+                                        
+                    APP_OTA_CRC_Confirm_Rsp();      
+                    
+                }                
+                else if(true == blIsCheckCRCInFlash)
+                {
+                
+                    blIsCheckCRCInFlash = false;
+
+                    blImageIsConfirmed = true;
+                    
+                    APP_OTA_CRC_Confirm_Rsp();
+                                
+                    TracerInfo("Check CRC is ok in flash\r\n");
+                    
+                }
+                else
+                {
+                    TracerInfo("ERROR: No CRC should be confirmed!\r\n");
+                }
+
+            }
+            else
+            {
+                // crc confirm fail
+                TracerInfo("CRC error has been informed by Master !\r\n");
+
+            }
+
+        }break;
+            
+        #endif // end of #ifdef BOOTLOADER
+
+
+        case E_CCPS_OPCODE_OTA_CMD_STOP:
+        {
+            
+            TracerInfo("\r\nRx OTA CMD_STOP\r\n");
+           
+            #ifdef BOOTLOADER
+            S_CCPS_OTA_STOP_OTA_CMD *ptData = (S_CCPS_OTA_STOP_OTA_CMD *) msg->data;
+            
+            if(E_CCPS_OTA_STOP_OTA_SUCCESS == ptData->result)
+            {
+                
+                TracerInfo("OTA is ok, ready to reboot...\r\n");
+
+                if(true == blImageIsConfirmed)
+                {
+                    blImageIsConfirmed = false;
+                                     
+                    ota_set_image_valid_state();
+                }
+
+            }
+            else
+            {
+                TracerInfo("OTA is fail!! ready to reboot...\r\n");
+
+                ota_clr_local_config();
+
+            }
+            #endif
+
+            APP_OTA_Reboot_Set();
+                
+            APP_OTA_Stop_Rsp();            
+            
+        }break;
+
+
+        case E_CCPS_OPCODE_OTA_CMD_RECONNECT:
+        {
+
+            TracerInfo("\r\nRx OTA CMD_RECONNECT\r\n");
+
+            APP_OTA_Reboot_Set();
+            
+            APP_OTA_Reconnect_Rsp();
+
+        }break;
+
+
+        default:
+        
+            TracerInfo("ERROR! Unsupport OP Code: 0x%x\r\n", msg->op);
+            
+            break;
+    }
+
+
+}
+
+
+
+#ifdef BOOTLOADER
+static void ota_decrypt_data(uint8_t *buf, uint32_t size)
+{
+    
+    for(uint8_t i = 0; i < size; i++)
+    {
+        buf[i] ^= bEncKey[bEncIndex];
+        buf[i] -= bEncIndex;
+        
+        bEncIndex++;
+        bEncIndex %= OTA_ENC_CODE_SIZE;
+    }
+}
+
+
+void APP_OTA_Image_Write(const uint8_t *raw_data, uint16_t data_size)
+{
+
+
+    if((dwOTADataOffset + data_size) <= OTA_CHUNK_SIZE)
+    {
+
+        TracerInfo("Rx Raw Data, data_offset: %d\r\n", dwOTADataOffset);
+
+
+        if(0x01 == sAppOTAPeerConfig.enc)
+        {
+            uint8_t *enc_data;
+                
+            TracerInfo("Decrypt Image...\r\n");
+
+            enc_data = (uint8_t*) malloc(data_size);
+
+            memcpy(enc_data, raw_data, data_size);
+
+            ota_decrypt_data(enc_data, data_size);
+
+            memcpy(&bOTADataInChunk[dwOTADataOffset], enc_data, data_size);
+
+            free(enc_data);
+        }
+        else        
+            memcpy(&bOTADataInChunk[dwOTADataOffset], raw_data, data_size); 
+
+        #if 0
+        for(uint16_t i = 0; i < data_size; i++)
+        {
+            TracerInfo("0x%02x, ",bOTADataInChunk[dwOTADataOffset + i]);
+        }
+
+        TracerInfo("\r\n");
+        #endif
+        
+        dwOTADataOffset += data_size;
+    
+    }
+    else
+    {
+        // Error!!
+        TracerInfo("ERROR! Data_Offset > Max of Chunk Size: %d\r\n", dwOTADataOffset + data_size);
+    }
+
+}
+#endif
+
+
+
+
+#ifdef BOOTLOADER
+#ifdef CC_OTA_SELF_TEST
+
+
+/*
+ * OTA Self-Test Code
+ ****************************************************************************************
+ */
+
+void   APP_OTA_SelfTest_EventHandler(S_AppSchedEvent *tEvent)
+{
+    
+    //TracerInfo(  "[APP_OTA_SelfTest_EventHandler] event: %d, argv: 0x%08X\r\n"
+    //           , tEvent->bEventID
+    //           , ((uint32_t) tEvent->vpData)                            );
+
+
+    switch (tEvent->bEventID)
+    {
+        
+         case E_APP_OTA_ST_EVENT_MASTER_REQUEST:
+         {
+            
+             S_App_CC_Messages *ptAppCCMessage = tEvent->vpData;            
+
+             TracerInfo("Event from Master\r\n");
+
+             TracerInfo("Length: %d, type: 0x%02x, op: 0x%02x\r\n", ptAppCCMessage->len, ptAppCCMessage->type, ptAppCCMessage->op);
+
+             if(ptAppCCMessage->len >= SIZE_OF_CC_MSG_HDR) 
+             {
+
+                 for(uint16_t i = 0; i < (ptAppCCMessage->len - SIZE_OF_CC_MSG_HDR); i++)
+                 {
+                    TracerInfo("0x%02x, ", ptAppCCMessage->data[i]);
+                 }
+                 /*
+                 for(uint16_t i = 0; i < tEvent->wDataByteSize; i++)
+                 {
+                     TracerInfo("0x%02x, ", (uint8_t)tEvent->vpData[i]);
+                 }
+                 */
+                 TracerInfo("\r\n");
+
+                 APP_OTA_MsgHandler(ptAppCCMessage);
+             }
+
+             break;
+         }
+         
+         case E_APP_OTA_ST_EVENT_SLAVE_REQUEST:
+         {
+
+             S_App_CC_Messages *ptAppCCMessage = tEvent->vpData;
+
+             TracerInfo("Event from Slave\r\n");
+
+             TracerInfo("Length: %d, type: 0x%02x, op: 0x%02x\r\n", ptAppCCMessage->len, ptAppCCMessage->type, ptAppCCMessage->op);
+
+             if(ptAppCCMessage->len >= SIZE_OF_CC_MSG_HDR) 
+             {
+                 for(uint16_t i = 0; i < (ptAppCCMessage->len - SIZE_OF_CC_MSG_HDR); i++)
+                 {
+                     TracerInfo("0x%02x, ", ptAppCCMessage->data[i]);
+                 }
+             }
+             
+             TracerInfo("\r\n");
+                          
+             break;
+         }
+         
+    }
+    
+}
+
+
+void    APP_OTA_PostEvent_MasterRequest(uint8_t *data, uint16_t size)
+{
+    
+    S_AppSchedEvent     _tEvent;
+   
+    
+    _tEvent.eModuleID     = E_APP_SCHED_MODID_OTA_SELFTEST_MGR;
+    _tEvent.bEventID      = E_APP_OTA_ST_EVENT_MASTER_REQUEST;
+    _tEvent.wDataByteSize = size;
+    _tEvent.vpData = ((void *) malloc(_tEvent.wDataByteSize));
+
+    memcpy(_tEvent.vpData, data, size);
+    
+    APP_SCHED_PostEvent(&_tEvent);
+
+
+    #if 0 // debug:
+    TracerInfo("Master Request:\r\n");        
+    for(uint16_t i = 0; i < size; i++)
+    {
+        TracerInfo("0x%02x, ", data[i]);
+    }
+
+    TracerInfo("\r\n");    
+    #endif
+}
+
+
+void APP_OTA_Self_Test(void)
+{
+
+    S_App_CC_Messages tx_msg;                    
+    uint16_t delayMS;
+
+    TracerInfo("======  CC_OTA_Self_Test Start!  ======\r\n");
+
+
+    
+    // Send OTA_CMD: Start OTA
+
+    TracerInfo("\r\n=== [Step 1.1]: Start OTA ===\r\n");
+    
+
+    tx_msg.len      = SIZE_OF_CC_MSG_HDR; 
+    tx_msg.type     = E_CCPS_FTYPE_OTA;
+    tx_msg.op       = E_CCPS_OPCODE_OTA_CMD_START;
+
+    APP_OTA_PostEvent_MasterRequest((uint8_t*)&tx_msg, (tx_msg.len + SIZE_OF_CC_MSG_LEN));
+
+
+    delayMS = 1000;
+    
+    do
+    {
+        APP_SCHED_RunScheduler();
+
+        cc6801_ClockDelayMs(1);
+    }while (delayMS--);
+    
+
+
+    // Send OTA_CMD: Start OTA
+
+    TracerInfo("\r\n=== [Step 1.2]: Start OTA ===\r\n");
+    
+    tx_msg.len      = SIZE_OF_CC_MSG_HDR; 
+    tx_msg.type     = E_CCPS_FTYPE_OTA;
+    tx_msg.op       = E_CCPS_OPCODE_OTA_CMD_START;
+
+    APP_OTA_PostEvent_MasterRequest((uint8_t*)&tx_msg, (tx_msg.len + SIZE_OF_CC_MSG_LEN));
+
+
+    delayMS = 1000;
+    
+    do
+    {
+        APP_SCHED_RunScheduler();
+
+        cc6801_ClockDelayMs(1);
+    }while (delayMS--);
+
+
+    
+
+    // Send OTA_CONFIG_REQ
+    TracerInfo("\r\n=== [Step 2]: Send OTA_CONFIG_REQ ===\r\n");
+    
+    S_CCPS_OTA_CONFIG_REQ tx_config;
+
+
+    tx_config.signature  = 0x12345678;
+    tx_config.file_size  = OTA_TEST_IMAGE_SIZE;
+    tx_config.file_crc   = dwOTATestImageCRC;    
+    tx_config.prog_addr  = 0x10025800;
+    tx_config.enc        = false;
+
+    TracerInfo("OTA Config from Master:\r\n");
+    TracerInfo("signature: 0x%04x\r\n", tx_config.signature);
+    TracerInfo("file_size: 0x%04x\r\n", tx_config.file_size);
+    TracerInfo("file_crc: 0x%04x\r\n",  tx_config.file_crc);    
+    TracerInfo("prog_addr: 0x%04x\r\n", tx_config.prog_addr);
+    TracerInfo("enc: %d\r\n",           tx_config.enc);
+
+    
+    tx_msg.len      = sizeof(S_CCPS_OTA_CONFIG_REQ) + SIZE_OF_CC_MSG_HDR;
+    tx_msg.type     = E_CCPS_FTYPE_OTA;
+    tx_msg.op       = E_CCPS_OPCODE_OTA_CMD_CONFIG;
+    memcpy(tx_msg.data, &tx_config, sizeof(S_CCPS_OTA_CONFIG_REQ));
+
+    APP_OTA_PostEvent_MasterRequest((uint8_t*)&tx_msg, (tx_msg.len + SIZE_OF_CC_MSG_LEN));
+
+
+    delayMS = 1000;
+    
+    do
+    {
+        APP_SCHED_RunScheduler();
+
+        cc6801_ClockDelayMs(1);
+    }while (delayMS--);
+
+
+    S_CCPS_OTA_CRC_CMD          tx_crc_area;     
+    S_CCPS_OTA_CRC_CONFIRM_REQ  tx_crc_confirm;
+
+
+    for(uint32_t chunk_cnt = 0; chunk_cnt < OTA_TEST_NB_OF_CHUNK; chunk_cnt++)
+    {
+ 
+        TracerInfo("\r\n=== chunk_cnt: %d ===\r\n", chunk_cnt);
+
+
+
+        // Send CHUNK_OFFSET from offset 0
+        TracerInfo("\r\n=== [Step 3]: Send CHUNK_OFFSET ===\r\n");
+        
+        S_CCPS_OTA_CHUNK_OFFSET_CMD tx_chunk_size;
+
+        tx_chunk_size.chunk_offset  = chunk_cnt; // 0;
+
+        tx_msg.len      = sizeof(S_CCPS_OTA_CHUNK_OFFSET_CMD) + SIZE_OF_CC_MSG_HDR;
+        tx_msg.type     = E_CCPS_FTYPE_OTA;
+        tx_msg.op       = E_CCPS_OPCODE_OTA_CMD_OFFSET;
+        memcpy(tx_msg.data, &tx_chunk_size, sizeof(S_CCPS_OTA_CHUNK_OFFSET_CMD));
+
+        APP_OTA_PostEvent_MasterRequest((uint8_t*)&tx_msg, (tx_msg.len + SIZE_OF_CC_MSG_LEN));
+
+
+        delayMS = 1000;
+        
+        do
+        {
+            APP_SCHED_RunScheduler();
+
+            cc6801_ClockDelayMs(1);
+        }while (delayMS--);    
+
+
+
+
+        // Send RAW_DATA
+        TracerInfo("\r\n=== [Step 4]: Send RAW_DATA ===\r\n");
+        #if 0    
+        S_App_CC_OP_RAW_DATA    tx_raw_data;
+
+        tx_raw_data.op          = E_APP_OTA_RAW_DATA;
+        memcpy(tx_raw_data.raw_data, baOTATestImage, OTA_CHUNK_SIZE);
+
+
+        tx_msg.len      = OTA_CHUNK_SIZE + SIZE_OF_CC_MSG_TYPE + 1;   // +1: raw_data->op 
+        tx_msg.type     = E_CCPS_FTYPE_OTA;
+        memcpy(tx_msg.data, &tx_raw_data, (OTA_CHUNK_SIZE + 1));      // +1: raw_data->op 
+
+        APP_OTA_PostEvent_MasterRequest((uint8_t*)&tx_msg, (tx_msg.len + SIZE_OF_CC_MSG_LEN));
+        #endif
+
+        APP_OTA_Image_Write(baOTATestImage, OTA_CHUNK_SIZE);
+
+        delayMS = 1000;
+        
+        do
+        {
+            APP_SCHED_RunScheduler();
+
+            cc6801_ClockDelayMs(1);
+        }while (delayMS--);
+
+
+
+        // Send OTA_CMD: CRC Check in Chunk
+        TracerInfo("\r\n=== [Step 5]: Send OTA_CMD: Check CRC in Chunk ===\r\n");
+    
+      
+        tx_crc_area.area  = E_CCPS_OTA_CRC_REQ_CHUNK;
+
+        tx_msg.len      = sizeof(S_CCPS_OTA_CRC_CMD) + SIZE_OF_CC_MSG_HDR;
+        tx_msg.type     = E_CCPS_FTYPE_OTA;
+        tx_msg.op       = E_CCPS_OPCODE_OTA_CMD_CRC;
+        memcpy(tx_msg.data, &tx_crc_area, sizeof(S_CCPS_OTA_CRC_CMD));
+
+        APP_OTA_PostEvent_MasterRequest((uint8_t*)&tx_msg, (tx_msg.len + SIZE_OF_CC_MSG_LEN));
+
+
+        delayMS = 1000;
+        
+        do
+        {
+            APP_SCHED_RunScheduler();
+
+            cc6801_ClockDelayMs(1);
+        }while (delayMS--);
+
+
+
+        // Send OTA_CMD: CRC OK!
+        TracerInfo("\r\n=== [Step 6]: Send OTA_CMD: CRC OK! ===\r\n");
+        
+        tx_crc_confirm.result  = E_CCPS_OTA_CRC_CONFIRM_OK;
+
+
+        tx_msg.len      = sizeof(S_CCPS_OTA_CRC_CONFIRM_REQ) + SIZE_OF_CC_MSG_HDR;
+        tx_msg.type     = E_CCPS_FTYPE_OTA;
+        tx_msg.op       = E_CCPS_OPCODE_OTA_CMD_CRC_CONFIRM;
+        memcpy(tx_msg.data, &tx_crc_confirm, sizeof(S_CCPS_OTA_CRC_CONFIRM_REQ));
+
+        APP_OTA_PostEvent_MasterRequest((uint8_t*)&tx_msg, (tx_msg.len + SIZE_OF_CC_MSG_LEN));
+
+
+        delayMS = 1000;
+        
+        do
+        {
+            APP_SCHED_RunScheduler();
+
+            cc6801_ClockDelayMs(1);
+        }while (delayMS--);    
+
+  
+    }
+    
+
+    // Send OTA_CMD: CRC check in Flash
+    TracerInfo("\r\n=== [Step 7]: Send OTA_CMD: Check CRC in Flash ===\r\n");
+    
+    tx_crc_area.area  = E_CCPS_OTA_CRC_REQ_FILE;
+
+
+    tx_msg.len      = sizeof(S_CCPS_OTA_CRC_CMD) + SIZE_OF_CC_MSG_HDR;
+    tx_msg.type     = E_CCPS_FTYPE_OTA;
+    tx_msg.op       = E_CCPS_OPCODE_OTA_CMD_CRC;
+    memcpy(tx_msg.data, &tx_crc_area, sizeof(S_CCPS_OTA_CRC_CMD));
+
+    APP_OTA_PostEvent_MasterRequest((uint8_t*)&tx_msg, (tx_msg.len + SIZE_OF_CC_MSG_LEN));
+
+
+
+    delayMS = 1000;
+    
+    do
+    {
+        APP_SCHED_RunScheduler();
+
+        cc6801_ClockDelayMs(1);
+    }while (delayMS--);
+
+
+
+    // Send OTA_CMD: CRC OK!
+    TracerInfo("\r\n=== [Step 8]: Send OTA_CMD: CRC OK! ===\r\n");
+    
+
+    tx_crc_confirm.result  = E_CCPS_OTA_CRC_CONFIRM_OK;
+
+
+    tx_msg.len      = sizeof(S_CCPS_OTA_CRC_CONFIRM_REQ) + SIZE_OF_CC_MSG_HDR;
+    tx_msg.type     = E_CCPS_FTYPE_OTA;
+    tx_msg.op       = E_CCPS_OPCODE_OTA_CMD_CRC_CONFIRM;
+    memcpy(tx_msg.data, &tx_crc_confirm, sizeof(S_CCPS_OTA_CRC_CONFIRM_REQ));
+
+    APP_OTA_PostEvent_MasterRequest((uint8_t*)&tx_msg, (tx_msg.len + SIZE_OF_CC_MSG_LEN));
+
+
+    delayMS = 1000;
+    
+    do
+    {
+        APP_SCHED_RunScheduler();
+
+        cc6801_ClockDelayMs(1);
+    }while (delayMS--);    
+
+
+
+    // Send OTA_STOP:
+    TracerInfo("\r\n=== [Step 9]: Send OTA_STOP ===\r\n");
+    
+    S_CCPS_OTA_STOP_OTA_CMD  tx_ota_stop;
+
+    tx_ota_stop.result  = E_CCPS_OTA_CRC_CONFIRM_OK;
+
+
+    tx_msg.len      = sizeof(S_CCPS_OTA_STOP_OTA_CMD) + SIZE_OF_CC_MSG_HDR;
+    tx_msg.type     = E_CCPS_FTYPE_OTA;
+    tx_msg.op       = E_CCPS_OPCODE_OTA_CMD_STOP;
+    memcpy(tx_msg.data, &tx_ota_stop, sizeof(S_CCPS_OTA_STOP_OTA_CMD));
+
+    APP_OTA_PostEvent_MasterRequest((uint8_t*)&tx_msg, (tx_msg.len + SIZE_OF_CC_MSG_LEN));
+
+
+    delayMS = 1000;
+    
+    do
+    {
+        APP_SCHED_RunScheduler();
+
+        cc6801_ClockDelayMs(1);
+    }while (delayMS--);    
+
+    TracerInfo("======  CC_OTA_Self_Test Done!!  ======\r\n");
+}
+
+#endif
+#endif
+
+//#endif //BLE_APP_OTA
 
 /// @} APP

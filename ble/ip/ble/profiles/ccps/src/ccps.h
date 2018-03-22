@@ -67,9 +67,9 @@
 
 
 
-#define CCPS_REPORT_MASK               (0x000F) 
+//#define CCPS_REPORT_MASK               (0x003F) 
 
-#define CCPS_REPORT_ATT_NB             (4)     
+#define CCPS_REPORT_ATT_NB             (CCPS_IDX_NB)     
 
 
 /// Possible states of the CCPS task
@@ -92,6 +92,9 @@ enum otas_att_db_list
     CCPS_IDX_REPORT_CHAR,
     CCPS_IDX_REPORT_VAL,
     CCPS_IDX_REPORT_NTF_CFG,
+
+    CCPS_IDX_IMAGE_CHAR,
+    CCPS_IDX_IMAGE_VAL,
 
     CCPS_IDX_NB,
 };

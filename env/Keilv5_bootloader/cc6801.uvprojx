@@ -454,49 +454,9 @@
               <FilePath>..\..\platform\bootloader\bootloader.c</FilePath>
             </File>
             <File>
-              <FileName>dfu-cc.pb.c</FileName>
+              <FileName>ota_handling.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\dfu-cc.pb.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_flash.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota_req_handling.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_req_handling.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota_settings.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_settings.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota_utils.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_utils.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota_ble_handler.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_ble_handler.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota_transport.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_transport.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota_public_key.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_public_key.c</FilePath>
+              <FilePath>..\..\platform\bootloader\ota_handling.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -647,6 +607,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\ble\modules\app\src\app_sec.c</FilePath>
             </File>
+            <File>
+              <FileName>app_ccps.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ble\modules\app\src\app_ccps.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -691,6 +656,16 @@
               <FileName>prf_utils.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\ble\ip\ble\hl\src\prf\prf_utils.c</FilePath>
+            </File>
+            <File>
+              <FileName>ccps.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ble\ip\ble\profiles\ccps\src\ccps.c</FilePath>
+            </File>
+            <File>
+              <FileName>ccps_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ble\ip\ble\profiles\ccps\src\ccps_task.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1281,49 +1256,9 @@
               <FilePath>..\..\platform\bootloader\bootloader.c</FilePath>
             </File>
             <File>
-              <FileName>dfu-cc.pb.c</FileName>
+              <FileName>ota_handling.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\dfu-cc.pb.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_flash.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota_req_handling.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_req_handling.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota_settings.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_settings.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota_utils.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_utils.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota_ble_handler.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_ble_handler.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota_transport.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_transport.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota_public_key.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_public_key.c</FilePath>
+              <FilePath>..\..\platform\bootloader\ota_handling.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1474,6 +1409,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\ble\modules\app\src\app_sec.c</FilePath>
             </File>
+            <File>
+              <FileName>app_ccps.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ble\modules\app\src\app_ccps.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1518,6 +1458,16 @@
               <FileName>prf_utils.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\ble\ip\ble\hl\src\prf\prf_utils.c</FilePath>
+            </File>
+            <File>
+              <FileName>ccps.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ble\ip\ble\profiles\ccps\src\ccps.c</FilePath>
+            </File>
+            <File>
+              <FileName>ccps_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ble\ip\ble\profiles\ccps\src\ccps_task.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1669,7 +1619,7 @@
             <nStopB2X>0</nStopB2X>
           </BeforeMake>
           <AfterMake>
-            <RunUserProg1>1</RunUserProg1>
+            <RunUserProg1>0</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
             <UserProg1Name>..\bin\afterbuild.bat @L !L</UserProg1Name>
             <UserProg2Name></UserProg2Name>
@@ -1924,7 +1874,7 @@
               <MiscControls>--preinclude ..\..\inc\global.h --preinclude ..\..\cfg\project\project.h</MiscControls>
               <Define>EVB BOOTLOADER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app\Display;..\..\platform\init\inc;..\..\platform\asic\6801a0;..\..\platform\bootloader;..\..\platform\drvi;..\..\module\mems;..\..\module\oled;..\..\service\crc32;..\..\service\crypto;..\..\service\ecc;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fds;..\..\service\fstorage;..\..\service\nano-pb;..\..\service\scheduler;..\..\service\sha256;..\..\service\sw_timer;..\..\service\tracer;..\..\service\uart;..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\ble\modules\app\src;..\..\ble\modules\common\api;..\..\ble\ip\ble\profiles\ota\otac\api;..\..\ble\ip\ble\profiles\ota\otat\api;..\..\ble\ip\ble\profiles\ota;..\..\ble\ip\ble\profiles\ota\otac\src;..\..\ble\ip\ble\profiles\ota\otat\src;..\..\app\ble_mgr;..\..\app\scheduler;.\config</IncludePath>
+              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app\Display;..\..\platform\init\inc;..\..\platform\asic\6801a0;..\..\platform\bootloader;..\..\platform\drvi;..\..\module\mems;..\..\module\oled;..\..\service\crc32;..\..\service\crypto;..\..\service\ecc;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fds;..\..\service\fstorage;..\..\service\nano-pb;..\..\service\scheduler;..\..\service\sha256;..\..\service\sw_timer;..\..\service\tracer;..\..\service\uart;..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\ble\modules\app\src;..\..\ble\modules\common\api;..\..\ble\ip\ble\profiles\ota\otac\api;..\..\ble\ip\ble\profiles\ota\otat\api;..\..\ble\ip\ble\profiles\ota;..\..\ble\ip\ble\profiles\ota\otac\src;..\..\ble\ip\ble\profiles\ota\otat\src;..\..\app\ble_mgr;..\..\app\scheduler;.\config;..\..\ble\ip\ble\profiles\ccps\api;..\..\ble\modules\app\src;..\..\ble\ip\ble\profiles\ccps\src</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1957,7 +1907,7 @@
             <ScatterFile>.\FPGA_eflash.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
-            <Misc>.\rom_symdef_M0.txt  --keep=jump_table.o(jump_table_mem_area)</Misc>
+            <Misc>.\rom_symdef_M0.txt  --keep=jump_table.o(jump_table_mem_area) --keep=jump_table.o(jump_table_switch_mem_area)</Misc>
             <LinkerInputFile></LinkerInputFile>
             <DisabledWarnings></DisabledWarnings>
           </LDads>
@@ -2043,49 +1993,9 @@
               <FilePath>..\..\platform\bootloader\bootloader.c</FilePath>
             </File>
             <File>
-              <FileName>dfu-cc.pb.c</FileName>
+              <FileName>ota_handling.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\dfu-cc.pb.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_flash.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota_req_handling.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_req_handling.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota_settings.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_settings.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota_utils.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_utils.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota_ble_handler.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_ble_handler.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota_transport.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_transport.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota_public_key.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_public_key.c</FilePath>
+              <FilePath>..\..\platform\bootloader\ota_handling.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2236,6 +2146,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\ble\modules\app\src\app_sec.c</FilePath>
             </File>
+            <File>
+              <FileName>app_ccps.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ble\modules\app\src\app_ccps.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2280,6 +2195,16 @@
               <FileName>prf_utils.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\ble\ip\ble\hl\src\prf\prf_utils.c</FilePath>
+            </File>
+            <File>
+              <FileName>ccps.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ble\ip\ble\profiles\ccps\src\ccps.c</FilePath>
+            </File>
+            <File>
+              <FileName>ccps_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ble\ip\ble\profiles\ccps\src\ccps_task.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2496,7 +2421,7 @@
             <nStopB2X>0</nStopB2X>
           </BeforeMake>
           <AfterMake>
-            <RunUserProg1>1</RunUserProg1>
+            <RunUserProg1>0</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
             <UserProg1Name>..\bin\afterbuild.bat @L !L</UserProg1Name>
             <UserProg2Name></UserProg2Name>
@@ -2751,7 +2676,7 @@
               <MiscControls> --preinclude ..\..\cfg\project\project.h  --preinclude ..\..\inc\global.h </MiscControls>
               <Define>EVB BOOTLOADER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\platform\asic\6801a0;..\..\platform\bootloader;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\crc32;..\..\service\crypto;..\..\service\ecc;..\..\service\experimental_section_vars;..\..\service\fds;..\..\service\fifo;..\..\service\fstorage;..\..\service\nano-pb;..\..\service\scheduler;..\..\service\sha256;..\..\service\sw_timer;..\..\service\tracer;..\..\service\uart;..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\ble\modules\app\src;..\..\ble\modules\common\api;..\..\ble\ip\ble\profiles\ota\otac\api;..\..\ble\ip\ble\profiles\ota\otat\api;..\..\ble\ip\ble\profiles\ota;..\..\ble\ip\ble\profiles\ota\otac\src;..\..\ble\ip\ble\profiles\ota\otat\src;..\..\app\scheduler;..\..\app\ble_mgr;.\config</IncludePath>
+              <IncludePath>..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\platform\asic\6801a0;..\..\platform\bootloader;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\crc32;..\..\service\crypto;..\..\service\ecc;..\..\service\experimental_section_vars;..\..\service\fds;..\..\service\fifo;..\..\service\fstorage;..\..\service\nano-pb;..\..\service\scheduler;..\..\service\sha256;..\..\service\sw_timer;..\..\service\tracer;..\..\service\uart;..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\ble\modules\app\src;..\..\ble\modules\common\api;..\..\ble\ip\ble\profiles\ota\otac\api;..\..\ble\ip\ble\profiles\ota\otat\api;..\..\ble\ip\ble\profiles\ota;..\..\ble\ip\ble\profiles\ota\otac\src;..\..\ble\ip\ble\profiles\ota\otat\src;..\..\app\scheduler;..\..\app\ble_mgr;.\config;..\..\ble\ip\ble\profiles\ccps\api;..\..\ble\modules\app\src;..\..\ble\ip\ble\profiles\ccps\src</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -2870,49 +2795,9 @@
               <FilePath>..\..\platform\bootloader\bootloader.c</FilePath>
             </File>
             <File>
-              <FileName>dfu-cc.pb.c</FileName>
+              <FileName>ota_handling.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\dfu-cc.pb.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_flash.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota_req_handling.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_req_handling.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota_settings.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_settings.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota_utils.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_utils.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota_ble_handler.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_ble_handler.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota_transport.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_transport.c</FilePath>
-            </File>
-            <File>
-              <FileName>fota_public_key.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\bootloader\fota_public_key.c</FilePath>
+              <FilePath>..\..\platform\bootloader\ota_handling.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3063,6 +2948,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\ble\modules\app\src\app_sec.c</FilePath>
             </File>
+            <File>
+              <FileName>app_ccps.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ble\modules\app\src\app_ccps.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -3107,6 +2997,16 @@
               <FileName>prf_utils.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\ble\ip\ble\hl\src\prf\prf_utils.c</FilePath>
+            </File>
+            <File>
+              <FileName>ccps.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ble\ip\ble\profiles\ccps\src\ccps.c</FilePath>
+            </File>
+            <File>
+              <FileName>ccps_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\ble\ip\ble\profiles\ccps\src\ccps_task.c</FilePath>
             </File>
           </Files>
         </Group>

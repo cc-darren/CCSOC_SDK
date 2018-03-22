@@ -52,6 +52,49 @@ struct app_ccps_env_tag
 
 };
 */
+
+#define SIZE_OF_CC_MSG_LEN       (sizeof(((S_App_CC_Messages *)0)->len))
+#define SIZE_OF_CC_MSG_TYPE      (sizeof(((S_App_CC_Messages *)0)->type))
+#define SIZE_OF_CC_MSG_OP        (sizeof(((S_App_CC_Messages *)0)->op))
+#define SIZE_OF_CC_MSG_HDR       (SIZE_OF_CC_MSG_TYPE + SIZE_OF_CC_MSG_OP)
+
+
+#pragma push
+#pragma pack(1)
+
+typedef struct 
+{
+    uint16_t len;
+    uint8_t  type;
+    uint8_t  op;
+    uint8_t  data[300]; 
+} S_App_CC_Messages;
+
+#pragma pop
+
+
+
+typedef enum
+{	
+	E_CCPS_FTYPE_SYSTEM 	= 0x00,	    /* System CMD/RSP */
+	E_CCPS_FTYPE_OTA    	= 0x10,	    /* OTA CMD/RSP */
+	E_CCPS_FTYPE_PED    	= 0x20,	    /* Pedometer CMD/RSP */
+	E_CCPS_FTYPE_HR     	= 0x21,	    /* Heart Rate CMD/RSP */
+	E_CCPS_FTYPE_SLEEP  	= 0x22,	    /* Sleep Monitor CMD/RSP */
+	E_CCPS_FTYPE_LIFTARM	= 0x23,	    /* Lift Arm CMD/RSP */
+	E_CCPS_FTYPE_SWIM   	= 0x24,	    /* Swim CMD/RSP */
+}	E_CcpsFunctionType;
+
+
+typedef enum		
+{
+    E_CCPS_OPCODE_SYS_CMD_READ 	= 0x00,	    /* CMD: read specific data */
+    E_CCPS_OPCODE_SYS_RSP_READ 	= 0x01,	    /* RSP: respond data */
+    E_CCPS_OPCODE_SYS_CMD_WRITE	= 0x02,	    /* CMD: write settings */
+    E_CCPS_OPCODE_SYS_RSP_WRITE	= 0x03,	    /* RSP: respond results */
+    E_CCPS_OPCODE_SYS_NTF_DATA 	= 0x04,	    /* NTF: report live data */    
+}   E_CcpsOpcodeSystem;
+
 /*
  * GLOBAL VARIABLES DECLARATIONS
  ****************************************************************************************
@@ -140,3 +183,4 @@ void ccps_packet_send_reply_handler(uint8_t *tx_data, uint8_t *length);
 /// @} APP
 
 #endif // APP_CCPS_H_
+
