@@ -170,12 +170,16 @@ struct otat_period_meas_send_req
     
 };
 */
+
+#pragma push
+#pragma pack(1)
 struct otat_notify_send_req
 {
     uint8_t     lenth;
-    uint8_t     eArray[20];
+    //uint8_t     dummy; // for alignment
+    uint8_t     eArray[40];
 };
-
+#pragma pop
 
 
 /// Parameters of the @ref STEP_COUNT_SEND_REQ message

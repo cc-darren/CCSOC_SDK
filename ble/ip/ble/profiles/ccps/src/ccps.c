@@ -41,9 +41,11 @@
 
 
 const uint8_t BLE_CCPS_BASE_UUID_128[ATT_UUID_128_LEN] = {0xA6, 0x54, 0x23, 0xF9, 0x1A, 0xA2, 0x98, 0x8F, 0x07, 0x65, 0x22, 0x41, 0x08, 0xCC, 0xA2, 0x64}; /**< Used vendor specific UUID. */
+
 #define ATT_DECL_PRIMARY_SERVICE_128  {0x00, 0x28, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
 #define ATT_DECL_CHARACTERISTIC_128   {0x03, 0x28, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-#define ATT_CHAR_USER_DEFINED_CCPS_128 {0xA6, 0x54, 0x23, 0xF9, 0x1A, 0xA2, 0x98, 0x8F, 0x07, 0x65, 0x22, 0x41, 0x08, 0xCC, 0xA2, 0x64} 
+#define ATT_CHAR_CCPS_REPORT_128      {0xA6, 0x54, 0x23, 0xF9, 0x1A, 0xA2, 0x98, 0x8F, 0x07, 0x65, 0x22, 0x41, 0x08, 0xCC, 0xA2, 0x64} 
+#define ATT_CHAR_CCPS_IMAGE_128       {0xA8, 0x54, 0x23, 0xF9, 0x1A, 0xA2, 0x98, 0x8F, 0x07, 0x65, 0x22, 0x41, 0x08, 0xCC, 0xA2, 0x64} 
 #define ATT_DESC_CLIENT_CHAR_CFG_128  {0x02, 0x29, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00} 
 
  
@@ -53,12 +55,19 @@ const struct attm_desc_128 ccps_att_db_128[CCPS_IDX_NB] =
     [CCPS_IDX_SVC]                   =   {ATT_DECL_PRIMARY_SERVICE_128, PERM(RD, ENABLE), 0, 0},
 
     // CCPS Report Characteristic Declaration
-    [CCPS_IDX_REPORT_CHAR]              =   {ATT_DECL_CHARACTERISTIC_128, PERM(RD, ENABLE), 0, 0},
+    [CCPS_IDX_REPORT_CHAR]           =   {ATT_DECL_CHARACTERISTIC_128,  PERM(RD, ENABLE), 0, 0},
     // CCPS Report Characteristic Value
-    [CCPS_IDX_REPORT_VAL]               =   {ATT_CHAR_USER_DEFINED_CCPS_128, PERM(NTF, ENABLE)|PERM(IND, ENABLE)|PERM(WRITE_REQ, ENABLE)|PERM(RD, ENABLE), 
-                                                                             PERM(RI, ENABLE)| PERM(UUID_LEN, UUID_128), CCPS_REPORT_MAX_LEN},
+    [CCPS_IDX_REPORT_VAL]            =   {ATT_CHAR_CCPS_REPORT_128,     PERM(NTF,ENABLE) | PERM(IND, ENABLE) | PERM(WRITE_REQ, ENABLE) | PERM(RD, ENABLE), 
+                                                                        PERM(RI, ENABLE) | PERM(UUID_LEN, UUID_128), CCPS_REPORT_MAX_LEN},
     // CCPS Report Characteristic - Client Characteristic Configuration Descriptor
-    [CCPS_IDX_REPORT_NTF_CFG]           =   {ATT_DESC_CLIENT_CHAR_CFG_128, PERM(RD, ENABLE)|PERM(WRITE_REQ, ENABLE), 0, 0},
+    [CCPS_IDX_REPORT_NTF_CFG]        =   {ATT_DESC_CLIENT_CHAR_CFG_128, PERM(RD, ENABLE) | PERM(WRITE_REQ, ENABLE), 0, 0},
+
+    // CCPS Image Characteristic Declaration
+    [CCPS_IDX_IMAGE_CHAR]            =   {ATT_DECL_CHARACTERISTIC_128,  PERM(RD, ENABLE), 0, 0},
+    // CCPS Image Characteristic Value
+    [CCPS_IDX_IMAGE_VAL]             =   {ATT_CHAR_CCPS_IMAGE_128,      PERM(WRITE_COMMAND, ENABLE), 
+                                                                        PERM(RI, ENABLE) | PERM(UUID_LEN, UUID_128), CCPS_REPORT_MAX_LEN},
+ 
 };
 
 
@@ -157,7 +166,12 @@ static uint16_t ccps_compute_att_table(uint16_t features)
 {
 
     //CCPS Characteristic is mandatory
-    uint16_t att_table = CCPS_REPORT_MASK;
+    uint16_t att_table = 0;
+
+    for(uint16_t bit = 0 ; bit < CCPS_REPORT_ATT_NB; bit++)
+    {
+        att_table |= (1 << bit);
+    }
 
     return att_table;
 }
@@ -281,7 +295,7 @@ uint16_t ccps_att_hdl_get(struct ccps_env_tag* ccps_env, uint8_t att_idx)
     {
         // Mandatory attribute handle
 
-        if(att_idx > CCPS_IDX_REPORT_NTF_CFG)
+        if(att_idx > (CCPS_IDX_NB-1))
         {
             handle += CCPS_REPORT_ATT_NB;
         }

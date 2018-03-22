@@ -3601,8 +3601,8 @@ int    venus_main(void)
     _PeripheralInit();
 
 
-    #ifdef CFG_BLE_APP
-        APP_BLEMGR_Init();
+    #ifdef CFG_BLE_APP    
+    APP_BLEMGR_Init();
     #endif
 
     _AppInit();
@@ -3621,7 +3621,7 @@ int    venus_main(void)
         #endif
 
         #ifndef EMWIN_ENABLE
-        _app_scheduler();
+        //_app_scheduler();
         #endif
 
         APP_SCHED_RunScheduler();

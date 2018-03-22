@@ -128,7 +128,7 @@ typedef struct
 // If there is a bootloader present the bootloader address read from UICR
 // will act as the page beyond the end of the available flash storage.
 //#define FS_PAGE_END_ADDR    (fs_flash_page_end_addr())
-#define FS_PAGE_END_ADDR    0x1003F800
+#define FS_PAGE_END_ADDR    0x10039800
 
 
 #ifdef __cplusplus

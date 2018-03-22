@@ -61,9 +61,9 @@
 #include "app_hid.h"                 // HID Application Definitions
 #endif //(BLE_APP_HID)
 
-#if (BLE_APP_OTA)
+//#if (BLE_APP_OTA)
 #include "app_ota.h"                 // OTA Application Definitions
-#endif //(BLE_APP_OTA)
+//#endif //(BLE_APP_OTA)
 
 #if (BLE_APP_CCPS)
 #include "app_ccps.h"
@@ -98,7 +98,7 @@
 #define DEVICE_NAME        "CloudChip DEVICE"
 #endif
 
-#define DEVICE_NAME_SIZE    sizeof(DEVICE_NAME)
+#define DEVICE_NAME_SIZE        sizeof(DEVICE_NAME)
 
 /**
  * UUID List part of ADV Data
@@ -200,7 +200,7 @@ enum appm_svc_list
     APPM_SVC_AM0_HAS,
     #endif //defined(BLE_APP_AM0)
 #if (BLE_APP_OTA)
-    APPM_SVC_OTAT,
+    //APPM_SVC_OTAT,
 #endif //(BLE_APP_HID)
 #if (BLE_APP_CCPS)
     APPM_SVC_CCPS,
@@ -238,7 +238,7 @@ static const appm_add_svc_func_t appm_add_svc_func_list[APPM_SVC_LIST_STOP] =
     (appm_add_svc_func_t)am0_app_add_has,
     #endif //defined(BLE_APP_AM0)
     #if (BLE_APP_OTA)
-    (appm_add_svc_func_t)app_ota_add_otas,
+    //(appm_add_svc_func_t)app_ota_add_otas, // Not used now
     #endif //(BLE_APP_HID)    
     #if (BLE_APP_CCPS)
     (appm_add_svc_func_t)app_ccps_add_ccpss,
@@ -300,6 +300,27 @@ void rwip_detect_disconnect_patch(void)
  
 }
 
+
+bool appm_get_nvds_device_name(uint8_t *bd_name)
+{
+
+    uint8_t compare_array[APP_DEVICE_NAME_MAX_LEN];
+
+    bd_name = (uint8_t*)0x1003F006;
+
+    memset(compare_array, 0x00, APP_DEVICE_NAME_MAX_LEN);
+    if(0 == memcmp(compare_array, bd_name, APP_DEVICE_NAME_MAX_LEN))
+        return false;
+
+    memset(compare_array, 0xFF, APP_DEVICE_NAME_MAX_LEN);
+    if(0 == memcmp(compare_array, bd_name, APP_DEVICE_NAME_MAX_LEN))
+        return false;
+
+    return true;
+
+}
+
+
 void appm_init()
 {
 
@@ -307,20 +328,6 @@ void appm_init()
     uint8_t key_len = KEY_LEN;
     #endif //(NVDS_SUPPORT)
     
-#ifndef CFG_JUMP_TABLE_2
-    //TracerInfo("appm_init1\r\n");
-
-    if(jump_table2_struct[JT_POS_FUNC_APPM_INIT] != 0)
-    {
-        //TracerInfo("appm_init1:%x\r\n",jump_table2_struct[JT_POS_FUNC_APPM_INIT]);
-        typedef void (*my_function)(void);
-        //TracerInfo("appm_init1\r\n");
-        ((my_function) (jump_table2_struct[JT_POS_FUNC_APPM_INIT]))(); 
-
-        return;
-    }
-    
-#endif
 
     // Reset the application manager environment
     memset(&app_env, 0, sizeof(app_env));
@@ -340,7 +347,13 @@ void appm_init()
     #endif //(NVDS_SUPPORT)
     {
         // Get default Device Name (No name if not enough space)
-        memcpy(app_env.dev_name, APP_DFLT_DEVICE_NAME, APP_DFLT_DEVICE_NAME_LEN);
+        uint8_t *device_name;
+        
+        if(true == appm_get_nvds_device_name(device_name))
+            memcpy(app_env.dev_name, device_name, APP_DFLT_DEVICE_NAME_LEN);
+        else
+            memcpy(app_env.dev_name, APP_DFLT_DEVICE_NAME, APP_DFLT_DEVICE_NAME_LEN);
+        
         app_env.dev_name_len = APP_DFLT_DEVICE_NAME_LEN;
 
         // TODO update this value per profiles
@@ -408,10 +421,10 @@ void appm_init()
     am0_app_init();
     #endif // defined(BLE_APP_AM0)
 
-    #if (BLE_APP_OTA)
+    //#if (BLE_APP_OTA)
     // OTA
     app_ota_init();
-    #endif //(BLE_APP_OTA)    
+    //#endif //(BLE_APP_OTA)    
 
     #if (BLE_APP_CCPS)
     app_ccps_init();
@@ -498,12 +511,34 @@ void app_wait_for_reset_ble(void)
 
 void appm_set_bdaddr(uint8_t *bd_addr)
 {
+    
     REG_BLE_WR(0x40004024, co_read32p(bd_addr));
     REG_BLE_WR(0x40004028, co_read16p((bd_addr+4)));
 
     memcpy((uint8_t *) 0x2000069D, bd_addr, BD_ADDR_LEN);
 
 }
+
+
+bool appm_get_nvds_bdaddr(uint8_t *bd_addr)
+{
+    
+    uint8_t compare_array[BD_ADDR_LEN];
+
+
+    bd_addr = (uint8_t*)0x1003F000;
+
+    memset(compare_array, 0x00, BD_ADDR_LEN);
+    if(0 == memcmp(compare_array, bd_addr, BD_ADDR_LEN))
+        return false;
+
+    memset(compare_array, 0xFF, BD_ADDR_LEN);
+    if(0 == memcmp(compare_array, bd_addr, BD_ADDR_LEN))
+        return false;
+
+    return true;
+}
+
 
 
 /**
@@ -517,9 +552,14 @@ void appm_start_advertising(void)
     // Check if the advertising procedure is already is progress
     if (ke_state_get(TASK_APP) == APPM_READY)
     {
+        uint8_t *bd_addr;
+        
+        if(true == appm_get_nvds_bdaddr(bd_addr))           
+            appm_set_bdaddr(bd_addr);
+        else
+            appm_set_bdaddr(PUBLIC_BD_ADDR);
 
-        appm_set_bdaddr(PUBLIC_BD_ADDR);
-    
+        
         #if defined(BLE_APP_AM0)
         am0_app_start_advertising();
         #else

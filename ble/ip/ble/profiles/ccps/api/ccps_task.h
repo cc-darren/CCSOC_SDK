@@ -53,6 +53,7 @@ enum ccps_msg_id
     CCPS_PACKET_SEND_CMD,
     CCPS_CTRL_PT_SEND_NOTIFY,
     CCPS_CTRL_PT_SEND_INDICATE,
+    CCPS_PACKET_SEND_IMAGE,
 
     /// Inform APP that Indication Configuration has been changed - use to update bond data
     CCPS_CFG_INDNTF_IND,
@@ -63,7 +64,7 @@ enum ccps_msg_id
 enum ccps_features
 {
     /// Indicate if REPORT Char. is supported
-    CCPS_REPORT_CHAR_SUP              = 0x01,
+    CCPS_REPORT_CHAR_SUP           = 0x01,
 
     CCPS_ALL_FEAT_SUP              = 0x01,
 };
@@ -77,6 +78,10 @@ enum ccps_ntf_ind_cfg
     
     /// REPORT indication enabled
     CCPS_CFG_REPORT_IND    = (1 << 1),
+
+    /// IMAGE notification enabled
+    CCPS_CFG_IMAGE_NTF     = (1 << 2),
+    
 };
 
 
@@ -138,6 +143,17 @@ struct ccps_ntf_ind_send_req
 
 
 struct ccps_packet_send_cmd
+{
+
+    uint16_t    length;
+#ifdef CFG_DLE_EN   
+    uint8_t     value[244];
+#else
+    uint8_t     value[20];
+#endif    
+};
+
+struct ccps_packet_send_image
 {
 
     uint16_t    length;

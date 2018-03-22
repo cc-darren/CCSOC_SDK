@@ -41,6 +41,8 @@
 
 #include "rwble.h"
 #include "app_task.h"
+#include "drvi_eflash.h"
+
 
 /******************************************************************************
  * DEFINITION / CONSTANT / ENUM / TYPE
@@ -91,14 +93,6 @@ const struct rwip_eif_api* rwip_eif_get(uint8_t type)
 {
     const struct rwip_eif_api* ret = NULL;
     
-    #ifndef CFG_JUMP_TABLE_2
-        if (jump_table2_struct[JT_POS_FUNC_EIF_GET] != 0)
-        {
-            typedef struct rwip_eif_api* (*my_function)(uint8_t type);
-            
-            return ((my_function) (jump_table2_struct[JT_POS_FUNC_EIF_GET]))(type);
-        }
-    #endif
     
     switch(type)
     {
@@ -124,19 +118,70 @@ const struct rwip_eif_api* rwip_eif_get(uint8_t type)
     return (ret);
 }
 
+
+#ifndef BOOTLOADER
+
+volatile static bool bWaitForWriteJumptableDone = false;
+
+
+static void  jumptable_flash_write_done_callback(uint32_t sys_evt)
+{
+
+    bWaitForWriteJumptableDone = false;
+}
+
+
+void    jumptable_check_and_move(void)
+{
+
+    uint8_t empty_space[JUMP_TABLE_SIZE];
+
+    for(uint32_t i = 0; i < JUMP_TABLE_SIZE; i++)
+        empty_space[i] = 0xFF;
+
+
+    if(0x00 == memcmp(empty_space, (uint8_t*)JUMP_TABLE_SWITCH_ADDRESS, JUMP_TABLE_SIZE))
+    {
+         drvi_EflashRegisterCallback(jumptable_flash_write_done_callback);
+
+         drvi_EflashInit();
+
+
+         bWaitForWriteJumptableDone = true;
+
+         drvi_EflashErasePage(0);
+
+         while(bWaitForWriteJumptableDone)
+            ;
+
+
+         bWaitForWriteJumptableDone = true;
+         
+         drvi_EflashProgram(JUMP_TABLE_SWITCH_ADDRESS, (uint8_t*)jump_table_base, JUMP_TABLE_SIZE);
+         
+         while(bWaitForWriteJumptableDone)
+            ;
+                  
+         drvi_EflashFlush();         
+    }
+
+}
+
+#endif
+
 /******************************************************************************
  * FUNCTION > APP_BLEMGR_Init
  ******************************************************************************/
 void    APP_BLEMGR_Init(void)
 {
     uint32_t error = 0;
-    
-    GLOBAL_INT_STOP();
-    
-    #ifndef CFG_JUMP_TABLE_2
-        memset(((void *) JUMP_TABLE_2_BASE_ADDR), 0, 1024);
+
+    #ifndef BOOTLOADER
+    jumptable_check_and_move();
     #endif
     
+    GLOBAL_INT_STOP();
+            
     memset (((void *) 0x40006000), 0, 8192);
     memset (((void *) 0x20000048), 0, 0x820);   
 

@@ -84,6 +84,7 @@ void IndirectWrite(void) {
 }
 #endif
 
+IN_SYS_RAM_BEGIN
 void EFLASH_IRQHandler(void)
 {
     uint32_t dwEfIntrSts;
@@ -118,6 +119,7 @@ void EFLASH_IRQHandler(void)
     }
 
 }
+IN_SYS_RAM_END
 
 
 void cc6801_EflashInit(void) 
@@ -131,7 +133,7 @@ void cc6801_EflashInit(void)
     NVIC_EnableIRQ(EFLASH_IRQn);
 }
 
-IN_RET_RAM_BEGIN
+IN_SYS_RAM_BEGIN
 void cc6801_EflashFlush(void) 
 {
     uint32_t tdata;
@@ -146,7 +148,7 @@ void cc6801_EflashFlush(void)
     GLOBAL_INT_START();
 
 }
-IN_RET_RAM_END
+IN_SYS_RAM_END
 
 BOOL cc6801_EflashEraseALL(void)
 {
@@ -178,6 +180,8 @@ BOOL cc6801_EflashEraseALL(void)
     return (0);                                  // Finished without Errors
 #endif
 }
+
+IN_SYS_RAM_BEGIN
 BOOL cc6801_EflashErasePage(uint32_t dwEflashAdr)
 {
 #if defined(FPGA) && FPGA
@@ -239,6 +243,8 @@ BOOL cc6801_EflashErasePage(uint32_t dwEflashAdr)
     }
 #endif
 }
+IN_SYS_RAM_END
+
 
 void cc6801_EflashRegisterCallback(fpEflash_Callback fpCB)
 {

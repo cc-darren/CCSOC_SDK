@@ -243,6 +243,30 @@ static int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
 
          }break;
 
+         case CCPS_IDX_IMAGE_VAL:
+         {
+             uint8_t state = ke_state_get(dest_id);
+             send_cfm = true;
+             
+             // check state of the task to know if it can be proceed immediately
+             if(state == CCPS_IDLE)
+             {
+                 // inform application that update of measurement interval is requested by peer device.
+                 struct ccps_packet_send_image * req_ind = KE_MSG_ALLOC(CCPS_PACKET_SEND_IMAGE,
+                         prf_dst_task_get(&ccps_env->prf_env, conidx), dest_id, ccps_packet_send_image);
+                 
+                 req_ind->length =  param->length;
+                 memcpy(req_ind->value, param->value, param->length);
+                 ke_msg_send(req_ind);
+             }
+             else
+             {
+                 msg_status = KE_MSG_SAVED;
+             }  
+
+         }break;
+
+
          case CCPS_IDX_REPORT_NTF_CFG:
          {
              status = ccps_update_ntf_ind_cfg(conidx, CCPS_CFG_REPORT_NTF, PRF_CLI_START_NTF, co_read16p(param->value));

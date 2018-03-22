@@ -56,7 +56,7 @@
  * DEFINITION / CONSTANT / ENUM / TYPE
  ******************************************************************************/
 
-#define IS_SRV_ACTIVED(type)  ((E_APP_SRV_ST_ACTIVE == b_app_srv_state[type]) ? true : false)
+#define IS_SRV_ACTIVED(type)    ((E_APP_SRV_ST_ACTIVE == b_app_srv_state[type]) ? true : false)
 #define IS_SRV_SUSPENDED(type)  ((E_APP_SRV_ST_SUSPEND == b_app_srv_state[type]) ? true : false)
 
 typedef enum
@@ -474,14 +474,16 @@ E_App_Srv_Err_Code   APP_SVCMGR_Init(void)
 void    APP_SVCMGR_PostEvent_HrRequest(E_AppSvcHrMode eMode, uint8_t bSwitch)
 {
     S_AppSchedEvent     _tEvent;
-    S_AppSvcEvtHrReq   *_ptReq = ((S_AppSvcEvtHrReq *) &_tEvent.vpData);
-        
+    S_AppSvcEvtHrReq   *_ptReq;
+    
     _tEvent.eModuleID     = E_APP_SCHED_MODID_SERVICE_MGR;
     _tEvent.bEventID      = E_APP_SVC_EVENT_HRM_SERVICE_REQUEST;
-    _tEvent.wDataByteSize = 0;
+    _tEvent.wDataByteSize = sizeof(S_AppSvcEvtHrReq);
+    _tEvent.vpData = ((void *) malloc(_tEvent.wDataByteSize));
 
+    _ptReq = (S_AppSvcEvtHrReq*) _tEvent.vpData;
     _ptReq->eHrMode = eMode;
-    _ptReq->bSwitch = bSwitch;
+    _ptReq->bSwitch = bSwitch;    
     
     APP_SCHED_PostEvent(&_tEvent);
 }
@@ -492,12 +494,15 @@ void    APP_SVCMGR_PostEvent_HrRequest(E_AppSvcHrMode eMode, uint8_t bSwitch)
 void    APP_SVCMGR_PostEvent_HrTimeout(E_AppSvcHrTimerID eTimerID)
 {
     S_AppSchedEvent       _tEvent;
-    S_AppSvcEvtTimeout   *_ptTimerout = ((S_AppSvcEvtTimeout *) &_tEvent.vpData);
+    S_AppSvcEvtTimeout   *_ptTimerout;
+    
 
     _tEvent.eModuleID     = E_APP_SCHED_MODID_SERVICE_MGR;
     _tEvent.bEventID      = E_APP_SVC_EVENT_HRM_TIMEOUT;
-    _tEvent.wDataByteSize = 0;
+    _tEvent.wDataByteSize = sizeof(S_AppSvcEvtTimeout);
+    _tEvent.vpData = ((void *) malloc(_tEvent.wDataByteSize));  
 
+    _ptTimerout = (S_AppSvcEvtTimeout*) _tEvent.vpData;
     _ptTimerout->eTimerID = eTimerID;
     
     APP_SCHED_PostEvent(&_tEvent);
@@ -510,12 +515,14 @@ void    APP_SVCMGR_PostEvent_HrTimeout(E_AppSvcHrTimerID eTimerID)
 void    APP_SVCMGR_PostEvent_PedoRequest(uint8_t bSwitch)
 {
     S_AppSchedEvent     _tEvent;
-    S_AppSvcEvtPedoReq   *_ptReq = ((S_AppSvcEvtPedoReq *) &_tEvent.vpData);
-        
+    S_AppSvcEvtPedoReq   *_ptReq;
+    
     _tEvent.eModuleID     = E_APP_SCHED_MODID_SERVICE_MGR;
     _tEvent.bEventID      = E_APP_SVC_EVENT_PEDO_SERVICE_REQEST;
-    _tEvent.wDataByteSize = 0;
+    _tEvent.wDataByteSize = sizeof(S_AppSvcEvtPedoReq);
+    _tEvent.vpData = ((void *) malloc(_tEvent.wDataByteSize));
 
+    _ptReq = (S_AppSvcEvtPedoReq*) _tEvent.vpData;
     _ptReq->bSwitch = bSwitch;
     
     APP_SCHED_PostEvent(&_tEvent);
@@ -527,282 +534,19 @@ void    APP_SVCMGR_PostEvent_PedoRequest(uint8_t bSwitch)
 void    APP_SVCMGR_PostEvent_SwimRequest(uint8_t bSwitch)
 {
     S_AppSchedEvent     _tEvent;
-    S_AppSvcEvtSwimReq   *_ptReq = ((S_AppSvcEvtSwimReq *) &_tEvent.vpData);
-        
+    S_AppSvcEvtSwimReq   *_ptReq;
+    
     _tEvent.eModuleID     = E_APP_SCHED_MODID_SERVICE_MGR;
     _tEvent.bEventID      = E_APP_SVC_EVENT_SWIM_SERVICE_REQEST;
-    _tEvent.wDataByteSize = 0;
+    _tEvent.wDataByteSize = sizeof(S_AppSvcEvtSwimReq);
+    _tEvent.vpData = ((void *) malloc(_tEvent.wDataByteSize));
 
+    _ptReq = (S_AppSvcEvtSwimReq*) _tEvent.vpData;
     _ptReq->bSwitch = bSwitch;
     
     APP_SCHED_PostEvent(&_tEvent);
 }
 
-
-
-
-#if 0
-
-
-#include <stdbool.h>
-#include <stdint.h>
-#include <string.h>
-
-#include "project.h"
-#include "CC_Sensor_Manager.h"
-#include "CC_AppSrvc_Manager.h"
-#include "Acc_Gyro_Controller.h" 
-#include "Mag_Controller.h"
-#include "CC_HRM_drv.h"
-#include "error.h"
-#include "tracer.h"
-#include "clock.h"
-
-#define IS_SRV_ACTIVED(type)  ((E_APP_SRV_ST_ACTIVE == b_app_srv_state[type]) ? true : false)
-#define IS_SRV_SUSPENDED(type)  ((E_APP_SRV_ST_SUSPEND == b_app_srv_state[type]) ? true : false)
-
-static E_App_Srv_State b_app_srv_state[E_APP_SRV_ID_TOTAL];
-
-
-
-
-
-
-
-static E_App_Srv_Err_Code AppSrv_Suspend(E_App_Srv_ID type)
-{
-
-    E_App_Srv_Err_Code ret_code = E_APP_SRV_ERR_NONE;
-
-    b_app_srv_state[type] = E_APP_SRV_ST_SUSPEND;
-
-    switch(type)
-    {
-        case E_APP_SRV_ID_HRM:
-            CC_SenMgr_Stop_HRM();
-            break;
-        case E_APP_SRV_ID_PEDO:            
-            CC_SenMgr_Stop_Pedometer();
-            break;
-        case E_APP_SRV_ID_SWIM:            
-            CC_SenMgr_Stop_Swim();
-            break;
-        default:
-            ret_code = E_APP_SRV_ERR_TYPE;
-            break;
-    }
-   
-
-    return ret_code; 
-}
-
-//static E_App_Srv_Err_Code AppSrv_Resume(E_App_Srv_ID type)
-static E_App_Srv_Err_Code AppSrv_Resume(void)
-{
-
-    E_App_Srv_Err_Code ret_code = E_APP_SRV_ERR_NONE;
-
-#ifdef SRV_MGR_TEST_CASE_4
-    if(IS_SRV_SUSPENDED(E_APP_SRV_ID_SWIM))
-    {
-        TracerInfo("CC_AppSrv_Sensor_Resume: %d\r\n", (E_APP_SRV_ID_SWIM));
-        if(E_SEN_ERROR_NONE == CC_SenMgr_Start_Swim())            
-            b_app_srv_state[E_APP_SRV_ID_HRM] = E_APP_SRV_ST_ACTIVE;        
-        else
-            ret_code = E_APP_SRV_ERR_RESUME_FAIL;
-    }      
-
-#endif
-
-#if 0
-    if(IS_SRV_SUSPENDED(type))
-    {
-        TracerInfo("CC_AppSrv_Sensor_Resume: %d!\r\n", type);
-        CC_SenMgr_Start_Swim();
-
-        b_app_srv_state[type] = E_APP_SRV_ST_ACTIVE;        
-    }      
-    else
-    {
-        TracerInfo("E_APP_SRV_ERR_CANT_RESUME_FROM_ACTIVE: %d!\r\n", type);
-        
-        ret_code = E_APP_SRV_ERR_CANT_RESUME_FROM_ACTIVE;
-
-    }
-#endif
-
-#if 0
-    if(IS_SRV_SUSPENDED(E_APP_SRV_ID_HRM))
-    {
-        // resume hrm
-        TracerInfo("CC_AppSrv_Sensor_Resume: %d!\r\n", E_APP_SRV_ID_HRM);
-        CC_SenMgr_Start_HRM();
-
-        b_app_srv_state[E_APP_SRV_ID_HRM] = E_APP_SRV_ST_ACTIVE;        
-    }
-    else
-        ret_code = E_APP_SRV_ERR_CANT_RESUME_FROM_ACTIVE;
-
-    if(IS_SRV_SUSPENDED(E_APP_SRV_ID_PEDO))
-    {
-        // resume pedo
-        TracerInfo("CC_AppSrv_Sensor_Resume: %d!\r\n", E_APP_SRV_ID_PEDO);
-        CC_SenMgr_Start_Pedometer();
-
-        b_app_srv_state[E_APP_SRV_ID_PEDO] = E_APP_SRV_ST_ACTIVE;        
-    }
-    else
-        ret_code = E_APP_SRV_ERR_CANT_RESUME_FROM_ACTIVE;        
-
-    if(IS_SRV_SUSPENDED(E_APP_SRV_ID_SWIM))
-    {
-        // resume swim
-        TracerInfo("CC_AppSrv_Sensor_Resume: %d!\r\n", E_APP_SRV_ID_SWIM);
-        CC_SenMgr_Start_Swim();
-
-        b_app_srv_state[E_APP_SRV_ID_SWIM] = E_APP_SRV_ST_ACTIVE;        
-    }    
-    else
-        ret_code = E_APP_SRV_ERR_CANT_RESUME_FROM_ACTIVE;        
-#endif
-    return ret_code; 
-}
-
-
-
-
-
-
-
-
-E_App_Srv_Err_Code CC_AppSrv_Manager_Init(void)
-{
-    E_App_Srv_Err_Code ret_code = E_APP_SRV_ERR_NONE;
-    
-    for(uint8_t i = 0; i < E_APP_SRV_ID_TOTAL; i++)
-    {
-        b_app_srv_state[i] = E_APP_SRV_ST_IDLE;
-    
-}
-
-    return ret_code;
-}
-
-
-E_App_Srv_Err_Code CC_AppSrv_Manager_Start(E_App_Srv_ID type)
-{
-    E_App_Srv_Err_Code ret_code = E_APP_SRV_ERR_NONE;
-    
-    switch(type)
-    {
-        case E_APP_SRV_ID_HRM:
-
-            if(IS_SRV_ACTIVED(E_APP_SRV_ID_SWIM))
-            {
-                //AppSrv_Suspend(E_APP_SRV_ID_HRM);
-
-                return E_APP_SRV_ERR_CONFLICT;
-            }
-
-            if(E_SEN_ERROR_NONE != CC_SenMgr_Start_HRM())
-                return E_APP_SRV_ERR_START_FAIL;
-
-            break;
-        case E_APP_SRV_ID_PEDO:            
-            
-#if 0 // not used resume here           
-            if(IS_SRV_ACTIVED(E_APP_SRV_ID_SWIM))
-                AppSrv_Suspend(E_APP_SRV_ID_SWIM);
-#endif
-            if(IS_SRV_ACTIVED(E_APP_SRV_ID_SWIM))
-            {
-                //AppSrv_Suspend(E_APP_SRV_ID_PEDO);
-
-                return E_APP_SRV_ERR_CONFLICT;
-            }
-
-            if(E_SEN_ERROR_NONE != CC_SenMgr_Start_Pedometer())
-                return E_APP_SRV_ERR_START_FAIL;
-            
-            break;
-        case E_APP_SRV_ID_SWIM:  // the highest priority!          
-#if 0
-            if(IS_SRV_ACTIVED(E_APP_SRV_ID_HRM))
-                AppSrv_Suspend(E_APP_SRV_ID_HRM);
-
-            if(IS_SRV_ACTIVED(E_APP_SRV_ID_PEDO))
-                AppSrv_Suspend(E_APP_SRV_ID_PEDO);
-#endif
-
-#if 1
-            if(IS_SRV_ACTIVED(E_APP_SRV_ID_HRM)
-                || IS_SRV_ACTIVED(E_APP_SRV_ID_PEDO))
-                return E_APP_SRV_ERR_CONFLICT;
-#endif                
-
-            if(E_SEN_ERROR_NONE != CC_SenMgr_Start_Swim())
-                return E_APP_SRV_ERR_START_FAIL;
-            
-            break;
-        default:
-            ret_code = E_APP_SRV_ERR_TYPE;
-            break;
-    }
-
-
-    b_app_srv_state[type] = E_APP_SRV_ST_ACTIVE;
-
-
-    return ret_code;
-}
-
-
-E_App_Srv_Err_Code CC_AppSrv_Manager_Stop(E_App_Srv_ID type)
-{
-
-    E_App_Srv_Err_Code ret_code = E_APP_SRV_ERR_NONE;
-
-    //TracerInfo("CC_AppSrv_Manager_Stop: %d!\r\n", type);
-
-
-    switch(type)
-    {
-        case E_APP_SRV_ID_HRM:
-            
-            if(E_SEN_ERROR_NONE != CC_SenMgr_Stop_HRM())
-               return E_APP_SRV_ERR_STOP_FAIL; 
-            
-            break;
-        case E_APP_SRV_ID_PEDO:            
-
-            if(E_SEN_ERROR_NONE != CC_SenMgr_Stop_Pedometer())
-               return E_APP_SRV_ERR_STOP_FAIL; 
-            
-            break;
-        case E_APP_SRV_ID_SWIM:            
-
-            if(E_SEN_ERROR_NONE != CC_SenMgr_Stop_Swim())
-               return E_APP_SRV_ERR_STOP_FAIL; 
-            
-            break;
-        default:
-            
-            ret_code = E_APP_SRV_ERR_TYPE;
-            
-            break;
-    }
-
-
-
-    b_app_srv_state[type] = E_APP_SRV_ST_IDLE;
-
-    AppSrv_Resume();
-
-    return ret_code;
-}
-
-
-#endif
 
 
 

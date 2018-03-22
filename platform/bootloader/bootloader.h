@@ -15,6 +15,7 @@
 
 #include <stdint.h>
 
+#if 0
 typedef struct S_FotaConfig
 {
     uint32_t dwEflashStartAddr;
@@ -24,6 +25,8 @@ typedef struct S_FotaConfig
 } T_FotaConfig;
 
 uint32_t BootloaderInit(T_FotaConfig *tpConfig);
+#endif
+
 void BootloaderMain(void);
 
 #endif // _BOOTLOADER_H__
