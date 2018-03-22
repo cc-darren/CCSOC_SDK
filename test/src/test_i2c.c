@@ -117,6 +117,10 @@ void microchip_24xx16_read(uint8_t bAddr, uint8_t *pbBuf, int iSize)
     {
         iRet = drvi_I2cRead(TEST_I2C_BUS, pbBuf, iSize);
     } while(CC_SUCCESS != iRet);
+//    do
+//    {
+//        iRet = drvi_I2cWriteThenRead(TEST_I2C_BUS, &bAddr, sizeof(bAddr), pbBuf, iSize);
+//    } while(CC_SUCCESS != iRet);
 }
 
 

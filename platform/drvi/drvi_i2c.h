@@ -54,9 +54,17 @@ __forceinline int drvi_I2cRead(uint8_t bBusNum, uint8_t *pData, uint16_t wLen)
     return cc6801_I2cRead(bBusNum, pData, wLen);
 }
 
+#ifdef CC6801A1
+__forceinline int drvi_I2cWriteThenRead(uint8_t bBusNum,
+                          uint8_t const *pTxData, uint16_t wTxLen,
+                          uint8_t *pRxData, uint16_t wRxLen)
+{
+    return cc6801_I2cWriteThenRead(bBusNum, pTxData, wTxLen, pRxData, wRxLen);
+}
+#else
 int drvi_I2cWriteThenRead(uint8_t bBusNum,
                           uint8_t const *pTxData, uint16_t wTxLen,
                           uint8_t *pRxData, uint16_t wRxLen);
+#endif
+
 #endif //_DRVI_I2C_H_
-
-

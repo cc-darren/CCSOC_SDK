@@ -54,78 +54,70 @@ volatile uint32_t I2C1_M_INTR = 0;
 
 void I2C0_M_IRQHandler(void)
 {
-    regI2C0->bf.dma_done_intr = 1;
+    uint32_t dwInt = g_tI2cBus[I2C_0].pReg->interrupt;
 
-    //regI2C0->ms_resync_done_intr = 1;
-    if (regI2C0->bf.i2c_cd_err_intr)
-    {
+    if (dwInt & I2C_INT_ERROR_CD_CLEAR_MASK)
         g_iError |= I2C_ERR_COLLIDED;
-        regI2C0->bf.i2c_cd_err_intr = 1;
-    }
 
-    if (regI2C0->bf.i2c_err_ack_intr)
-    {
+    if (dwInt & I2C_INT_ERROR_ACK_CLEAR_MASK)
         g_iError |= I2C_ERR_NO_ACK;
-        regI2C0->bf.i2c_err_ack_intr = 1;
-    }
 
-    if (regI2C0->bf.dma_done_intr)
-        regI2C0->bf.dma_done_intr = 1;
+    dwInt |= (I2C_INT_ERROR_CD_CLEAR_MASK |
+              I2C_INT_ERROR_ACK_CLEAR_MASK |
+              I2C_INT_DMA_DONE_CLEAR_MASK);
+
+    g_tI2cBus[I2C_0].pReg->interrupt |= dwInt;
 
     I2C0_M_INTR = 1;
 }
 
 void I2C1_M_IRQHandler(void)
 {
-    regI2C1->bf.dma_done_intr = 1;
+    uint32_t dwInt = g_tI2cBus[I2C_1].pReg->interrupt;
 
-    //regI2C1->ms_resync_done_intr = 1;
-    if (regI2C1->bf.i2c_cd_err_intr)
-    {
+    if (dwInt & I2C_INT_ERROR_CD_CLEAR_MASK)
         g_iError |= I2C_ERR_COLLIDED;
-        regI2C1->bf.i2c_cd_err_intr = 1;
-    }
 
-    if (regI2C1->bf.i2c_err_ack_intr)
-    {
+    if (dwInt & I2C_INT_ERROR_ACK_CLEAR_MASK)
         g_iError |= I2C_ERR_NO_ACK;
-        regI2C1->bf.i2c_err_ack_intr = 1;
-    }
 
-    if (regI2C1->bf.dma_done_intr)
-        regI2C1->bf.dma_done_intr = 1;
+    dwInt |= (I2C_INT_ERROR_CD_CLEAR_MASK |
+              I2C_INT_ERROR_ACK_CLEAR_MASK |
+              I2C_INT_DMA_DONE_CLEAR_MASK);
+
+    g_tI2cBus[I2C_0].pReg->interrupt |= dwInt;
 
     I2C1_M_INTR = 1;
 }
 
-void cc6801_I2cIntDisable(U_regI2C *pI2cBase)
+void cc6801_I2cIntDisable(S_regI2C *pI2cBase)
 {
-    pI2cBase->dw.interrupt |= (I2C_INT_DMA_DONE_DISABLE_MASK |
+    pI2cBase->interrupt |= (I2C_INT_DMA_DONE_DISABLE_MASK |
                                I2C_INT_ERROR_ACK_DISABLE_MASK |
                                I2C_INT_ERROR_CD_DISABLE_MASK |
                                I2C_INT_RESYNC_DISABLE_MASK);
 }
 
-void cc6801_I2cIntEnable(U_regI2C *pI2cBase)
+void cc6801_I2cIntEnable(S_regI2C *pI2cBase)
 {
-    pI2cBase->dw.interrupt |= (I2C_INT_DMA_DONE_CLEAR_MASK |
+    pI2cBase->interrupt |= (I2C_INT_DMA_DONE_CLEAR_MASK |
                                I2C_INT_ERROR_ACK_CLEAR_MASK |
                                I2C_INT_ERROR_CD_CLEAR_MASK |
                                I2C_INT_RESYNC_CLEAR_MASK);
 
-    pI2cBase->dw.interrupt |= (I2C_INT_DMA_DONE_ENABLE_MASK |
+    pI2cBase->interrupt |= (I2C_INT_DMA_DONE_ENABLE_MASK |
                                I2C_INT_ERROR_ACK_ENABLE_MASK |
                                I2C_INT_ERROR_CD_ENABLE_MASK |
                                I2C_INT_RESYNC_ENABLE_MASK);
 }
 
-static int cc6801_I2c0Xfer(U_regI2C *pI2cBase)
+static int cc6801_I2c0Xfer(S_regI2C *pI2cBase)
 {
     g_iError = I2C_ERR_NONE;
 
     NVIC_EnableIRQ(I2C0_M_IRQn);
 
-    pI2cBase->bf.dma_enable = I2C_DMA_ENABLE_BIT;
+    pI2cBase->dmaCtrl |= I2C_DMA_ENABLE_MASK;
 
     while(!I2C0_M_INTR);
     I2C0_M_INTR = 0;
@@ -142,13 +134,13 @@ static int cc6801_I2c0Xfer(U_regI2C *pI2cBase)
     return CC_ERROR_BUSY;
 }
 
-static int cc6801_I2c1Xfer(U_regI2C *pI2cBase)
+static int cc6801_I2c1Xfer(S_regI2C *pI2cBase)
 {
     g_iError = I2C_ERR_NONE;
 
     NVIC_EnableIRQ(I2C1_M_IRQn);
 
-    pI2cBase->bf.dma_enable = I2C_DMA_ENABLE_BIT;
+    pI2cBase->dmaCtrl |= I2C_DMA_ENABLE_MASK;
 
     while(!I2C1_M_INTR);
     I2C1_M_INTR = 0;
@@ -173,7 +165,7 @@ int cc6801_I2cClk16MFreqSet(T_I2cDevice *tpDev)
     uint32_t dwCfgMask;
     uint32_t dwI2cConfig;
 
-    dwI2cConfig = g_tI2cBus[bBusId].pReg->dw.cfg;
+    dwI2cConfig = g_tI2cBus[bBusId].pReg->coreCfg;
     dwI2cConfig &= ~I2C_CONFIG_PRESCALER_MASK;
     dwI2cConfig &= ~I2C_CONFIG_CFGMASK_MASK;
 
@@ -197,7 +189,7 @@ int cc6801_I2cClk16MFreqSet(T_I2cDevice *tpDev)
     }
 
     dwI2cConfig |= ((dwPrescaler << I2C_CONFIG_PRESCALER_SHIFT) |  (dwCfgMask << I2C_CONFIG_CFGMASK_SHIFT));
-    g_tI2cBus[bBusId].pReg->dw.cfg = dwI2cConfig;
+    g_tI2cBus[bBusId].pReg->coreCfg = dwI2cConfig;
 
     TracerInfo("I2C%d clock rate %dHz\r\n", bBusId, dwFreq);
 
@@ -212,7 +204,7 @@ int cc6801_I2cClk24MFreqSet(T_I2cDevice *tpDev)
     uint32_t dwCfgMask;
     uint32_t dwI2cConfig;
 
-    dwI2cConfig = g_tI2cBus[bBusId].pReg->dw.cfg;
+    dwI2cConfig = g_tI2cBus[bBusId].pReg->coreCfg;
     dwI2cConfig &= ~I2C_CONFIG_PRESCALER_MASK;
     dwI2cConfig &= ~I2C_CONFIG_CFGMASK_MASK;
 
@@ -236,7 +228,7 @@ int cc6801_I2cClk24MFreqSet(T_I2cDevice *tpDev)
     }
 
     dwI2cConfig |= ((dwPrescaler << I2C_CONFIG_PRESCALER_SHIFT) |  (dwCfgMask << I2C_CONFIG_CFGMASK_SHIFT));
-    g_tI2cBus[bBusId].pReg->dw.cfg = dwI2cConfig;
+    g_tI2cBus[bBusId].pReg->coreCfg = dwI2cConfig;
 
     TracerInfo("I2C%d clock rate %dHz\r\n", bBusId, dwFreq);
 
@@ -245,14 +237,28 @@ int cc6801_I2cClk24MFreqSet(T_I2cDevice *tpDev)
 
 void cc6801_I2cDeviceRegister(T_I2cDevice *tpDev)
 {
+    uint32_t dwMsCfg = 0;
+    uint32_t dwCoreCfg = 0;
+
     uint8_t bBusId = tpDev->bBusNum;
 
-    g_tI2cBus[bBusId].pReg->bf.cfg_core_select = 1;
+    dwCoreCfg = g_tI2cBus[bBusId].pReg->coreCfg;
 
-    g_tI2cBus[bBusId].pReg->bf.ms_slave_addr = tpDev->bAddr;
-    g_tI2cBus[bBusId].pReg->bf.ms_no_stop = 0;
-    g_tI2cBus[bBusId].pReg->bf.ms_addr_en = 0;
-    g_tI2cBus[bBusId].pReg->bf.ms_addr_16bit = 0;
+    dwCoreCfg &= ~I2C_CONFIG_CORESEL_MASK;
+    dwCoreCfg |= I2C_CONFIG_MASTER_MASK;
+
+    g_tI2cBus[bBusId].pReg->coreCfg = dwCoreCfg;
+
+    dwMsCfg = g_tI2cBus[bBusId].pReg->masterCfg;
+
+    dwMsCfg &= ~I2C_MSCONFIG_SLAVEADDR_MASK;
+    dwMsCfg |= (tpDev->bAddr << I2C_MSCONFIG_SLAVEADDR_SHIFT);
+
+    dwMsCfg &= ~(I2C_MSCONFIG_NOSTOP_MASK |
+                 I2C_MSCONFIG_ADDREN_MASK |
+                 I2C_MSCONFIG_ADDR16_MASK);
+
+    g_tI2cBus[bBusId].pReg->masterCfg = dwMsCfg;
 
     cc6801_I2cIntEnable(g_tI2cBus[bBusId].pReg);
 }
@@ -294,9 +300,8 @@ static int cc6801_I2cClkDivSet(uint8_t bBusId)
     dwClkCfg = regCKGEN->dw.clkCfg2;
     dwClkCfg &= ~((0x1F) << 8);
     dwClkCfg |= (bClkDiv << 8);
-#ifdef EVB
+
     regCKGEN->dw.clkCfg2 = dwClkCfg;
-#endif
 
     return 0;
 }
@@ -321,7 +326,15 @@ int cc6801_I2cInit(T_I2cDevice *tpDev)
          return CC_ERROR_INVALID_PARAM;
     }
 
+    g_tI2cBus[bBusId].pReg->interrupt = 0;
+    g_tI2cBus[bBusId].pReg->dmaCtrl = 0;
+    g_tI2cBus[bBusId].pReg->wAddr = 0;
+    g_tI2cBus[bBusId].pReg->rAddr = 0;
+    g_tI2cBus[bBusId].pReg->coreCfg = 0;
+    g_tI2cBus[bBusId].pReg->masterCfg = 0;
+
     cc6801_I2cClkDivSet(bBusId);
+
     if (CLOCK_16 == g_tI2cBus[bBusId].bClkSrc)
     {
         cc6801_I2cClk16MFreqSet(tpDev);
@@ -342,14 +355,16 @@ int cc6801_I2cWrite(uint8_t bBusNum,
                     uint8_t const *pData,
                     uint16_t wLen)
 {
-    U_regI2C *pI2cBase = g_tI2cBus[bBusNum].pReg;
+    uint32_t dwDmaCtrl = 0;
+    S_regI2C *pI2cBase = g_tI2cBus[bBusNum].pReg;
 
-    pI2cBase->bf.dma_str_raddr = (uint32_t)pData;
-    pI2cBase->bf.wdata_byte_num = wLen - 1;
-    pI2cBase->bf.rdata_byte_num = wLen - 1;
-    pI2cBase->bf.op_mode = 0;
+    dwDmaCtrl = pI2cBase->dmaCtrl;
+    dwDmaCtrl &= ~(I2C_DMA_OPMODE_MASK | I2C_DMA_RBYTE_MASK | I2C_DMA_WBYTE_MASK);
+    dwDmaCtrl |= (I2C_DMA_OPMODE_WR_MASK |
+                 (((wLen-1)&I2C_DMA_WBYTE_BIT << I2C_DMA_WBYTE_SHIFT)));
 
-    pI2cBase->bf.dbus_burst = 0;
+    pI2cBase->rAddr = ((uint32_t)pData & I2C_DMA_RWADDR_MASK);
+    pI2cBase->dmaCtrl = dwDmaCtrl;
 
     return g_tI2cBus[bBusNum].fpI2cXfer(pI2cBase);
 }
@@ -359,14 +374,38 @@ int cc6801_I2cRead(uint8_t bBusNum,
                    uint8_t *pData,
                    uint16_t wLen)
 {
-    U_regI2C *pI2cBase = g_tI2cBus[bBusNum].pReg;
+    uint32_t dwDmaCtrl = 0;
+    S_regI2C *pI2cBase = g_tI2cBus[bBusNum].pReg;
 
-    pI2cBase->bf.dma_str_waddr = (uint32_t)pData;
-    pI2cBase->bf.wdata_byte_num = wLen - 1;
-    pI2cBase->bf.rdata_byte_num = wLen - 1;
-    pI2cBase->bf.op_mode = 1;
+    dwDmaCtrl = pI2cBase->dmaCtrl;
+    dwDmaCtrl &= ~(I2C_DMA_OPMODE_MASK | I2C_DMA_RBYTE_MASK | I2C_DMA_WBYTE_MASK);
+    dwDmaCtrl |= (I2C_DMA_OPMODE_RD_MASK |
+                 (((wLen-1)&I2C_DMA_RBYTE_BIT) << I2C_DMA_RBYTE_SHIFT));
 
-    pI2cBase->bf.dbus_burst = 0;
+    pI2cBase->wAddr = ((uint32_t)pData & I2C_DMA_RWADDR_MASK);
+    pI2cBase->dmaCtrl = dwDmaCtrl;
+
+    return g_tI2cBus[bBusNum].fpI2cXfer(pI2cBase);
+}
+
+int cc6801_I2cWriteThenRead(uint8_t         bBusNum,
+                            uint8_t const * pWrData,
+                            uint16_t        wWrLen,
+                            uint8_t       * pRdData,
+                            uint16_t        wRdLen)
+{
+    uint32_t dwDmaCtrl = 0;
+    S_regI2C *pI2cBase = g_tI2cBus[bBusNum].pReg;
+
+    dwDmaCtrl &= ~(I2C_DMA_OPMODE_MASK | I2C_DMA_RBYTE_MASK | I2C_DMA_WBYTE_MASK);
+    dwDmaCtrl |= (I2C_DMA_OPMODE_WBR_MASK |
+                 (((wRdLen-1)&I2C_DMA_RBYTE_BIT) << I2C_DMA_RBYTE_SHIFT) |
+                 (((wWrLen-1)&I2C_DMA_WBYTE_BIT << I2C_DMA_WBYTE_SHIFT)));
+
+    pI2cBase->wAddr = ((uint32_t)pRdData & I2C_DMA_RWADDR_MASK);
+    pI2cBase->rAddr = ((uint32_t)pWrData & I2C_DMA_RWADDR_MASK);
+
+    pI2cBase->dmaCtrl = dwDmaCtrl;
 
     return g_tI2cBus[bBusNum].fpI2cXfer(pI2cBase);
 }

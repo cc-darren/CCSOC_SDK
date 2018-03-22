@@ -194,6 +194,7 @@ RETURNS
 ******************************************************************************/
 static void cc6801_ClockSysClkSet(T_ClockConfig *pClk)
 {
+#ifndef FPGA
     uint32_t dwNewPLL;
     uint32_t i = 0xFFFFF;
 
@@ -225,6 +226,7 @@ static void cc6801_ClockSysClkSet(T_ClockConfig *pClk)
     }
 
     regSCU->dw.clkConfig1 = SCU_CLK_CFG1;
+#endif
 }
 
 
