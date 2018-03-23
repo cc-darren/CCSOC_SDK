@@ -3623,7 +3623,7 @@ int    venus_main(void)
         #endif
 
         #ifndef EMWIN_ENABLE
-        //_app_scheduler();
+        _app_scheduler();
         #endif
 
         APP_SCHED_RunScheduler();

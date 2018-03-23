@@ -127,12 +127,11 @@ void  ota_set_mode_enabled(void)
 bool  ota_verify_and_get_app_address(uint32_t *start_address)
 {
 
-    *start_address = sAppOTALocalConfig.prog_addr;
-
-
     drvi_EflashInit();
     
     ota_update_bl_settings();
+
+    *start_address = sAppOTALocalConfig.prog_addr;
 
 
     if(sAppOTALocalConfig.enter_ota_mode == ENTER_OTA_MODE_CODE)
