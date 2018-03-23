@@ -464,6 +464,20 @@ Declaration of static Global Variables & Functions
 #define HRM_INT_PIN         22
 #define HRM_RST_PIN         30
 
+
+#define SWAP_ACC_DIRECTION_EN
+
+#define FORCE_LIFTARM_TEST_EN   // for test
+//#define FORCE_SWIM_TEST_EN   // for test
+//#define FORCE_HRS_TEST_EN   // for test
+
+#define APP_SERV_MGR_EN        // for new service/sensor manager
+#ifdef APP_SERV_MGR_EN
+//#define SM_TEST_EN
+//#define SRV_MGR_TEST_EN
+#endif
+
+#define SW_TIMER_BY_KERNEL  // min timer: 10ms
 //-----------------------------------
 //  _bState : 1  , Init form system reboot
 //          : 2 ,  Init form Venus app setting
@@ -867,6 +881,15 @@ typedef struct
 //BLE is always supported
 #define CFG_BLE    1
 
+// <h> BLE - DEVICE NAME
+#define APP_DFLT_DEVICE_NAME    "CC6801-88"
+
+// <h> BLE - DEVICE ADDRESS
+#define APP_DFLT_DEVICE_ADDR    { 0x88, 0x36, 0x61, 0x45, 0x23, 0x01 }
+
+// <h> BLE - Data Length Extension (v4.2)
+#define CFG_DLE_EN
+
 // <h> BLE IP ARCH CONFIGURATION
 #define CFG_BLE_APP
 
@@ -910,17 +933,12 @@ typedef struct
 #define CFG_PRF_HTPT
 #define CFG_PRF_BASS
 #define CFG_PRF_DISS
-//#define CFG_PRF_CSCPS
-#define CFG_PRF_OTA
 #define CFG_PRF_CCPS
-
 
 #define CFG_APP
 #define CFG_APP_HT
 #define BLE_APP_BATT  1
 #define CFG_APP_DIS    1
-//#define CFG_APP_CSCS    1
-#define CFG_APP_OTA
 #define CFG_APP_CCPS
 
 #define CFG_EXT_DB

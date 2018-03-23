@@ -445,6 +445,9 @@ Declaration of static Global Variables & Functions
 // <h> BLE - DEVICE ADDRESS
 #define APP_DFLT_DEVICE_ADDR    { 0xAB, 0x89, 0x67, 0x45, 0x23, 0x01 }
 
+// <h> BLE - Data Length Extension (v4.2)
+#define CFG_DLE_EN
+
 // <h> BLE IP ARCH CONFIGURATION
 #define CFG_BLE_APP
 
@@ -485,19 +488,14 @@ Declaration of static Global Variables & Functions
 
 #define CFG_PRF
 #define CFG_NB_PRF    5
-//#define CFG_PRF_HTPT
 #define CFG_PRF_BASS
 #define CFG_PRF_DISS
-//#define CFG_PRF_CSCPS
-#define CFG_PRF_OTA
+#define CFG_PRF_CCPS
 
 #define CFG_APP
-//#define CFG_APP_HT
 #define BLE_APP_BATT  1
 #define CFG_APP_DIS    1
-//#define CFG_APP_CSCS    1
-#define CFG_APP_OTA
-
+#define CFG_APP_CCPS
 #define CFG_EXT_DB
 //#define CFG_DBG
 
