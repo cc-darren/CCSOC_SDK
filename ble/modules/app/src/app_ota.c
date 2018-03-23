@@ -73,6 +73,7 @@ const static uint8_t bEncKey[OTA_ENC_CODE_SIZE] = {0x86, 0x16, 0x9d, 0xda, 0x59,
 static uint8_t bEncIndex;
 
 // ota buffer:
+uint8_t bOTAEncryptedDataInChunk[OTA_CHUNK_SIZE] __attribute__((aligned(4)));
 uint8_t bOTADataInChunk[OTA_CHUNK_SIZE] __attribute__((aligned(4)));
 
 // config. settings. from peer
@@ -449,7 +450,6 @@ void APP_OTA_MsgHandler(S_App_CC_Messages *msg)
 
                 ota_flash_erase_fw_space();    
 
-
                 TracerInfo("prog_addr: 0x%04x\r\n",    sAppOTAPeerConfig.prog_addr);         
                 TracerInfo("file_size: 0x%04x\r\n",    sAppOTAPeerConfig.file_size);
                 TracerInfo("file_crc: 0x%04x\r\n",     sAppOTAPeerConfig.file_crc);
@@ -458,13 +458,14 @@ void APP_OTA_MsgHandler(S_App_CC_Messages *msg)
                 TracerInfo("enc: %d\r\n",              sAppOTAPeerConfig.enc);                
             }
             else
+            {
                 TracerInfo("chunk_offset: 0x%04x\r\n", sAppOTAPeerConfig.chunk_offset);
+            }
 
             
             
             dwOTADataOffset  = 0;
-            
-            bEncIndex   = ota_get_prog_image_offset() % OTA_ENC_CODE_SIZE;
+            bEncIndex   = (ota_get_prog_image_offset(sAppOTAPeerConfig.chunk_offset) % OTA_ENC_CODE_SIZE);   
 
            
             // Assume OK:
@@ -490,7 +491,14 @@ void APP_OTA_MsgHandler(S_App_CC_Messages *msg)
 
                 data_size = dwOTADataOffset;
 
-                crc = crc32_compute(bOTADataInChunk, data_size, NULL);
+                if(0x01 == sAppOTAPeerConfig.enc)
+                {
+                    crc = crc32_compute(bOTAEncryptedDataInChunk, data_size, NULL);
+                }
+                else
+                {
+                    crc = crc32_compute(bOTADataInChunk, data_size, NULL);
+                }
 
                 TracerInfo("CRC in Chunk: 0x%04x, data_offset: %d\r\n", crc, dwOTADataOffset);
                 
@@ -642,50 +650,62 @@ void APP_OTA_MsgHandler(S_App_CC_Messages *msg)
 static void ota_decrypt_data(uint8_t *buf, uint32_t size)
 {
     
-    for(uint8_t i = 0; i < size; i++)
+    for(uint32_t i = 0; i < size; i++)
     {
+
+        bEncIndex %= OTA_ENC_CODE_SIZE;
+
         buf[i] ^= bEncKey[bEncIndex];
         buf[i] -= bEncIndex;
-        
+
         bEncIndex++;
-        bEncIndex %= OTA_ENC_CODE_SIZE;
+
     }
+
 }
 
 
-void APP_OTA_Image_Write(const uint8_t *raw_data, uint16_t data_size)
+void APP_OTA_Image_Write(const uint8_t *image_data, uint16_t data_size)
 {
 
 
     if((dwOTADataOffset + data_size) <= OTA_CHUNK_SIZE)
     {
 
-        TracerInfo("Rx Raw Data, data_offset: %d\r\n", dwOTADataOffset);
-
+        TracerInfo("Rx Raw Data, data_offset: %d\r\n", dwOTADataOffset);     
+        
 
         if(0x01 == sAppOTAPeerConfig.enc)
         {
-            uint8_t *enc_data;
+            uint8_t *decry_data = (uint8_t*) malloc(data_size);
+
+            if(decry_data == NULL)
+            {
+                TracerInfo("HEAP Size is not enough!\r\n");
                 
+                return;
+            }
+
             TracerInfo("Decrypt Image...\r\n");
+            
+            memcpy(&bOTAEncryptedDataInChunk[dwOTADataOffset], image_data, data_size);               
+            
+            memcpy(decry_data, image_data, data_size);
 
-            enc_data = (uint8_t*) malloc(data_size);
+            ota_decrypt_data(decry_data, data_size);
 
-            memcpy(enc_data, raw_data, data_size);
+            memcpy(&bOTADataInChunk[dwOTADataOffset], decry_data, data_size);
 
-            ota_decrypt_data(enc_data, data_size);
-
-            memcpy(&bOTADataInChunk[dwOTADataOffset], enc_data, data_size);
-
-            free(enc_data);
+            free(decry_data);
         }
-        else        
-            memcpy(&bOTADataInChunk[dwOTADataOffset], raw_data, data_size); 
+        else
+            memcpy(&bOTADataInChunk[dwOTADataOffset], image_data, data_size);         
+
 
         #if 0
         for(uint16_t i = 0; i < data_size; i++)
-        {
-            TracerInfo("0x%02x, ",bOTADataInChunk[dwOTADataOffset + i]);
+        {            
+            TracerInfo("0x%02x, ",image_data[i]);
         }
 
         TracerInfo("\r\n");

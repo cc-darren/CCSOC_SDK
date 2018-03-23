@@ -57,7 +57,7 @@ bool  ota_flash_erase_fw_space(void);
 void  ota_save_chunk_offset(uint32_t offset);
 void  ota_flash_write_chunk_data(uint8_t *pdata, uint32_t data_size);
 void  ota_time_tick_create(void);
-uint32_t  ota_get_prog_image_offset(void);
+uint32_t  ota_get_prog_image_offset(uint32_t chunk_offset);
 uint32_t  ota_get_file_crc(void);
 #endif
 

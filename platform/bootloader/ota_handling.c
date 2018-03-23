@@ -21,8 +21,7 @@
 #define ENTER_OTA_MODE_CODE         (0x404F5441)  // "@OTA"
 #define OTA_IMAGE_VALID_CODE        (0x5613C648)     
 #define FlASH_PAGE_SIZE             (2048)        // in Byte
-//#define ADDRESS_OF_USER_DATA        (0x10039800)
-#define ADDRESS_OF_USER_DATA        (0x1003E800)
+#define ADDRESS_OF_USER_DATA        (0x10039800)
 #define ADDRESS_OF_BL_SETTINGS      (0x1003E800)
 #define END_OF_OTA_ADDRESS          (ADDRESS_OF_USER_DATA)
 
@@ -275,12 +274,10 @@ void  ota_save_chunk_offset(uint32_t offset)
 }
 
 
-uint32_t ota_get_prog_image_offset(void)
+uint32_t  ota_get_prog_image_offset(uint32_t chunk_offset)
 {
 
-    sAppOTALocalConfig.chunk_size = OTA_CHUNK_SIZE;
-
-    return sAppOTALocalConfig.chunk_offset * sAppOTALocalConfig.chunk_size;
+    return chunk_offset * sAppOTALocalConfig.chunk_size;
 }
 
 
