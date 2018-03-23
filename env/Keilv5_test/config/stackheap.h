@@ -36,7 +36,7 @@
 #define _STACKHEAP_H_
 
 #define SYS_STACK_SIZE      0x800
-#define SYS_HEAP_SIZE       0x004
+#define SYS_HEAP_SIZE       0x200
 
 
 #endif //_STACKHEAP_H_
