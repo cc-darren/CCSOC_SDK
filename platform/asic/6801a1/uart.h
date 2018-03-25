@@ -29,8 +29,8 @@
 #define UART_DMA_TX_BYTENUM_MASK      ((0xFF << UART_DMA_TX_BYTENUM_SHIFT) | 0UL)
 #define UART_DMA_RX_BYTENUM_MASK      ((0xFF) | 0UL)
 
-#define UART_DMA_START_ADDR_MASK      ((0xFFFF) | 0UL)
-#define UART_DMA_END_ADDR_MASK        ((0xFFFF) | 0UL)
+#define UART_DMA_START_ADDR_MASK      ((0x3FFFF) | 0UL)
+#define UART_DMA_END_ADDR_MASK        ((0x3FFFF) | 0UL)
 
 #define UART_DMA_ENABLE_BIT           (0x01)
 #define UART_DMA_ENABLE_MASK          (UART_DMA_RX_ENABLE_BIT)

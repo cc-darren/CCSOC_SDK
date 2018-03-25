@@ -78,7 +78,7 @@
 #define SPIM_DMA_ENABLE_BIT                            (1)
 #define SPIM_DMA_ENALBE_MASK                           (SPIM_DMA_ENABLE_BIT << 24)
 
-#define SPIM_DMA_RWADDR_BIT                            (0x1FFFF)
+#define SPIM_DMA_RWADDR_BIT                            (0x3FFFF)
 #define SPIM_DMA_RWADDR_MASK                           (SPIM_DMA_RWADDR_BIT << 0)
 
 typedef struct S_SpiDevice T_SpiDevice;
