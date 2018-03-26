@@ -12,7 +12,7 @@
 /******************************************************************************
 *  Filename:
 *  ---------
-*
+*  test_eflash.c
 *
 *  Project:
 *  --------
@@ -24,7 +24,7 @@
 *
 *  Author:
 *  -------
-*  Blake   (cc-blake)
+*  Mush   (cc-mush)
 *
 *===========================================================================
 *
@@ -33,47 +33,15 @@
 /******************************************************************************
 Head Block of The File
 ******************************************************************************/
-#include <stdio.h>
-#include <string.h>
-#include "ll.h"
-#include "drvi_init.h"
-#include "drvi_gpio.h"
 #include "test.h"
-#if (TEST_AES)
-#include "test_aes.h"
-#endif
-#if (TEST_I2C)
-#include "test_i2c.h"
-#endif
-#if (TEST_SPI)
-#include "test_spi.h"
-#endif
-#if (TEST_UART_LOOPBACK)
-#include "test_uart.h"
-#endif
-#if (TEST_CLOCK)
-#include "test_clock.h"
-#endif
-#if (TEST_MEMRW)
-#include "test_mem.h"
-#endif
-#if (TEST_WKTM)
-#include "test_wktm.h"
-#endif
-#if (TEST_DMIC)
-#include "test_dmic.h"
-#endif
-#if (TEST_DHRYSTONE)
-#include "drvi_wktm.h"
-#include "test_dhrystone.h"
-#endif
+
 #if (TEST_EFLASH)
-#include "test_eflash.h"
-#endif
+
+#include "drvi_eflash.h"
+
 /******************************************************************************
 Declaration of External Variables & Functions
 ******************************************************************************/
-//extern void mem_rw(void);
 
 /******************************************************************************
 Declaration of data structure
@@ -83,76 +51,66 @@ Declaration of data structure
 Declaration of Global Variables & Functions
 ******************************************************************************/
 
+#define EFLASH_PAGE_NUMBER  128         //total numbers of page
+#define EFLASH_PAGE_SIZE   2048         //byte number of a page
+
 /******************************************************************************
 Declaration of static Global Variables & Functions
 ******************************************************************************/
 
-/******************************************************************************
-FUNCTION
-  cc6801_Init
+#define AVALOFF 0x02
 
-DESCRIPTION
-  1. The function implements all the cc6801 modules initialization.
-
-PARAMETERS
-
-RETURNS
-
-******************************************************************************/
-static int cc6801_Init(void)
+void test_eflash(uint32_t dwRepeat,unsigned char *dmaAdr)
 {
-#if (TEST_AES)
-    TEST_AesInit();
-#endif
+    uint32_t *dwPtr;
+    uint32_t dma_flash_waddr;
+    uint32_t ii,jj;
 
-#if (TEST_UART_LOOPBACK)
-    TEST_UartInit();
-#endif
-    
-#if (TEST_DHRYSTONE)
-    NVIC_ClearPendingIRQ(SWT_IF_IRQ);
-    NVIC_EnableIRQ(SWT_IF_IRQ);
-    drvi_wktmStart(SWT_IF_ID);
-#endif
-    return 0;
-}
+    uint32_t failCnt;
+    uint32_t dwRd1,dwRd2;
 
-void TEST_Main(void)
-{
-    cc6801_Init();
+    drvi_EflashInit();
 
-#if (TEST_CLOCK)
-    TEST_DynamicClock(1000);
-#endif
-#if (TEST_MEMRW)
-    TEST_MemRW(10);
-#endif
-#if (TEST_AES)
-    TEST_AesLoop(1000);
-#endif
-#if (TEST_SPI)
-    TEST_SpiRW(1000);
-#endif
-#if (TEST_I2C)
-    TEST_I2cRW(1000);
-#endif
-#if (TEST_UART_LOOPBACK)
-    TEST_UartLoopBack(1000);
-#endif
-#if (TEST_WKTM)
-    TEST_Wktm();
-#endif
-#if (TEST_DMIC)
-    test_dmic();
-#endif
-#if (TEST_DHRYSTONE)
-    while(1)
-    {
-        dhry_main();
+    while (dwRepeat--) {
+
+        drvi_EflashEraseALL();
+
+        //program eflash data
+        dma_flash_waddr = 0x10000000;
+        for (ii=0;ii<EFLASH_PAGE_NUMBER;ii++){
+            //prepare data in dma
+            dwPtr = (uint32_t *)dmaAdr;
+            for (jj=0;jj<(EFLASH_PAGE_SIZE/sizeof(uint32_t));jj++) {
+                *dwPtr = ((dwRepeat+AVALOFF/3)<<24)+((ii+AVALOFF)<<16)+jj;
+                dwPtr++;
+            }
+            drvi_EflashProgram(dma_flash_waddr,dmaAdr,EFLASH_PAGE_SIZE);
+            dma_flash_waddr += EFLASH_PAGE_SIZE;
+        }
+
+        //flush
+        drvi_EflashFlush();
+
+        //check eflash value
+        dma_flash_waddr = 0x10000000;
+        failCnt = 0;
+        for (ii=0;ii<EFLASH_PAGE_NUMBER;ii++) {
+            dwPtr = (uint32_t *)dma_flash_waddr;
+            for (jj=0;jj<(EFLASH_PAGE_SIZE/sizeof(uint32_t));jj++) {
+                dwRd1 = ((dwRepeat+AVALOFF/3)<<24)+((ii+AVALOFF)<<16)+jj;
+
+                dwRd2 = *dwPtr;
+
+                if (dwRd1!= dwRd2) {
+                    failCnt++;
+                }
+                dwPtr++;
+            }
+            dma_flash_waddr += EFLASH_PAGE_SIZE;
+        }
+
     }
-#endif
-#if (TEST_EFLASH)
-    test_eflash(100,(unsigned char *)0x20022000);
-#endif
-
 }
+
+#endif //TEST_EFLASH
+
