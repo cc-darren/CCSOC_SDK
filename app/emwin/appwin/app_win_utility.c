@@ -41,11 +41,8 @@
 #include "app_win_utility.h"
 #include "DIALOG.h"
 #include "tracer.h"
-#ifdef JDI_OLED_ENABLE_208x208
-#include "JDI_LPM010M297B.h"
-#endif
-#ifdef JDI_OLED_ENABLE_176x176
-#include "JDI_LPM013M126A.h"
+#if (MODULE_OLED == OLED_JDI_LPM013M126A) || (MODULE_OLED == OLED_JDI_LPM010M297B)
+#include "JDI_LPM013MXXXX.h"
 #endif
 
 /******************************************************************************
@@ -96,7 +93,7 @@ static void   _AppWinEventHandler(S_AppSchedEvent *tEvent)
          break;
     case APP_WIN_EVENT_CODE_DRAW_WINDOW:
          _tMsg.MsgId = 0x00; // Send NULL event
-         JDI_End_Draw();
+         OLED_JDI_Drv_End_Draw();
          break;
     }
 

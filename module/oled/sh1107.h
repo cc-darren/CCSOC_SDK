@@ -9,6 +9,8 @@
  * from the file.
  */
 
+#if (MODULE_OLED == OLED_SOLOMON_SH1107)
+
 #ifndef _SH1107_SPI_H_
 #define _SH1107_SPI_H_
 
@@ -117,3 +119,5 @@ void sh1107_Sleep(void);
 void sh1107_WakeUp(void);
 
 #endif //_SH1107_SPI_H_
+
+#endif

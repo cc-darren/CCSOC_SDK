@@ -29,6 +29,7 @@
 *===========================================================================/
 *  20170804 Blake initial version
 ******************************************************************************/
+#ifndef EMWIN_ENABLE
 
 #include "font.h"
 #include "sh1107.h"
@@ -265,4 +266,6 @@ void sh1107_DrawBitmap(uint8_t x0, uint8_t y0,uint8_t x1, uint8_t y1,uint8_t BMP
         }
     }
 }
+#endif
+
 

@@ -60,6 +60,8 @@
 //Supported OLED displays
 #define OLED_SOLOMON_SSD1306    0x4001
 #define OLED_SOLOMON_SH1107     0x4002
+#define OLED_JDI_LPM013M126A    0x4003
+#define OLED_JDI_LPM010M297B    0x4004
 #define OLED_NULL               0x4FFF //choose this if OLED is not in using
 
 //Supported PPG sensors

@@ -30,6 +30,8 @@
 *  20170804 Blake initial version
 ******************************************************************************/
 
+#if (MODULE_OLED == OLED_SOLOMON_SH1107)
+
 #include "drvi_spi.h"
 
 #include "sh1107.h"
@@ -211,3 +213,4 @@ void sh1107_WakeUp(void)
     sh1107_SendCommand(0x14);
     sh1107_SendCommand(0xAF);
 }
+#endif

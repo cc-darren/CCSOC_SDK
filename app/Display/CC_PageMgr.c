@@ -1,4 +1,7 @@
 
+
+#ifndef EMWIN_ENABLE
+
 #include <stdint.h>
 #include <stdbool.h>
 #include "project.h"
@@ -967,4 +970,6 @@ uint8_t CC_PageMgr_IsOLEDActive(void)
 {
     return _cIs_OLED_Active;
 }
+
+#endif
 

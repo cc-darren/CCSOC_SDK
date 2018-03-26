@@ -126,6 +126,47 @@
             <HexOffset>0</HexOffset>
             <Oh166RecLen>16</Oh166RecLen>
           </OPTHX>
+          <Simulator>
+            <UseSimulator>0</UseSimulator>
+            <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
+            <RunToMain>1</RunToMain>
+            <RestoreBreakpoints>1</RestoreBreakpoints>
+            <RestoreWatchpoints>1</RestoreWatchpoints>
+            <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
+            <RestoreFunctions>1</RestoreFunctions>
+            <RestoreToolbox>1</RestoreToolbox>
+            <LimitSpeedToRealTime>0</LimitSpeedToRealTime>
+            <RestoreSysVw>1</RestoreSysVw>
+          </Simulator>
+          <Target>
+            <UseTarget>1</UseTarget>
+            <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
+            <RunToMain>1</RunToMain>
+            <RestoreBreakpoints>1</RestoreBreakpoints>
+            <RestoreWatchpoints>1</RestoreWatchpoints>
+            <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
+            <RestoreFunctions>0</RestoreFunctions>
+            <RestoreToolbox>1</RestoreToolbox>
+            <RestoreTracepoints>1</RestoreTracepoints>
+            <RestoreSysVw>1</RestoreSysVw>
+          </Target>
+          <RunDebugAfterBuild>0</RunDebugAfterBuild>
+          <TargetSelection>0</TargetSelection>
+          <SimDlls>
+            <CpuDll></CpuDll>
+            <CpuDllArguments></CpuDllArguments>
+            <PeripheralDll></PeripheralDll>
+            <PeripheralDllArguments></PeripheralDllArguments>
+            <InitializationFile></InitializationFile>
+          </SimDlls>
+          <TargetDlls>
+            <CpuDll></CpuDll>
+            <CpuDllArguments></CpuDllArguments>
+            <PeripheralDll></PeripheralDll>
+            <PeripheralDllArguments></PeripheralDllArguments>
+            <InitializationFile></InitializationFile>
+            <Driver>BIN\UL2CM3.DLL</Driver>
+          </TargetDlls>
         </DebugOption>
         <Utilities>
           <Flash1>
@@ -329,8 +370,6 @@
             <v6LangP>0</v6LangP>
             <vShortEn>1</vShortEn>
             <vShortWch>1</vShortWch>
-            <v6Lto>0</v6Lto>
-            <v6WtE>0</v6WtE>
             <VariousControls>
               <MiscControls>--preinclude ..\..\cfg\project\project.h  --preinclude ..\..\inc\global.h  </MiscControls>
               <Define>FPGA VENUS_WRISTBAND APPLICATION</Define>
@@ -1251,8 +1290,6 @@
                     <v6LangP>0</v6LangP>
                     <vShortEn>0</vShortEn>
                     <vShortWch>0</vShortWch>
-                    <v6Lto>0</v6Lto>
-                    <v6WtE>0</v6WtE>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -1305,8 +1342,6 @@
                     <v6LangP>0</v6LangP>
                     <vShortEn>0</vShortEn>
                     <vShortWch>0</vShortWch>
-                    <v6Lto>0</v6Lto>
-                    <v6WtE>0</v6WtE>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -1318,14 +1353,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>JDI_LPM010M297B.c</FileName>
+              <FileName>JDI_LPM013MXXXX.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\module\oled\JDI_LPM010M297B\JDI_LPM010M297B.c</FilePath>
-            </File>
-            <File>
-              <FileName>JDI_LPM013M126A.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\module\oled\JDI_LPM013M126A\JDI_LPM013M126A.c</FilePath>
+              <FilePath>..\..\module\oled\JDI_LPM013MXXXX\JDI_LPM013MXXXX.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1422,39 +1452,114 @@
           <GroupName>emWin_WindowsApp</GroupName>
           <Files>
             <File>
+              <FileName>app_win_alarmDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_alarmDLG.c</FilePath>
+            </File>
+            <File>
               <FileName>app_win_background.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\app\emWin\appwin\app_win_background.c</FilePath>
             </File>
             <File>
-              <FileName>app_win_ped.c</FileName>
+              <FileName>app_win_batteryDLG.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\appwin\app_win_ped.c</FilePath>
+              <FilePath>..\..\app\emWin\appwin\app_win_batteryDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_blebondingDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_blebondingDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_caroileDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_caroileDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_chargestateDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_chargestateDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_clockDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_clockDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_dbfullDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_dbfullDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_deviceinfoDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_deviceinfoDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_distanceDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_distanceDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_factoryresetDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_factoryresetDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_heartrateDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_heartrateDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_heartratewarningDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_heartratewarningDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_incommingcallDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_incommingcallDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_incommingsmsDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_incommingsmsDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_longsitDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_longsitDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_lowpowerDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_lowpowerDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_pedDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_pedDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_pedgoalDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_pedgoalDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_swimmingDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_swimmingDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_swimmingswitchDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_swimmingswitchDLG.c</FilePath>
             </File>
             <File>
               <FileName>app_win_utility.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\app\emWin\appwin\app_win_utility.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_win_battery.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\appwin\app_win_battery.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_win_deviceInfo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\appwin\app_win_deviceInfo.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_win_heartrate.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\appwin\app_win_heartrate.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_win_clock.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\appwin\app_win_clock.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1498,8 +1603,6 @@
                 <v6LangP>0</v6LangP>
                 <vShortEn>0</vShortEn>
                 <vShortWch>0</vShortWch>
-                <v6Lto>0</v6Lto>
-                <v6WtE>0</v6WtE>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -1567,8 +1670,6 @@
                 <v6LangP>0</v6LangP>
                 <vShortEn>0</vShortEn>
                 <vShortWch>0</vShortWch>
-                <v6Lto>0</v6Lto>
-                <v6WtE>0</v6WtE>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -1717,6 +1818,47 @@
             <HexOffset>0</HexOffset>
             <Oh166RecLen>16</Oh166RecLen>
           </OPTHX>
+          <Simulator>
+            <UseSimulator>0</UseSimulator>
+            <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
+            <RunToMain>1</RunToMain>
+            <RestoreBreakpoints>1</RestoreBreakpoints>
+            <RestoreWatchpoints>1</RestoreWatchpoints>
+            <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
+            <RestoreFunctions>1</RestoreFunctions>
+            <RestoreToolbox>1</RestoreToolbox>
+            <LimitSpeedToRealTime>0</LimitSpeedToRealTime>
+            <RestoreSysVw>1</RestoreSysVw>
+          </Simulator>
+          <Target>
+            <UseTarget>1</UseTarget>
+            <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
+            <RunToMain>1</RunToMain>
+            <RestoreBreakpoints>1</RestoreBreakpoints>
+            <RestoreWatchpoints>1</RestoreWatchpoints>
+            <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
+            <RestoreFunctions>0</RestoreFunctions>
+            <RestoreToolbox>1</RestoreToolbox>
+            <RestoreTracepoints>1</RestoreTracepoints>
+            <RestoreSysVw>1</RestoreSysVw>
+          </Target>
+          <RunDebugAfterBuild>0</RunDebugAfterBuild>
+          <TargetSelection>0</TargetSelection>
+          <SimDlls>
+            <CpuDll></CpuDll>
+            <CpuDllArguments></CpuDllArguments>
+            <PeripheralDll></PeripheralDll>
+            <PeripheralDllArguments></PeripheralDllArguments>
+            <InitializationFile></InitializationFile>
+          </SimDlls>
+          <TargetDlls>
+            <CpuDll></CpuDll>
+            <CpuDllArguments></CpuDllArguments>
+            <PeripheralDll></PeripheralDll>
+            <PeripheralDllArguments></PeripheralDllArguments>
+            <InitializationFile></InitializationFile>
+            <Driver>BIN\UL2CM3.DLL</Driver>
+          </TargetDlls>
         </DebugOption>
         <Utilities>
           <Flash1>
@@ -1920,8 +2062,6 @@
             <v6LangP>1</v6LangP>
             <vShortEn>1</vShortEn>
             <vShortWch>1</vShortWch>
-            <v6Lto>0</v6Lto>
-            <v6WtE>0</v6WtE>
             <VariousControls>
               <MiscControls>--preinclude ..\..\cfg\project\project.h --preinclude ..\..\inc\global.h</MiscControls>
               <Define>FPGA VENUS_WRISTBAND APPLICATION</Define>
@@ -2842,8 +2982,6 @@
                     <v6LangP>0</v6LangP>
                     <vShortEn>0</vShortEn>
                     <vShortWch>0</vShortWch>
-                    <v6Lto>0</v6Lto>
-                    <v6WtE>0</v6WtE>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -2896,8 +3034,6 @@
                     <v6LangP>0</v6LangP>
                     <vShortEn>0</vShortEn>
                     <vShortWch>0</vShortWch>
-                    <v6Lto>0</v6Lto>
-                    <v6WtE>0</v6WtE>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -2909,14 +3045,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>JDI_LPM010M297B.c</FileName>
+              <FileName>JDI_LPM013MXXXX.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\module\oled\JDI_LPM010M297B\JDI_LPM010M297B.c</FilePath>
-            </File>
-            <File>
-              <FileName>JDI_LPM013M126A.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\module\oled\JDI_LPM013M126A\JDI_LPM013M126A.c</FilePath>
+              <FilePath>..\..\module\oled\JDI_LPM013MXXXX\JDI_LPM013MXXXX.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3013,39 +3144,114 @@
           <GroupName>emWin_WindowsApp</GroupName>
           <Files>
             <File>
+              <FileName>app_win_alarmDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_alarmDLG.c</FilePath>
+            </File>
+            <File>
               <FileName>app_win_background.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\app\emWin\appwin\app_win_background.c</FilePath>
             </File>
             <File>
-              <FileName>app_win_ped.c</FileName>
+              <FileName>app_win_batteryDLG.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\appwin\app_win_ped.c</FilePath>
+              <FilePath>..\..\app\emWin\appwin\app_win_batteryDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_blebondingDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_blebondingDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_caroileDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_caroileDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_chargestateDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_chargestateDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_clockDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_clockDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_dbfullDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_dbfullDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_deviceinfoDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_deviceinfoDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_distanceDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_distanceDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_factoryresetDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_factoryresetDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_heartrateDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_heartrateDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_heartratewarningDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_heartratewarningDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_incommingcallDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_incommingcallDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_incommingsmsDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_incommingsmsDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_longsitDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_longsitDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_lowpowerDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_lowpowerDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_pedDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_pedDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_pedgoalDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_pedgoalDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_swimmingDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_swimmingDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_swimmingswitchDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_swimmingswitchDLG.c</FilePath>
             </File>
             <File>
               <FileName>app_win_utility.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\app\emWin\appwin\app_win_utility.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_win_battery.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\appwin\app_win_battery.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_win_deviceInfo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\appwin\app_win_deviceInfo.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_win_heartrate.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\appwin\app_win_heartrate.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_win_clock.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\appwin\app_win_clock.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3089,8 +3295,6 @@
                 <v6LangP>0</v6LangP>
                 <vShortEn>0</vShortEn>
                 <vShortWch>0</vShortWch>
-                <v6Lto>0</v6Lto>
-                <v6WtE>0</v6WtE>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -3243,6 +3447,47 @@
             <HexOffset>0</HexOffset>
             <Oh166RecLen>16</Oh166RecLen>
           </OPTHX>
+          <Simulator>
+            <UseSimulator>0</UseSimulator>
+            <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
+            <RunToMain>1</RunToMain>
+            <RestoreBreakpoints>1</RestoreBreakpoints>
+            <RestoreWatchpoints>1</RestoreWatchpoints>
+            <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
+            <RestoreFunctions>1</RestoreFunctions>
+            <RestoreToolbox>1</RestoreToolbox>
+            <LimitSpeedToRealTime>0</LimitSpeedToRealTime>
+            <RestoreSysVw>1</RestoreSysVw>
+          </Simulator>
+          <Target>
+            <UseTarget>1</UseTarget>
+            <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
+            <RunToMain>0</RunToMain>
+            <RestoreBreakpoints>1</RestoreBreakpoints>
+            <RestoreWatchpoints>1</RestoreWatchpoints>
+            <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
+            <RestoreFunctions>0</RestoreFunctions>
+            <RestoreToolbox>1</RestoreToolbox>
+            <RestoreTracepoints>1</RestoreTracepoints>
+            <RestoreSysVw>1</RestoreSysVw>
+          </Target>
+          <RunDebugAfterBuild>0</RunDebugAfterBuild>
+          <TargetSelection>6</TargetSelection>
+          <SimDlls>
+            <CpuDll></CpuDll>
+            <CpuDllArguments></CpuDllArguments>
+            <PeripheralDll></PeripheralDll>
+            <PeripheralDllArguments></PeripheralDllArguments>
+            <InitializationFile></InitializationFile>
+          </SimDlls>
+          <TargetDlls>
+            <CpuDll></CpuDll>
+            <CpuDllArguments></CpuDllArguments>
+            <PeripheralDll></PeripheralDll>
+            <PeripheralDllArguments></PeripheralDllArguments>
+            <InitializationFile>.\Map_eflash.ini</InitializationFile>
+            <Driver>Segger\JL2CM3.dll</Driver>
+          </TargetDlls>
         </DebugOption>
         <Utilities>
           <Flash1>
@@ -3446,13 +3691,11 @@
             <v6LangP>0</v6LangP>
             <vShortEn>1</vShortEn>
             <vShortWch>1</vShortWch>
-            <v6Lto>0</v6Lto>
-            <v6WtE>0</v6WtE>
             <VariousControls>
               <MiscControls>--preinclude ..\..\cfg\project\project.h  --preinclude ..\..\inc\global.h  </MiscControls>
               <Define>EVB ZEUS_WRISTBAND APPLICATION</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\ble\ip\ble\profiles\htp;..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\cfg;..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app;..\..\platform\asic\6801a0;..\..\platform\bootloader;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\crc32;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\sw_timer;..\..\service\tracer;..\..\service\uart;..\..\service\fds;..\..\algo\CC_Library\Inc;..\..\algo\CC_Library\Src\Inc;..\..\algo\CC_Swimming\Inc;..\..\app\HeartRate;..\..\module\ppg;..\..\ble\modules\app\src;..\..\ble\modules\common\api;..\..\app\Display;..\..\ble\ip\ble\profiles\ota\otac\api;..\..\ble\ip\ble\profiles\ota\otat\api;..\..\ble\ip\ble\profiles\ota;..\..\ble\ip\ble\profiles\ota\otac\src;..\..\ble\ip\ble\profiles\ota\otat\src;..\..\app\DataBase;..\..\app\scheduler;..\..\app\AppService\inc;..\..\app\SensorController\inc;..\..\app\svc_mgr;..\..\ble\ip\ble\profiles\ccps\api;..\..\ble\ip\ble\profiles\ccps\src;..\..\app\ble_mgr;..\..\app\sdk\ble\profiles\ccps;..\..\service\fds;..\..\app\Vibration;..\..\app\utility;.\config;..\..\module\oled\JDI_LPM013M126A;..\..\module\oled\JDI_LPM010M297B;..\..\app\emWin\Config;..\..\app\emWin\Include;..\..\app\emWin\Drv;..\..\app\emWin\GUI_X;..\..\app\emWin\appwin;..\..\ble\ip\ble\profiles\ccps\api;..\..\ble\modules\app\src;..\..\ble\ip\ble\profiles\ccps\src</IncludePath>
+              <IncludePath>..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\ble\ip\ble\profiles\htp;..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\cfg;..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app;..\..\platform\asic\6801a0;..\..\platform\bootloader;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\crc32;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\sw_timer;..\..\service\tracer;..\..\service\uart;..\..\service\fds;..\..\algo\CC_Library\Inc;..\..\algo\CC_Library\Src\Inc;..\..\algo\CC_Swimming\Inc;..\..\app\HeartRate;..\..\module\ppg;..\..\ble\modules\app\src;..\..\ble\modules\common\api;..\..\app\Display;..\..\ble\ip\ble\profiles\ota\otac\api;..\..\ble\ip\ble\profiles\ota\otat\api;..\..\ble\ip\ble\profiles\ota;..\..\ble\ip\ble\profiles\ota\otac\src;..\..\ble\ip\ble\profiles\ota\otat\src;..\..\app\DataBase;..\..\app\scheduler;..\..\app\AppService\inc;..\..\app\SensorController\inc;..\..\app\svc_mgr;..\..\ble\ip\ble\profiles\ccps\api;..\..\ble\ip\ble\profiles\ccps\src;..\..\app\ble_mgr;..\..\app\sdk\ble\profiles\ccps;..\..\service\fds;..\..\app\Vibration;..\..\app\utility;.\config;..\..\app\emWin\Config;..\..\app\emWin\Include;..\..\app\emWin\Drv;..\..\app\emWin\GUI_X;..\..\app\emWin\appwin;..\..\ble\ip\ble\profiles\ccps\api;..\..\ble\modules\app\src;..\..\ble\ip\ble\profiles\ccps\src;..\..\module\oled\JDI_LPM013MXXXX</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -4358,8 +4601,6 @@
                     <v6LangP>0</v6LangP>
                     <vShortEn>0</vShortEn>
                     <vShortWch>0</vShortWch>
-                    <v6Lto>0</v6Lto>
-                    <v6WtE>0</v6WtE>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -4412,8 +4653,6 @@
                     <v6LangP>0</v6LangP>
                     <vShortEn>0</vShortEn>
                     <vShortWch>0</vShortWch>
-                    <v6Lto>0</v6Lto>
-                    <v6WtE>0</v6WtE>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -4435,14 +4674,9 @@
               <FilePath>..\..\module\oled\sh1107_128x32.c</FilePath>
             </File>
             <File>
-              <FileName>JDI_LPM010M297B.c</FileName>
+              <FileName>JDI_LPM013MXXXX.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\module\oled\JDI_LPM010M297B\JDI_LPM010M297B.c</FilePath>
-            </File>
-            <File>
-              <FileName>JDI_LPM013M126A.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\module\oled\JDI_LPM013M126A\JDI_LPM013M126A.c</FilePath>
+              <FilePath>..\..\module\oled\JDI_LPM013MXXXX\JDI_LPM013MXXXX.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4558,39 +4792,114 @@
           <GroupName>emWin_WindowsApp</GroupName>
           <Files>
             <File>
+              <FileName>app_win_alarmDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_alarmDLG.c</FilePath>
+            </File>
+            <File>
               <FileName>app_win_background.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\app\emWin\appwin\app_win_background.c</FilePath>
             </File>
             <File>
-              <FileName>app_win_ped.c</FileName>
+              <FileName>app_win_batteryDLG.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\appwin\app_win_ped.c</FilePath>
+              <FilePath>..\..\app\emWin\appwin\app_win_batteryDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_blebondingDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_blebondingDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_caroileDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_caroileDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_chargestateDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_chargestateDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_clockDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_clockDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_dbfullDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_dbfullDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_deviceinfoDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_deviceinfoDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_distanceDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_distanceDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_factoryresetDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_factoryresetDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_heartrateDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_heartrateDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_heartratewarningDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_heartratewarningDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_incommingcallDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_incommingcallDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_incommingsmsDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_incommingsmsDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_longsitDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_longsitDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_lowpowerDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_lowpowerDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_pedDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_pedDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_pedgoalDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_pedgoalDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_swimmingDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_swimmingDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_swimmingswitchDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_swimmingswitchDLG.c</FilePath>
             </File>
             <File>
               <FileName>app_win_utility.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\app\emWin\appwin\app_win_utility.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_win_battery.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\appwin\app_win_battery.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_win_deviceInfo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\appwin\app_win_deviceInfo.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_win_heartrate.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\appwin\app_win_heartrate.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_win_clock.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\appwin\app_win_clock.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4634,8 +4943,6 @@
                 <v6LangP>0</v6LangP>
                 <vShortEn>0</vShortEn>
                 <vShortWch>0</vShortWch>
-                <v6Lto>0</v6Lto>
-                <v6WtE>0</v6WtE>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -4703,8 +5010,6 @@
                 <v6LangP>0</v6LangP>
                 <vShortEn>0</vShortEn>
                 <vShortWch>0</vShortWch>
-                <v6Lto>0</v6Lto>
-                <v6WtE>0</v6WtE>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>
@@ -4738,7 +5043,7 @@
       <TargetName>EVB_M4f</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060183::V5.06 update 2 (build 183)::ARMCC</pCCUsed>
+      <pCCUsed>5060061::V5.06 update 1 (build 61)::ARMCC</pCCUsed>
       <TargetOption>
         <TargetCommonOption>
           <Device>ARMCM4_FP</Device>
@@ -4853,6 +5158,47 @@
             <HexOffset>0</HexOffset>
             <Oh166RecLen>16</Oh166RecLen>
           </OPTHX>
+          <Simulator>
+            <UseSimulator>0</UseSimulator>
+            <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
+            <RunToMain>1</RunToMain>
+            <RestoreBreakpoints>1</RestoreBreakpoints>
+            <RestoreWatchpoints>1</RestoreWatchpoints>
+            <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
+            <RestoreFunctions>1</RestoreFunctions>
+            <RestoreToolbox>1</RestoreToolbox>
+            <LimitSpeedToRealTime>0</LimitSpeedToRealTime>
+            <RestoreSysVw>1</RestoreSysVw>
+          </Simulator>
+          <Target>
+            <UseTarget>1</UseTarget>
+            <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
+            <RunToMain>1</RunToMain>
+            <RestoreBreakpoints>1</RestoreBreakpoints>
+            <RestoreWatchpoints>1</RestoreWatchpoints>
+            <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
+            <RestoreFunctions>0</RestoreFunctions>
+            <RestoreToolbox>1</RestoreToolbox>
+            <RestoreTracepoints>1</RestoreTracepoints>
+            <RestoreSysVw>1</RestoreSysVw>
+          </Target>
+          <RunDebugAfterBuild>0</RunDebugAfterBuild>
+          <TargetSelection>6</TargetSelection>
+          <SimDlls>
+            <CpuDll></CpuDll>
+            <CpuDllArguments></CpuDllArguments>
+            <PeripheralDll></PeripheralDll>
+            <PeripheralDllArguments></PeripheralDllArguments>
+            <InitializationFile></InitializationFile>
+          </SimDlls>
+          <TargetDlls>
+            <CpuDll></CpuDll>
+            <CpuDllArguments></CpuDllArguments>
+            <PeripheralDll></PeripheralDll>
+            <PeripheralDllArguments></PeripheralDllArguments>
+            <InitializationFile>.\Map_eflash.ini</InitializationFile>
+            <Driver>Segger\JL2CM3.dll</Driver>
+          </TargetDlls>
         </DebugOption>
         <Utilities>
           <Flash1>
@@ -5056,13 +5402,11 @@
             <v6LangP>1</v6LangP>
             <vShortEn>1</vShortEn>
             <vShortWch>1</vShortWch>
-            <v6Lto>0</v6Lto>
-            <v6WtE>0</v6WtE>
             <VariousControls>
               <MiscControls>--preinclude ..\..\cfg\project\project.h --preinclude ..\..\inc\global.h</MiscControls>
               <Define>EVB ZEUS_WRISTBAND APPLICATION</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\ble\ip\ble\profiles\htp;..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\service\tracer;..\..\cfg;..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app;..\..\platform\asic\6801a0;..\..\platform\bootloader;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\crc32;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\sw_timer;..\..\service\uart;..\..\algo\CC_Library\Inc;..\..\algo\CC_Swimming\Inc;..\..\algo\HRM_Library;..\..\app\Display;..\..\app\HeartRate;..\..\module\ppg;..\..\algo\CC_Library\Src\Inc;..\..\ble\modules\app\src;..\..\ble\ip\ble\profiles\ota\otat;..\..\ble\ip\ble\profiles\ota\otat\api;..\..\ble\ip\ble\profiles\ota\otat\src;..\..\app\DataBase;..\..\service\fds;..\..\app\scheduler;..\..\app\SensorController\inc;..\..\app\AppService\inc;..\..\app\svc_mgr;..\..\ble\ip\ble\profiles\ccps\api;..\..\ble\ip\ble\profiles\ccps\src;..\..\app\ble_mgr;..\..\app\sdk\ble\profiles\ccps;..\..\app\sdk\database;..\..\app\DataBase;..\..\app\Vibration;..\..\app\utility;.\config;..\..\module\oled\JDI_LPM013M126A;..\..\module\oled\JDI_LPM010M297B;..\..\app\emWin\Config;..\..\app\emWin\Include;..\..\app\emWin\Drv;..\..\app\emWin\GUI_X;..\..\app\emWin\appwin;..\..\ble\ip\ble\profiles\ccps\api;..\..\ble\modules\app\src;..\..\ble\ip\ble\profiles\ccps\src</IncludePath>
+              <IncludePath>..\..\ble\inc;..\..\ble\ip\ahi\api;..\..\ble\ip\ble\hl\api;..\..\ble\ip\ble\hl\inc;..\..\ble\ip\ble\hl\src\gap;..\..\ble\ip\ble\hl\src\gap\gapc;..\..\ble\ip\ble\hl\src\gap\gapm;..\..\ble\ip\ble\hl\src\gap\smpc;..\..\ble\ip\ble\hl\src\gap\smpm;..\..\ble\ip\ble\hl\src\gatt;..\..\ble\ip\ble\hl\src\gatt\attc;..\..\ble\ip\ble\hl\src\gatt\attm;..\..\ble\ip\ble\hl\src\gatt\atts;..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\ble\ip\ble\hl\src\rwble_hl;..\..\ble\ip\ble\ll\src\em;..\..\ble\ip\ble\ll\src\llc;..\..\ble\ip\ble\ll\src\lld;..\..\ble\ip\ble\ll\src\llm;..\..\ble\ip\ble\ll\src\rwble;..\..\ble\ip\ble\profiles\anp;..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\ble\ip\ble\profiles\anp\anps\api;..\..\ble\ip\ble\profiles\bas\basc\api;..\..\ble\ip\ble\profiles\bas\bass\api;..\..\ble\ip\ble\profiles\blp;..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\ble\ip\ble\profiles\blp\blps\api;..\..\ble\ip\ble\profiles\cpp;..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\ble\ip\ble\profiles\cscp;..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\ble\ip\ble\profiles\dis\disc\api;..\..\ble\ip\ble\profiles\dis\diss\api;..\..\ble\ip\ble\profiles\find;..\..\ble\ip\ble\profiles\find\findl\api;..\..\ble\ip\ble\profiles\find\findt\api;..\..\ble\ip\ble\profiles\glp;..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\ble\ip\ble\profiles\glp\glps\api;..\..\ble\ip\ble\profiles\hogp;..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\ble\ip\ble\profiles\hrp;..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\ble\ip\ble\profiles\htp;..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\ble\ip\ble\profiles\lan;..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\ble\ip\ble\profiles\lan\lans\api;..\..\ble\ip\ble\profiles\pasp;..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\ble\ip\ble\profiles\rscp;..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\ble\ip\ble\profiles\scpp;..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\ble\ip\ble\profiles\tip;..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\ble\ip\ble\profiles\tip\tips\api;..\..\ble\ip\ea\api;..\..\ble\ip\em\api;..\..\ble\ip\hci\api;..\..\ble\modules\app\api;..\..\ble\modules\common\api;..\..\ble\modules\dbg\api;..\..\ble\modules\display\api;..\..\ble\modules\ecc_p256\api;..\..\ble\modules\h4tl\api;..\..\ble\modules\ke\api;..\..\ble\modules\ke\src;..\..\ble\modules\nvds\api;..\..\ble\modules\rf\api;..\..\ble\modules\rwip\api;..\..\service\tracer;..\..\cfg;..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app;..\..\platform\asic\6801a0;..\..\platform\bootloader;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\crc32;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\sw_timer;..\..\service\uart;..\..\algo\CC_Library\Inc;..\..\algo\CC_Swimming\Inc;..\..\algo\HRM_Library;..\..\app\Display;..\..\app\HeartRate;..\..\module\ppg;..\..\algo\CC_Library\Src\Inc;..\..\ble\modules\app\src;..\..\ble\ip\ble\profiles\ota\otat;..\..\ble\ip\ble\profiles\ota\otat\api;..\..\ble\ip\ble\profiles\ota\otat\src;..\..\app\DataBase;..\..\service\fds;..\..\app\scheduler;..\..\app\SensorController\inc;..\..\app\AppService\inc;..\..\app\svc_mgr;..\..\ble\ip\ble\profiles\ccps\api;..\..\ble\ip\ble\profiles\ccps\src;..\..\app\ble_mgr;..\..\app\sdk\ble\profiles\ccps;..\..\app\sdk\database;..\..\app\DataBase;..\..\app\Vibration;..\..\app\utility;.\config;..\..\app\emWin\Config;..\..\app\emWin\Include;..\..\app\emWin\Drv;..\..\app\emWin\GUI_X;..\..\app\emWin\appwin;..\..\ble\ip\ble\profiles\ccps\api;..\..\ble\modules\app\src;..\..\ble\ip\ble\profiles\ccps\src;..\..\module\oled\JDI_LPM013MXXXX</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -5968,8 +6312,6 @@
                     <v6LangP>0</v6LangP>
                     <vShortEn>0</vShortEn>
                     <vShortWch>0</vShortWch>
-                    <v6Lto>0</v6Lto>
-                    <v6WtE>0</v6WtE>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -6022,8 +6364,6 @@
                     <v6LangP>0</v6LangP>
                     <vShortEn>0</vShortEn>
                     <vShortWch>0</vShortWch>
-                    <v6Lto>0</v6Lto>
-                    <v6WtE>0</v6WtE>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -6045,14 +6385,9 @@
               <FilePath>..\..\module\oled\sh1107_128x32.c</FilePath>
             </File>
             <File>
-              <FileName>JDI_LPM010M297B.c</FileName>
+              <FileName>JDI_LPM013MXXXX.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\module\oled\JDI_LPM010M297B\JDI_LPM010M297B.c</FilePath>
-            </File>
-            <File>
-              <FileName>JDI_LPM013M126A.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\module\oled\JDI_LPM013M126A\JDI_LPM013M126A.c</FilePath>
+              <FilePath>..\..\module\oled\JDI_LPM013MXXXX\JDI_LPM013MXXXX.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -6168,39 +6503,114 @@
           <GroupName>emWin_WindowsApp</GroupName>
           <Files>
             <File>
+              <FileName>app_win_alarmDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_alarmDLG.c</FilePath>
+            </File>
+            <File>
               <FileName>app_win_background.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\app\emWin\appwin\app_win_background.c</FilePath>
             </File>
             <File>
-              <FileName>app_win_ped.c</FileName>
+              <FileName>app_win_batteryDLG.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\appwin\app_win_ped.c</FilePath>
+              <FilePath>..\..\app\emWin\appwin\app_win_batteryDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_blebondingDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_blebondingDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_caroileDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_caroileDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_chargestateDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_chargestateDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_clockDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_clockDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_dbfullDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_dbfullDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_deviceinfoDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_deviceinfoDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_distanceDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_distanceDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_factoryresetDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_factoryresetDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_heartrateDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_heartrateDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_heartratewarningDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_heartratewarningDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_incommingcallDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_incommingcallDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_incommingsmsDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_incommingsmsDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_longsitDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_longsitDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_lowpowerDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_lowpowerDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_pedDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_pedDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_pedgoalDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_pedgoalDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_swimmingDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_swimmingDLG.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_win_swimmingswitchDLG.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\app\emWin\appwin\app_win_swimmingswitchDLG.c</FilePath>
             </File>
             <File>
               <FileName>app_win_utility.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\app\emWin\appwin\app_win_utility.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_win_battery.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\appwin\app_win_battery.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_win_deviceInfo.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\appwin\app_win_deviceInfo.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_win_heartrate.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\appwin\app_win_heartrate.c</FilePath>
-            </File>
-            <File>
-              <FileName>app_win_clock.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\emWin\appwin\app_win_clock.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -6244,8 +6654,6 @@
                 <v6LangP>0</v6LangP>
                 <vShortEn>0</vShortEn>
                 <vShortWch>0</vShortWch>
-                <v6Lto>0</v6Lto>
-                <v6WtE>0</v6WtE>
                 <VariousControls>
                   <MiscControls></MiscControls>
                   <Define></Define>

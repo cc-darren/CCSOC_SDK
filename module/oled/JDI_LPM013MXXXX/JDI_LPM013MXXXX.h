@@ -9,19 +9,19 @@
  * from the file.
  */
 
-#ifdef JDI_OLED_ENABLE_176x176
+#ifdef EMWIN_ENABLE
+#if ((MODULE_OLED == OLED_JDI_LPM013M126A) || (MODULE_OLED == OLED_JDI_LPM010M297B))
 
 #ifndef _JDI_LCD_DRV_
 #define _JDI_LCD_DRV_
 
 #include "global.h"
 
-void JDI_LCD_Init(void);
-void JDI_Demo(void);
-void JDI_Start_Draw(void);
-void JDI_End_Draw(void);
-void JDI_PutPixel(uint8_t xPhys, uint8_t yPhys, uint8_t PixelIndex);
-unsigned int JDI_GetPixel(uint8_t xPhys, uint8_t yPhys);
+void OLED_JDI_Drv_Init(void);
+void OLED_JDI_Drv_Start_Draw(void);
+void OLED_JDI_Drv_End_Draw(void);
+void OLED_JDI_Drv_PutPixel(uint8_t xPhys, uint8_t yPhys, uint8_t PixelIndex);
+unsigned int OLED_JDI_Drv_GetPixel(uint8_t xPhys, uint8_t yPhys);
 
 void JDI_Demo(void);
 
@@ -30,3 +30,4 @@ void JDI_Demo(void);
 
 #endif
 
+#endif

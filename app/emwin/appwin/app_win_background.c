@@ -24,16 +24,24 @@ const fpApp_Window APP_WM_TABLE[APP_WIMODW_INDEX_MAX] = {
 													APP_WM_PED,
 													APP_WM_HEARTRATE,
 													APP_WM_BATTERY,
+													APP_WM_DISTANCE,
+													APP_WM_CAROILE,
+													APP_WM_SWIMMING,
 													APP_WM_DEVICEINFO,
 													NULL,
 													APP_WM_ENDOFWIN
 													 };
 
 
+fpApp_Window APP_WM_NOITFY_TABLE[E_WIN_NOTIFY_MAX] = { 0 };
+uint8_t g_aWm_Conut = 0;
+
 typedef struct S_WindowIdx{
     int32_t dwCurWinIdx;
     int32_t dwPreWinIdx;
 }S_WinIdx;
+
+
 
 #define APP_WIN_HANDLE_MAX            1
 WM_HWIN hActiveWindow[APP_WIN_HANDLE_MAX];
@@ -50,6 +58,7 @@ static int _APP_Win_Launch_NewWindow(void)
     }
 
 	hActiveWindow[0] = APP_WM_TABLE[sWinData.dwCurWinIdx]();
+    //JDI_Set_All_ScreenFlag(true);
 	if (0 == hActiveWindow[0])
 		return -1;
 	return bRet;
@@ -164,9 +173,8 @@ void MainTask(void)
 {
     APP_WIN_HookScheduler();
 
-    APP_SVCMGR_Init();
+    //APP_SVCMGR_Init();
     APP_SVCMGR_PostEvent_PedoRequest(ENABLE);
-
 
     APP_WIM_CreateTimer();
 	WM_SetCallback(WM_HBKWIN, _cbBackGround);

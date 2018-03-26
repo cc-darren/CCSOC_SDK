@@ -40,6 +40,7 @@
 
 #include "ll.h"
 #include "drvi_init.h"
+#include "drvi_gpio.h"
 #include "tracer.h"
 
 #include "sw_timer.h"
@@ -104,11 +105,9 @@
 #include "WM.h"
 #include "app_win_utility.h"
 #include "GUIDRV_Template.h"
-#ifdef JDI_OLED_ENABLE_208x208
-#include "JDI_LPM010M297B.h"
-#endif
-#ifdef JDI_OLED_ENABLE_176x176
-#include "JDI_LPM013M126A.h"
+
+#if (MODULE_OLED == OLED_JDI_LPM013M126A) || (MODULE_OLED == OLED_JDI_LPM010M297B)
+#include "JDI_LPM013MXXXX.h"
 #endif
 #endif
 
@@ -2158,6 +2157,7 @@ static void _sensor_power_down_mag(void)
 }
 #endif
 
+#ifndef EMWIN_ENABLE
 #ifdef PEDO_EN
 static void _sensor_algorithm_liftarm_proc()
 {
@@ -2225,7 +2225,7 @@ static void _sensor_algorithm_liftarm_proc()
     }
 
 }
-
+#endif
 
 
 uint32_t g_dwLapCnt =0;
@@ -2903,7 +2903,7 @@ void CC_SYS_FactoryReset_Handler(void)
 #endif
 
 
-
+#ifndef EMWIN_ENABLE
 bool _app_scheduler(void)
 {
 
@@ -3466,7 +3466,7 @@ bool _app_scheduler(void)
 
     return _bScheduleOperating;
 }
-
+#endif
 
 
 
@@ -3578,8 +3578,10 @@ void    _PeripheralInit(void)
         drvi_RequestIrq(HRM_INT_PIN, HRM_int_handler, IRQ_TYPE_EDGE_FALLING);
     #endif
 
+    #ifndef EMWIN_ENABLE
     app_displayoled_init();
     app_displayoled_start();
+    #endif
 }
 
 /******************************************************************************
@@ -3633,7 +3635,7 @@ int    venus_main(void)
         #ifndef JDI_DRAW_WIHTTIMER
         if ( true == APP_Gui_Get_DrawFlag())
         {
-          JDI_End_Draw();
+          OLED_JDI_Drv_End_Draw();
           APP_Gui_Set_DrawFlag(false);
         }
         #endif

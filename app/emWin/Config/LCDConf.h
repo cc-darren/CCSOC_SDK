@@ -50,17 +50,17 @@ Purpose     : Display driver configuration file
 // Physical display size
 //
 
-#ifdef JDI_OLED_ENABLE_208x208
-#define XSIZE_PHYS    104//208
-#define YSIZE_PHYS    208//104
-#define VXSIZE_PHYS   208
-#define VYSIZE_PHYS   208
-#endif
-#ifdef JDI_OLED_ENABLE_176x176
+
+#if (MODULE_OLED == OLED_JDI_LPM013M126A)
 #define XSIZE_PHYS    88 //176
 #define YSIZE_PHYS    176//88
 #define VXSIZE_PHYS   176
 #define VYSIZE_PHYS   176
+#elif (MODULE_OLED == OLED_JDI_LPM010M297B)
+#define XSIZE_PHYS    104//208
+#define YSIZE_PHYS    208//104
+#define VXSIZE_PHYS   208
+#define VYSIZE_PHYS   208
 #endif
 
 

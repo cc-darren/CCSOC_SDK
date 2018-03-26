@@ -35,12 +35,12 @@
 *
 **********************************************************************
 */
-#define ID_WINDOW_0 (GUI_ID_USER + 0x00)
-#define ID_TEXT_0 (GUI_ID_USER + 0x01)
-#define ID_IMAGE_0 (GUI_ID_USER + 0x02)
-#define ID_TEXT_1 (GUI_ID_USER + 0x03)
+#define ID_WINDOW_0     (GUI_ID_USER + 0x00)
+#define ID_TEXT_0     (GUI_ID_USER + 0x01)
+#define ID_IMAGE_0     (GUI_ID_USER + 0x02)
+#define ID_TEXT_1     (GUI_ID_USER + 0x03)
 
-#define ID_IMAGE_0_IMAGE_0 0x00
+#define ID_IMAGE_0_IMAGE_0     0x00
 
 // USER START (Optionally insert additional defines)
 static int TimeD = 0;
@@ -146,10 +146,10 @@ static const U8 _acImage_0[3318] = {
 *       _aDialogCreate
 */
 static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
-  { WINDOW_CreateIndirect, "Win_Ped", ID_WINDOW_0, 0, 0, 176, 176, 0, 0x0, 0 },
-  { TEXT_CreateIndirect, "Text_Ped", ID_TEXT_0, 0, 20, 176, 40, 0, 0x64, 0 },
-  { IMAGE_CreateIndirect, "Image", ID_IMAGE_0, 4, 80, 80, 80, 0, 0, 0 },
-  { TEXT_CreateIndirect, "Text", ID_TEXT_1, 92, 80, 80, 80, 0, 0x64, 0 },
+  { WINDOW_CreateIndirect, "app_win_ped", ID_WINDOW_0, 0, 0, 176, 176, 0, 0x0, 0 },
+  { TEXT_CreateIndirect, "Text_Ped", ID_TEXT_0, 0, 20, 176, 31, 0, 0x64, 0 },
+  { IMAGE_CreateIndirect, "Image_Ped", ID_IMAGE_0, 4, 80, 80, 80, 0, 0, 0 },
+  { TEXT_CreateIndirect, "Text_PedCnt", ID_TEXT_1, 92, 80, 80, 80, 0, 0x64, 0 },
   // USER START (Optionally insert additional widgets)
   // USER END
 };
@@ -191,7 +191,7 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
   switch (pMsg->MsgId) {
   case WM_INIT_DIALOG:
     //
-    // Initialization of 'Win_Ped'
+    // Initialization of 'app_win_ped'
     //
     hItem = pMsg->hWin;
     WINDOW_SetBkColor(hItem, GUI_MAKE_COLOR(0x00000000));
@@ -204,18 +204,18 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
     TEXT_SetFont(hItem, GUI_FONT_32B_ASCII);
     TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x0040FF00));
     //
-    // Initialization of 'Image'
+    // Initialization of 'Image_Ped'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_IMAGE_0);
     pData = _GetImageById(ID_IMAGE_0_IMAGE_0, &FileSize);
     IMAGE_SetBMP(hItem, pData, FileSize);
     //
-    // Initialization of 'Text'
+    // Initialization of 'Text_PedCnt'
     //
     hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_1);
     TEXT_SetText(hItem, "--");
     TEXT_SetTextAlign(hItem, GUI_TA_LEFT | GUI_TA_VCENTER);
-    TEXT_SetFont(hItem, GUI_FONT_D48);
+    TEXT_SetFont(hItem, GUI_FONT_32B_ASCII);
     TEXT_SetTextColor(hItem, GUI_MAKE_COLOR(0x0040FF00));
     // USER START (Optionally insert additional code for further widget initialization)
     // USER END
@@ -265,10 +265,10 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
 */
 /*********************************************************************
 *
-*       CreateWin_Ped
+*       Createapp_win_ped
 */
-WM_HWIN CreateWin_Ped(void);
-WM_HWIN CreateWin_Ped(void) {
+WM_HWIN Createapp_win_ped(void);
+WM_HWIN Createapp_win_ped(void) {
   WM_HWIN hWin;
 
   hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
@@ -281,7 +281,7 @@ WM_HWIN CreateWindow_Ped(void) {
 	WM_HWIN hWin;
 
 	hWin = GUI_CreateDialogBox(_aDialogCreate, GUI_COUNTOF(_aDialogCreate), _cbDialog, WM_HBKWIN, 0, 0);
-	WM_CreateTimer(hWin, 0, 100, 0);
+	//WM_CreateTimer(hWin, 0, 100, 0);
 	TimeD = 0;
 	return hWin;
 }

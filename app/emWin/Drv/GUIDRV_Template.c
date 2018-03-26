@@ -58,11 +58,9 @@ Purpose     : Template driver, could be used as starting point for new
 #include "sw_timer.h"
 #include "app_win_utility.h"
 #endif
-#ifdef JDI_OLED_ENABLE_208x208
-#include "JDI_LPM010M297B.h"
-#endif
-#ifdef JDI_OLED_ENABLE_176x176
-#include "JDI_LPM013M126A.h"
+
+#if (MODULE_OLED == OLED_JDI_LPM013M126A) || (MODULE_OLED == OLED_JDI_LPM010M297B)
+#include "JDI_LPM013MXXXX.h"
 #endif
 
 /*********************************************************************
@@ -214,7 +212,7 @@ static void _SetPixelIndex(GUI_DEVICE * pDevice, int x, int y, LCD_PIXELINDEX Pi
       if (PixelIndex == 0x04)
           TracerInfo("== draw wedget Red ==\r\n");
       #endif
-      JDI_PutPixel(xPhys,yPhys,PixelIndex);
+      OLED_JDI_Drv_PutPixel(xPhys,yPhys,PixelIndex);
     }
     #if (LCD_MIRROR_X == 0) && (LCD_MIRROR_Y == 0) && (LCD_SWAP_XY == 0)
       #undef xPhys
@@ -258,7 +256,7 @@ static LCD_PIXELINDEX _GetPixelIndex(GUI_DEVICE * pDevice, int x, int y) {
       //
       // TBD by customer...
       //
-      PixelIndex = JDI_GetPixel(xPhys, yPhys);
+      PixelIndex = OLED_JDI_Drv_GetPixel(xPhys, yPhys);
       //PixelIndex = 0;
     }
     #if (LCD_MIRROR_X == 0) && (LCD_MIRROR_Y == 0) && (LCD_SWAP_XY == 0)

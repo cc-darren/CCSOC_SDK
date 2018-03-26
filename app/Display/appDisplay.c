@@ -9,6 +9,8 @@
  * from the file.
  */
 
+#ifndef EMWIN_ENABLE
+
 #include <stdio.h>
 #include <string.h>
 #include "appDisplay.h"
@@ -234,4 +236,6 @@ void app_displayoled_changestate(E_OLED_PWRSTATE e_nxState,char state)
     f_displayoled()->ePwr_nextstate = e_nxState;
     f_displayoled()->remote_turnon = state;
 }
+#endif
+
 

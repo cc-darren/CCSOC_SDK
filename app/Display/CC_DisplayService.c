@@ -1,4 +1,6 @@
 
+#ifndef EMWIN_ENABLE
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -814,5 +816,6 @@ void CC_Dsp_Srv_Reflash_Screen(void)
     
 }
 
+#endif
 
 

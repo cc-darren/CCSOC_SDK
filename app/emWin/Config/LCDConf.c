@@ -46,12 +46,8 @@ Purpose     : Display controller configuration (single layer)
 #include "GUIDRV_Template.h"
 #include "LCDConf.h"
 #ifndef WIN32
-  #ifdef JDI_OLED_ENABLE_208x208
-  #include "JDI_LPM010M297B.h"
-#endif
-
-  #ifdef JDI_OLED_ENABLE_176x176
-  #include "JDI_LPM013M126A.h"
+#if ((MODULE_OLED == OLED_JDI_LPM013M126A) || (MODULE_OLED == OLED_JDI_LPM010M297B))
+#include "JDI_LPM013MXXXX.h"
   #endif
 #include "Tracer.h"
 #endif
@@ -160,7 +156,7 @@ const LCD_API_COLOR_CONV LCD_API_ColorConv_User = {
 */
 #ifndef WIN32
 static void _InitController(void) {
-    JDI_LCD_Init();
+    OLED_JDI_Drv_Init();
 
     #ifdef JDI_DRAW_WIHTTIMER
     GUIDRV_DrawWindow_CreateTimer();

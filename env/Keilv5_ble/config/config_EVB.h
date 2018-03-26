@@ -65,28 +65,14 @@ Head Block of The File
 ***************************************************/
 #define ASIC                    CC6801
 
-// EMWIN AND JDI
-#define nEMWIN_ENABLE
-
-#ifdef EMWIN_ENABLE
-#define JDI_OLED_176x176
-#define nJDI_OLED_208x208
-
-#ifdef JDI_OLED_176x176
-#define JDI_OLED_ENABLE_176x176
-#endif
-#ifdef JDI_OLED_208x208
-#define JDI_OLED_ENABLE_208x208
-#endif
-
-#define JDI_DRAW_WIHTTIMER
-#endif
-
 //find and include project options from the asic you chose
 #include "asic_options.h"
 
 
 /************Add sub-options of this ASIC****************/
+
+// EMWIN AND JDI
+#define nEMWIN_ENABLE
 
 //define SPI clock
 //define I2C clock
@@ -151,7 +137,7 @@ Head Block of The File
 
 
 
-#ifndef EMWIN_ENABLE
+
 /**************************************************
 *   Choose OLED model and config OLED interface
 *   (pick one GYRO sensor from module_supported.h)
@@ -163,12 +149,12 @@ Head Block of The File
 *   OLED_IF_TYPE : the OLED interface type
 *   OLED_IF_ID   : the OLED interface id
 ***************************************************/
+#ifndef EMWIN_ENABLE
 #define MODULE_OLED             OLED_SOLOMON_SH1107
-#define OLED_IF                 UseInterface(SPI,2)
 #else
-#define MODULE_OLED              OLED_SOLOMON_SH1107//OLED_JDI_LPM010M297B
-#define OLED_IF                 UseInterface(SPI,2)
+#define MODULE_OLED             OLED_JDI_LPM013M126A
 #endif
+#define OLED_IF                 UseInterface(SPI,2)
 
 /**************************************************
 *   Choose PPG model and config PPG interface
@@ -477,6 +463,9 @@ Declaration of static Global Variables & Functions
 #define DEVICE_MODEL "Z E U S"
 #define SDK_FW_VERSION "v0.000.004"
 
+#ifdef EMWIN_ENABLE
+#define JDI_DRAW_WIHTTIMER
+#endif
 
 #define SLEEP_EN
 #define LONGSIT_EN

@@ -217,6 +217,12 @@
     #elif (MODULE_OLED == OLED_SOLOMON_SH1107)
       #define OLED_HEADER sh1107
 
+    #elif (MODULE_OLED == OLED_JDI_LPM013M126A)
+      #define OLED_HEADER JDI_LPM013MXXXX
+
+    #elif (MODULE_OLED == OLED_JDI_LPM010M297B)
+      #define OLED_HEADER JDI_LPM010M297B
+
     #elif (MODULE_OLED == OLED_NULL)
       #define OLED_HEADER oled_null
       #undef OLED_IF

@@ -23,6 +23,7 @@
 //#include "pah8002_comm.h"
 #include "ppg_pah8002.h"
 #include "pah8002_api_c.h"
+#include "drvi_gpio.h"
 //#include "CC_drv_gpio.h"
 
 

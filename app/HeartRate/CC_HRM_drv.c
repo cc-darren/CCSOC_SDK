@@ -17,6 +17,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
+#include "drvi_gpio.h"
 
 //#include "LSM6DS3_ACC_GYRO_driver.h"
 #include "cc_db.h"
