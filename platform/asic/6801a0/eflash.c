@@ -39,7 +39,7 @@
 #endif
 
 #ifndef EFLASH_DMAMODE
-#define EFLASH_DMAMODE 1
+#define EFLASH_DMAMODE 0
 #endif
 
 static fpEflash_Callback g_fpEflashCB=NULL;
@@ -121,7 +121,7 @@ void cc6801_EflashInit(void)
 #endif
 }
 
-IN_SYS_RAM_BEGIN
+IN_RET_RAM_BEGIN
 void cc6801_EflashFlush(void) 
 {
     uint32_t tdata;
@@ -131,14 +131,14 @@ void cc6801_EflashFlush(void)
     //setbit(SCU_ICACHE_REG,FLUSH_EN);
     regSCU->dw.cacheBootCtrl |= FLUSH_EN;
     do {
-        //rd(SCU_ICACHE_REG,tdata);
-        tdata = regSCU->dw.cacheBootCtrl;
+        rd(SCU_ICACHE_REG,tdata);
+        //tdata = regSCU->dw.cacheBootCtrl;
     } while((tdata&FLUSH_EN)!=0);
 	
     GLOBAL_INT_START();
 
 }
-IN_SYS_RAM_END
+IN_RET_RAM_END
 
 BOOL cc6801_EflashEraseALL(void)
 {
