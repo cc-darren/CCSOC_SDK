@@ -1187,10 +1187,7 @@ typedef struct
     uint32_t dwInterrupt;
     uint32_t dwCtrl;
     uint32_t dwIndirStart;
-    uint32_t dwProgBuf1;
-    uint32_t dwProgBuf2;
-    uint32_t dwProgBuf3;
-    uint32_t dwProgBuf4;
+    uint32_t dwProgBuf[4];
     uint32_t dwAccessCtrl;
     uint32_t dwRdBuf1;
     uint32_t dwRdBuf2;

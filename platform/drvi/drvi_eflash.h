@@ -12,8 +12,8 @@
 #ifndef _DRVI_EFLASH_H_
 #define _DRVI_EFLASH_H_
 
-#include "project.h"
 #include "eflash.h"
+
 
 __forceinline void drvi_EflashInit(void)
 {
@@ -40,7 +40,10 @@ __forceinline void drvi_EflashRegisterCallback(fpEflash_Callback fpCB)
 {
     cc6801_EflashRegisterCallback(fpCB);
 }
-
+__forceinline void drvi_SecurityProtect(void)
+{
+    cc6801_SecurityProtect();
+}
 /**@brief SoC Events. */
 enum E_DRVI_EFLASH_EVTS
 {

@@ -53,7 +53,6 @@ typedef void (*fpEflash_Callback)(uint32_t sys_evt);
 //#define EF_TIMING6_REG              (EF_ADDR_BASE + 0x0000005c)
 
 //#define EF_DMA_CTRL_REG             (EF_ADDR_BASE + 0x00000060)
-    #define EF_DMA_CTRL_REG_DMAEnable       0x80000000  //31
     #define EF_DMA_CTRL_REG_OPModeWrite     0x00000000  //29~28
     #define EF_DMA_CTRL_REG_DMABurst        0x00008000  //15
 //#define EF_DMA_WADDR_REG            (EF_ADDR_BASE + 0x00000064) //RAM addr to write flash
@@ -66,8 +65,7 @@ BOOL cc6801_EflashEraseALL(void);
 BOOL cc6801_EflashErasePage(uint32_t adr);
 void cc6801_EflashProgram(uint32_t dwEflashAdr,unsigned char * pBufAdr,uint32_t dwBufSize);
 void cc6801_EflashRegisterCallback(fpEflash_Callback fpCB);
-
-#define EFLASH_DMAMODE 0
+void cc6801_SecurityProtect(void);
 
 
 

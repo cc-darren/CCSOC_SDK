@@ -34,8 +34,12 @@
 #include "eflash.h"
 #include <stddef.h>
 
-#if (defined FSTORAGE_ENABLED) && (FSTORAGE_ENABLED)
-#include "fstorage.h"
+#ifndef EFLASH_ASYNCMODE
+#define EFLASH_ASYNCMODE 1
+#endif
+
+#ifndef EFLASH_DMAMODE
+#define EFLASH_DMAMODE 1
 #endif
 
 static fpEflash_Callback g_fpEflashCB=NULL;
@@ -47,56 +51,44 @@ unsigned char * pSrcData;
 uint32_t dwTargetAdr;
 
 void IndirectWrite(void) {
-    uint32_t dwTmplen,dwTmpdata;
-    //if (dwTotalBufSize) {
-        //set eflash address
-        wr(EF_ACCESS_REG,dwTargetAdr<<8);
-    
-        if (dwTotalBufSize>=16) {
-            dwTmplen = 4;
-            dwTotalBufSize -= 16;
-            dwTargetAdr += 16;
-        } else {
-            dwTmplen = ((dwTotalBufSize+3)>>2);
-            dwTotalBufSize=0;
-        }
-        //set eflash length in DW-1
-        wr(EF_CONFIG_REG,((dwTmplen-1)<<16));
-        
-        dwTmpdata = EF_WR_DATA0_REG;
-        while (dwTmplen) {
-            //set eflash data
-            wr(dwTmpdata,*(uint32_t*)pSrcData);
-            dwTmplen--;
-            dwTmpdata+=4;
-            pSrcData+=4;
-        }
-        //set eflash mode to program
-        wr(EF_FLASHMODE_REG, EF_FLASHMODE_REG_AHBEnable|EF_FLASHMODE_REG_ModeMain);//wait eflash status
+    uint32_t dwTmplen;
 
-//        //wait eflash status
-//        do {
-//            rd(EF_INTERRUPT_REG,tdata);
-//        } while( (tdata&(EF_INTERRUPT_REG_EraPrgModeStatus|EF_INTERRUPT_REG_DataModeStatus))==0 );
-//        //clear eflash status
-//        wr(EF_INTERRUPT_REG, tdata);  // clear int status
-    //}
+    //set eflash address
+    regEFLASH->dwIndirStart = (dwTargetAdr<<8);
+
+    if (dwTotalBufSize>=16) {
+        dwTmplen = 4;
+        dwTotalBufSize -= 16;
+        dwTargetAdr += 16;
+    } else {
+        dwTmplen = ((dwTotalBufSize+3)>>2);
+        dwTotalBufSize=0;
+    }
+    //set eflash length in DW-1
+    regEFLASH->dwCtrl = ((dwTmplen-1)<<16);
+
+    while (dwTmplen) {
+        //set eflash data
+        regEFLASH->dwProgBuf[4-dwTmplen] = (*(uint32_t*)pSrcData);
+        dwTmplen--;
+        pSrcData+=4;
+    }
+    //set eflash mode to program
+    regEFLASH->dwAccessCtrl = (EF_FLASHMODE_REG_AHBEnable|EF_FLASHMODE_REG_ModeMain);
 }
-#endif
+#endif //(EFLASH_DMAMODE==0)
 
 void EFLASH_IRQHandler(void)
 {
     uint32_t dwEfIntrSts;
-    rd(EF_INTERRUPT_REG,dwEfIntrSts);
 
-    setbit(EF_INTERRUPT_REG, (EF_INTERRUPT_REG_DMAModeStatus    | \
-                              EF_INTERRUPT_REG_EraPrgModeStatus | \
-                              EF_INTERRUPT_REG_DataModeStatus     \
-                              ));
+    dwEfIntrSts = regEFLASH->dwInterrupt;
+
+    regEFLASH->dwInterrupt |= (EF_INTERRUPT_REG_DMAModeStatus    | EF_INTERRUPT_REG_EraPrgModeStatus | EF_INTERRUPT_REG_DataModeStatus);
 
     if (dwEfIntrSts&(EF_INTERRUPT_REG_DataModeStatus|EF_INTERRUPT_REG_DMAModeStatus)) {
         //write complete
-        #if (EFLASH_DMAMODE==0)
+        #if ((EFLASH_DMAMODE==0) && (EFLASH_ASYNCMODE==1))
         if (dwTotalBufSize)
         {
             IndirectWrite();
@@ -116,19 +108,17 @@ void EFLASH_IRQHandler(void)
             g_fpEflashCB(E_DRVI_EFLASH_OPERATION_SUCCESS);
         }
     }
-
 }
-
 
 void cc6801_EflashInit(void) 
 {
-    wr(EF_INTERRUPT_REG, (EF_INTERRUPT_REG_DMAModeStatus    |   \
-                          EF_INTERRUPT_REG_EraPrgModeStatus |   \
-                          EF_INTERRUPT_REG_DataModeStatus   |   \
-                          EF_INTERRUPT_REG_EraPrgModeEn     |   \
-                          EF_INTERRUPT_REG_DataModeEn));
+#if (EFLASH_ASYNCMODE==1)
     NVIC_ClearPendingIRQ(EFLASH_IRQn);
     NVIC_EnableIRQ(EFLASH_IRQn);
+    regEFLASH->dwInterrupt |= (EF_INTERRUPT_REG_DMAModeStatus | EF_INTERRUPT_REG_EraPrgModeStatus | EF_INTERRUPT_REG_DataModeStatus | EF_INTERRUPT_REG_EraPrgModeEn | EF_INTERRUPT_REG_DataModeEn);
+#else
+    regEFLASH->dwInterrupt |= (EF_INTERRUPT_REG_DMAModeStatus | EF_INTERRUPT_REG_EraPrgModeStatus | EF_INTERRUPT_REG_DataModeStatus);
+#endif
 }
 
 IN_SYS_RAM_BEGIN
@@ -138,9 +128,11 @@ void cc6801_EflashFlush(void)
 	
     GLOBAL_INT_STOP();
 
-    setbit(SCU_ICACHE_REG,FLUSH_EN);
+    //setbit(SCU_ICACHE_REG,FLUSH_EN);
+    regSCU->dw.cacheBootCtrl |= FLUSH_EN;
     do {
-        rd(SCU_ICACHE_REG,tdata);
+        //rd(SCU_ICACHE_REG,tdata);
+        tdata = regSCU->dw.cacheBootCtrl;
     } while((tdata&FLUSH_EN)!=0);
 	
     GLOBAL_INT_START();
@@ -151,93 +143,49 @@ IN_SYS_RAM_END
 BOOL cc6801_EflashEraseALL(void)
 {
 
-#if defined(FPGA) && FPGA
-    for(uint32_t ii=0x10000000;ii<0x10040000;ii+=0x800)
-    {
-        cc6801_EflashErasePage(ii);
-    }
-    return (0);                                  // Finished without Errors
-#else
     /* Add your Code */
     uint32_t tdata;  //32bit
 
     //set efalsh start address at 0
-        wr(EF_ACCESS_REG,0<<8);
+    regEFLASH->dwIndirStart = (0<<8);
 
     //set efalsh mode to mass erase
     tdata = (EF_FLASHMODE_REG_AHBEnable | EF_FLASHMODE_REG_ModeMassErase);
-    wr(EF_FLASHMODE_REG, tdata);
-    
-//    //wait eflash status
-//    do {
-//      rd(EF_INTERRUPT_REG,tdata);
-//    } while( (tdata&(EF_INTERRUPT_REG_EraPrgModeStatus|EF_INTERRUPT_REG_DataModeStatus))==0 );
-    
-//    // clear eflash status
-//    wr(EF_INTERRUPT_REG, tdata);  
-    return (0);                                  // Finished without Errors
+    regEFLASH->dwAccessCtrl = tdata;
+
+#if (EFLASH_ASYNCMODE==0)
+    //wait eflash status
+    do {
+        tdata = regEFLASH->dwInterrupt;
+    } while( (tdata&(EF_INTERRUPT_REG_EraPrgModeStatus|EF_INTERRUPT_REG_DataModeStatus))==0 );
+    EFLASH_IRQHandler();
 #endif
+
+    return (0);                                  // Finished without Errors
 }
 BOOL cc6801_EflashErasePage(uint32_t dwEflashAdr)
 {
-#if defined(FPGA) && FPGA
-    uint32_t tdata;
-    dwEflashAdr &=(0xFFFFF800);
-
-    wr(EF_INTERRUPT_REG, (EF_INTERRUPT_REG_DMAModeStatus    |   \
-                          EF_INTERRUPT_REG_EraPrgModeStatus |   \
-                          EF_INTERRUPT_REG_DataModeStatus   ));
-    for ( uint32_t ii=0;ii<2048;ii+=16)
-    {
-        wr(EF_ACCESS_REG,(dwEflashAdr)<<8);
-        dwEflashAdr+=16;
-        wr(EF_WR_DATA0_REG,0xFFFFFFFF);
-        wr(EF_WR_DATA1_REG,0xFFFFFFFF);
-        wr(EF_WR_DATA2_REG,0xFFFFFFFF);
-        wr(EF_WR_DATA3_REG,0xFFFFFFFF);
-   
-        wr(EF_CONFIG_REG,(3<<16));
-        wr(EF_FLASHMODE_REG, EF_FLASHMODE_REG_AHBEnable|EF_FLASHMODE_REG_ModeMain);//wait eflash status
-        
-        //wait eflash status
-        do {
-            rd(EF_INTERRUPT_REG,tdata);
-        } while( (tdata&(EF_INTERRUPT_REG_EraPrgModeStatus|EF_INTERRUPT_REG_DataModeStatus))==0 );
-    
-        // clear eflash status
-        wr(EF_INTERRUPT_REG, tdata);  
-    }
-    
-    wr(EF_INTERRUPT_REG, (EF_INTERRUPT_REG_DMAModeStatus    |   \
-                          EF_INTERRUPT_REG_EraPrgModeStatus |   \
-                          EF_INTERRUPT_REG_DataModeStatus   |   \
-                          EF_INTERRUPT_REG_EraPrgModeEn     |   \
-                          EF_INTERRUPT_REG_DataModeEn));
-    
-    return (TRUE);                                  // Finished without Errors
-#else
     if (dwEflashAdr & 0x07FF) {
         return FALSE;
     } else {
         uint32_t tdata;  //32bit
 
         //set efalsh start address at 0
-        wr(EF_ACCESS_REG,dwEflashAdr<<8);
+        regEFLASH->dwIndirStart = (dwEflashAdr<<8);
 
         //set efalsh mode to mass erase
         tdata = (EF_FLASHMODE_REG_AHBEnable | EF_FLASHMODE_REG_ModeMainErase);
-        wr(EF_FLASHMODE_REG, tdata);
-    
-//        //wait eflash status
-//        do {
-//            rd(EF_INTERRUPT_REG,tdata);
-//        } while( (tdata&(EF_INTERRUPT_REG_EraPrgModeStatus|EF_INTERRUPT_REG_DataModeStatus))==0 );
-    
-//        // clear eflash status
-//        wr(EF_INTERRUPT_REG, tdata);  
+        regEFLASH->dwAccessCtrl = tdata;
+
+#if (EFLASH_ASYNCMODE==0)
+        //wait eflash status
+        do {
+            tdata = regEFLASH->dwInterrupt;
+        } while( (tdata&(EF_INTERRUPT_REG_EraPrgModeStatus|EF_INTERRUPT_REG_DataModeStatus))==0 );
+        EFLASH_IRQHandler();
+#endif
         return (TRUE);                                  // Finished without Errors
     }
-#endif
 }
 
 void cc6801_EflashRegisterCallback(fpEflash_Callback fpCB)
@@ -247,53 +195,71 @@ void cc6801_EflashRegisterCallback(fpEflash_Callback fpCB)
 
 void cc6801_EflashProgram(uint32_t dwEflashAdr,unsigned char * pBufAdr,uint32_t dwBufSize)
 {
-#if EFLASH_DMAMODE
-    //use cc6801 DMA mode 
+#if (EFLASH_DMAMODE==1)  //use cc6801 DMA mode 
     uint32_t tdata;
-    
+
     //set eflash length in DW-1
-    wr(EF_CONFIG_REG,(((dwBufSize>>2)-1)<<16));
+    regEFLASH->dwCtrl = (((dwBufSize>>2)-1)<<16);
  
     //set eflash dwEflashAdr
-    wr(EF_ACCESS_REG,dwEflashAdr<<8);
+    regEFLASH->dwIndirStart = (dwEflashAdr<<8);
     
     //set eflash mode to program
     /*
     tdata = (EF_FLASHMODE_REG_AHBEnable | EF_FLASHMODE_REG_DMAChannel | EF_FLASHMODE_REG_ModeMain);
-    wr(EF_FLASHMODE_REG, tdata);
+    wr(regEFLASH->dwAccessCtrl, tdata);
     */
     //set dma write address
     tdata = dwEflashAdr;
-    wr(EF_DMA_WADDR_REG,dwEflashAdr);
+    regEFLASH->dwDmaWrAddr = dwEflashAdr;
     //set dma read address
     tdata = (uint32_t)pBufAdr;
-    wr(EF_DMA_RADDR_REG,tdata);
+    regEFLASH->dwDmaRdAddr = tdata;
     
     //set dma control
     dwBufSize--;
-    tdata = (EF_DMA_CTRL_REG_DMAEnable | EF_DMA_CTRL_REG_OPModeWrite | dwBufSize<<16 | EF_DMA_CTRL_REG_DMABurst | dwBufSize);
-    wr(EF_DMA_CTRL_REG, tdata);
+    tdata = (EF_DMA_CTRL_REG_OPModeWrite | dwBufSize<<16 | EF_DMA_CTRL_REG_DMABurst | dwBufSize);
+    regEFLASH->dwDmaCtrl = tdata;
     
     //set eflash mode to program
-    
     tdata = (EF_FLASHMODE_REG_AHBEnable | EF_FLASHMODE_REG_DMAChannel | EF_FLASHMODE_REG_ModeMain);
-    wr(EF_FLASHMODE_REG, tdata);
-    
-//    //wait eflash status
-//    do {
-//      rd(EF_INTERRUPT_REG,tdata);
-//    } while( (tdata&(EF_INTERRUPT_REG_EraPrgModeStatus|EF_INTERRUPT_REG_DataModeStatus))==0 );
-//    //clear eflash status
-//    wr(EF_INTERRUPT_REG, tdata);  // clear int status
-#else
+    regEFLASH->dwAccessCtrl = tdata;
+
+#if (EFLASH_ASYNCMODE==0)
+    //wait eflash status
+    do {
+        tdata = regEFLASH->dwInterrupt;
+    } while( (tdata&(EF_INTERRUPT_REG_EraPrgModeStatus|EF_INTERRUPT_REG_DataModeStatus))==0 );
+    EFLASH_IRQHandler();
+#endif
+
+#else //EFLASH_DMAMODE
 
     dwTotalBufSize = dwBufSize;
     dwProgrammedSize = 0;
     pSrcData = pBufAdr;
     dwTargetAdr = dwEflashAdr;
 
+#if (EFLASH_ASYNCMODE==0)
+    uint32_t tdata;
+
+    while (dwTotalBufSize)
+    {
+        IndirectWrite();
+        do {
+            tdata = regEFLASH->dwInterrupt;
+        } while( (tdata&(EF_INTERRUPT_REG_EraPrgModeStatus|EF_INTERRUPT_REG_DataModeStatus))==0 );
+    }
+    EFLASH_IRQHandler();
+#else
     IndirectWrite();
-
-
 #endif
+
+#endif //EFLASH_DMAMODE
+}
+
+void cc6801_SecurityProtect(void)
+{
+    uint32_t protectval=0x00000000;
+    cc6801_EflashProgram(0x1003FFFC,(unsigned char *)&protectval,4);
 }
