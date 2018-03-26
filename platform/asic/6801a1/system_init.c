@@ -70,6 +70,7 @@ void sys_InitMain (void)
     //Enable all clock and de-assert reset
     regCKGEN->dw.clkEn = 0xFFFFFFFF;
     regCKGEN->dw.swReset = 0xFFFFFFFF;
+    regSCU->dw.cacheBootCtrl |= (1<<18 | 1<<19);    //de-assert software reset for AO and VOICE modules
     regAOCKGEN->clkEn = 0xFFFFFFFF;
     regAOCKGEN->swReset = 0xFFFFFFFF;
     
