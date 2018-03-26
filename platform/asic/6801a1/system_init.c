@@ -63,12 +63,16 @@ void sys_InitMain (void)
     //enable high speed as early as possible
     drvi_ClockSysClkAdjust(g_dwCurrentClock);
     
-    //Set init value, it should be config by driver respectively
-    regCKGEN->dw.clkCfg1 = (0x00000000 | 0<<29 | 1<<21 | 0<<13 | 1<<5);
-    regCKGEN->dw.clkCfg2 = (0x00000000 | 1<<29 | 1<<21 | 1<<13 | 1<<5);
-    regCKGEN->dw.clkCfg3 = (0x00000000 | 1<<29 | 1<<21 | 1<<13 | 1<<5);
-    regCKGEN->dw.clkCfg4 = (0x00000000 | 1<<5);
-
+    //Choose 32K or high frequency
+    regAOCKGEN->clkCfg1 = (0<<13);  //WKT use 32K
+    regAOCKGEN->clkCfg2 = (1<<5);   //PWM use high frequency
+    
+    //Enable all clock and de-assert reset
+    regCKGEN->dw.clkEn = 0xFFFFFFFF;
+    regCKGEN->dw.swReset = 0xFFFFFFFF;
+    regAOCKGEN->clkEn = 0xFFFFFFFF;
+    regAOCKGEN->swReset = 0xFFFFFFFF;
+    
 /******************************/
 /* re-arrange IRQ priority    */
 /******************************/
