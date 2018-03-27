@@ -221,7 +221,7 @@
       #define OLED_HEADER JDI_LPM013MXXXX
 
     #elif (MODULE_OLED == OLED_JDI_LPM010M297B)
-      #define OLED_HEADER JDI_LPM010M297B
+      #define OLED_HEADER JDI_LPM013MXXXX
 
     #elif (MODULE_OLED == OLED_NULL)
       #define OLED_HEADER oled_null
