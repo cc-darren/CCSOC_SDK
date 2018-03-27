@@ -310,7 +310,7 @@ extern "C" {
 /******************************/
 /* cc6801 register definition */
 /******************************/
-typedef union U_regSCU
+typedef volatile union U_regSCU
 {
     struct
     {
@@ -511,7 +511,7 @@ typedef union U_regSCU
     }bf;    //bit-field
 }U_regSCU;
 
-typedef union U_regCKGEN
+typedef volatile union U_regCKGEN
 {
     struct
     {
@@ -629,7 +629,7 @@ typedef union U_regCKGEN
     }bf;    //bit-field
 }U_regCKGEN;
 
-typedef union U_regGPIO
+typedef volatile union U_regGPIO
 {
     struct
     {
@@ -648,7 +648,7 @@ typedef union U_regGPIO
     }dw;    //double word
 }U_regGPIO;
 
-typedef struct
+typedef volatile struct
 {
     uint32_t pad0InEn;
     uint32_t pad1InEn;
@@ -659,7 +659,7 @@ typedef struct
 } S_regGPIOnew;
 
 
-typedef union U_regWDT
+typedef volatile union U_regWDT
 {
     struct
     {
@@ -690,7 +690,7 @@ typedef union U_regWDT
     }bf;    //bit-field
 }U_regWDT;
 
-typedef union U_regPWMWKTM
+typedef volatile union U_regPWMWKTM
 {
     struct
     {
@@ -729,7 +729,7 @@ typedef union U_regPWMWKTM
     }bf;    //bit-field
 }U_regPWMWKTM;
 
-typedef union U_regRTC
+typedef volatile union U_regRTC
 {
     struct
     {
@@ -849,7 +849,7 @@ typedef union U_regRTC
     }bf;    //bit-field
 }U_regRTC;
 
-typedef struct
+typedef volatile struct
 {
     uint32_t i2sClkCtrl;
     uint32_t i2sRxCtrl;
@@ -871,7 +871,7 @@ typedef struct
     uint32_t i2sDmaTxCurrAddr;
 }S_regI2S;
 
-typedef union U_regSPI
+typedef volatile union U_regSPI
 {
     struct
     {
@@ -989,7 +989,7 @@ typedef union U_regUARTDMA
     }bf;    //bit-field
 }U_regUARTDMA;
 
-typedef union U_regUARTCTRL
+typedef volatile union U_regUARTCTRL
 {
     struct
     {
@@ -1082,7 +1082,7 @@ typedef union U_regUARTCTRL
     }bf;    //bit-field
 }U_regUARTCTRL;
 
-typedef struct
+typedef volatile struct
 {
     uint32_t interrupt;
     uint32_t reserved0;
@@ -1093,7 +1093,7 @@ typedef struct
     uint32_t masterCfg;
 }S_regI2C;
 
-typedef struct
+typedef volatile struct
 {
     uint32_t reserved0;
     uint32_t clkCfg1;
@@ -1103,7 +1103,7 @@ typedef struct
     uint32_t swReset;
 }S_regAOCKGEN;
 
-typedef struct
+typedef volatile struct
 {
     uint32_t dwInterrupt;
     uint32_t dwCtrl;
@@ -1127,7 +1127,7 @@ typedef struct
     uint32_t dwDmaRdAddr;
 }S_regEFLASH;
 
-typedef struct
+typedef volatile struct
 {
     uint32_t dwConfig;
     uint32_t dwStatus;
@@ -1146,7 +1146,7 @@ typedef struct
     uint32_t dwRetRamCtrl;
 }S_regHS;
 
-typedef union U_regAES
+typedef volatile union U_regAES
 {
     struct
     {
@@ -1187,19 +1187,19 @@ typedef union U_regAES
     }bf;    //bit-field
 }U_regAES;
 
-typedef struct
+typedef volatile struct
 {
     uint32_t dwInterrupt;
     uint32_t dwDeltaCnt;
     uint32_t dwFineDeltaCnt;
 }S_regCCU;
 
-typedef struct
+typedef volatile struct
 {
     uint32_t none;
 }S_regVMU;
 
-typedef struct
+typedef volatile struct
 {
     //remap control
     uint32_t  padding1:31;
