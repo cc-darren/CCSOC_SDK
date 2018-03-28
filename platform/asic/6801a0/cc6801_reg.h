@@ -841,7 +841,7 @@ typedef volatile union U_regGPIO
     }bf;    //bit-field
 }U_regGPIO;
 
-typedef union U_regUARTDMA
+typedef volatile union U_regUARTDMA
 {
     struct
     {
@@ -1003,65 +1003,16 @@ typedef volatile union U_regUARTCTRL
     }bf;    //bit-field
 }U_regUARTCTRL;
 
-typedef volatile union U_regI2C
+typedef volatile struct
 {
-    struct
-    {
-        uint32_t interrupt;
-        uint32_t reserved0;
-        uint32_t dmaCtrl;
-        uint32_t wAddr;
-        uint32_t rAddr;
-        uint32_t cfg;
-        uint32_t masterCfg;
-    }dw;    //double word
-
-    struct
-    {
-        //I2C interrupt:0x1100
-        uint32_t  dma_done_intr_en:1;
-        uint32_t  i2c_err_ack_intr_en:1;
-        uint32_t  i2c_cd_err_intr_en:1;
-        uint32_t  ms_resync_intr_en:1;
-        uint32_t  reserved0:12;
-        uint32_t  dma_done_intr:1;
-        uint32_t  i2c_err_ack_intr:1;
-        uint32_t  i2c_cd_err_intr:1;
-        uint32_t  ms_resync_done_intr:1;
-        uint32_t  reserved1:12;
-        //I2C Reserved:0x1104
-        uint32_t  reserved2;
-        //I2C DMA control:0x1108
-        uint32_t  wdata_byte_num:12;
-        uint32_t  reserved3:3;
-        uint32_t  dbus_burst:1;
-        uint32_t  rdata_byte_num:12;
-        uint32_t  op_mode:2;
-        uint32_t  reserved4:1;
-        uint32_t  dma_enable:1;
-        //I2C DMA write address:0x110C
-        uint32_t  dma_str_waddr:17;
-        uint32_t  reserved5:15;
-        //I2C DMA read address:0x1110
-        uint32_t  dma_str_raddr:17;
-        uint32_t  reserved6:15;
-        //I2C core configuration:0x1114
-        uint32_t  cfg_core_select:2;
-        uint32_t  cfg_i2c_mask:6;
-        uint32_t  ms_resync_bus:1;
-        uint32_t  reserved7:7;
-        uint32_t  ms_prescaler:12;
-        uint32_t  reserved8:4;
-        //I2C core ms configuration:0x1118
-        uint32_t  ms_addr_16bit:1;
-        uint32_t  ms_addr_en:1;
-        uint32_t  ms_no_stop:1;
-        uint32_t  reserved9:5;
-        uint32_t  ms_slave_addr:7;
-        uint32_t  reserved10:1;
-        uint32_t  ms_word_addr:16;
-    }bf;    //bit-field
-}U_regI2C;
+    uint32_t interrupt;
+    uint32_t reserved0;
+    uint32_t dmaCtrl;
+    uint32_t wAddr;
+    uint32_t rAddr;
+    uint32_t coreCfg;
+    uint32_t masterCfg;
+}S_regI2C;
 
 typedef volatile union U_regSPI
 {
@@ -1269,8 +1220,8 @@ typedef volatile struct
 #define regSPI1         ((U_regSPI         *) SPI1_ADDR_BASE)
 #define regSPI2         ((U_regSPI         *) SPI2_ADDR_BASE)
 #define regRTC          ((U_regRTC         *) RTC_ADDR_BASE)
-#define regI2C0         ((U_regI2C         *) I2C0_ADDR_BASE)
-#define regI2C1         ((U_regI2C         *) I2C1_ADDR_BASE)
+#define regI2C0         ((S_regI2C         *) I2C0_ADDR_BASE)
+#define regI2C1         ((S_regI2C         *) I2C1_ADDR_BASE)
 #define regAES          ((U_regAES         *) AES_ADDR_BASE)
 #define regWDT          ((U_regWDT         *) WDT_ADDR_BASE)
 #define regEFLASH       ((S_regEFLASH      *) EF_ADDR_BASE)

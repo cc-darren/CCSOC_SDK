@@ -920,7 +920,7 @@ typedef volatile union U_regSPI
     }bf;    //bit-field
 }U_regSPI;
 
-typedef union U_regUARTDMA
+typedef volatile union U_regUARTDMA
 {
     struct
     {

@@ -116,7 +116,7 @@
 #define I2C_MSCONFIG_ADDR16_BIT                   (0x01)
 #define I2C_MSCONFIG_ADDR16_MASK                  (I2C_MSCONFIG_ADDR16_BIT << I2C_MSCONFIG_ADDR16_SHIFT)
 
-#define I2C_DMA_RWADDR_BIT                        (0x1FFFF)
+#define I2C_DMA_RWADDR_BIT                        (0x3FFFF)
 #define I2C_DMA_RWADDR_MASK                       (I2C_DMA_RWADDR_BIT << 0)
 
 #define I2C_ERR_NONE        0x00

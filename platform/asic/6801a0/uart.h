@@ -134,10 +134,10 @@ typedef enum
 
 typedef struct
 {
-    void *pDmaReg;
-    void *pCtrlReg;
-    int (*fpUartXfer)(void const * const pReg);
-    int (*fpUartRcvr)(void const * const pReg);
+    U_regUARTDMA  *pDmaReg;
+    U_regUARTCTRL *pCtrlReg;
+    int (*fpUartXfer)(U_regUARTDMA *pReg);
+    int (*fpUartRcvr)(U_regUARTDMA *pReg);
 
     uint8_t *pRxBuffer;
     uint32_t dwRxCount;
