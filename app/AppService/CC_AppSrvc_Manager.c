@@ -474,16 +474,14 @@ E_App_Srv_Err_Code   APP_SVCMGR_Init(void)
 void    APP_SVCMGR_PostEvent_HrRequest(E_AppSvcHrMode eMode, uint8_t bSwitch)
 {
     S_AppSchedEvent     _tEvent;
-    S_AppSvcEvtHrReq   *_ptReq;
-    
+    S_AppSvcEvtHrReq   *_ptReq = ((S_AppSvcEvtHrReq *) &_tEvent.vpData);
+        
     _tEvent.eModuleID     = E_APP_SCHED_MODID_SERVICE_MGR;
     _tEvent.bEventID      = E_APP_SVC_EVENT_HRM_SERVICE_REQUEST;
-    _tEvent.wDataByteSize = sizeof(S_AppSvcEvtHrReq);
-    _tEvent.vpData = ((void *) malloc(_tEvent.wDataByteSize));
+    _tEvent.wDataByteSize = 0;
 
-    _ptReq = (S_AppSvcEvtHrReq*) _tEvent.vpData;
     _ptReq->eHrMode = eMode;
-    _ptReq->bSwitch = bSwitch;    
+    _ptReq->bSwitch = bSwitch;
     
     APP_SCHED_PostEvent(&_tEvent);
 }
@@ -494,15 +492,12 @@ void    APP_SVCMGR_PostEvent_HrRequest(E_AppSvcHrMode eMode, uint8_t bSwitch)
 void    APP_SVCMGR_PostEvent_HrTimeout(E_AppSvcHrTimerID eTimerID)
 {
     S_AppSchedEvent       _tEvent;
-    S_AppSvcEvtTimeout   *_ptTimerout;
-    
+    S_AppSvcEvtTimeout   *_ptTimerout = ((S_AppSvcEvtTimeout *) &_tEvent.vpData);
 
     _tEvent.eModuleID     = E_APP_SCHED_MODID_SERVICE_MGR;
     _tEvent.bEventID      = E_APP_SVC_EVENT_HRM_TIMEOUT;
-    _tEvent.wDataByteSize = sizeof(S_AppSvcEvtTimeout);
-    _tEvent.vpData = ((void *) malloc(_tEvent.wDataByteSize));  
+    _tEvent.wDataByteSize = 0;
 
-    _ptTimerout = (S_AppSvcEvtTimeout*) _tEvent.vpData;
     _ptTimerout->eTimerID = eTimerID;
     
     APP_SCHED_PostEvent(&_tEvent);
@@ -514,15 +509,13 @@ void    APP_SVCMGR_PostEvent_HrTimeout(E_AppSvcHrTimerID eTimerID)
  ******************************************************************************/
 void    APP_SVCMGR_PostEvent_PedoRequest(uint8_t bSwitch)
 {
-    S_AppSchedEvent     _tEvent;
-    S_AppSvcEvtPedoReq   *_ptReq;
-    
+    S_AppSchedEvent       _tEvent;
+    S_AppSvcEvtPedoReq   *_ptReq = ((S_AppSvcEvtPedoReq *) &_tEvent.vpData);
+        
     _tEvent.eModuleID     = E_APP_SCHED_MODID_SERVICE_MGR;
     _tEvent.bEventID      = E_APP_SVC_EVENT_PEDO_SERVICE_REQEST;
-    _tEvent.wDataByteSize = sizeof(S_AppSvcEvtPedoReq);
-    _tEvent.vpData = ((void *) malloc(_tEvent.wDataByteSize));
+    _tEvent.wDataByteSize = 0;
 
-    _ptReq = (S_AppSvcEvtPedoReq*) _tEvent.vpData;
     _ptReq->bSwitch = bSwitch;
     
     APP_SCHED_PostEvent(&_tEvent);
@@ -533,15 +526,13 @@ void    APP_SVCMGR_PostEvent_PedoRequest(uint8_t bSwitch)
  ******************************************************************************/
 void    APP_SVCMGR_PostEvent_SwimRequest(uint8_t bSwitch)
 {
-    S_AppSchedEvent     _tEvent;
-    S_AppSvcEvtSwimReq   *_ptReq;
-    
+    S_AppSchedEvent       _tEvent;
+    S_AppSvcEvtSwimReq   *_ptReq = ((S_AppSvcEvtSwimReq *) &_tEvent.vpData);
+        
     _tEvent.eModuleID     = E_APP_SCHED_MODID_SERVICE_MGR;
     _tEvent.bEventID      = E_APP_SVC_EVENT_SWIM_SERVICE_REQEST;
-    _tEvent.wDataByteSize = sizeof(S_AppSvcEvtSwimReq);
-    _tEvent.vpData = ((void *) malloc(_tEvent.wDataByteSize));
+    _tEvent.wDataByteSize = 0;
 
-    _ptReq = (S_AppSvcEvtSwimReq*) _tEvent.vpData;
     _ptReq->bSwitch = bSwitch;
     
     APP_SCHED_PostEvent(&_tEvent);
