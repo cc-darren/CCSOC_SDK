@@ -67,10 +67,9 @@ void IndirectWrite(void) {
     //set eflash length in DW-1
     regEFLASH->dwCtrl = ((dwTmplen-1)<<16);
 
-    while (dwTmplen) {
+    for (uint32_i ii=0;ii<dwTmplen;ii++) {
         //set eflash data
-        regEFLASH->dwProgBuf[4-dwTmplen] = (*(uint32_t*)pSrcData);
-        dwTmplen--;
+        regEFLASH->dwProgBuf[ii] = (*(uint32_t*)pSrcData);
         pSrcData+=4;
     }
     //set eflash mode to program
@@ -173,7 +172,7 @@ BOOL cc6801_EflashErasePage(uint32_t dwEflashAdr)
         //set efalsh start address at 0
         regEFLASH->dwIndirStart = (dwEflashAdr<<8);
 
-        //set efalsh mode to mass erase
+        //set efalsh mode to page erase
         tdata = (EF_FLASHMODE_REG_AHBEnable | EF_FLASHMODE_REG_ModeMainErase);
         regEFLASH->dwAccessCtrl = tdata;
 

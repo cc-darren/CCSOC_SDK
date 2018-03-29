@@ -67,10 +67,10 @@ void IndirectWrite(void) {
     //set eflash length in DW-1
     regEFLASH->dwCtrl = ((dwTmplen-1)<<16);
 
-    while (dwTmplen) {
+
+    for (uint32_t ii=0;ii<dwTmplen;ii++) {
         //set eflash data
-        regEFLASH->dwProgBuf[4-dwTmplen] = (*(uint32_t*)pSrcData);
-        dwTmplen--;
+        regEFLASH->dwProgBuf[ii] = (*(uint32_t*)pSrcData);
         pSrcData+=4;
     }
     //set eflash mode to program
@@ -131,8 +131,8 @@ void cc6801_EflashFlush(void)
     //setbit(SCU_ICACHE_REG,FLUSH_EN);
     regSCU->dw.cacheBootCtrl |= FLUSH_EN;
     do {
-        rd(SCU_ICACHE_REG,tdata);
-        //tdata = regSCU->dw.cacheBootCtrl;
+        //rd(SCU_ICACHE_REG,tdata);
+        tdata = regSCU->dw.cacheBootCtrl;
     } while((tdata&FLUSH_EN)!=0);
 	
     GLOBAL_INT_START();
