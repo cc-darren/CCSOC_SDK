@@ -15,6 +15,7 @@
 #include "ble_mgr.h"
 #include "ota_handling.h"
 #include "error.h"
+#include "app.h"
 
 
 #define EF_ENTRY(addr)                (addr+4)
@@ -89,7 +90,7 @@ void BootloaderMain(void)
         while(1)
         {
             rwip_schedule();
-            //rwip_detect_disconnect_patch();
+            rwip_detect_disconnect_patch();
             rwip_ignore_ll_conn_param_update_patch();
 
             __WFE();
