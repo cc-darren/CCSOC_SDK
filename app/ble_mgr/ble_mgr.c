@@ -199,8 +199,11 @@ void    APP_BLEMGR_Init(void)
     memset (((void *) 0x20000048), 0, 0x820);   
 
     *((uint32_t *) 0x4000011C) = 0x00000008;
-    //*((uint32_t *) 0x40000104) = (*((uint32_t *) 0x40000104) & 0xFFFFFE0) | 0x04; // if SYSTEM_CLOCK_MHZ: 32MHz
-    *((uint32_t *) 0x40000104) = (*((uint32_t *) 0x40000104) & 0xFFFFFE0) | 0x03; // if SYSTEM_CLOCK_MHZ: 24MHz
+    #if (SYSTEM_CLOCK_MHZ == 24)
+        *((uint32_t *) 0x40000104) = (*((uint32_t *) 0x40000104) & 0xFFFFFE0) | 0x03; // if SYSTEM_CLOCK_MHZ: 24MHz
+    #elif (SYSTEM_CLOCK_MHZ == 32)
+        *((uint32_t *) 0x40000104) = (*((uint32_t *) 0x40000104) & 0xFFFFFE0) | 0x04; // if SYSTEM_CLOCK_MHZ: 32MHz
+    #endif
     
     rwip_init(error);
     
