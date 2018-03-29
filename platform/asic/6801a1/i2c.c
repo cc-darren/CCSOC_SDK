@@ -85,7 +85,7 @@ void I2C1_M_IRQHandler(void)
               I2C_INT_ERROR_ACK_CLEAR_MASK |
               I2C_INT_DMA_DONE_CLEAR_MASK);
 
-    g_tI2cBus[I2C_0].pReg->interrupt |= dwInt;
+    g_tI2cBus[I2C_1].pReg->interrupt |= dwInt;
 
     I2C1_M_INTR = 1;
 }

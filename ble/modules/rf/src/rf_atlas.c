@@ -51,9 +51,11 @@ static void rf_atl_reg_wr (uint16_t addr, uint32_t value);
 #define REG_ATL_WR                rf_atl_reg_wr
 
 // CONFIGURATIONs ==============================================================
+#ifdef FPGA
+#define TC4CC6801
+#else
 #define CC6801_MPW
-//#define TC4CC6801
-
+#endif
 //#define DCDC_MODE
 
 /**

@@ -135,12 +135,23 @@ void    jumptable_check_and_move(void)
 {
 
     uint8_t empty_space[JUMP_TABLE_SIZE];
-
+    #ifdef FPGA
+    uint8_t empty_space2[JUMP_TABLE_SIZE];
+    #endif
+    
     for(uint32_t i = 0; i < JUMP_TABLE_SIZE; i++)
         empty_space[i] = 0xFF;
-
-
+    #ifdef FPGA
+    for(uint32_t i = 0; i < JUMP_TABLE_SIZE; i++)
+        empty_space2[i] = 0x00;
+    #endif
+    
+    #ifdef FPGA
+    if((0x00 == memcmp(empty_space, (uint8_t*)JUMP_TABLE_SWITCH_ADDRESS, JUMP_TABLE_SIZE))
+        ||(0x00 == memcmp(empty_space2, (uint8_t*)JUMP_TABLE_SWITCH_ADDRESS, JUMP_TABLE_SIZE)))
+    #else
     if(0x00 == memcmp(empty_space, (uint8_t*)JUMP_TABLE_SWITCH_ADDRESS, JUMP_TABLE_SIZE))
+    #endif
     {
          drvi_EflashRegisterCallback(jumptable_flash_write_done_callback);
 
@@ -177,7 +188,9 @@ void    APP_BLEMGR_Init(void)
     uint32_t error = 0;
 
     #ifndef BOOTLOADER
+    #ifndef FPGA 
     jumptable_check_and_move();
+    #endif
     #endif
     
     GLOBAL_INT_STOP();
@@ -186,7 +199,8 @@ void    APP_BLEMGR_Init(void)
     memset (((void *) 0x20000048), 0, 0x820);   
 
     *((uint32_t *) 0x4000011C) = 0x00000008;
-    *((uint32_t *) 0x40000104) = (*((uint32_t *) 0x40000104) & 0xFFFFFE0) | 0x04;
+    //*((uint32_t *) 0x40000104) = (*((uint32_t *) 0x40000104) & 0xFFFFFE0) | 0x04; // if SYSTEM_CLOCK_MHZ: 32MHz
+    *((uint32_t *) 0x40000104) = (*((uint32_t *) 0x40000104) & 0xFFFFFE0) | 0x03; // if SYSTEM_CLOCK_MHZ: 24MHz
     
     rwip_init(error);
     
