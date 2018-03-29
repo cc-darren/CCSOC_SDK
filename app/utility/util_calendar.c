@@ -275,8 +275,8 @@ app_date_time_t app_Time_Proc(uint8_t _cnt)
 {
 
   app_time_update(_cnt);    
-//  TracerInfo("System Date %d.%d.%d %d \r\n",m_SystemTime.systime.year,m_SystemTime.systime.month,m_SystemTime.systime.day,m_SystemTime.systime.dayofweek);
-//  TracerInfo("System Clock %d:%d:%d \r\n",m_SystemTime.systime.hours,m_SystemTime.systime.minutes,m_SystemTime.systime.seconds); 
+  //TracerInfo("System Date %d.%d.%d %d \r\n",m_SystemTime.systime.year,m_SystemTime.systime.month,m_SystemTime.systime.day,m_SystemTime.systime.dayofweek);
+  //TracerInfo("System Clock %d:%d:%d \r\n",m_SystemTime.systime.hours,m_SystemTime.systime.minutes,m_SystemTime.systime.seconds); 
   return m_SystemTime.systime;
 
 
