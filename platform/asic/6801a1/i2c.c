@@ -5,7 +5,7 @@
  * STANDARD SOFTWARE LICENSE AGREEMENT.
  *
  * Licensees are granted free, non-transferable use of the information.
- * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed
  * from the file.
  */
 
