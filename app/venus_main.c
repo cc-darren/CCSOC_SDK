@@ -643,6 +643,7 @@ void CC_DB_Force_Execute_Init(uint8_t init_type)
 void CC_DB_Init(uint8_t _bState)
 {
     uint8_t _bFirstInit = 0;
+    
     uint32_t ret = CC_DB_Init_FileRec(&_bFirstInit, _bState);
     TracerInfo("CC_DB_Init_FileRec return = [0x%x]\r\n",ret);
     if (false==_bFirstInit)
@@ -1762,7 +1763,12 @@ uint32_t Get_system_time_ms(void)
 
 static void application_timers_start(void)
 {
-
+    #ifdef CFG_BLE_APP 
+    #ifdef SW_TIMER_BY_KERNEL
+    APP_SW_Timer_Init();
+    #endif
+    #endif
+    
     CC_VENUS_OLEDGeneralOutTimerStart(5000);
 
     sw_timer_start(m_rsc_meas_timer_id, SPEED_AND_CADENCE_MEAS_INTERVAL, NULL);

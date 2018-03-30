@@ -47,5 +47,15 @@ extern void    APP_BLEMGR_Init(void);
  ******************************************************************************/
 const struct rwip_eif_api* rwip_eif_get(uint8_t type);
 
+
+/******************************************************************************
+ * [FUNCTION] APP_SW_Timer_Init
+ *     1. Initialize SW timer 
+ * [ARGUMENT] None.
+ * [RETURN  ] None.
+ ******************************************************************************/
+void    APP_SW_Timer_Init(void);
+
+
 #endif    //(_APP_BLE_MGR_H_)
 

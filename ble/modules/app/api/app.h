@@ -214,6 +214,7 @@ uint8_t appm_get_dev_name(uint8_t* name);
  * @brief Return if the device is currently bonded
  ****************************************************************************************
  */
+void appm_system_reset(void);
 bool app_sec_get_bond_status(void);
 void rwip_ignore_ll_conn_param_update_patch(void);
 void rwip_detect_disconnect_patch(void);

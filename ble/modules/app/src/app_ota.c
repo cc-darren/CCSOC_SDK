@@ -370,7 +370,7 @@ void APP_OTA_MsgHandler(S_App_CC_Messages *msg)
             
             TracerInfo("\r\nRx OTA CMD_START\r\n"); 
 
-            //app_ota_init();
+            app_ota_init();
             
             #ifdef BOOTLOADER
             
@@ -449,13 +449,14 @@ void APP_OTA_MsgHandler(S_App_CC_Messages *msg)
                 ota_clr_image_valid_state();
 
                 ota_flash_erase_fw_space();    
-
+                
                 TracerInfo("prog_addr: 0x%04x\r\n",    sAppOTAPeerConfig.prog_addr);         
                 TracerInfo("file_size: 0x%04x\r\n",    sAppOTAPeerConfig.file_size);
                 TracerInfo("file_crc: 0x%04x\r\n",     sAppOTAPeerConfig.file_crc);
                 TracerInfo("signature: 0x%04x\r\n",    sAppOTAPeerConfig.signature);
                 TracerInfo("chunk_offset: 0x%04x\r\n", sAppOTAPeerConfig.chunk_offset);              
                 TracerInfo("enc: %d\r\n",              sAppOTAPeerConfig.enc);                
+                
             }
             else
             {

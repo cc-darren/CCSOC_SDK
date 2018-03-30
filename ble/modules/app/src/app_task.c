@@ -558,7 +558,7 @@ static int gapc_disconnect_ind_handler(ke_msg_id_t const msgid,
 
     if(true == APP_OTA_RebootIsReady())
     {
-        NVIC_SystemReset();
+        appm_system_reset();
     }
 
     // Go to the ready state

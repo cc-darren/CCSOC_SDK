@@ -42,11 +42,22 @@
 #include "rwble.h"
 #include "app_task.h"
 #include "drvi_eflash.h"
+#include "app.h"
 
 
 /******************************************************************************
  * DEFINITION / CONSTANT / ENUM / TYPE
  ******************************************************************************/
+#pragma push
+#pragma pack(1)
+    
+typedef struct 
+{
+    uint8_t  bd_addr[BD_ADDR_LEN];
+    uint8_t  dev_name[APP_DEVICE_NAME_MAX_LEN];
+} S_NVDS_Device_Info;
+    
+#pragma pop
 
 
 /******************************************************************************
@@ -121,13 +132,13 @@ const struct rwip_eif_api* rwip_eif_get(uint8_t type)
 
 #ifndef BOOTLOADER
 
-volatile static bool bWaitForWriteJumptableDone = false;
+volatile static bool bWaitForWriteFlashDone = false;
 
 
-static void  jumptable_flash_write_done_callback(uint32_t sys_evt)
+static void  flash_write_done_callback(uint32_t sys_evt)
 {
 
-    bWaitForWriteJumptableDone = false;
+    bWaitForWriteFlashDone = false;
 }
 
 
@@ -153,30 +164,67 @@ void    jumptable_check_and_move(void)
     if(0x00 == memcmp(empty_space, (uint8_t*)JUMP_TABLE_SWITCH_ADDRESS, JUMP_TABLE_SIZE))
     #endif
     {
-         drvi_EflashRegisterCallback(jumptable_flash_write_done_callback);
+         drvi_EflashRegisterCallback(flash_write_done_callback);
 
          drvi_EflashInit();
 
 
-         bWaitForWriteJumptableDone = true;
+         bWaitForWriteFlashDone = true;
 
          drvi_EflashErasePage(0);
 
-         while(bWaitForWriteJumptableDone)
+         while(bWaitForWriteFlashDone)
             ;
 
 
-         bWaitForWriteJumptableDone = true;
+         bWaitForWriteFlashDone = true;
          
          drvi_EflashProgram(JUMP_TABLE_SWITCH_ADDRESS, (uint8_t*)jump_table_base, JUMP_TABLE_SIZE);
          
-         while(bWaitForWriteJumptableDone)
+         while(bWaitForWriteFlashDone)
             ;
                   
          drvi_EflashFlush();         
     }
 
 }
+
+
+void  set_nvds_device_info(void)
+{
+    
+
+    uint8_t bd_addr[BD_ADDR_LEN] = APP_DFLT_DEVICE_ADDR;
+    uint8_t dev_name[APP_DFLT_DEVICE_NAME_LEN] = APP_DFLT_DEVICE_NAME;
+    S_NVDS_Device_Info dev_info;
+
+    memcpy(dev_info.bd_addr, bd_addr, BD_ADDR_LEN);
+    memcpy(dev_info.dev_name, dev_name, APP_DFLT_DEVICE_NAME_LEN);
+
+
+    drvi_EflashRegisterCallback(flash_write_done_callback);
+
+    drvi_EflashInit();   
+
+
+    bWaitForWriteFlashDone = true;
+
+    drvi_EflashErasePage(0x1003F000);
+
+    while(bWaitForWriteFlashDone)
+       ;
+
+    bWaitForWriteFlashDone = true;
+
+    drvi_EflashProgram(0x1003F000, (uint8_t*)&dev_info, sizeof(S_NVDS_Device_Info));
+
+    while(bWaitForWriteFlashDone)
+       ;
+
+    
+    drvi_EflashFlush();   
+}
+
 
 #endif
 
@@ -190,6 +238,8 @@ void    APP_BLEMGR_Init(void)
     #ifndef BOOTLOADER
     #ifndef FPGA 
     jumptable_check_and_move();
+
+    set_nvds_device_info();
     #endif
     #endif
     
@@ -208,14 +258,21 @@ void    APP_BLEMGR_Init(void)
     rwip_init(error);
     
     GLOBAL_INT_START();
-    
-    #ifdef SW_TIMER_BY_KERNEL
-        while (APPM_ADVERTISING != ke_state_get(TASK_APP))    
-        {
-            rwip_schedule();
-        }
-    #endif
+
 }
+
+
+#ifdef SW_TIMER_BY_KERNEL
+void    APP_SW_Timer_Init(void)
+{
+
+     while (APPM_ADVERTISING != ke_state_get(TASK_APP))    
+     {
+            rwip_schedule();
+     }
+}
+#endif
+
 
 /******************************************************************************
  * FUNCTION > BLE_IRQHandler

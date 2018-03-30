@@ -26,6 +26,7 @@
 #include "project.h"
 
 #include "rwip_config.h"             // SW configuration
+#include "drvi_wdt.h"
 
 #if (BLE_APP_PRESENT)
 #include <string.h>
@@ -281,7 +282,7 @@ void rwip_ignore_ll_conn_param_update_patch(void)
 void rwip_detect_disconnect_patch(void)
 {
 
-        
+
     if(APPM_CONNECTED == ke_state_get(TASK_APP))
     {
         if((LLC_DISC_BUSY == ke_state_get(TASK_LLC))
@@ -301,19 +302,32 @@ void rwip_detect_disconnect_patch(void)
 }
 
 
-bool appm_get_nvds_device_name(uint8_t *bd_name)
+void appm_system_reset(void)
+{
+    
+    drvi_WdtRegisterCallback(2000, NULL);
+    drvi_WdtRstSet(1);
+    drvi_WdtEnable();
+
+    while(1)
+    {
+        __NOP();
+    }   
+}
+
+bool appm_get_nvds_device_name(uint8_t **bd_name)
 {
 
     uint8_t compare_array[APP_DEVICE_NAME_MAX_LEN];
 
-    bd_name = (uint8_t*)0x1003F006;
+    *bd_name = (uint8_t*)0x1003F006;
 
     memset(compare_array, 0x00, APP_DEVICE_NAME_MAX_LEN);
-    if(0 == memcmp(compare_array, bd_name, APP_DEVICE_NAME_MAX_LEN))
+    if(0 == memcmp(compare_array, *bd_name, APP_DEVICE_NAME_MAX_LEN))
         return false;
 
     memset(compare_array, 0xFF, APP_DEVICE_NAME_MAX_LEN);
-    if(0 == memcmp(compare_array, bd_name, APP_DEVICE_NAME_MAX_LEN))
+    if(0 == memcmp(compare_array, *bd_name, APP_DEVICE_NAME_MAX_LEN))
         return false;
 
     return true;
@@ -349,7 +363,7 @@ void appm_init()
         // Get default Device Name (No name if not enough space)
         uint8_t *device_name;
         
-        if(true == appm_get_nvds_device_name(device_name))
+        if(true == appm_get_nvds_device_name(&device_name))
             memcpy(app_env.dev_name, device_name, APP_DFLT_DEVICE_NAME_LEN);
         else
             memcpy(app_env.dev_name, APP_DFLT_DEVICE_NAME, APP_DFLT_DEVICE_NAME_LEN);
@@ -381,6 +395,7 @@ void appm_init()
         #endif // #if (NVDS_SUPPORT)
     }
 
+    
     /*------------------------------------------------------
      * INITIALIZE ALL MODULES
      *------------------------------------------------------*/
@@ -423,7 +438,7 @@ void appm_init()
 
     //#if (BLE_APP_OTA)
     // OTA
-    app_ota_init();
+    //app_ota_init();
     //#endif //(BLE_APP_OTA)    
 
     #if (BLE_APP_CCPS)
@@ -502,7 +517,7 @@ void app_wait_for_reset_ble(void)
             is_reset_ble = false;
             reset_ble_cnt = 0;
 
-            NVIC_SystemReset();
+            appm_system_reset();
         }
     }
 }
@@ -520,20 +535,20 @@ void appm_set_bdaddr(uint8_t *bd_addr)
 }
 
 
-bool appm_get_nvds_bdaddr(uint8_t *bd_addr)
+bool appm_get_nvds_bdaddr(uint8_t **bd_addr)
 {
     
     uint8_t compare_array[BD_ADDR_LEN];
 
 
-    bd_addr = (uint8_t*)0x1003F000;
+    *bd_addr = (uint8_t*)0x1003F000;
 
     memset(compare_array, 0x00, BD_ADDR_LEN);
-    if(0 == memcmp(compare_array, bd_addr, BD_ADDR_LEN))
+    if(0 == memcmp(compare_array, *bd_addr, BD_ADDR_LEN))
         return false;
 
     memset(compare_array, 0xFF, BD_ADDR_LEN);
-    if(0 == memcmp(compare_array, bd_addr, BD_ADDR_LEN))
+    if(0 == memcmp(compare_array, *bd_addr, BD_ADDR_LEN))
         return false;
 
     return true;
@@ -554,7 +569,7 @@ void appm_start_advertising(void)
     {
         uint8_t *bd_addr;
         
-        if(true == appm_get_nvds_bdaddr(bd_addr))           
+        if(true == appm_get_nvds_bdaddr(&bd_addr))           
             appm_set_bdaddr(bd_addr);
         else
             appm_set_bdaddr(PUBLIC_BD_ADDR);

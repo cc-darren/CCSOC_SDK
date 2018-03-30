@@ -156,7 +156,7 @@ static void on_dfu_complete(fs_evt_t const * const evt, fs_ret_t result)
 {
     DebugInfo("Resetting device. \r\n");
     (void)fota_transports_close();
-    //NVIC_SystemReset();
+    //appm_system_reset();
     return;
 }
 

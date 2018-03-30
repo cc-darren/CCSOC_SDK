@@ -15,6 +15,7 @@
 #include "drvi_eflash.h"
 #include "crc32.h"
 #include "ota_handling.h"
+#include "rwip.h"
 #include "tracer.h"
 
 
@@ -302,6 +303,8 @@ bool  ota_flash_erase_fw_space(void)
          drvi_EflashErasePage(start_addr + (page_offset * FlASH_PAGE_SIZE));
 
          ota_flash_write_wait_done();
+
+         rwip_schedule();
 
     }
    
