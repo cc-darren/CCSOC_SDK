@@ -419,6 +419,7 @@ Head Block of The File
 //#define TEST_DMIC  1        //When DMIC is enabled, other testing must be disabled.
 #define TEST_DHRYSTONE 1
 //#define TEST_EFLASH 1
+//#define TEST_WDT 1
 
 /******************************************************************************
 Declaration of External Variables & Functions

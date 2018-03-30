@@ -13,9 +13,19 @@
 #define _DRVI_WDT_H_
 #include "wdt.h"
 
-__forceinline void drvi_WdtInit(uint32_t dwMSec)
+__forceinline void drvi_WdtInit(void)
 {
-    cc6801_WdtInit(dwMSec);
+    cc6801_WdtInit();
+}
+
+__forceinline void drvi_WdtRegisterCallback(uint32_t dwMSec, T_callback tCB)
+{
+    cc6801_WdtRegisterCallback(dwMSec, tCB);
+}
+
+__forceinline void drvi_WdtRstSet(uint32_t dwMSec)
+{
+    cc6801_WdtRstSet(dwMSec);
 }
 
 __forceinline void drvi_WdtEnable(void)

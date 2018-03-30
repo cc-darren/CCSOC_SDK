@@ -846,6 +846,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\test\src\test_eflash.c</FilePath>
             </File>
+            <File>
+              <FileName>test_wdt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_wdt.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1703,6 +1708,11 @@
               <FileName>test_eflash.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\test\src\test_eflash.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_wdt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_wdt.c</FilePath>
             </File>
           </Files>
         </Group>

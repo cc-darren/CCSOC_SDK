@@ -55,7 +55,7 @@ void drvi_initialize(void)
     #endif
 
     #if defined(WDT_INUSE) && WDT_INUSE
-    drvi_WdtInit(WDT_DEFAULT_TIMEOUT);
+    drvi_WdtInit();
     #endif
 }
 

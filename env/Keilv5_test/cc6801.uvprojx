@@ -638,6 +638,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\test\src\test_wktm.c</FilePath>
             </File>
+            <File>
+              <FileName>test_wdt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_wdt.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1411,6 +1416,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\test\src\test_wktm.c</FilePath>
             </File>
+            <File>
+              <FileName>test_wdt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_wdt.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -2118,6 +2128,11 @@
               <FileName>test_wktm.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\test\src\test_wktm.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_wdt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_wdt.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2892,6 +2907,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\test\src\test_wktm.c</FilePath>
             </File>
+            <File>
+              <FileName>test_wdt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_wdt.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -3599,6 +3619,11 @@
               <FileName>test_wktm.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\test\src\test_wktm.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_wdt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_wdt.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4372,6 +4397,11 @@
               <FileName>test_wktm.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\test\src\test_wktm.c</FilePath>
+            </File>
+            <File>
+              <FileName>test_wdt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\test\src\test_wdt.c</FilePath>
             </File>
           </Files>
         </Group>

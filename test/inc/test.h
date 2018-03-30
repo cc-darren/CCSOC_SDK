@@ -73,5 +73,5 @@ Declaration of static Global Variables & Functions
 // Sec 10: C Functions
 ******************************************************************************/
 void TEST_Main(void);
-
+void TEST_Watchdog(uint32_t iCount);
 #endif // _TEST_CONFIG_H_
