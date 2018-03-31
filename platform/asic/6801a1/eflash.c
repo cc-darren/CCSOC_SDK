@@ -33,6 +33,7 @@
 #include "drvi_eflash.h"
 #include "eflash.h"
 #include <stddef.h>
+#include "string.h"
 
 #ifndef EFLASH_ASYNCMODE
 #define EFLASH_ASYNCMODE 1
@@ -162,8 +163,17 @@ BOOL cc6801_EflashEraseALL(void)
 
     return (0);                                  // Finished without Errors
 }
+
+#if defined(FPGA)
+    unsigned char pDMAbuf[0x800];
+#endif
 BOOL cc6801_EflashErasePage(uint32_t dwEflashAdr)
 {
+#if defined(FPGA)
+    memset(pDMAbuf,0xFF,0x800);
+    cc6801_EflashProgram(dwEflashAdr,pDMAbuf,0x800);
+    return 0;
+#else
     if (dwEflashAdr & 0x07FF) {
         return FALSE;
     } else {
@@ -185,6 +195,7 @@ BOOL cc6801_EflashErasePage(uint32_t dwEflashAdr)
 #endif
         return (TRUE);                                  // Finished without Errors
     }
+#endif //defined(FPGA)
 }
 
 void cc6801_EflashRegisterCallback(fpEflash_Callback fpCB)
