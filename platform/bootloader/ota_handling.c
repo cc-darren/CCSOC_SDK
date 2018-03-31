@@ -70,7 +70,7 @@ void  ota_handling_init(void)
 void  ota_update_bl_settings(void)
 {
 
-    drvi_EflashFlush(); 
+    //drvi_EflashFlush(); 
 
     memcpy(&sAppOTALocalConfig, (uint8_t*)ADDRESS_OF_BL_SETTINGS, sizeof(S_App_OTA_LocalConfig));
 
@@ -128,6 +128,8 @@ bool  ota_verify_and_get_app_address(uint32_t *start_address)
 {
 
     drvi_EflashInit();
+
+    drvi_EflashFlush(); 
     
     ota_update_bl_settings();
 

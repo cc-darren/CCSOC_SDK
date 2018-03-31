@@ -438,7 +438,7 @@ void appm_init()
 
     //#if (BLE_APP_OTA)
     // OTA
-    //app_ota_init();
+    app_ota_init();
     //#endif //(BLE_APP_OTA)    
 
     #if (BLE_APP_CCPS)

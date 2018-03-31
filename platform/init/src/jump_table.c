@@ -73,17 +73,6 @@ void lld_sleep_compensate(void);
 void lld_sleep_init(void);
 uint32_t lld_sleep_us_2_lpcycles(uint32_t us);
 uint32_t lld_sleep_lpcycles_2_us(uint32_t lpcycles); 
-/*
-typedef void (*generic_jumptable_callback)(void);
-typedef void (*rf_init_jumptable_callback)(struct rwip_rf_api);
-typedef struct rwip_eif_api* (*eifget_jumptable_callback)(uint8_t);
-typedef void (*prf_init_jumptable_callback)(bool);
-typedef void (*prf_create_jumptable_callback)(bool);
-typedef uint8_t (*prf_add_profile_jumptable_callback)(struct gapm_profile_task_add_cmd *, ke_task_id_t*);
-typedef void (*prf_cleanup_jumptable_callback)(uint8_t, uint8_t);
-typedef ke_task_id_t (*prf_get_id_from_task_jumptable_callback)(ke_msg_id_t);
-typedef ke_task_id_t (*prf_get_task_from_id_jumptable_callback)(ke_msg_id_t);
-*/
 
 
 void  appm_init_switch(void)
@@ -116,7 +105,7 @@ void  prf_init_switch(bool reset)
 
 void  prf_create_switch(uint8_t conidx)
 {
-    typedef void (*prf_create_jumptable_callback)(bool);
+    typedef void (*prf_create_jumptable_callback)(uint8_t);
     
     ((prf_create_jumptable_callback) (jump_table_base[JT_POS_FUNC_PRF_CREATE]))(conidx); 
 }
@@ -142,7 +131,7 @@ ke_task_id_t  prf_get_id_from_task_switch(ke_msg_id_t task)
     return ((prf_get_id_from_task_jumptable_callback) (jump_table_base[JT_POS_FUNC_PRF_GET_ID_FROM_TASK]))(task); 
 }
 
-ke_msg_id_t  prf_get_task_from_id_switch(ke_msg_id_t id)
+ke_task_id_t  prf_get_task_from_id_switch(ke_msg_id_t id)
 {
 
     typedef ke_task_id_t (*prf_get_task_from_id_jumptable_callback)(ke_msg_id_t);

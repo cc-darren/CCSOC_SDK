@@ -243,7 +243,7 @@ void    APP_BLEMGR_Init(void)
     #endif
     #endif
     
-    GLOBAL_INT_STOP();
+    NVIC_DisableIRQ(BLE_IRQn);
             
     memset (((void *) 0x40006000), 0, 8192);
     memset (((void *) 0x20000048), 0, 0x820);   
@@ -257,7 +257,9 @@ void    APP_BLEMGR_Init(void)
     
     rwip_init(error);
     
+    NVIC_EnableIRQ(BLE_IRQn);
     GLOBAL_INT_START();
+
 
 }
 
