@@ -5,7 +5,7 @@
  * STANDARD SOFTWARE LICENSE AGREEMENT.
  *
  * Licensees are granted free, non-transferable use of the information.
- * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed
  * from the file.
  */
 
@@ -121,8 +121,15 @@
 #define UART_MDSL_RTS_ENABLE_MASK (UART_MDSL_RTS_ENABLE_BIT << 7)
 
 typedef struct S_UartPort T_UartPort;
-typedef struct S_UartEvent T_UartEvent;
-typedef void (*fpUartRxDone)(T_UartEvent *p_event);
+
+typedef struct
+{
+    uint32_t dwDbusRxAddr;
+    uint8_t  bPort;
+    uint8_t  cRxByteNum;
+} T_cc6801UartEvent;
+
+typedef void (*fpRxCallBack)(T_cc6801UartEvent *pEvent);
 
 typedef enum
 {
@@ -137,25 +144,24 @@ typedef struct
     U_regUARTDMA  *pDmaReg;
     U_regUARTCTRL *pCtrlReg;
     int (*fpUartXfer)(U_regUARTDMA *pReg);
-    int (*fpUartRcvr)(U_regUARTDMA *pReg);
 
     uint8_t *pRxBuffer;
     uint32_t dwRxCount;
     uint32_t dwRxBufferLen;
 
-    void (*fbRxDoneHandler)(T_UartEvent *p_event);
+    void (*fRxCb)(T_cc6801UartEvent *pEvent);
 } T_cc6801UartPort;
 
 int cc6801_UartInit(void);
 
 int cc6801_UartConfigSet(T_UartPort *pUartPort);
 
-void cc6801_UartRxDoneRegister(uint8_t bIdx, fpUartRxDone RxCallBack);
+void cc6801_UartRxCallbackRegister(uint8_t bIdx, uint8_t *pRxBuf, int iRxBufSize, fpRxCallBack RxCallBack);
 
 int cc6801_UartTxDMA(uint8_t bPortNum,
                    uint8_t const * const pData, uint8_t bLen);
 
-int cc6801_UartRxDMA(uint8_t bPortNum, uint8_t *pData, uint8_t bLen);
+int cc6801_UartRxDMA(uint8_t bPortNum, uint8_t bLen);
 
 int cc6801_UartTx(uint8_t bPortNum,
                    uint8_t const * const pData, uint8_t bLen);

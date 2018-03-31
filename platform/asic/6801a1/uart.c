@@ -5,7 +5,7 @@
  * STANDARD SOFTWARE LICENSE AGREEMENT.
  *
  * Licensees are granted free, non-transferable use of the information.
- * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed
  * from the file.
  */
 
@@ -30,6 +30,8 @@
 *  20170206 PAT initial version
 ******************************************************************************/
 
+#include "string.h"
+
 #include "clock.h"
 #include "uart.h"
 #include "drvi_uart.h"
@@ -39,9 +41,6 @@
 static int cc6801_Uart0Xfer(U_regUARTDMA *pReg);
 static int cc6801_Uart1Xfer(U_regUARTDMA *pReg);
 static int cc6801_Uart2Xfer(U_regUARTDMA *pReg);
-static int cc6801_Uart0Rcvr(U_regUARTDMA *pReg);
-static int cc6801_Uart1Rcvr(U_regUARTDMA *pReg);
-static int cc6801_Uart2Rcvr(U_regUARTDMA *pReg);
 
 volatile uint32_t UART0_RXDM_INTR = 0;
 volatile uint32_t UART0_TXDM_INTR = 0;
@@ -55,9 +54,9 @@ E_ClockSupported g_dwUartClock;
 
 T_cc6801UartPort g_tUartPort[UART_TOTAL_SUPPORTED] =
 {
-    {regUART0DMA, regUART0CTRL, cc6801_Uart0Xfer, cc6801_Uart0Rcvr},
-    {regUART1DMA, regUART1CTRL, cc6801_Uart1Xfer, cc6801_Uart1Rcvr},
-    {regUART2DMA, regUART2CTRL, cc6801_Uart2Xfer, cc6801_Uart2Rcvr},
+    {regUART0DMA, regUART0CTRL, cc6801_Uart0Xfer},
+    {regUART1DMA, regUART1CTRL, cc6801_Uart1Xfer},
+    {regUART2DMA, regUART2CTRL, cc6801_Uart2Xfer},
 };
 
 struct S_BaudrateTable
@@ -100,28 +99,22 @@ struct S_BaudrateTable sBrTable24M[] =
     {UART_BAUDRATE_921600, 0x0D, 0x01, 0x01},
 };
 
-static void cc6801_RxDone(uint8_t bIdx, uint8_t bBytes)
-{
-    T_UartEvent tEvent;
-
-    tEvent.type      = DRVI_UART_EVENT_RX_DONE;
-    tEvent.bRxBytes  = bBytes;
-    tEvent.pRxBuf    = g_tUartPort[bIdx].pRxBuffer;
-
-    g_tUartPort[bIdx].dwRxBufferLen = 0;
-
-    g_tUartPort[bIdx].fbRxDoneHandler(&tEvent);
-}
-
 void UART0_RXDMA_IRQHandler(void)
 {
+    T_cc6801UartEvent tEvent;
+
+    NVIC_DisableIRQ(UART0_RXDMA_IRQn);
     wr(UART0_ADDR_BASE+0x00, 0x00010003);   // clear interrupt
+
+    tEvent.bPort = UART_0;
+    tEvent.cRxByteNum = (regUART0DMA->dw.dmaByteNum & UART_DMA_RX_BYTENUM_MASK);
+    tEvent.dwDbusRxAddr = ((regUART0DMA->dw.dmaDbusRx & UART_DMA_START_ADDR_MASK) | 0x20000000);
+
+    if (g_tUartPort[UART_0].fRxCb)
+        g_tUartPort[UART_0].fRxCb(&tEvent);
+
     UART0_RXDM_INTR = 1;
-    if (g_tUartPort[UART_0].dwRxBufferLen)
-    {
-        NVIC_DisableIRQ(UART0_RXDMA_IRQn);
-        cc6801_RxDone(UART_0, g_tUartPort[UART_0].dwRxCount);
-    }
+    NVIC_EnableIRQ(UART0_RXDMA_IRQn);
 }
 
 void UART0_TXDMA_IRQHandler(void)
@@ -132,13 +125,20 @@ void UART0_TXDMA_IRQHandler(void)
 
 void UART1_RXDMA_IRQHandler(void)
 {
+    T_cc6801UartEvent tEvent;
+
+    NVIC_DisableIRQ(UART1_RXDMA_IRQn);
     wr(UART1_ADDR_BASE+0x00, 0x00010003);   // clear interrupt
+
+    tEvent.bPort = UART_1;
+    tEvent.cRxByteNum = (regUART1DMA->dw.dmaByteNum & UART_DMA_RX_BYTENUM_MASK);
+    tEvent.dwDbusRxAddr = ((regUART1DMA->dw.dmaDbusRx & UART_DMA_START_ADDR_MASK) | 0x20000000);
+
+    if (g_tUartPort[UART_1].fRxCb)
+        g_tUartPort[UART_1].fRxCb(&tEvent);
+
     UART1_RXDM_INTR = 1;
-    if (g_tUartPort[UART_1].dwRxBufferLen)
-    {
-        NVIC_DisableIRQ(UART1_RXDMA_IRQn);
-        cc6801_RxDone(UART_1, g_tUartPort[UART_1].dwRxCount);
-    }
+    NVIC_EnableIRQ(UART1_RXDMA_IRQn);
 }
 
 void UART1_TXDMA_IRQHandler(void)
@@ -149,13 +149,20 @@ void UART1_TXDMA_IRQHandler(void)
 
 void UART2_RXDMA_IRQHandler(void)
 {
+    T_cc6801UartEvent tEvent;
+
+    NVIC_DisableIRQ(UART2_RXDMA_IRQn);
     wr(UART2_ADDR_BASE+0x00, 0x00010003);   // clear interrupt
+
+    tEvent.bPort = UART_2;
+    tEvent.cRxByteNum = (regUART2DMA->dw.dmaByteNum & UART_DMA_RX_BYTENUM_MASK);
+    tEvent.dwDbusRxAddr = ((regUART2DMA->dw.dmaDbusRx & UART_DMA_START_ADDR_MASK) | 0x20000000);
+
+    if (g_tUartPort[UART_2].fRxCb)
+        g_tUartPort[UART_2].fRxCb(&tEvent);
+
     UART2_RXDM_INTR = 1;
-    if (g_tUartPort[UART_2].dwRxBufferLen)
-    {
-        NVIC_DisableIRQ(UART2_RXDMA_IRQn);
-        cc6801_RxDone(UART_2, g_tUartPort[UART_2].dwRxCount);
-    }
+    NVIC_EnableIRQ(UART2_RXDMA_IRQn);
 }
 
 void UART2_TXDMA_IRQHandler(void)
@@ -239,51 +246,6 @@ static int cc6801_Uart2Xfer(U_regUARTDMA *pUart2DmaBase)
     return CC_SUCCESS;
 }
 
-static int cc6801_Uart0Rcvr(U_regUARTDMA *pUart0DmaBase)
-{
-    NVIC_EnableIRQ(UART0_RXDMA_IRQn);
-
-    cc6801_UartRxDmaEnable(pUart0DmaBase, 1);
-    if (g_tUartPort[UART_0].fbRxDoneHandler)
-        return CC_SUCCESS;
-
-    while(!UART0_RXDM_INTR);
-    UART0_RXDM_INTR = 0;
-    //NVIC_DisableIRQ(UART0_RXDMA_IRQn);
-
-    return CC_SUCCESS;
-}
-
-static int cc6801_Uart1Rcvr(U_regUARTDMA *pUart1DmaBase)
-{
-    NVIC_EnableIRQ(UART1_RXDMA_IRQn);
-
-    cc6801_UartRxDmaEnable(pUart1DmaBase, 1);
-    if (g_tUartPort[UART_1].fbRxDoneHandler)
-        return CC_SUCCESS;
-
-    while(!UART1_RXDM_INTR);
-    UART1_RXDM_INTR = 0;
-    //NVIC_DisableIRQ(UART1_RXDMA_IRQn);
-
-    return CC_SUCCESS;
-}
-
-static int cc6801_Uart2Rcvr(U_regUARTDMA *pUart2DmaBase)
-{
-    NVIC_EnableIRQ(UART2_RXDMA_IRQn);
-
-    cc6801_UartRxDmaEnable(pUart2DmaBase, 1);
-    if (g_tUartPort[UART_2].fbRxDoneHandler)
-        return CC_SUCCESS;
-
-    while(!UART2_RXDM_INTR);
-    UART2_RXDM_INTR = 0;
-    //NVIC_DisableIRQ(UART2_RXDMA_IRQn);
-
-    return CC_SUCCESS;
-}
-
 static void cc6801_UartTxBufferSet(U_regUARTDMA * pUartBase,
                                     uint32_t dwTxBufAddr, uint8_t bLen)
 {
@@ -300,20 +262,21 @@ static void cc6801_UartTxBufferSet(U_regUARTDMA * pUartBase,
     pUartBase->dw.dmaTxEnd = (dwTxEndAddr & UART_DMA_END_ADDR_MASK);
 }
 
-static void cc6801_UartRxBufferSet(U_regUARTDMA *pUartBase,
+static int cc6801_UartRxBufferSet(U_regUARTDMA *pUartBase,
                                     uint32_t dwRxBufAddr, uint8_t bLen)
 {
     uint32_t dwRxEndAddr = 0;
-    uint32_t dwByteNum = pUartBase->dw.dmaByteNum;
 
-    dwByteNum &= UART_DMA_TX_BYTENUM_MASK;
-    dwByteNum |= bLen - 1;
-    pUartBase->dw.dmaByteNum = dwByteNum;
+    if (dwRxBufAddr & 0x3UL)
+        return CC_ERROR_INVALID_ADDR;
+
     //DMA rx start address
     pUartBase->dw.dmaRxStart = (dwRxBufAddr & UART_DMA_START_ADDR_MASK);
     //DMA rx end address
     dwRxEndAddr = dwRxBufAddr + (((bLen - 1) >> 2) << 2);
     pUartBase->dw.dmaRxEnd = (dwRxEndAddr & UART_DMA_END_ADDR_MASK);
+
+    return CC_SUCCESS;
 }
 
 static uint8_t cc6801_ComputeFRS(uint32_t dwConfig)
@@ -438,10 +401,15 @@ int cc6801_UartConfigSet(T_UartPort *pUartPort)
     return CC_SUCCESS;
 }
 
-void cc6801_UartRxDoneRegister(uint8_t bIdx, fpUartRxDone RxCallBack)
+void cc6801_UartRxCallbackRegister(uint8_t bIdx, uint8_t *pRxBuf, int iRxBufSize, fpRxCallBack RxCallBack)
 {
+    cc6801_UartRxBufferSet(g_tUartPort[bIdx].pDmaReg, (uint32_t)pRxBuf, iRxBufSize);
+
     if (RxCallBack)
-        g_tUartPort[bIdx].fbRxDoneHandler = RxCallBack;
+        g_tUartPort[bIdx].fRxCb = RxCallBack;
+
+    cc6801_UartRxDmaEnable(g_tUartPort[bIdx].pDmaReg, 1);
+    NVIC_EnableIRQ(UART0_RXDMA_IRQn);
 }
 
 static void cc6801_UartClkDivSet(void)
@@ -492,23 +460,25 @@ int cc6801_UartInit(void)
     return error;
 }
 
-int cc6801_UartRxDMA(uint8_t bPortNum, uint8_t *pData, uint8_t bLen)
+int cc6801_UartRxDMA(uint8_t bPortNum, uint8_t bLen)
 {
     T_cc6801UartPort *ptPort = &g_tUartPort[bPortNum];
     U_regUARTDMA *pUartDmaBase = g_tUartPort[bPortNum].pDmaReg;
-    uint32_t dwRxBufAddr = (uint32_t)pData;
+    uint32_t dwByteNum = pUartDmaBase->dw.dmaByteNum;
 
-    ptPort->pRxBuffer     = pData;
+    if (bLen <= 0)
+        return CC_ERROR_INVALID_PARAM;
+
     ptPort->dwRxBufferLen = bLen;
     ptPort->dwRxCount     = 0;
 
-    if (dwRxBufAddr & 0x3UL)
-      return CC_ERROR_INVALID_ADDR;
+    dwByteNum &= ~UART_DMA_RX_BYTENUM_MASK;
+    dwByteNum |= ((bLen - 1) & UART_DMA_RX_BYTENUM_MASK);
+    pUartDmaBase->dw.dmaByteNum = dwByteNum;
 
-    cc6801_UartRxBufferSet(pUartDmaBase, dwRxBufAddr, bLen);
     ptPort->dwRxCount = bLen;
 
-    return ptPort->fpUartRcvr(pUartDmaBase);
+    return CC_SUCCESS;
 }
 
 int cc6801_UartTxDMA(uint8_t bPortNum,
@@ -536,7 +506,7 @@ int cc6801_UartRx(uint8_t bPortNum, uint8_t *pData, uint8_t bLen)
         ptPort->dwRxCount++;
     } while (ptPort->dwRxBufferLen > ptPort->dwRxCount);
 
-    cc6801_RxDone(bPortNum, ptPort->dwRxCount);
+    g_tUartPort[bPortNum].fRxCb((T_cc6801UartEvent *)NULL);
 
     return CC_SUCCESS;
 }
@@ -555,3 +525,4 @@ int cc6801_UartTx(uint8_t bPortNum,
 
     return CC_SUCCESS;
 }
+

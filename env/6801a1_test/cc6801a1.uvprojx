@@ -333,9 +333,9 @@
             <v6WtE>0</v6WtE>
             <VariousControls>
               <MiscControls>--no_inline --no_multifile -DMSC_CLOCK</MiscControls>
-              <Define>FPGA</Define>
+              <Define>FPGA CC6801A1</Define>
               <Undefine></Undefine>
-              <IncludePath>.\config;..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app\Display;..\..\platform\init\inc;..\..\platform\asic\6801a1;..\..\platform\drvi;..\..\module\mems;..\..\module\oled;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\tracer;..\..\test;..\..\test\inc</IncludePath>
+              <IncludePath>.\config;..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app\Display;..\..\platform\init\inc;..\..\platform\asic\6801a1;..\..\platform\drvi;..\..\module\mems;..\..\module\oled;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\tracer;..\..\service\uart_ring;..\..\test;..\..\test\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -796,6 +796,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\service\tracer\tracer.c</FilePath>
             </File>
+            <File>
+              <FileName>uart_ring.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\uart_ring\uart_ring.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1196,9 +1201,9 @@
             <v6WtE>0</v6WtE>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>FPGA</Define>
+              <Define>FPGA CC6801A1</Define>
               <Undefine></Undefine>
-              <IncludePath>.\config;..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app\Display;..\..\platform\asic\6801a1;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\tracer;..\..\test;..\..\test\inc</IncludePath>
+              <IncludePath>.\config;..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app\Display;..\..\platform\asic\6801a1;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\tracer;..\..\service\uart_ring;..\..\test;..\..\test\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1658,6 +1663,11 @@
               <FileName>tracer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\service\tracer\tracer.c</FilePath>
+            </File>
+            <File>
+              <FileName>uart_ring.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\service\uart_ring\uart_ring.c</FilePath>
             </File>
           </Files>
         </Group>

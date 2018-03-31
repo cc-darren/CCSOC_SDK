@@ -82,14 +82,14 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>..\bin\afterbuild.bat @L !L</UserProg1Name>
+            <UserProg1Name>fromelf.exe --bincombined --output .\Objects\@L.bin !L</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
             <nStopA1X>0</nStopA1X>
             <nStopA2X>0</nStopA2X>
           </AfterMake>
-          <SelectedForBatchBuild>1</SelectedForBatchBuild>
+          <SelectedForBatchBuild>0</SelectedForBatchBuild>
           <SVCSIdString></SVCSIdString>
         </TargetCommonOption>
         <CommonProperty>
@@ -159,7 +159,7 @@
             <ldmm>1</ldmm>
             <ldXref>1</ldXref>
             <BigEnd>0</BigEnd>
-            <AdsALst>0</AdsALst>
+            <AdsALst>1</AdsALst>
             <AdsACrf>1</AdsACrf>
             <AdsANop>0</AdsANop>
             <AdsANot>0</AdsANot>
@@ -332,10 +332,10 @@
             <v6Lto>0</v6Lto>
             <v6WtE>0</v6WtE>
             <VariousControls>
-              <MiscControls>--no_inline --no_multifile -DMSC_CLOCK</MiscControls>
+              <MiscControls></MiscControls>
               <Define>FPGA CC6801A1</Define>
               <Undefine></Undefine>
-              <IncludePath>.\config;..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app\Display;..\..\platform\init\inc;..\..\platform\asic\6801a1;..\..\platform\drvi;..\..\module\mems;..\..\module\oled;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\tracer;..\..\service\uart_ring;..\..\test;..\..\test\inc</IncludePath>
+              <IncludePath>.\config;..\..\..\cfg\project;..\..\..\inc;..\..\..\inc\CMSIS;..\..\..\platform\init\inc;..\..\..\platform\asic\6801a1;..\..\..\platform\drvi;..\..\..\module\mems;..\..\..\module\oled;..\..\..\service\tracer;..\..\..\service\uart_ring</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -376,178 +376,27 @@
       </TargetOption>
       <Groups>
         <Group>
-          <GroupName>app</GroupName>
-          <GroupOption>
-            <CommonProperty>
-              <UseCPPCompiler>0</UseCPPCompiler>
-              <RVCTCodeConst>0</RVCTCodeConst>
-              <RVCTZI>0</RVCTZI>
-              <RVCTOtherData>0</RVCTOtherData>
-              <ModuleSelection>0</ModuleSelection>
-              <IncludeInBuild>0</IncludeInBuild>
-              <AlwaysBuild>2</AlwaysBuild>
-              <GenerateAssemblyFile>2</GenerateAssemblyFile>
-              <AssembleAssemblyFile>2</AssembleAssemblyFile>
-              <PublicsOnly>2</PublicsOnly>
-              <StopOnExitCode>11</StopOnExitCode>
-              <CustomArgument></CustomArgument>
-              <IncludeLibraryModules></IncludeLibraryModules>
-              <ComprImg>1</ComprImg>
-            </CommonProperty>
-            <GroupArmAds>
-              <Cads>
-                <interw>2</interw>
-                <Optim>0</Optim>
-                <oTime>2</oTime>
-                <SplitLS>2</SplitLS>
-                <OneElfS>2</OneElfS>
-                <Strict>2</Strict>
-                <EnumInt>2</EnumInt>
-                <PlainCh>2</PlainCh>
-                <Ropi>2</Ropi>
-                <Rwpi>2</Rwpi>
-                <wLevel>2</wLevel>
-                <uThumb>2</uThumb>
-                <uSurpInc>2</uSurpInc>
-                <uC99>2</uC99>
-                <useXO>2</useXO>
-                <v6Lang>0</v6Lang>
-                <v6LangP>0</v6LangP>
-                <vShortEn>2</vShortEn>
-                <vShortWch>2</vShortWch>
-                <v6Lto>0</v6Lto>
-                <v6WtE>0</v6WtE>
-                <VariousControls>
-                  <MiscControls></MiscControls>
-                  <Define></Define>
-                  <Undefine></Undefine>
-                  <IncludePath></IncludePath>
-                </VariousControls>
-              </Cads>
-              <Aads>
-                <interw>2</interw>
-                <Ropi>2</Ropi>
-                <Rwpi>2</Rwpi>
-                <thumb>2</thumb>
-                <SplitLS>2</SplitLS>
-                <SwStkChk>2</SwStkChk>
-                <NoWarn>2</NoWarn>
-                <uSurpInc>2</uSurpInc>
-                <useXO>2</useXO>
-                <VariousControls>
-                  <MiscControls></MiscControls>
-                  <Define></Define>
-                  <Undefine></Undefine>
-                  <IncludePath></IncludePath>
-                </VariousControls>
-              </Aads>
-            </GroupArmAds>
-          </GroupOption>
-          <Files>
-            <File>
-              <FileName>appDisplay.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\Display\appDisplay.c</FilePath>
-            </File>
-            <File>
-              <FileName>font.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\Display\font.c</FilePath>
-            </File>
-            <File>
-              <FileName>icon.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\Display\icon.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>6801a1</GroupName>
           <Files>
             <File>
-              <FileName>adc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\adc.c</FilePath>
-            </File>
-            <File>
-              <FileName>aes.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\aes.c</FilePath>
-            </File>
-            <File>
               <FileName>clock.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\clock.c</FilePath>
-            </File>
-            <File>
-              <FileName>dmic.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\dmic.c</FilePath>
-            </File>
-            <File>
-              <FileName>dmu.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\dmu.c</FilePath>
-            </File>
-            <File>
-              <FileName>eflash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\eflash.c</FilePath>
+              <FilePath>..\..\..\platform\asic\6801a1\clock.c</FilePath>
             </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\gpio.c</FilePath>
-            </File>
-            <File>
-              <FileName>i2c.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\i2c.c</FilePath>
-            </File>
-            <File>
-              <FileName>i2s.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\i2s.c</FilePath>
-            </File>
-            <File>
-              <FileName>lowpower.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\lowpower.c</FilePath>
-            </File>
-            <File>
-              <FileName>pwm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\pwm.c</FilePath>
-            </File>
-            <File>
-              <FileName>spim.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\spim.c</FilePath>
-            </File>
-            <File>
-              <FileName>rtc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\rtc.c</FilePath>
+              <FilePath>..\..\..\platform\asic\6801a1\gpio.c</FilePath>
             </File>
             <File>
               <FileName>uart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\uart.c</FilePath>
-            </File>
-            <File>
-              <FileName>wdt.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\wdt.c</FilePath>
-            </File>
-            <File>
-              <FileName>wktm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\wktm.c</FilePath>
+              <FilePath>..\..\..\platform\asic\6801a1\uart.c</FilePath>
             </File>
             <File>
               <FileName>system_init.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\system_init.c</FilePath>
+              <FilePath>..\..\..\platform\asic\6801a1\system_init.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -555,236 +404,34 @@
           <GroupName>drvi</GroupName>
           <Files>
             <File>
-              <FileName>drvi_aes.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_aes.c</FilePath>
-            </File>
-            <File>
-              <FileName>drvi_i2c.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_i2c.c</FilePath>
-            </File>
-            <File>
               <FileName>drvi_init.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_init.c</FilePath>
-            </File>
-            <File>
-              <FileName>drvi_pwm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_pwm.c</FilePath>
-            </File>
-            <File>
-              <FileName>drvi_spi.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_spi.c</FilePath>
+              <FilePath>..\..\..\platform\drvi\drvi_init.c</FilePath>
             </File>
             <File>
               <FileName>drvi_uart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_uart.c</FilePath>
-            </File>
-            <File>
-              <FileName>drvi_wktm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_wktm.c</FilePath>
-            </File>
-            <File>
-              <FileName>drvi_rtc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_rtc.c</FilePath>
+              <FilePath>..\..\..\platform\drvi\drvi_uart.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>module</GroupName>
-          <GroupOption>
-            <CommonProperty>
-              <UseCPPCompiler>0</UseCPPCompiler>
-              <RVCTCodeConst>0</RVCTCodeConst>
-              <RVCTZI>0</RVCTZI>
-              <RVCTOtherData>0</RVCTOtherData>
-              <ModuleSelection>0</ModuleSelection>
-              <IncludeInBuild>0</IncludeInBuild>
-              <AlwaysBuild>2</AlwaysBuild>
-              <GenerateAssemblyFile>2</GenerateAssemblyFile>
-              <AssembleAssemblyFile>2</AssembleAssemblyFile>
-              <PublicsOnly>2</PublicsOnly>
-              <StopOnExitCode>11</StopOnExitCode>
-              <CustomArgument></CustomArgument>
-              <IncludeLibraryModules></IncludeLibraryModules>
-              <ComprImg>1</ComprImg>
-            </CommonProperty>
-            <GroupArmAds>
-              <Cads>
-                <interw>2</interw>
-                <Optim>0</Optim>
-                <oTime>2</oTime>
-                <SplitLS>2</SplitLS>
-                <OneElfS>2</OneElfS>
-                <Strict>2</Strict>
-                <EnumInt>2</EnumInt>
-                <PlainCh>2</PlainCh>
-                <Ropi>2</Ropi>
-                <Rwpi>2</Rwpi>
-                <wLevel>2</wLevel>
-                <uThumb>2</uThumb>
-                <uSurpInc>2</uSurpInc>
-                <uC99>2</uC99>
-                <useXO>2</useXO>
-                <v6Lang>0</v6Lang>
-                <v6LangP>0</v6LangP>
-                <vShortEn>2</vShortEn>
-                <vShortWch>2</vShortWch>
-                <v6Lto>0</v6Lto>
-                <v6WtE>0</v6WtE>
-                <VariousControls>
-                  <MiscControls></MiscControls>
-                  <Define></Define>
-                  <Undefine></Undefine>
-                  <IncludePath></IncludePath>
-                </VariousControls>
-              </Cads>
-              <Aads>
-                <interw>2</interw>
-                <Ropi>2</Ropi>
-                <Rwpi>2</Rwpi>
-                <thumb>2</thumb>
-                <SplitLS>2</SplitLS>
-                <SwStkChk>2</SwStkChk>
-                <NoWarn>2</NoWarn>
-                <uSurpInc>2</uSurpInc>
-                <useXO>2</useXO>
-                <VariousControls>
-                  <MiscControls></MiscControls>
-                  <Define></Define>
-                  <Undefine></Undefine>
-                  <IncludePath></IncludePath>
-                </VariousControls>
-              </Aads>
-            </GroupArmAds>
-          </GroupOption>
           <Files>
             <File>
               <FileName>acc_null.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\module\mems\acc_null.c</FilePath>
-            </File>
-            <File>
-              <FileName>mag_null.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\module\mems\mag_null.c</FilePath>
+              <FilePath>..\..\..\module\mems\acc_null.c</FilePath>
             </File>
             <File>
               <FileName>gyr_null.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\module\mems\gyr_null.c</FilePath>
+              <FilePath>..\..\..\module\mems\gyr_null.c</FilePath>
             </File>
             <File>
-              <FileName>acc_lsm6ds3.c</FileName>
+              <FileName>mag_null.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\module\mems\acc_lsm6ds3.c</FilePath>
-            </File>
-            <File>
-              <FileName>mag_ak09912.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\module\mems\mag_ak09912.c</FilePath>
-            </File>
-            <File>
-              <FileName>gyr_lsm6ds3.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\module\mems\gyr_lsm6ds3.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>oled</GroupName>
-          <GroupOption>
-            <CommonProperty>
-              <UseCPPCompiler>0</UseCPPCompiler>
-              <RVCTCodeConst>0</RVCTCodeConst>
-              <RVCTZI>0</RVCTZI>
-              <RVCTOtherData>0</RVCTOtherData>
-              <ModuleSelection>0</ModuleSelection>
-              <IncludeInBuild>0</IncludeInBuild>
-              <AlwaysBuild>2</AlwaysBuild>
-              <GenerateAssemblyFile>2</GenerateAssemblyFile>
-              <AssembleAssemblyFile>2</AssembleAssemblyFile>
-              <PublicsOnly>2</PublicsOnly>
-              <StopOnExitCode>11</StopOnExitCode>
-              <CustomArgument></CustomArgument>
-              <IncludeLibraryModules></IncludeLibraryModules>
-              <ComprImg>1</ComprImg>
-            </CommonProperty>
-            <GroupArmAds>
-              <Cads>
-                <interw>2</interw>
-                <Optim>0</Optim>
-                <oTime>2</oTime>
-                <SplitLS>2</SplitLS>
-                <OneElfS>2</OneElfS>
-                <Strict>2</Strict>
-                <EnumInt>2</EnumInt>
-                <PlainCh>2</PlainCh>
-                <Ropi>2</Ropi>
-                <Rwpi>2</Rwpi>
-                <wLevel>2</wLevel>
-                <uThumb>2</uThumb>
-                <uSurpInc>2</uSurpInc>
-                <uC99>2</uC99>
-                <useXO>2</useXO>
-                <v6Lang>0</v6Lang>
-                <v6LangP>0</v6LangP>
-                <vShortEn>2</vShortEn>
-                <vShortWch>2</vShortWch>
-                <v6Lto>0</v6Lto>
-                <v6WtE>0</v6WtE>
-                <VariousControls>
-                  <MiscControls></MiscControls>
-                  <Define></Define>
-                  <Undefine></Undefine>
-                  <IncludePath></IncludePath>
-                </VariousControls>
-              </Cads>
-              <Aads>
-                <interw>2</interw>
-                <Ropi>2</Ropi>
-                <Rwpi>2</Rwpi>
-                <thumb>2</thumb>
-                <SplitLS>2</SplitLS>
-                <SwStkChk>2</SwStkChk>
-                <NoWarn>2</NoWarn>
-                <uSurpInc>2</uSurpInc>
-                <useXO>2</useXO>
-                <VariousControls>
-                  <MiscControls></MiscControls>
-                  <Define></Define>
-                  <Undefine></Undefine>
-                  <IncludePath></IncludePath>
-                </VariousControls>
-              </Aads>
-            </GroupArmAds>
-          </GroupOption>
-          <Files>
-            <File>
-              <FileName>sh1107.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\module\oled\sh1107.c</FilePath>
-            </File>
-            <File>
-              <FileName>sh1107_128x32.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\module\oled\sh1107_128x32.c</FilePath>
-            </File>
-            <File>
-              <FileName>ssd1306.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\module\oled\ssd1306.c</FilePath>
-            </File>
-            <File>
-              <FileName>ssd1306_128x32.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\module\oled\ssd1306_128x32.c</FilePath>
+              <FilePath>..\..\..\module\mems\mag_null.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -792,59 +439,19 @@
           <GroupName>service</GroupName>
           <Files>
             <File>
+              <FileName>service_lib_M0.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\..\service\service_lib_M0.lib</FilePath>
+            </File>
+            <File>
               <FileName>tracer.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\service\tracer\tracer.c</FilePath>
+              <FilePath>..\..\..\service\tracer\tracer.c</FilePath>
             </File>
             <File>
               <FileName>uart_ring.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\service\uart_ring\uart_ring.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>test</GroupName>
-          <Files>
-            <File>
-              <FileName>test_aes.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\test\src\test_aes.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\test\src\test_main.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_uart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\test\src\test_uart.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_spi.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\test\src\test_spi.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_i2c.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\test\src\test_i2c.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_clock.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\test\src\test_clock.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_dhry_1.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\test\src\test_dhry_1.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_dhry_2.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\test\src\test_dhry_2.c</FilePath>
+              <FilePath>..\..\..\service\uart_ring\uart_ring.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -852,14 +459,14 @@
           <GroupName>startup</GroupName>
           <Files>
             <File>
-              <FileName>startup_ARMCortexM.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\platform\asic\6801a1\bootcode\startup_ARMCortexM.s</FilePath>
-            </File>
-            <File>
               <FileName>arch_main.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\arch_main.c</FilePath>
+            </File>
+            <File>
+              <FileName>startup_ARMCortexM.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>..\..\..\platform\asic\6801a1\bootcode\startup_ARMCortexM.s</FilePath>
             </File>
           </Files>
         </Group>
@@ -940,14 +547,14 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>..\bin\afterbuild.bat @L !L</UserProg1Name>
+            <UserProg1Name>fromelf.exe --bincombined --output .\Objects\@L.bin !L</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
             <nStopA1X>0</nStopA1X>
             <nStopA2X>0</nStopA2X>
           </AfterMake>
-          <SelectedForBatchBuild>1</SelectedForBatchBuild>
+          <SelectedForBatchBuild>0</SelectedForBatchBuild>
           <SVCSIdString></SVCSIdString>
         </TargetCommonOption>
         <CommonProperty>
@@ -1193,7 +800,7 @@
               <MiscControls></MiscControls>
               <Define>FPGA CC6801A1</Define>
               <Undefine></Undefine>
-              <IncludePath>.\config;..\..\cfg\project;..\..\inc;..\..\inc\CMSIS;..\..\app\Display;..\..\platform\asic\6801a1;..\..\platform\drvi;..\..\platform\init\inc;..\..\module\mems;..\..\module\oled;..\..\service\experimental_section_vars;..\..\service\fifo;..\..\service\fstorage;..\..\service\tracer;..\..\service\uart_ring;..\..\test;..\..\test\inc</IncludePath>
+              <IncludePath>.\config;..\..\..\cfg\project;..\..\..\inc;..\..\..\inc\CMSIS;..\..\..\platform\init\inc;..\..\..\platform\asic\6801a1;..\..\..\platform\drvi;..\..\..\module\mems;..\..\..\module\oled;..\..\..\service\tracer;..\..\..\service\uart_ring</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1234,178 +841,27 @@
       </TargetOption>
       <Groups>
         <Group>
-          <GroupName>app</GroupName>
-          <GroupOption>
-            <CommonProperty>
-              <UseCPPCompiler>0</UseCPPCompiler>
-              <RVCTCodeConst>0</RVCTCodeConst>
-              <RVCTZI>0</RVCTZI>
-              <RVCTOtherData>0</RVCTOtherData>
-              <ModuleSelection>0</ModuleSelection>
-              <IncludeInBuild>0</IncludeInBuild>
-              <AlwaysBuild>2</AlwaysBuild>
-              <GenerateAssemblyFile>2</GenerateAssemblyFile>
-              <AssembleAssemblyFile>2</AssembleAssemblyFile>
-              <PublicsOnly>2</PublicsOnly>
-              <StopOnExitCode>11</StopOnExitCode>
-              <CustomArgument></CustomArgument>
-              <IncludeLibraryModules></IncludeLibraryModules>
-              <ComprImg>1</ComprImg>
-            </CommonProperty>
-            <GroupArmAds>
-              <Cads>
-                <interw>2</interw>
-                <Optim>0</Optim>
-                <oTime>2</oTime>
-                <SplitLS>2</SplitLS>
-                <OneElfS>2</OneElfS>
-                <Strict>2</Strict>
-                <EnumInt>2</EnumInt>
-                <PlainCh>2</PlainCh>
-                <Ropi>2</Ropi>
-                <Rwpi>2</Rwpi>
-                <wLevel>2</wLevel>
-                <uThumb>2</uThumb>
-                <uSurpInc>2</uSurpInc>
-                <uC99>2</uC99>
-                <useXO>2</useXO>
-                <v6Lang>0</v6Lang>
-                <v6LangP>0</v6LangP>
-                <vShortEn>2</vShortEn>
-                <vShortWch>2</vShortWch>
-                <v6Lto>0</v6Lto>
-                <v6WtE>0</v6WtE>
-                <VariousControls>
-                  <MiscControls></MiscControls>
-                  <Define></Define>
-                  <Undefine></Undefine>
-                  <IncludePath></IncludePath>
-                </VariousControls>
-              </Cads>
-              <Aads>
-                <interw>2</interw>
-                <Ropi>2</Ropi>
-                <Rwpi>2</Rwpi>
-                <thumb>2</thumb>
-                <SplitLS>2</SplitLS>
-                <SwStkChk>2</SwStkChk>
-                <NoWarn>2</NoWarn>
-                <uSurpInc>2</uSurpInc>
-                <useXO>2</useXO>
-                <VariousControls>
-                  <MiscControls></MiscControls>
-                  <Define></Define>
-                  <Undefine></Undefine>
-                  <IncludePath></IncludePath>
-                </VariousControls>
-              </Aads>
-            </GroupArmAds>
-          </GroupOption>
-          <Files>
-            <File>
-              <FileName>appDisplay.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\Display\appDisplay.c</FilePath>
-            </File>
-            <File>
-              <FileName>font.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\Display\font.c</FilePath>
-            </File>
-            <File>
-              <FileName>icon.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\app\Display\icon.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>6801a1</GroupName>
           <Files>
             <File>
-              <FileName>adc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\adc.c</FilePath>
-            </File>
-            <File>
-              <FileName>aes.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\aes.c</FilePath>
-            </File>
-            <File>
               <FileName>clock.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\clock.c</FilePath>
-            </File>
-            <File>
-              <FileName>dmic.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\dmic.c</FilePath>
-            </File>
-            <File>
-              <FileName>dmu.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\dmu.c</FilePath>
-            </File>
-            <File>
-              <FileName>eflash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\eflash.c</FilePath>
+              <FilePath>..\..\..\platform\asic\6801a1\clock.c</FilePath>
             </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\gpio.c</FilePath>
-            </File>
-            <File>
-              <FileName>i2c.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\i2c.c</FilePath>
-            </File>
-            <File>
-              <FileName>i2s.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\i2s.c</FilePath>
-            </File>
-            <File>
-              <FileName>lowpower.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\lowpower.c</FilePath>
-            </File>
-            <File>
-              <FileName>pwm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\pwm.c</FilePath>
-            </File>
-            <File>
-              <FileName>spim.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\spim.c</FilePath>
-            </File>
-            <File>
-              <FileName>rtc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\rtc.c</FilePath>
+              <FilePath>..\..\..\platform\asic\6801a1\gpio.c</FilePath>
             </File>
             <File>
               <FileName>uart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\uart.c</FilePath>
-            </File>
-            <File>
-              <FileName>wdt.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\wdt.c</FilePath>
-            </File>
-            <File>
-              <FileName>wktm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\wktm.c</FilePath>
+              <FilePath>..\..\..\platform\asic\6801a1\uart.c</FilePath>
             </File>
             <File>
               <FileName>system_init.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\asic\6801a1\system_init.c</FilePath>
+              <FilePath>..\..\..\platform\asic\6801a1\system_init.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1413,236 +869,34 @@
           <GroupName>drvi</GroupName>
           <Files>
             <File>
-              <FileName>drvi_aes.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_aes.c</FilePath>
-            </File>
-            <File>
-              <FileName>drvi_i2c.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_i2c.c</FilePath>
-            </File>
-            <File>
               <FileName>drvi_init.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_init.c</FilePath>
-            </File>
-            <File>
-              <FileName>drvi_pwm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_pwm.c</FilePath>
-            </File>
-            <File>
-              <FileName>drvi_spi.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_spi.c</FilePath>
+              <FilePath>..\..\..\platform\drvi\drvi_init.c</FilePath>
             </File>
             <File>
               <FileName>drvi_uart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_uart.c</FilePath>
-            </File>
-            <File>
-              <FileName>drvi_wktm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_wktm.c</FilePath>
-            </File>
-            <File>
-              <FileName>drvi_rtc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\platform\drvi\drvi_rtc.c</FilePath>
+              <FilePath>..\..\..\platform\drvi\drvi_uart.c</FilePath>
             </File>
           </Files>
         </Group>
         <Group>
           <GroupName>module</GroupName>
-          <GroupOption>
-            <CommonProperty>
-              <UseCPPCompiler>0</UseCPPCompiler>
-              <RVCTCodeConst>0</RVCTCodeConst>
-              <RVCTZI>0</RVCTZI>
-              <RVCTOtherData>0</RVCTOtherData>
-              <ModuleSelection>0</ModuleSelection>
-              <IncludeInBuild>0</IncludeInBuild>
-              <AlwaysBuild>2</AlwaysBuild>
-              <GenerateAssemblyFile>2</GenerateAssemblyFile>
-              <AssembleAssemblyFile>2</AssembleAssemblyFile>
-              <PublicsOnly>2</PublicsOnly>
-              <StopOnExitCode>11</StopOnExitCode>
-              <CustomArgument></CustomArgument>
-              <IncludeLibraryModules></IncludeLibraryModules>
-              <ComprImg>1</ComprImg>
-            </CommonProperty>
-            <GroupArmAds>
-              <Cads>
-                <interw>2</interw>
-                <Optim>0</Optim>
-                <oTime>2</oTime>
-                <SplitLS>2</SplitLS>
-                <OneElfS>2</OneElfS>
-                <Strict>2</Strict>
-                <EnumInt>2</EnumInt>
-                <PlainCh>2</PlainCh>
-                <Ropi>2</Ropi>
-                <Rwpi>2</Rwpi>
-                <wLevel>2</wLevel>
-                <uThumb>2</uThumb>
-                <uSurpInc>2</uSurpInc>
-                <uC99>2</uC99>
-                <useXO>2</useXO>
-                <v6Lang>0</v6Lang>
-                <v6LangP>0</v6LangP>
-                <vShortEn>2</vShortEn>
-                <vShortWch>2</vShortWch>
-                <v6Lto>0</v6Lto>
-                <v6WtE>0</v6WtE>
-                <VariousControls>
-                  <MiscControls></MiscControls>
-                  <Define></Define>
-                  <Undefine></Undefine>
-                  <IncludePath></IncludePath>
-                </VariousControls>
-              </Cads>
-              <Aads>
-                <interw>2</interw>
-                <Ropi>2</Ropi>
-                <Rwpi>2</Rwpi>
-                <thumb>2</thumb>
-                <SplitLS>2</SplitLS>
-                <SwStkChk>2</SwStkChk>
-                <NoWarn>2</NoWarn>
-                <uSurpInc>2</uSurpInc>
-                <useXO>2</useXO>
-                <VariousControls>
-                  <MiscControls></MiscControls>
-                  <Define></Define>
-                  <Undefine></Undefine>
-                  <IncludePath></IncludePath>
-                </VariousControls>
-              </Aads>
-            </GroupArmAds>
-          </GroupOption>
           <Files>
             <File>
               <FileName>acc_null.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\module\mems\acc_null.c</FilePath>
-            </File>
-            <File>
-              <FileName>mag_null.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\module\mems\mag_null.c</FilePath>
+              <FilePath>..\..\..\module\mems\acc_null.c</FilePath>
             </File>
             <File>
               <FileName>gyr_null.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\module\mems\gyr_null.c</FilePath>
+              <FilePath>..\..\..\module\mems\gyr_null.c</FilePath>
             </File>
             <File>
-              <FileName>acc_lsm6ds3.c</FileName>
+              <FileName>mag_null.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\module\mems\acc_lsm6ds3.c</FilePath>
-            </File>
-            <File>
-              <FileName>mag_ak09912.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\module\mems\mag_ak09912.c</FilePath>
-            </File>
-            <File>
-              <FileName>gyr_lsm6ds3.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\module\mems\gyr_lsm6ds3.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>oled</GroupName>
-          <GroupOption>
-            <CommonProperty>
-              <UseCPPCompiler>0</UseCPPCompiler>
-              <RVCTCodeConst>0</RVCTCodeConst>
-              <RVCTZI>0</RVCTZI>
-              <RVCTOtherData>0</RVCTOtherData>
-              <ModuleSelection>0</ModuleSelection>
-              <IncludeInBuild>0</IncludeInBuild>
-              <AlwaysBuild>2</AlwaysBuild>
-              <GenerateAssemblyFile>2</GenerateAssemblyFile>
-              <AssembleAssemblyFile>2</AssembleAssemblyFile>
-              <PublicsOnly>2</PublicsOnly>
-              <StopOnExitCode>11</StopOnExitCode>
-              <CustomArgument></CustomArgument>
-              <IncludeLibraryModules></IncludeLibraryModules>
-              <ComprImg>1</ComprImg>
-            </CommonProperty>
-            <GroupArmAds>
-              <Cads>
-                <interw>2</interw>
-                <Optim>0</Optim>
-                <oTime>2</oTime>
-                <SplitLS>2</SplitLS>
-                <OneElfS>2</OneElfS>
-                <Strict>2</Strict>
-                <EnumInt>2</EnumInt>
-                <PlainCh>2</PlainCh>
-                <Ropi>2</Ropi>
-                <Rwpi>2</Rwpi>
-                <wLevel>2</wLevel>
-                <uThumb>2</uThumb>
-                <uSurpInc>2</uSurpInc>
-                <uC99>2</uC99>
-                <useXO>2</useXO>
-                <v6Lang>0</v6Lang>
-                <v6LangP>0</v6LangP>
-                <vShortEn>2</vShortEn>
-                <vShortWch>2</vShortWch>
-                <v6Lto>0</v6Lto>
-                <v6WtE>0</v6WtE>
-                <VariousControls>
-                  <MiscControls></MiscControls>
-                  <Define></Define>
-                  <Undefine></Undefine>
-                  <IncludePath></IncludePath>
-                </VariousControls>
-              </Cads>
-              <Aads>
-                <interw>2</interw>
-                <Ropi>2</Ropi>
-                <Rwpi>2</Rwpi>
-                <thumb>2</thumb>
-                <SplitLS>2</SplitLS>
-                <SwStkChk>2</SwStkChk>
-                <NoWarn>2</NoWarn>
-                <uSurpInc>2</uSurpInc>
-                <useXO>2</useXO>
-                <VariousControls>
-                  <MiscControls></MiscControls>
-                  <Define></Define>
-                  <Undefine></Undefine>
-                  <IncludePath></IncludePath>
-                </VariousControls>
-              </Aads>
-            </GroupArmAds>
-          </GroupOption>
-          <Files>
-            <File>
-              <FileName>sh1107.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\module\oled\sh1107.c</FilePath>
-            </File>
-            <File>
-              <FileName>sh1107_128x32.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\module\oled\sh1107_128x32.c</FilePath>
-            </File>
-            <File>
-              <FileName>ssd1306.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\module\oled\ssd1306.c</FilePath>
-            </File>
-            <File>
-              <FileName>ssd1306_128x32.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\module\oled\ssd1306_128x32.c</FilePath>
+              <FilePath>..\..\..\module\mems\mag_null.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1650,59 +904,19 @@
           <GroupName>service</GroupName>
           <Files>
             <File>
+              <FileName>service_lib_M0.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\..\service\service_lib_M0.lib</FilePath>
+            </File>
+            <File>
               <FileName>tracer.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\service\tracer\tracer.c</FilePath>
+              <FilePath>..\..\..\service\tracer\tracer.c</FilePath>
             </File>
             <File>
               <FileName>uart_ring.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\service\uart_ring\uart_ring.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>test</GroupName>
-          <Files>
-            <File>
-              <FileName>test_aes.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\test\src\test_aes.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\test\src\test_main.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_uart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\test\src\test_uart.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_spi.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\test\src\test_spi.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_i2c.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\test\src\test_i2c.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_clock.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\test\src\test_clock.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_dhry_1.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\test\src\test_dhry_1.c</FilePath>
-            </File>
-            <File>
-              <FileName>test_dhry_2.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\test\src\test_dhry_2.c</FilePath>
+              <FilePath>..\..\..\service\uart_ring\uart_ring.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1710,14 +924,14 @@
           <GroupName>startup</GroupName>
           <Files>
             <File>
-              <FileName>startup_ARMCortexM.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\..\platform\asic\6801a1\bootcode\startup_ARMCortexM.s</FilePath>
-            </File>
-            <File>
               <FileName>arch_main.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\arch_main.c</FilePath>
+            </File>
+            <File>
+              <FileName>startup_ARMCortexM.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>..\..\..\platform\asic\6801a1\bootcode\startup_ARMCortexM.s</FilePath>
             </File>
           </Files>
         </Group>
