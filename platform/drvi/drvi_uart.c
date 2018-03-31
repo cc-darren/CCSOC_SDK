@@ -13,14 +13,14 @@
 
 #if defined UART_INUSE && (UART_INUSE)
 
+T_UartPort g_tDrviUartPort[UART_TOTAL_SUPPORTED];
+
 #ifdef CC6801A1
 #include "uart_ring.h"
 
 #ifndef UART_BUFFER_SIZE
 #define UART_BUFFER_SIZE 64
 #endif
-
-T_UartPort g_tDrviUartPort[UART_TOTAL_SUPPORTED];
 
 #if defined UART0_INUSE && (UART0_INUSE)
 RINGBUFF_T sUart0Ring;
