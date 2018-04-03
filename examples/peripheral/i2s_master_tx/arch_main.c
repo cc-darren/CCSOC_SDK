@@ -70,7 +70,7 @@ int main(void)
     drvi_I2sSetFormat(DAI_FORMAT_I2S | DAI_CODEC_SLAVE);
 
     drvi_I2sTxConfig((uint32_t)g_bAudioSample, (uint32_t)(g_bAudioSample+sizeof(g_bAudioSample)-1));
-    drvi_I2sStart((uint16_t)sizeof(g_bAudioSample), 0);
+    drvi_I2sStart(1, 1);
 
     while(1)
     {

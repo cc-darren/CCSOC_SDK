@@ -30,8 +30,8 @@
 *
 ******************************************************************************/
 
-#ifndef _PROJECT_I2S_MASTER_H_
-#define _PROJECT_I2S_MASTER_H_
+#ifndef _PROJECT_I2S_SLAVE_H_
+#define _PROJECT_I2S_SLAVE_H_
 
 /******************************************************************************
 Head Block of The File
@@ -357,7 +357,7 @@ Head Block of The File
 #define GPIO27_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
 
 // GPIO Pin Group7
-#define GPIO_MODE_PINGROUP7                  GPIO_MODE_I2S_MASTER
+#define GPIO_MODE_PINGROUP7                  GPIO_MODE_I2S_SLAVE
 #define GPIO28_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
 #define GPIO29_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
 #define GPIO30_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
@@ -401,6 +401,7 @@ Declaration of External Variables & Functions
 
 
 //I2C parameters
+//#define SGTL5000_SLAVE_ADDRESS      0x0A
 
 //UART parameters
 //#define UART_LOOPBACK_TEST       1
@@ -430,4 +431,4 @@ Declaration of static Global Variables & Functions
 // Sec 10: C Functions
 ******************************************************************************/
 
-#endif // _PROJECT_I2S_MASTER_H_
+#endif // _PROJECT_I2S_SLAVE_H_
