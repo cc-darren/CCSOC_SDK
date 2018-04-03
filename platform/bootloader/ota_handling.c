@@ -25,7 +25,7 @@
 #define ADDRESS_OF_USER_DATA        (0x10039800)
 #define ADDRESS_OF_BL_SETTINGS      (0x1003E800)
 #define END_OF_OTA_ADDRESS          (ADDRESS_OF_USER_DATA)
-
+#define DEFAULT_ADDRESS_OF_APP      (0x1000A000)
 
 
 static S_App_OTA_LocalConfig sAppOTALocalConfig;
@@ -133,6 +133,16 @@ bool  ota_verify_and_get_app_address(uint32_t *start_address)
     
     ota_update_bl_settings();
 
+    //Louis, 2018.04.03, for LOAD by Keil on MPW chip    
+    if (   (0xFFFFFFFF == sAppOTALocalConfig.prog_addr)
+        && (0xFFFFFFFF == sAppOTALocalConfig.enter_ota_mode)
+        && (0xFFFFFFFF == sAppOTALocalConfig.image_is_valid))
+    {
+        *start_address = DEFAULT_ADDRESS_OF_APP;
+        
+        return true;
+    }
+    
     *start_address = sAppOTALocalConfig.prog_addr;
 
 
