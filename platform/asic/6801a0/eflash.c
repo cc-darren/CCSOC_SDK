@@ -173,7 +173,7 @@ BOOL cc6801_EflashErasePage(uint32_t dwEflashAdr)
         //set efalsh start address at 0
         regEFLASH->dwIndirStart = (dwEflashAdr<<8);
 
-        //set efalsh mode to mass erase
+        //set efalsh mode to page erase
         tdata = (EF_FLASHMODE_REG_AHBEnable | EF_FLASHMODE_REG_ModeMainErase);
         regEFLASH->dwAccessCtrl = tdata;
 
@@ -183,7 +183,7 @@ BOOL cc6801_EflashErasePage(uint32_t dwEflashAdr)
             tdata = regEFLASH->dwInterrupt;
         } while( (tdata&(EF_INTERRUPT_REG_EraPrgModeStatus|EF_INTERRUPT_REG_DataModeStatus))==0 );
         EFLASH_IRQHandler();
-#endif
+#endif //(EFLASH_ASYNCMODE==0)
         return (TRUE);                                  // Finished without Errors
     }
 }
@@ -192,6 +192,7 @@ void cc6801_EflashRegisterCallback(fpEflash_Callback fpCB)
 {
     g_fpEflashCB = fpCB;
 }
+
 void cc6801_EflashProgram(uint32_t dwEflashAdr,unsigned char * pBufAdr,uint32_t dwBufSize)
 {
 #if (EFLASH_DMAMODE==1)  //use cc6801 DMA mode 
@@ -243,6 +244,7 @@ void cc6801_EflashProgram(uint32_t dwEflashAdr,unsigned char * pBufAdr,uint32_t 
         do {
             tdata = regEFLASH->dwInterrupt;
         } while( (tdata&(EF_INTERRUPT_REG_EraPrgModeStatus|EF_INTERRUPT_REG_DataModeStatus))==0 );
+        regEFLASH->dwInterrupt |= (EF_INTERRUPT_REG_DMAModeStatus    | EF_INTERRUPT_REG_EraPrgModeStatus | EF_INTERRUPT_REG_DataModeStatus);
     }
     EFLASH_IRQHandler();
 #else
