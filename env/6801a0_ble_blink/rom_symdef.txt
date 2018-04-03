@@ -1,0 +1,22 @@
+#<SYMDEFS># ARM Linker, 5060183: Last Updated: Tue May 23 19:09:01 2017
+
+0x000149c1 T rwble_isr
+0x00014ad5  T rwip_init
+0x00014b81 T rwip_schedule
+
+0x0000b705 T ke_task_create
+0x0000b7e1 T ke_task_msg_flush
+0x0000b3c5 T ke_malloc
+0x0000b285 T ke_free
+0x0000b5c9 T ke_msg_send
+0x0000b6b5 T ke_state_set
+0x0000b691 T ke_state_get
+0x0000b98d T ke_timer_clear
+0x0000b949 T ke_timer_active
+0x0000b551 T ke_msg_alloc
+0x0000ba85 T ke_timer_set
+
+0x000020c1 T attm_att_set_permission
+0x000024c7 T attm_svc_create_db
+
+0x000054b9 T gapc_get_conhdl
