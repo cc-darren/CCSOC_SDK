@@ -1,0 +1,21 @@
+<DataBase>
+  <!--             -->
+  <!-- CloudChip   -->
+  <!--             -->
+  <Device>
+    <ChipInfo Vendor="CloudChip" Name="CC6801a0_M0" Core="JLINK_CORE_CORTEX_M0" WorkRAMAddr="0x20000000" WorkRAMSize="0x00018000" />
+    <FlashBankInfo Name="EFlash" BaseAddr="0x10000000" MaxSize="0x00040000" Loader="Devices/CC6801a0_M0.FLM" LoaderType="FLASH_ALGO_TYPE_OPEN" AlwaysPresent="1"/ >
+  </Device>
+  <Device>
+    <ChipInfo Vendor="CloudChip" Name="CC6801a0_M4" Core="JLINK_CORE_CORTEX_M4" WorkRAMAddr="0x20000000" WorkRAMSize="0x00018000" />
+    <FlashBankInfo Name="EFlash" BaseAddr="0x10000000" MaxSize="0x00040000" Loader="Devices/CC6801a0_M4.FLM" LoaderType="FLASH_ALGO_TYPE_OPEN" AlwaysPresent="1"/ >
+  </Device>
+  <Device>
+    <ChipInfo Vendor="CloudChip" Name="CC6801a1_M0" Core="JLINK_CORE_CORTEX_M0" WorkRAMAddr="0x20000000" WorkRAMSize="0x00023000" />
+    <FlashBankInfo Name="EFlash" BaseAddr="0x10000000" MaxSize="0x00040000" Loader="Devices/CC6801a1_M0.FLM" LoaderType="FLASH_ALGO_TYPE_OPEN" AlwaysPresent="1"/ >
+  </Device>
+  <Device>
+    <ChipInfo Vendor="CloudChip" Name="CC6801a1_M4" Core="JLINK_CORE_CORTEX_M4" WorkRAMAddr="0x20000000" WorkRAMSize="0x00023000" />
+    <FlashBankInfo Name="EFlash" BaseAddr="0x10000000" MaxSize="0x00040000" Loader="Devices/CC6801a1_M4.FLM" LoaderType="FLASH_ALGO_TYPE_OPEN" AlwaysPresent="1"/ >
+  </Device>
+</DataBase>

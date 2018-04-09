@@ -1,0 +1,5 @@
+si swd
+speed 4000
+loadfile .\release\EVB_BL_M4f_20180402.bin 0x10000000
+loadfile .\release\EVB_M4f.bin 0x10010000
+q
