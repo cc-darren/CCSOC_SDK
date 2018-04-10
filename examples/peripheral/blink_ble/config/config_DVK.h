@@ -41,7 +41,6 @@ Head Block of The File
 // Sec 1: Include File
 #include "global.h"
 #include "stdint.h"
-#include "CC_Calorie_burn.h"
 #include "util_calendar.h"
 
 // Sec 2: Constant Definitions, Imported Symbols, miscellaneous
@@ -65,18 +64,14 @@ Head Block of The File
 ***************************************************/
 #define ASIC                    CC6801
 
-// EMWIN AND JDI
-#define nEMWIN_ENABLE
-
-#ifdef EMWIN_ENABLE
-#define JDI_OLED_ENABLE
-#endif
-
 //find and include project options from the asic you chose
 #include "asic_options.h"
 
 
 /************Add sub-options of this ASIC****************/
+
+// EMWIN AND JDI
+#define nEMWIN_ENABLE
 
 //define SPI clock
 //define I2C clock
@@ -141,7 +136,7 @@ Head Block of The File
 
 
 
-#ifndef EMWIN_ENABLE
+
 /**************************************************
 *   Choose OLED model and config OLED interface
 *   (pick one GYRO sensor from module_supported.h)
@@ -153,12 +148,12 @@ Head Block of The File
 *   OLED_IF_TYPE : the OLED interface type
 *   OLED_IF_ID   : the OLED interface id
 ***************************************************/
+#ifndef EMWIN_ENABLE
 #define MODULE_OLED             OLED_SOLOMON_SH1107
-#define OLED_IF                 UseInterface(SPI,2)
 #else
-#define MODULE_OLED              OLED_SOLOMON_SH1107//OLED_JDI_LPM010M297B
-#define OLED_IF                 UseInterface(SPI,2)
+#define MODULE_OLED             OLED_JDI_LPM013M126A
 #endif
+#define OLED_IF                 UseInterface(SPI,2)
 
 /**************************************************
 *   Choose PPG model and config PPG interface
@@ -462,23 +457,6 @@ Declaration of static Global Variables & Functions
 #define DEVICE_MODEL "CC-6801"
 #define SDK_FW_VERSION "v0.000.004"
 
-#define CFG_APP_CODE_ONLY
-
-#ifndef CFG_APP_CODE_ONLY
-#define CFG_JUMP_TABLE_2
-#endif
-
-#define SLEEP_EN
-#define LONGSIT_EN
-#define PEDO_EN
-#define HRM_EN
-//#define BLE_OTA_BL_MODE_EN
-#define DB_EN
-#define FIFO_MODE_EN
-#define FACTORY_RESET
-
-#define APP_VIB_MGR
-
 
 #define TOUCH_INT_PIN       GPIO_PIN_2
 #define HRM_INT_PIN         GPIO_PIN_9
@@ -490,451 +468,9 @@ Declaration of static Global Variables & Functions
 #define OLED_DC_PIN         GPIO_PIN_0
 #endif
 
-#define SWAP_ACC_DIRECTION_EN
-
-#define FORCE_LIFTARM_TEST_EN   // for test
-//#define FORCE_SWIM_TEST_EN   // for test
-//#define FORCE_HRS_TEST_EN   // for test
-
-#define APP_SERV_MGR_EN        // for new service/sensor manager
-#ifdef APP_SERV_MGR_EN
-//#define SM_TEST_EN
-//#define SRV_MGR_TEST_EN
-#endif
-
+//#define CFG_SDK_CCPS_EN
 #define SW_TIMER_BY_KERNEL  // min timer: 10ms
 
-//-----------------------------------
-//  _bState : 1  , Init form system reboot
-//          : 2 ,  Init form Venus app setting
-//------------------------------------
-#define   DB_INIT_FROM_SYSTEM       1
-#define   DB_INIT_FROM_APP              2
-#define   DB_INIT_FROM_APP_FACTORY_RESET 3
-
-#define  TIME_OF_24_HOUR     86400
-
-
-typedef enum
-{
-
-    eSysStateInit=1,
-    eSysStateNormal,
-    eSysStateLowPwr,
-    eSysInvaild
-}eSystem_Battery_State_t;
-
-
-enum
-{
-    eEvent_None = 0,
-    eEvent_LOWPOWER,
-    eEvent_TOUCH,
-//    eEvent_LONG_TOUCH,
-    eEvent_SWIM_ON,
-    eEvent_SWIM_OFF,
-    eEvent_SWIM_CONFIRM_ON,
-    eEvent_SWIM_CONFIRM_OFF,
-    eEvent_CHARGINGIN,
-    eEvent_CHARGINGOUT,
-    eEvent_CHARGINGFULL,
-    eEvent_HRM_DATA,
-    eEvent_HRM_TIMEOUT,
-    eEvent_HEARTRATESTRAPMODE_ON,
-    eEvent_HEARTRATESTRAPMODE_OFF,
-    eEvent_LIFTARM_UP,
-    eEvent_LIFTARM_DOWN,
-    eEvent_LONGSIT,
-    eEvent_INCOMMINGCALL_ON,
-    eEvent_INCOMMINGCALL_OFF,
-    eEvent_INCOMMINGSMS,
-    eEvent_ALARM,
-    eEvent_HR_WARNING_HIHG,
-    eEvent_HR_WARNING_LOW,
-    eEvent_FACTORY_RESET_START,
-    eEvent_FACTORY_RESET_DONE,
-    eEvent_FACTORY_RESET_STOP,  //LOW POWER FAIL
-    eEvent_PAIR_PASSKEY,
-    eEvent_PAIR_SUCCESS,
-    eEvent_PAIR_FAIL,
-#ifdef PED_GOAL
-    eEvent_PED_GOAL_ACHIEVE,
-    eEvent_SWIMMING_GOAL_ACHIEVE,
-#endif
-    eEvent_Dummy
-};
-
-#if 0
-enum
-{
-    eEvent_None = 0,
-    eEvent_LOWPOWER,
-    eEvent_TOUCH,
-//    eEvent_LONG_TOUCH,
-    eEvent_SWIM_ON,
-    eEvent_SWIM_OFF,
-    eEvent_SWIM_CONFIRM_ON,
-    eEvent_SWIM_CONFIRM_OFF,
-    eEvent_CHARGINGIN,
-    eEvent_CHARGINGOUT,
-    eEvent_CHARGINGFULL,
-    eEvent_HRM_DATA,
-    eEvent_HRM_TIMEOUT,
-    eEvent_HEARTRATESTRAPMODE_ON,
-    eEvent_HEARTRATESTRAPMODE_OFF,
-    eEvent_LIFTARM,
-    eEvent_LONGSIT,
-    eEvent_INCOMMINGCALL_ON,
-    eEvent_INCOMMINGCALL_OFF,
-    eEvent_INCOMMINGSMS,
-    eEvent_ALARM,
-    eEvent_FACTORY_RESET_START,
-    eEvent_FACTORY_RESET_DONE,
-    eEvent_FACTORY_RESET_STOP,  //LOW POWER FAIL
-    eEvent_Dummy
-};
-#endif
-typedef enum
-{
-    eDEVICE_CHARGE_IN = 0,
-    eDEVICE_CHARGE_OUT
-}eDEV_CHARGE_STATE_t;
-
-typedef enum
-{
-    eDEVICE_CHARGE_NOFULL = 0,
-    eDEVICE_CHARGE_FULL
-}eDEV_CHARGEFULL_STATE_t;
-
-typedef enum
-{
-    eSWIM_25M = 0,
-    eSWIM_50M,
-    eSWIM_25YD,
-    eSWIM_33_33M,
-    eSWIM_33_33YD,
-    eeSWIM_UNKNOWN
-}eSWIM_LEN_SET_t;
-
-typedef enum
-{
-    eMMI_STANDBY_PAGE =0,
-    eMMI_CLOCK_PAGE = 1,
-    eMMI_PEDO_PAGE,
-    eMMI_HRM_PAGE,
-    eMMI_BATTERY_PAGE, //4//4
-    eMMI_DISTANCE_PAGE,
-    eMMI_CAL_PAGE,
-    eMMI_SWINMING_PAGE,
-    eMMI_DEVICE_INFO_PAGE,
-    eMMI_DUMMY_PAGE,
-    eMMI_CHARGING_IN_PAGE = 10,
-    eMMI_CHARGING_IN_FULL,
-    eMMI_HRMDATA_PAGE,
-    eMMI_HRMTIMEOUT_PAGE,
-    eMMI_HRM_HRS_INIT_PAGE,
-    eMMI_HRM_HRS_ACTIVATED_PAGE,
-    eMMI_HRM_HRS_DATA_PAGE,
-    eMMI_HRM_HRS_DEACTIVATED_PAGE,
-    eMMI_LONGSIT_PAGE,
-    eMMI_INCOMMING_CALL_PAGE,
-    eMMI_INCOMMING_SMS_PAGE,
-    eMMI_ALARM_PAGE,
-    eMMI_SWIMMING_ON_PAGE,
-    eMMI_SWIMMING_OFF_PAGE,
-    eMMI_SWIMMING_CONFIRM_ON_PAGE,
-    eMMI_SWIMMING_CONFIRM_OFF_PAGE,
-    eMMI_PRE_LOWPOWER,
-    eMMI_LOWPOWER,
-    eMMI_DB_FULL,
-    eMMI_HR_WARNING_HIGH,
-    eMMI_HR_WARNING_LOW,
-    eMMI_FACTORY_RESET_START,
-    eMMI_FACTORY_RESET_DONE,
-    eMMI_FACTORY_RESET_STOP,
-    eMMI_PAIR_PASSKEY,
-    eMMI_PAIR_SUCCESS,
-    eMMI_PAIR_FAIL,
-#ifdef PED_GOAL
-    eMMI_PED_GOAL_ACHIEVE,
-    eMMI_SWIMMING_GOAL_ACHIEVE,
-#endif
-    eMMI_LIFTARM_DOWN_OLEDOFF,
-    eMMI_DUMMY_END
-}eMMI_Page_t;
-
-typedef enum
-{
-    eHRMCLOSE_ID_TOUCH=0,
-    eHRMCLOSE_ID_GENERALTIMEOUT,
-    eHRMCLOSE_ID_DUMMY
-}eHrm_Close_EventID;
-
-typedef enum
-{
-    eHRM_Off=0,
-    eHRM_On,
-    eHRM_Invaild
-}eHrmOp_State;
-
-
-typedef enum
-{
-    eStateOff=0,
-    eStateOn,
-    eStateInvaild
-}eCommon_State;
-
-
-typedef enum
-{
-    eDisable=0,
-    eEnable,
-    eInvaild,
-}eStete_t;
-
-
-typedef enum
-{
-    eOne=1,
-    eDayofChange
-}eClear_DB_Setting_t;
-
-
-typedef enum
-{
-    eSwimCalProcStop=0,
-    eSwimCalProcStart =1,
-    eSwimCalProcInvaild,
-}eSwim_Cal_ProcState_t;
-
-typedef enum
-{
-    eSwimCalInit=1,
-    eSwimCalProc,
-    eSwimCalRetry,
-    eSwimCalExit,
-    eSwimCalInvaild,
-}eSwim_Cal_State_t;
-
-typedef enum
-{
-    eLongsitNoResult = 0,
-    eLongsitNoWear =1,
-    eLongsitWearOnHand,
-}eLongsit_Wear_State_t;
-
-
-typedef enum
-{
-    ePedo_Stop = 0x00,
-    ePedo_Walk = 0x01,
-    ePedo_Run  = 0x02,
-}ePedo_State_t;
-
-typedef struct
-{
-    uint8_t    bCount;
-    uint8_t    baPadding[2];
-    uint32_t  dwData;
-}   S_VenusEvent;
-
-typedef enum
-{
-    eLiftarm_None =0,
-    eLiftarm_Up = 1,
-    eLiftarm_Down,
-}eLiftarm_Mode;
-
-#define CHARGE_MAX_USERS 8
-typedef void (*charge_cb_t)(eDEV_CHARGE_STATE_t eState);
-
-#if 1
-
-
-#if 0
-
-typedef struct
-{
-   int16_t    Data[3];
-   uint16_t     wVaildFlag;
-}db_sys_static_gyro_offset_t __attribute__((aligned(4)));
-
-
-typedef struct
-{
-    uint8_t start_time_hour;
-    uint8_t start_time_min;
-    uint8_t end_time_hour;
-    uint8_t end_time_min;
-}db_sys_sleep_monitor_t __attribute__((aligned(4))); // from cc_db_structrure.h
-
-
-typedef struct
-{
-    uint16_t count;
-    uint8_t rsvd[2];
-}db_sleep_record_count_t __attribute__((aligned(4)));
-
-
-
-typedef struct
-{
-    uint8_t year;
-    uint8_t month;
-    uint8_t day;
-    uint8_t hour;
-    uint8_t min;
-    uint8_t sec;
-    uint8_t sleep_state;
-    uint8_t rsvd[1];
-}db_sleep_time_t __attribute__((aligned(4)));
-
-
-typedef struct
-{
-    uint32_t period_second;
-}db_sleep_time_period_t __attribute__((aligned(4)));
-
-
-typedef struct
-{
-    db_sleep_time_t         detect_time;
-    db_sleep_time_period_t  period;
-}db_sleep_t __attribute__((aligned(4)));
-#endif
-
-#if 1 // from venus: ble_rscs.h
-
-typedef struct
-{
-   uint8_t     command;
-   uint8_t     is_update_steps;
-   uint32_t    dwTotal_steps;
-   uint32_t    dwTotal_calorie;
-
-}CC_Ble_Ped_Info_T;
-
-typedef struct
-{
-   uint8_t     command;
-   uint8_t     is_update_hrm;  //bit 0: Ped = 0xF1, Hrm = 0xF2 Sleep = 0xF3
-   uint16_t    hrmdata;
-}CC_Ble_Hrm_Info_T;
-
-typedef struct
-{
-   uint8_t     command;
-   uint8_t     is_Swim_En;  //bit 0: Ped = 0xF1, Hrm = 0xF2 Sleep = 0xF3  Swim = 0xF4
-   uint8_t     style_type;
-   uint32_t   dwSwimCnt;
-   uint32_t     cSwimLap;
-   unsigned long   dwTimestamp;
-}CC_Ble_Swim_Info_T;
-
-
-typedef struct
-{
-    uint8_t cHeight;
-    uint8_t cWeight;
-    uint8_t cAge;
-    CC_Gender_t cGender; // 0: Man, 1: Female
-    uint8_t cStride_Lenght;
-    eSWIM_LEN_SET_t cSwim_Pool_Size;
-    uint8_t bBandLocation;
-
-    uint8_t bRestingHrMax;
-    uint8_t bRestingHrMin;
-    uint8_t bExerciseHrMax;
-    uint8_t bExerciseHrMin;
-    uint8_t BRsv;
-
-}CC_Ble_General_Info_T;
-
-
-typedef struct
-{
-    uint8_t cUnitLength;
-    uint8_t cUnitWeight;
-    uint16_t rsvd;
-}CC_Ble_Unit_Info_T;
-
-
-typedef enum
-{
-    eCALLDISABLE =0,
-    eCALLENABLE,
-    eCALLINCOMMING,
-    eCALLINCOMMINGOFF,
-    eCALLUNKNOWN
-}eCALL_state_t;
-
-
-typedef enum
-{
-    eSMSDISABLE =0,
-    eSMSENABLE,
-    eSMSCOMMING,
-    eSMSUNKNOWN
-}eSMS_state_t;
-
-typedef enum
-{
-    eLONGSITDISABLE =0,
-    eLONGSITENABLE,
-    eLONGSITUNKNOWN
-}eLONGSIT_state_t;
-
-typedef enum
-{
-    eLIFTARMDISABLE =0,
-    eLIFTARMENABLE,
-    eLIFTARMUNKNOWN
-}eLIFTARM_state_t;
-
-typedef struct
-{
-    uint8_t cIndex;
-    uint8_t cHour;
-    uint8_t cMinute;
-    uint8_t cSetting;
-
-}CC_Ble_Clock_Set_T;
-
-typedef struct
-{
-    uint8_t cTotalNum;
-    CC_Ble_Clock_Set_T cAlarmTime[4];
-}CC_Ble_Clock_Alarm_T;
-
-
-
-
-#if 0
-typedef struct
-{
-    eStete_t eIsHrsEnabled;
-    eStete_t eIs24HrEnabled;
-
-    uint32_t dw24HrPeriodicMeasurementTime;    // ms
-    uint32_t dw24HrOneMeasurementMaxTime;      // ms
-}db_sys_hr_setting_t  __attribute__((aligned(4)));
-
-
-
-typedef struct
-{
-    uint8_t incomming_call_en;
-    uint8_t incomming_sms_en;
-    uint8_t longsit_en;
-    uint8_t lifearm_en;
-}db_sys_notify_enabled_t __attribute__((aligned(4)));
-#endif
-
-
-#endif
-
-#endif
 
 
 /******************************************************************************
@@ -945,10 +481,10 @@ typedef struct
 #define CFG_BLE    1
 
 // <h> BLE - DEVICE NAME
-#define APP_DFLT_DEVICE_NAME    "CC6801-87"
+#define APP_DFLT_DEVICE_NAME    "CC6801-01"
 
 // <h> BLE - DEVICE ADDRESS
-#define APP_DFLT_DEVICE_ADDR    { 0xAB, 0x3A, 0x60, 0x48, 0x23, 0x01 }
+#define APP_DFLT_DEVICE_ADDR    { 0xAB, 0x89, 0x67, 0x45, 0x23, 0x01 }
 
 // <h> BLE - Data Length Extension (v4.2)
 #define CFG_DLE_EN
@@ -977,7 +513,6 @@ typedef struct
 
 #define CFG_AHITL
 #define CFG_HCITL
-//#define CFG_NVDS
 #define CFG_HW_AUDIO
 
 #define CFG_SEC_CON
@@ -989,19 +524,15 @@ typedef struct
 #define CFG_RF_ATLAS
 
 #define CFG_PRF
-#define CFG_NB_PRF    5
-#define CFG_PRF_HTPT
+#define CFG_NB_PRF    4
 #define CFG_PRF_BASS
 #define CFG_PRF_DISS
-#define CFG_PRF_OTA
 #define CFG_PRF_CCPS
 
 #define CFG_APP
-#define CFG_APP_HT
-#define BLE_APP_BATT  1
-#define CFG_APP_DIS    1
-#define CFG_APP_OTA
-#define CFG_APP_CCPS
+#define BLE_APP_BATT    1
+#define CFG_APP_DIS     1
+#define CFG_APP_CCPS    1
 
 
 #define CFG_EXT_DB

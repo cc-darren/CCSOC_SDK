@@ -379,49 +379,14 @@
           <GroupName>app</GroupName>
           <Files>
             <File>
-              <FileName>venus_main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\venus_main.c</FilePath>
-            </File>
-            <File>
-              <FileName>CC_SleepMonitor_Service.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\algo\CC_Library\Src\CC_SleepMonitor_Service.c</FilePath>
-            </File>
-            <File>
-              <FileName>CC_Longsit_Service.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\algo\CC_Library\Src\CC_Longsit_Service.c</FilePath>
-            </File>
-            <File>
-              <FileName>CC_HRM_drv.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\HeartRate\CC_HRM_drv.c</FilePath>
-            </File>
-            <File>
-              <FileName>CC_AppSrvc_HeartRate.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\HeartRate\CC_AppSrvc_HeartRate.c</FilePath>
-            </File>
-            <File>
-              <FileName>CC_DisplayService.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\Display\CC_DisplayService.c</FilePath>
-            </File>
-            <File>
-              <FileName>CC_PageMgr.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\Display\CC_PageMgr.c</FilePath>
-            </File>
-            <File>
-              <FileName>CC_Vib_Service.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\Display\CC_Vib_Service.c</FilePath>
-            </File>
-            <File>
               <FileName>appDisplay.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\app\Display\appDisplay.c</FilePath>
+            </File>
+            <File>
+              <FileName>ble_mgr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\app\ble_mgr\ble_mgr.c</FilePath>
             </File>
             <File>
               <FileName>font.c</FileName>
@@ -429,44 +394,9 @@
               <FilePath>..\..\..\app\Display\font.c</FilePath>
             </File>
             <File>
-              <FileName>icon.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\Display\icon.c</FilePath>
-            </File>
-            <File>
               <FileName>scheduler.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\app\scheduler\scheduler.c</FilePath>
-            </File>
-            <File>
-              <FileName>CC_AppSrvc_Manager.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\AppService\CC_AppSrvc_Manager.c</FilePath>
-            </File>
-            <File>
-              <FileName>Acc_Gyro_Controller.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\SensorController\Acc_Gyro_Controller.c</FilePath>
-            </File>
-            <File>
-              <FileName>CC_Sensor_Manager.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\SensorController\CC_Sensor_Manager.c</FilePath>
-            </File>
-            <File>
-              <FileName>Mag_Controller.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\SensorController\Mag_Controller.c</FilePath>
-            </File>
-            <File>
-              <FileName>PPG_Controller.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\SensorController\PPG_Controller.c</FilePath>
-            </File>
-            <File>
-              <FileName>ble_mgr.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\ble_mgr\ble_mgr.c</FilePath>
             </File>
             <File>
               <FileName>database_lib_M0.lib</FileName>
@@ -497,36 +427,11 @@
                 <FileArmAds/>
               </FileOption>
             </File>
-            <File>
-              <FileName>App_Vib_Pattern.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\Vibration\App_Vib_Pattern.c</FilePath>
-            </File>
-            <File>
-              <FileName>App_Vib_Manager.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\Vibration\App_Vib_Manager.c</FilePath>
-            </File>
-            <File>
-              <FileName>util_calendar.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\utility\util_calendar.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>6801a0</GroupName>
           <Files>
-            <File>
-              <FileName>adc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\platform\asic\6801a0\adc.c</FilePath>
-            </File>
-            <File>
-              <FileName>aes.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\platform\asic\6801a0\aes.c</FilePath>
-            </File>
             <File>
               <FileName>clock.c</FileName>
               <FileType>1</FileType>
@@ -656,11 +561,6 @@
               <FileName>rf_atlas.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\ble\modules\rf\src\rf_atlas.c</FilePath>
-            </File>
-            <File>
-              <FileName>nvds.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\ble\modules\nvds\src\nvds.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -982,11 +882,6 @@
         <Group>
           <GroupName>drvi</GroupName>
           <Files>
-            <File>
-              <FileName>drvi_aes.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\platform\drvi\drvi_aes.c</FilePath>
-            </File>
             <File>
               <FileName>drvi_i2c.c</FileName>
               <FileType>1</FileType>
@@ -1773,49 +1668,14 @@
           <GroupName>app</GroupName>
           <Files>
             <File>
-              <FileName>venus_main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\venus_main.c</FilePath>
-            </File>
-            <File>
-              <FileName>CC_SleepMonitor_Service.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\algo\CC_Library\Src\CC_SleepMonitor_Service.c</FilePath>
-            </File>
-            <File>
-              <FileName>CC_Longsit_Service.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\algo\CC_Library\Src\CC_Longsit_Service.c</FilePath>
-            </File>
-            <File>
-              <FileName>CC_HRM_drv.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\HeartRate\CC_HRM_drv.c</FilePath>
-            </File>
-            <File>
-              <FileName>CC_AppSrvc_HeartRate.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\HeartRate\CC_AppSrvc_HeartRate.c</FilePath>
-            </File>
-            <File>
-              <FileName>CC_DisplayService.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\Display\CC_DisplayService.c</FilePath>
-            </File>
-            <File>
-              <FileName>CC_PageMgr.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\Display\CC_PageMgr.c</FilePath>
-            </File>
-            <File>
-              <FileName>CC_Vib_Service.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\Display\CC_Vib_Service.c</FilePath>
-            </File>
-            <File>
               <FileName>appDisplay.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\app\Display\appDisplay.c</FilePath>
+            </File>
+            <File>
+              <FileName>ble_mgr.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\app\ble_mgr\ble_mgr.c</FilePath>
             </File>
             <File>
               <FileName>font.c</FileName>
@@ -1823,44 +1683,9 @@
               <FilePath>..\..\..\app\Display\font.c</FilePath>
             </File>
             <File>
-              <FileName>icon.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\Display\icon.c</FilePath>
-            </File>
-            <File>
               <FileName>scheduler.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\app\scheduler\scheduler.c</FilePath>
-            </File>
-            <File>
-              <FileName>CC_AppSrvc_Manager.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\AppService\CC_AppSrvc_Manager.c</FilePath>
-            </File>
-            <File>
-              <FileName>Acc_Gyro_Controller.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\SensorController\Acc_Gyro_Controller.c</FilePath>
-            </File>
-            <File>
-              <FileName>CC_Sensor_Manager.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\SensorController\CC_Sensor_Manager.c</FilePath>
-            </File>
-            <File>
-              <FileName>Mag_Controller.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\SensorController\Mag_Controller.c</FilePath>
-            </File>
-            <File>
-              <FileName>PPG_Controller.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\SensorController\PPG_Controller.c</FilePath>
-            </File>
-            <File>
-              <FileName>ble_mgr.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\ble_mgr\ble_mgr.c</FilePath>
             </File>
             <File>
               <FileName>database_lib_M0.lib</FileName>
@@ -1891,36 +1716,11 @@
               <FileType>4</FileType>
               <FilePath>..\..\..\app\DataBase\database_lib_M4.lib</FilePath>
             </File>
-            <File>
-              <FileName>App_Vib_Pattern.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\Vibration\App_Vib_Pattern.c</FilePath>
-            </File>
-            <File>
-              <FileName>App_Vib_Manager.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\Vibration\App_Vib_Manager.c</FilePath>
-            </File>
-            <File>
-              <FileName>util_calendar.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\utility\util_calendar.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>6801a0</GroupName>
           <Files>
-            <File>
-              <FileName>adc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\platform\asic\6801a0\adc.c</FilePath>
-            </File>
-            <File>
-              <FileName>aes.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\platform\asic\6801a0\aes.c</FilePath>
-            </File>
             <File>
               <FileName>clock.c</FileName>
               <FileType>1</FileType>
@@ -2050,11 +1850,6 @@
               <FileName>rf_atlas.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\ble\modules\rf\src\rf_atlas.c</FilePath>
-            </File>
-            <File>
-              <FileName>nvds.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\ble\modules\nvds\src\nvds.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2376,11 +2171,6 @@
         <Group>
           <GroupName>drvi</GroupName>
           <Files>
-            <File>
-              <FileName>drvi_aes.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\platform\drvi\drvi_aes.c</FilePath>
-            </File>
             <File>
               <FileName>drvi_i2c.c</FileName>
               <FileType>1</FileType>
