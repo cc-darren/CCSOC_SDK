@@ -44,9 +44,7 @@
 #include "scheduler.h"
 #include "rwip.h"
 #include "app_ota.h"
-#ifdef APPLICATION
-#include "sdk_ccps.h"
-#endif
+
 /*
  * DEFINES
  ****************************************************************************************

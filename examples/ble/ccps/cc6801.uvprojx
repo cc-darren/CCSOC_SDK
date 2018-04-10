@@ -427,11 +427,6 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\app\Display\appDisplay.c</FilePath>
             </File>
-            <File>
-              <FileName>sdk_ccps.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\sdk\ble\profiles\ccps\sdk_ccps.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -951,6 +946,11 @@
               <FileName>jump_table.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\platform\init\src\jump_table.c</FilePath>
+            </File>
+            <File>
+              <FileName>sdk_ccps.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\sdk_ccps.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1716,11 +1716,6 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\app\Display\appDisplay.c</FilePath>
             </File>
-            <File>
-              <FileName>sdk_ccps.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\sdk\ble\profiles\ccps\sdk_ccps.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -2240,6 +2235,11 @@
               <FileName>jump_table.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\platform\init\src\jump_table.c</FilePath>
+            </File>
+            <File>
+              <FileName>sdk_ccps.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\sdk_ccps.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2940,11 +2940,6 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\app\Display\appDisplay.c</FilePath>
             </File>
-            <File>
-              <FileName>sdk_ccps.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\sdk\ble\profiles\ccps\sdk_ccps.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -3464,6 +3459,11 @@
               <FileName>jump_table.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\platform\init\src\jump_table.c</FilePath>
+            </File>
+            <File>
+              <FileName>sdk_ccps.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\sdk_ccps.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -4229,11 +4229,6 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\app\Display\appDisplay.c</FilePath>
             </File>
-            <File>
-              <FileName>sdk_ccps.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\app\sdk\ble\profiles\ccps\sdk_ccps.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -4753,6 +4748,11 @@
               <FileName>jump_table.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\platform\init\src\jump_table.c</FilePath>
+            </File>
+            <File>
+              <FileName>sdk_ccps.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\sdk_ccps.c</FilePath>
             </File>
           </Files>
         </Group>

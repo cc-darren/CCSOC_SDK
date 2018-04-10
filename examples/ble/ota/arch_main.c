@@ -65,7 +65,6 @@
 #include "tracer.h"
 #include "scheduler.h"
 #include "rwip.h"
-#include "sdk_ccps.h"
 
 /*
  * DEFINES

@@ -65,10 +65,7 @@
 #include "tracer.h"
 #include "scheduler.h"
 #include "rwip.h"
-#include "sdk_ccps.h"
-#ifdef DB_EN
-#include "sdk_db.h"
-#endif
+
 /*
  * DEFINES
  ****************************************************************************************
