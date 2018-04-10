@@ -387,8 +387,8 @@ typedef struct
 
 S_VenusCB    s_tVenusCB;
 extern uint8_t g_GyroEnable;
-static short _wGyroData[3]  = { 0 };
-static short _wAccelData[3]  = { 0 };
+short _wGyroData[3] = { 0 };
+short _wAccelData[3] = { 0 };
 float g_fSleepCalSeconds =0;
 uint8_t g_bSleepEnCnt = 0;
 #ifndef APP_SERV_MGR_EN  // not defined

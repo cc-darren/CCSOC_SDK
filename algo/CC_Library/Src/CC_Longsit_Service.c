@@ -154,9 +154,9 @@ void CC_Longsit_Srv_Enable(void)
         //LongSit_reset_notification();
         CC_Longsit_Srv_Start30MinuteTimer();
         g_dwIsActiveLongsit = eEnable;
-        TracerInfo("CC_Longsit_Srv_Enable LongSit_open \r\n");
-        }
+        //TracerInfo("CC_Longsit_Srv_Enable LongSit_open \r\n");
     }
+}
 
 void CC_Longsit_Srv_Disable(void)
 {
@@ -167,7 +167,7 @@ void CC_Longsit_Srv_Disable(void)
         CC_Longsit_Srv_Stop5SecondMonitorMotionTimer();
         CC_Longsit_Srv_Stop1SecondTimer();
         g_dwIsActiveLongsit = eDisable;
-        TracerInfo("CC_Longsit_Srv_Disable  LongSit_close \r\n");
+        //TracerInfo("CC_Longsit_Srv_Disable  LongSit_close \r\n");
     }
 }
 
@@ -206,11 +206,11 @@ void CC_LongSit_Srv_TimeSetting(db_sys_longsit_t *_stExecPeriod)
         g_stLongSitExecPeriod.start_time_min = _stExecPeriod->start_time_min;
         g_stLongSitExecPeriod.end_time_hour = _stExecPeriod->end_time_hour;
         g_stLongSitExecPeriod.end_time_min  = _stExecPeriod->end_time_min;
-        TracerInfo("CC_LongSit_Srv_TimeSetting Set New Time \r\n");
+        //TracerInfo("CC_LongSit_Srv_TimeSetting Set New Time \r\n");
     }
     else
     {
-        TracerInfo("CC_LongSit_Srv_TimeSetting Time is same with before \r\n");
+        //TracerInfo("CC_LongSit_Srv_TimeSetting Time is same with before \r\n");
     }
 
 }
@@ -246,7 +246,7 @@ void CC_LongSit_Srv_PollingHandler(void)
             if(false == g_bIsLongSitRunOnPeriod)
             {
                 g_bIsLongSitRunOnPeriod = true;
-                CC_Longsit_Srv_Enable();
+                //CC_Longsit_Srv_Enable();
     
             }
         }
@@ -256,7 +256,7 @@ void CC_LongSit_Srv_PollingHandler(void)
             if (true == g_bIsLongSitRunOnPeriod)
             {
                 g_bIsLongSitRunOnPeriod = false;
-                CC_Longsit_Srv_Disable();
+                //CC_Longsit_Srv_Disable();
 
 
             }
@@ -271,7 +271,7 @@ void CC_LongSit_Srv_PollingHandler(void)
             if (true == g_bIsLongSitRunOnPeriod)
             {
                 g_bIsLongSitRunOnPeriod = false;
-                CC_Longsit_Srv_Disable();
+                //CC_Longsit_Srv_Disable();
 
 
             }
@@ -283,7 +283,7 @@ void CC_LongSit_Srv_PollingHandler(void)
             if(false == g_bIsLongSitRunOnPeriod)
             {
                 g_bIsLongSitRunOnPeriod = true;
-                CC_Longsit_Srv_Enable();
+                //CC_Longsit_Srv_Enable();
             }
         }
     }
