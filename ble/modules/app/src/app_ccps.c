@@ -44,7 +44,9 @@
 #include "scheduler.h"
 #include "rwip.h"
 #include "app_ota.h"
-
+#ifdef CFG_SDK_CCPS_EN
+#include "sdk_ccps.h"
+#endif
 /*
  * DEFINES
  ****************************************************************************************
@@ -82,7 +84,7 @@ static int ccps_packet_send_cmd_handler(ke_msg_id_t const msgid,
                                         ke_task_id_t const src_id)
 {
 
-#ifdef CFG_SDK_CCPS_EN   // for SDK only
+#ifdef CFG_SDK_CCPS_EN // for SDK only
 
     sdk_ccps_rx_req_data(param->value, param->length);
     

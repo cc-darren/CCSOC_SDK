@@ -473,6 +473,7 @@ Declaration of static Global Variables & Functions
 #define OLED_DC_PIN         GPIO_PIN_40
 #endif
 
+#define CFG_SDK_CCPS_EN
 #define SW_TIMER_BY_KERNEL  // min timer: 10ms
 
 
