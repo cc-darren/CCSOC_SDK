@@ -472,7 +472,7 @@ Declaration of static Global Variables & Functions
 #define PEDO_EN
 #define HRM_EN
 //#define BLE_OTA_BL_MODE_EN
-#define DB_EN
+//#define DB_EN
 #define FIFO_MODE_EN
 #define FACTORY_RESET
 
