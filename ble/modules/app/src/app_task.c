@@ -45,7 +45,6 @@
 #include "arch.h"                 // Platform Definitions
 #include <string.h>
 #include "ke_timer.h"             // Kernel timer
-#include "fota_settings.h"
 
 #if (BLE_APP_SEC)
 #include "app_sec.h"              // Security Module Definition

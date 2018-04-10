@@ -84,7 +84,11 @@ static int ccps_packet_send_cmd_handler(ke_msg_id_t const msgid,
                                         ke_task_id_t const src_id)
 {
 
+#ifdef CFG_SDK_CCPS_EN   // for SDK only
 
+    sdk_ccps_rx_req_data(param->value, param->length);
+    
+#else    
     S_App_CC_Messages *ptAppCCMessage = (S_App_CC_Messages *) param->value;
     
 
@@ -103,10 +107,6 @@ static int ccps_packet_send_cmd_handler(ke_msg_id_t const msgid,
         }
     }
 
-    
-
-#if 0   // for SDK only
-    sdk_ccps_rx_req_data(param->value, param->length);
 #endif
 
     return (KE_MSG_CONSUMED);

@@ -41,7 +41,6 @@
 #include "drvi_clock.h"
 #include "sw_timer.h"
 #include "tracer.h"
-#include "crc32.h"
 #include "app_ccps.h"
 #include "ota_handling.h"
 #ifdef CC_OTA_SELF_TEST

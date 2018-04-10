@@ -122,6 +122,8 @@ void cc6801_EflashInit(void)
 }
 
 IN_RET_RAM_BEGIN
+#pragma push
+#pragma O0
 void cc6801_EflashFlush(void) 
 {
     uint32_t tdata;
@@ -138,6 +140,7 @@ void cc6801_EflashFlush(void)
     GLOBAL_INT_START();
 
 }
+#pragma pop
 IN_RET_RAM_END
 
 BOOL cc6801_EflashEraseALL(void)
@@ -173,7 +176,7 @@ BOOL cc6801_EflashErasePage(uint32_t dwEflashAdr)
         //set efalsh start address at 0
         regEFLASH->dwIndirStart = (dwEflashAdr<<8);
 
-        //set efalsh mode to page erase
+        //set efalsh mode to mass erase
         tdata = (EF_FLASHMODE_REG_AHBEnable | EF_FLASHMODE_REG_ModeMainErase);
         regEFLASH->dwAccessCtrl = tdata;
 
@@ -244,7 +247,6 @@ void cc6801_EflashProgram(uint32_t dwEflashAdr,unsigned char * pBufAdr,uint32_t 
         do {
             tdata = regEFLASH->dwInterrupt;
         } while( (tdata&(EF_INTERRUPT_REG_EraPrgModeStatus|EF_INTERRUPT_REG_DataModeStatus))==0 );
-        regEFLASH->dwInterrupt |= (EF_INTERRUPT_REG_DMAModeStatus    | EF_INTERRUPT_REG_EraPrgModeStatus | EF_INTERRUPT_REG_DataModeStatus);
     }
     EFLASH_IRQHandler();
 #else

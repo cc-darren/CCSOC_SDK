@@ -13,7 +13,6 @@
 //#include "global.h"
 #include "project.h"
 #include "drvi_eflash.h"
-#include "crc32.h"
 #include "ota_handling.h"
 #include "rwip.h"
 #include "tracer.h"
