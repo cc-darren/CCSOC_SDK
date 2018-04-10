@@ -14,7 +14,6 @@
 #ifdef SLEEP_EN
 #include "CC_SleepMonitor_Service.h"
 #include "CC_Longsit_Service.h"
-#include "CC_Slpmtr.h"
 #include "htpt_task.h"
 #include "tracer.h"
 
@@ -75,22 +74,25 @@ void CC_SleepMonitor_Srv_Enable(void)
     if (true == CC_MainGet_SwimmingEn())
         return;
 
-    if (!slpmtr_is_opened())
+    
+    //if (!slpmtr_is_opened())
     {
-        slpmtr_open_with_sensitivity(SLPMTR_SENS_LOW);
+        //slpmtr_open_with_sensitivity(SLPMTR_SENS_LOW);
         m_bIsSleepAlgActive= eEnable;
         CC_ResetSleep_StateCount();
         CC_DB_Save_StartSleepService_Info();
 
         TracerInfo("CC_SleepMonitor_Srv_Enable Sleep Algo Open\r\n");
     } 
+    //#endif
 }
 
 void CC_SleepMonitor_Srv_Disable(void)
 {
-    if (slpmtr_is_opened())
+    
+    //if (slpmtr_is_opened())
     {
-        slpmtr_close();
+        //slpmtr_close();
         CC_DB_Save_EndSleepService_Info();
         m_bIsSleepAlgActive= eDisable;
         g_fSleepCalSeconds = 0;
@@ -119,6 +121,7 @@ void CC_SleepMonitor_Srv_Disable_SleepService(eStete_t eStete)
 void CC_SleepMonitor_Srv_Handle(void)
 {
 
+    #if 0
     if ( false == m_bIsSleepStartService)
         return;
     
@@ -130,6 +133,7 @@ void CC_SleepMonitor_Srv_Handle(void)
     
     if (true == CC_MainGet_SwimmingEn())
         return;
+    #endif
 
         _sensor_algorithm_sleepmeter_proc();
 }

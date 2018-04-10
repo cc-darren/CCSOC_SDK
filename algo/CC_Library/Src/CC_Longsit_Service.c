@@ -19,12 +19,8 @@
 #ifdef UTILITY_EN
 #include "CC_Utility_Service.h"
 #endif
-#include "CC_Utility.h"
 
 #include "pah8series_data_c.h"
-#include "CC_Slpmtr.h"
-#include "CC_Longsit.h"
-#include "CC_Utility.h"
 #include "sw_timer.h"
 #include "tracer.h"
 
@@ -151,11 +147,11 @@ void CC_Longsit_Srv_Enable(void)
     if (true == CC_MainGet_SwimmingEn())
         return;
             
-    if (!LongSit_is_open())
+    //if (!LongSit_is_open())
     {
-        LongSit_open();
-        LongSit_set_time_threshold(LONGSIT_TIME_TH);
-        LongSit_reset_notification();
+        //LongSit_open();
+        //LongSit_set_time_threshold(LONGSIT_TIME_TH);
+        //LongSit_reset_notification();
         CC_Longsit_Srv_Start30MinuteTimer();
         g_dwIsActiveLongsit = eEnable;
         TracerInfo("CC_Longsit_Srv_Enable LongSit_open \r\n");
@@ -164,9 +160,9 @@ void CC_Longsit_Srv_Enable(void)
 
 void CC_Longsit_Srv_Disable(void)
 {
-    if (LongSit_is_open())
+    //if (LongSit_is_open())
     {
-		LongSit_close();
+		//LongSit_close();
         CC_Longsit_Srv_Stop30MinuteTimer();
         CC_Longsit_Srv_Stop5SecondMonitorMotionTimer();
         CC_Longsit_Srv_Stop1SecondTimer();
@@ -331,13 +327,13 @@ void CC_Longsit_Srv_UtilityAlgoStateChange(uint32_t _dwState)
 
 void CC_Longsit_Srv_handle(uint32_t _dwPedStep)
 {
-    LongSit_Process(_dwPedStep); 
+//    LongSit_Process(_dwPedStep); 
 }
 
 
 void CC_Longsit_Srv_Reset_Notification(void)
 {
-	LongSit_reset_notification(); 
+	//LongSit_reset_notification(); 
 }
 
 void CC_LongSit_onNotified(uint8_t notified)
