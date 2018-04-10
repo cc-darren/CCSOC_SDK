@@ -41,7 +41,7 @@ Head Block of The File
 // Sec 1: Include File
 #include "global.h"
 #include "stdint.h"
-#include "CC_Calorie_burn.h"
+//#include "CC_Calorie_burn.h"
 #include "util_calendar.h"
 
 // Sec 2: Constant Definitions, Imported Symbols, miscellaneous
@@ -65,18 +65,14 @@ Head Block of The File
 ***************************************************/
 #define ASIC                    CC6801
 
-// EMWIN AND JDI
-#define nEMWIN_ENABLE
-
-#ifdef EMWIN_ENABLE
-#define JDI_OLED_ENABLE
-#endif
-
 //find and include project options from the asic you chose
 #include "asic_options.h"
 
 
 /************Add sub-options of this ASIC****************/
+
+// EMWIN AND JDI
+#define nEMWIN_ENABLE
 
 //define SPI clock
 //define I2C clock
@@ -141,7 +137,7 @@ Head Block of The File
 
 
 
-#ifndef EMWIN_ENABLE
+
 /**************************************************
 *   Choose OLED model and config OLED interface
 *   (pick one GYRO sensor from module_supported.h)
@@ -153,12 +149,12 @@ Head Block of The File
 *   OLED_IF_TYPE : the OLED interface type
 *   OLED_IF_ID   : the OLED interface id
 ***************************************************/
+#ifndef EMWIN_ENABLE
 #define MODULE_OLED             OLED_SOLOMON_SH1107
-#define OLED_IF                 UseInterface(SPI,2)
 #else
-#define MODULE_OLED              OLED_SOLOMON_SH1107//OLED_JDI_LPM010M297B
-#define OLED_IF                 UseInterface(SPI,2)
+#define MODULE_OLED             OLED_JDI_LPM013M126A
 #endif
+#define OLED_IF                 UseInterface(SPI,2)
 
 /**************************************************
 *   Choose PPG model and config PPG interface
@@ -468,12 +464,16 @@ Declaration of static Global Variables & Functions
 #define CFG_JUMP_TABLE_2
 #endif
 
+#ifdef EMWIN_ENABLE
+#define JDI_DRAW_WIHTTIMER
+#endif
+
 #define SLEEP_EN
 #define LONGSIT_EN
 #define PEDO_EN
 #define HRM_EN
 //#define BLE_OTA_BL_MODE_EN
-#define DB_EN
+//#define DB_EN
 #define FIFO_MODE_EN
 #define FACTORY_RESET
 
@@ -832,6 +832,10 @@ typedef struct
    unsigned long   dwTimestamp;
 }CC_Ble_Swim_Info_T;
 
+typedef enum {
+    CC_LIB_GENDER_MALE =0,
+    CC_LIB_GENDER_FEMALE = 1,
+} CC_Gender_t;
 
 typedef struct
 {
