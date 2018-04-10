@@ -138,7 +138,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3>"..\..\..\env\bin\FlashTool\cc6801_DL.exe" (cc6801a0_m0 .\Objects\@L.bin 0x1000A000)</Flash3>
+          <Flash3>"..\..\..\env\bin\FlashTool\cc6801_DL.exe" (cc6801a0_m0 ..\..\..\env\bl\CC_BL_M0.bin 0x10000000 .\Objects\@L.bin 0x1000A000)</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -1724,13 +1724,13 @@
             <UseTargetDll>0</UseTargetDll>
             <UseExternalTool>1</UseExternalTool>
             <RunIndependent>0</RunIndependent>
-            <UpdateFlashBeforeDebugging>0</UpdateFlashBeforeDebugging>
+            <UpdateFlashBeforeDebugging>1</UpdateFlashBeforeDebugging>
             <Capability>1</Capability>
             <DriverSelection>4096</DriverSelection>
           </Flash1>
-          <bUseTDR>0</bUseTDR>
+          <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3>"..\..\..\env\bin\FlashTool\cc6801_DL.exe" (cc6801a0_m4 .\Objects\@L.bin 0x1000A000)</Flash3>
+          <Flash3>"..\..\..\env\bin\FlashTool\cc6801_DL.exe" (cc6801a0_m4 ..\..\..\env\bl\CC_BL_M4.bin 0x10000000 .\Objects\@L.bin 0x1000A000)</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -1960,7 +1960,7 @@
             <ScatterFile>.\FPGA_eflash.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
-            <Misc>.\rom_symdef_M4.txt --keep=jump_table.o(jump_table_mem_area)</Misc>
+            <Misc>.\rom_symdef_M4.txt --keep=jump_table.o(jump_table_mem_area) --keep=jump_table.o(jump_table_switch_mem_area)</Misc>
             <LinkerInputFile></LinkerInputFile>
             <DisabledWarnings></DisabledWarnings>
           </LDads>
@@ -3257,7 +3257,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3>"..\..\..\env\bin\FlashTool\cc6801_DL.exe" (cc6801a0_m0 .\Objects\@L.bin 0x1000A000)</Flash3>
+          <Flash3>"..\..\..\env\bin\FlashTool\cc6801_DL.exe" (cc6801a0_m0 ..\..\..\env\bl\CC_BL_M0.bin 0x10000000 .\Objects\@L.bin 0x1000A000)</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -4849,7 +4849,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3>"..\..\..\env\bin\FlashTool\cc6801_DL.exe" (cc6801a0_m4 .\Objects\@L.bin 0x1000A000)</Flash3>
+          <Flash3>"..\..\..\env\bin\FlashTool\cc6801_DL.exe" (cc6801a0_m4 ..\..\..\env\bl\CC_BL_M4.bin 0x10000000 .\Objects\@L.bin 0x1000A000)</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -5079,7 +5079,7 @@
             <ScatterFile>.\FPGA_eflash.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
-            <Misc>.\rom_symdef_M4.txt --keep=jump_table.o(jump_table_mem_area)</Misc>
+            <Misc>.\rom_symdef_M4.txt --keep=jump_table.o(jump_table_mem_area) --keep=jump_table.o(jump_table_switch_mem_area)</Misc>
             <LinkerInputFile></LinkerInputFile>
             <DisabledWarnings></DisabledWarnings>
           </LDads>
