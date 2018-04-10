@@ -83,7 +83,7 @@
             <RunUserProg1>0</RunUserProg1>
             <RunUserProg2>1</RunUserProg2>
             <UserProg1Name></UserProg1Name>
-            <UserProg2Name>CC_Hex2Bin.exe -enc .\Objects\EVB_M0p</UserProg2Name>
+            <UserProg2Name>..\..\..\env\bin\CC_Hex2Bin.exe .\Objects\@L .\RELEASE\@L</UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
             <nStopA1X>0</nStopA1X>
@@ -138,7 +138,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3>".\FlashTool\cc6801_DL.exe" (EVB_BL_M0p_20180402.bin .\Objects\@L.hex 0x1000A000 cc6801a0_m0)</Flash3>
+          <Flash3>"..\..\..\env\bin\FlashTool\cc6801_DL.exe" (cc6801a0_m0 ..\..\..\env\bl\CC_BL_M0.bin 0x10000000 .\Objects\@L.bin 0x1000A000)</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -1327,7 +1327,7 @@
             <RunUserProg1>0</RunUserProg1>
             <RunUserProg2>1</RunUserProg2>
             <UserProg1Name></UserProg1Name>
-            <UserProg2Name>CC_Hex2Bin.exe -enc .\Objects\EVB_M4f</UserProg2Name>
+            <UserProg2Name>..\..\..\env\bin\CC_Hex2Bin.exe .\Objects\@L .\RELEASE\@L</UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
             <nStopA1X>0</nStopA1X>
@@ -1382,7 +1382,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3>".\FlashTool\cc6801_DL.exe" (EVB_BL_M4f_20180402.bin .\Objects\@L.hex 0x1000A000 cc6801a0_m4)</Flash3>
+          <Flash3>"..\..\..\env\bin\FlashTool\cc6801_DL.exe" (cc6801a0_m4 ..\..\..\env\bl\CC_BL_M4.bin 0x10000000 .\Objects\@L.bin 0x1000A000)</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -1612,7 +1612,7 @@
             <ScatterFile>.\FPGA_eflash.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
-            <Misc>.\rom_symdef_M4.txt --keep=jump_table.o(jump_table_mem_area)</Misc>
+            <Misc>.\rom_symdef_M4.txt --keep=jump_table.o(jump_table_mem_area) --keep=jump_table.o(jump_table_switch_mem_area)</Misc>
             <LinkerInputFile></LinkerInputFile>
             <DisabledWarnings></DisabledWarnings>
           </LDads>
@@ -2506,7 +2506,7 @@
             <RunUserProg1>0</RunUserProg1>
             <RunUserProg2>1</RunUserProg2>
             <UserProg1Name></UserProg1Name>
-            <UserProg2Name>CC_Hex2Bin.exe -enc .\Objects\EVB_M0p</UserProg2Name>
+            <UserProg2Name>..\..\..\env\bin\CC_Hex2Bin.exe .\Objects\@L .\RELEASE\@L</UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
             <nStopA1X>0</nStopA1X>
@@ -2552,8 +2552,8 @@
         </DebugOption>
         <Utilities>
           <Flash1>
-            <UseTargetDll>1</UseTargetDll>
-            <UseExternalTool>0</UseExternalTool>
+            <UseTargetDll>0</UseTargetDll>
+            <UseExternalTool>1</UseExternalTool>
             <RunIndependent>0</RunIndependent>
             <UpdateFlashBeforeDebugging>1</UpdateFlashBeforeDebugging>
             <Capability>1</Capability>
@@ -2561,7 +2561,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash3>"..\..\..\env\bin\FlashTool\cc6801_DL.exe" (cc6801a0_m0 ..\..\..\env\bl\CC_BL_M0.bin 0x10000000 .\Objects\@L.bin 0x1000A000)</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -3750,7 +3750,7 @@
             <RunUserProg1>0</RunUserProg1>
             <RunUserProg2>1</RunUserProg2>
             <UserProg1Name></UserProg1Name>
-            <UserProg2Name>CC_Hex2Bin.exe -enc .\Objects\EVB_M4f</UserProg2Name>
+            <UserProg2Name>..\..\..\env\bin\CC_Hex2Bin.exe .\Objects\@L .\RELEASE\@L</UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
             <nStopA1X>0</nStopA1X>
@@ -3796,16 +3796,16 @@
         </DebugOption>
         <Utilities>
           <Flash1>
-            <UseTargetDll>1</UseTargetDll>
-            <UseExternalTool>0</UseExternalTool>
+            <UseTargetDll>0</UseTargetDll>
+            <UseExternalTool>1</UseExternalTool>
             <RunIndependent>0</RunIndependent>
             <UpdateFlashBeforeDebugging>1</UpdateFlashBeforeDebugging>
             <Capability>1</Capability>
-            <DriverSelection>4099</DriverSelection>
+            <DriverSelection>4096</DriverSelection>
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash3>"..\..\..\env\bin\FlashTool\cc6801_DL.exe" (cc6801a0_m4 ..\..\..\env\bl\CC_BL_M4.bin 0x10000000 .\Objects\@L.bin 0x1000A000)</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -4035,7 +4035,7 @@
             <ScatterFile>.\FPGA_eflash.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
-            <Misc>.\rom_symdef_M4.txt --keep=jump_table.o(jump_table_mem_area)</Misc>
+            <Misc>.\rom_symdef_M4.txt --keep=jump_table.o(jump_table_mem_area) --keep=jump_table.o(jump_table_switch_mem_area)</Misc>
             <LinkerInputFile></LinkerInputFile>
             <DisabledWarnings></DisabledWarnings>
           </LDads>
