@@ -459,8 +459,8 @@ Declaration of static Global Variables & Functions
 
 
 
-#define DEVICE_MODEL "Z E U S"
-#define SDK_FW_VERSION "v0.000.003"
+#define DEVICE_MODEL "CC-6801"
+#define SDK_FW_VERSION "v0.000.004"
 
 #define CFG_APP_CODE_ONLY
 

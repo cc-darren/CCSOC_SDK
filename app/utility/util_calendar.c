@@ -245,14 +245,14 @@ void app_UpdatTimeDate(const uint8_t *data)
 #ifdef SLEEP_EN            
             CC_SleepMonitor_Srv_Enable_SleepService(eEnable);
 #endif
-            if((DB_INIT_FROM_APP_FACTORY_RESET == CC_DB_Get_Init_Type()) || (true == CC_DB_Check_Init_Done())) 
-            {
-                // do nothing;
-            }
-            else
-            {
-                CC_DB_Force_Execute_Init(DB_INIT_FROM_APP);
-            }
+            //if((DB_INIT_FROM_APP_FACTORY_RESET == CC_DB_Get_Init_Type()) || (true == CC_DB_Check_Init_Done())) 
+            //{
+            //    // do nothing;
+            //}
+            //else
+            //{
+            //    CC_DB_Force_Execute_Init(DB_INIT_FROM_APP);
+            //}
             
         }
         else

@@ -11,17 +11,38 @@ Firmware: J-Link V9 compiled Dec  1 2017 14:40:21
 Hardware version: V9.40
 S/N: 59402096
 License(s): RDI, GDB, FlashDL, FlashBP, JFlash
-VTref = 3.385V
+VTref = 3.390V
 Selecting SWD as current target interface.
 
 Selecting 4000 kHz as target interface speed
 
 Target connection not established yet but required for command.
-Device "CC6801A0_M0" selected.
+Device "CC6801A0_M4" selected.
 
 
 Connecting to target via SWD
-Cannot connect to target.
+Found SW-DP with ID 0x2BA01477
+Scanning AP map to find all available APs
+AP[1]: Stopped AP scan as end of AP map has been reached
+AP[0]: AHB-AP (IDR: 0x24770011)
+Iterating through AP map to find AHB-AP to use
+AP[0]: Core found
+AP[0]: AHB-AP ROM base: 0xE00FF000
+CPUID register: 0x410FC241. Implementer code: 0x41 (ARM)
+Found Cortex-M4 r0p1, Little endian.
+FPUnit: 6 code (BP) slots and 2 literal slots
+CoreSight components:
+ROMTbl[0] @ E00FF000
+ROMTbl[0][0]: E000E000, CID: B105E00D, PID: 000BB00C SCS-M7
+ROMTbl[0][1]: E0001000, CID: B105E00D, PID: 003BB002 DWT
+ROMTbl[0][2]: E0002000, CID: B105E00D, PID: 002BB003 FPB
+ROMTbl[0][3]: E0000000, CID: B105E00D, PID: 003BB001 ITM
+ROMTbl[0][4]: E0040000, CID: B105900D, PID: 000BB9A1 TPIU
+Cortex-M4 identified.
+Downloading file [D:/PROJECT/CC6801/ZEUS/COMMIT_ZONE/CC6801/env/bin/FlashTool\tmpbin.bin]...
+J-Link: Flash download: Bank 0 @ 0x10000000: 1 range affected (262144 bytes)
+J-Link: Flash download: Total time needed: 4.504s (Prepare: 0.014s, Compare: 0.000s, Erase: 0.137s, Program: 2.342s, Verify: 2.004s, Restore: 0.006s)
+O.K.
 
 
 Script processing completed.

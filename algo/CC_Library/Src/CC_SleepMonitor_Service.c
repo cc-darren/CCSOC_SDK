@@ -25,8 +25,8 @@ extern void CC_MainGet_CurrentTime(app_date_time_t *_stCurTime);
 extern eDEV_CHARGE_STATE_t CC_GetChargeStatus(void);
 extern void CC_ResetSleep_StateCount(void);
 extern uint8_t CC_MainGet_SwimmingEn(void);
-extern void CC_DB_Save_StartSleepService_Info(void);
-extern void CC_DB_Save_EndSleepService_Info(void);
+//extern void CC_DB_Save_StartSleepService_Info(void);
+//extern void CC_DB_Save_EndSleepService_Info(void);
 
 
 extern float g_fSleepCalSeconds;
@@ -80,7 +80,7 @@ void CC_SleepMonitor_Srv_Enable(void)
         //slpmtr_open_with_sensitivity(SLPMTR_SENS_LOW);
         m_bIsSleepAlgActive= eEnable;
         CC_ResetSleep_StateCount();
-        CC_DB_Save_StartSleepService_Info();
+        //CC_DB_Save_StartSleepService_Info();
 
         TracerInfo("CC_SleepMonitor_Srv_Enable Sleep Algo Open\r\n");
     } 
@@ -93,7 +93,7 @@ void CC_SleepMonitor_Srv_Disable(void)
     //if (slpmtr_is_opened())
     {
         //slpmtr_close();
-        CC_DB_Save_EndSleepService_Info();
+        //CC_DB_Save_EndSleepService_Info();
         m_bIsSleepAlgActive= eDisable;
         g_fSleepCalSeconds = 0;
         g_bSleepEnCnt=0;
