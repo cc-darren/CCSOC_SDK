@@ -227,8 +227,8 @@ Head Block of The File
 *   AUDIO_IF_TYPE : the AUDIO interface type
 *   AUDIO_IF_ID   : the AUDIO interface id
 ***************************************************/
-#define MODULE_AUDIO            AUDIO_NULL
-//#define AUDIO_IF                UseInterface(I2C,1)
+#define MODULE_AUDIO            AUDIO_SGTL5000
+#define AUDIO_IF                UseInterface(I2C,1)
 
 /******************************************************************************************************************
 *   Set SPI master configuration
@@ -401,7 +401,7 @@ Declaration of External Variables & Functions
 
 
 //I2C parameters
-//#define SGTL5000_SLAVE_ADDRESS      0x0A
+#define SGTL5000_SLAVE_ADDRESS      0x0A
 
 //UART parameters
 //#define UART_LOOPBACK_TEST       1
