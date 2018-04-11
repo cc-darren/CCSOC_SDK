@@ -24,11 +24,10 @@
 
 extern void sys_InitMain(void);
 
-uint16_t I2cWordRead(uint16_t wReg)
+int I2cWordRead(uint16_t wReg, uint16_t *wVal)
 {
     int iRet;
     uint8_t bBuf[2];
-    uint16_t wVal;
 
     //send i2c device address first
     bBuf[0] = (wReg >> 8) & 0xFF;
@@ -42,9 +41,9 @@ uint16_t I2cWordRead(uint16_t wReg)
     if (iRet != CC_SUCCESS)
         return CC_ERROR_INTERNAL;
 
-    wVal = ((bBuf[0] << 8) | bBuf[1]);
+    *wVal = ((bBuf[0] << 8) | bBuf[1]);
 
-    return wVal;
+    return iRet;
 }
 
 int I2cWordWrite(uint16_t wReg, uint16_t wVal)
@@ -83,6 +82,7 @@ static void I2cInit(void)
 int main(void)
 {
     int ret;
+    uint16_t wId;
 
     //Must be first in main()
     sys_InitMain();
@@ -100,9 +100,11 @@ int main(void)
 
     I2cInit();
 
-    ret = I2cWordRead(0x0000);
+    ret = I2cWordRead(0x0000, &wId);
     if (ret)
         TracerInfo("Error reading chip id %d\r\n", ret);
+
+    TracerInfo("Audio Codec SGTL5000 Chip ID 0x%X\r\n", wId);
 
     ret = I2cWordWrite(0x0030, 0x6AFF);
     if (ret)
