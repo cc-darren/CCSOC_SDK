@@ -361,6 +361,7 @@ int cc6801_I2cWrite(uint8_t bBusNum,
     dwDmaCtrl = pI2cBase->dmaCtrl;
     dwDmaCtrl &= ~(I2C_DMA_OPMODE_MASK | I2C_DMA_RBYTE_MASK | I2C_DMA_WBYTE_MASK);
     dwDmaCtrl |= (I2C_DMA_OPMODE_WR_MASK |
+                 (((wLen-1)&I2C_DMA_RBYTE_BIT) << I2C_DMA_RBYTE_SHIFT) |
                  (((wLen-1)&I2C_DMA_WBYTE_BIT << I2C_DMA_WBYTE_SHIFT)));
 
     pI2cBase->rAddr = ((uint32_t)pData & I2C_DMA_RWADDR_MASK);
@@ -380,7 +381,8 @@ int cc6801_I2cRead(uint8_t bBusNum,
     dwDmaCtrl = pI2cBase->dmaCtrl;
     dwDmaCtrl &= ~(I2C_DMA_OPMODE_MASK | I2C_DMA_RBYTE_MASK | I2C_DMA_WBYTE_MASK);
     dwDmaCtrl |= (I2C_DMA_OPMODE_RD_MASK |
-                 (((wLen-1)&I2C_DMA_RBYTE_BIT) << I2C_DMA_RBYTE_SHIFT));
+                 (((wLen-1)&I2C_DMA_RBYTE_BIT) << I2C_DMA_RBYTE_SHIFT) |
+                 (((wLen-1)&I2C_DMA_WBYTE_BIT << I2C_DMA_WBYTE_SHIFT)));
 
     pI2cBase->wAddr = ((uint32_t)pData & I2C_DMA_RWADDR_MASK);
     pI2cBase->dmaCtrl = dwDmaCtrl;
