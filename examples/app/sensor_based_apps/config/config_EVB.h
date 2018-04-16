@@ -461,7 +461,7 @@ Declaration of static Global Variables & Functions
 
 
 #define DEVICE_MODEL "CC-6801"
-#define SDK_FW_VERSION "v0.000.004"
+#define SDK_FW_VERSION "v0.000.005"
 
 #ifdef EMWIN_ENABLE
 #define JDI_DRAW_WIHTTIMER
