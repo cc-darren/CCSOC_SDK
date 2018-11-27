@@ -27,7 +27,7 @@
 static int g_bNewTextLine;
 static char g_baPrintfBuf[1024];
 
-static char g_baLogBuf[LOG_BUF_LEN];
+__align(4) static char g_baLogBuf[LOG_BUF_LEN];
 static char *g_pLogBuf = g_baLogBuf;
 
 static uint16_t g_wLogStart = 0;

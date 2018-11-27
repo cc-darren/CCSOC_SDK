@@ -17,7 +17,9 @@
 
 #ifdef CFG_BLE_APP
 
+#ifndef CC6801B0
 #define JUMP_TABLE_SWITCH_ADDRESS        (0x10000200)
+#endif
 #define JUMP_TABLE_TOTAL                 (256)
 #define JUMP_TABLE_SIZE                  (1024)
 

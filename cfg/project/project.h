@@ -49,10 +49,18 @@ Head Block of The File
     #include "config_FPGA.h"
 #elif defined(EVB) && EVB
     #include "config_EVB.h"
+#elif defined(EVB605A) && EVB605A
+    #include "config_EVB605A.h"
+#elif defined(EVB605A_IOdown) && EVB605A_IOdown
+    #include "config_EVB605A_IOdown.h"
 #elif defined(EVB_QFN60L) && EVB_QFN60L
     #include "config_EVB_QFN60L.h"
 #elif defined(DVK) && DVK
     #include "config_DVK.h"
+#elif defined(DVK403A) && DVK403A
+    #include "config_DVK403A.h"
+#elif defined(DC404A) && DC404A
+    #include "config_DC404A.h"
 #elif defined(ASIC) && ASIC
     #include "config_ASIC.h"
 #else

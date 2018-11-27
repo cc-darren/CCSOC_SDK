@@ -99,6 +99,16 @@ __forceinline int drvi_GpioPinMuxInit(void)
     return cc6801_gpio_pinmux_init();
 }
 
+__forceinline void drvi_GpioPinmuxConfig(uint8_t bPin, const uint16_t wConfig)
+{
+    cc6801_GpioPinmuxConfig(bPin, wConfig);
+}
+
+__forceinline void drvi_GpioPortModeSet(U_regGPIO *pGroup, uint8_t bport, uint8_t bMode)
+{
+    cc6801_GpioPortModeSet(pGroup, bport, bMode);
+}
+
 __forceinline void drvi_GpioDirectInput(uint8_t bPinNum)
 {
     cc6801_GpioDirectInput(bPinNum);

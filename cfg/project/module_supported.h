@@ -72,4 +72,15 @@
 #define ADC_MCP_MCP3421         0x6001
 #define ADC_NULL                0x6FFF //choose this if ADC is not in using
 
+//Supported PRESSURE modules
+#define PRESSURE_LPS33HW        0x7001
+#define PRESSURE_NULL           0x7FFF //choose this if pressure IC is not in using
+
+#define TOUCH_FOCAL_FT6X36      0x8001
+#define TOUCH_NULL              0x8FFF //choose this if touch IC is not in used
+
+#define FLASH_W25Q80DV          0x9001
+#define FLASH_W25Q256JV         0x9002
+#define FLASH_NULL              0x9FFF //choose this if flash is not in used
+
 #endif  //_MODULE_SUPPORTED_H_

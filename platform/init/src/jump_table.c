@@ -31,6 +31,9 @@
 #include "l2cc.h"
 
 #include "ble_mgr.h"
+#ifdef CFG_NVDS
+#include "nvds.h"
+#endif
 
 uint32_t rwip_heap_non_ret[RWIP_CALC_HEAP_LEN(RWIP_HEAP_NON_RET_SIZE)];//  __attribute__((section("heap_mem_area_not_ret"), zero_init));
 uint32_t rwip_heap_env[RWIP_CALC_HEAP_LEN(RWIP_HEAP_ENV_SIZE)]   __attribute__((section("heap_env_area"), zero_init));
@@ -68,6 +71,8 @@ void _func_dummy(void)
     // do nothing
 }
 
+
+#ifndef CC6801B0
 
 void lld_sleep_compensate(void);
 void lld_sleep_init(void);
@@ -245,7 +250,7 @@ const uint32_t* jump_table_switch_base[] __attribute__((section("jump_table_swit
         /* 067 */ (const uint32_t *) &rwip_heap_non_ret[0],
         /* 068 */ (const uint32_t *) RWIP_HEAP_NON_RET_SIZE,    
 };
-
+#endif
 
 const uint32_t* const jump_table_base[] __attribute__((section("jump_table_mem_area"))) =
 {
@@ -284,11 +289,19 @@ const uint32_t* const jump_table_base[] __attribute__((section("jump_table_mem_a
         /* 012 */ (const uint32_t *) _func_dummy,
     #endif
 
+    #ifdef CFG_NVDS
+        /* 013 */ (const uint32_t *) 1,
+        /* 014 */ (const uint32_t *) nvds_init,
+        /* 015 */ (const uint32_t *) nvds_get,
+        /* 016 */ (const uint32_t *) nvds_put,
+        /* 017 */ (const uint32_t *) nvds_del,
+    #else
         /* 013 */ (const uint32_t *) 0,
         /* 014 */ (const uint32_t *) 0,
         /* 015 */ (const uint32_t *) 0,
         /* 016 */ (const uint32_t *) 0,
         /* 017 */ (const uint32_t *) 0,
+    #endif
         /* 018 */ (const uint32_t *) 0,
         /* 019 */ (const uint32_t *) 0,
         /* 020 */ (const uint32_t *) 0,

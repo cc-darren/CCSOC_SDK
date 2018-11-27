@@ -30,6 +30,10 @@
 #define LCD_EXTCOM_SET          cc6801_GpioWrite(26,CC6801_GPIO_OUTPUT_HIGH)
 
 
+#define DRV_MODE_3BIT                   0x80
+#define DRV_MODE_4BIT                   0x90
+#define DRV_LINE_VERTICAL_OFFSET        1
+
 // BIT MODE DEFINE
 #define  DISPLAY_MODE_BIT1              1
 #define  DISPLAY_MODE_BIT3              3
@@ -268,8 +272,8 @@ void OLED_JDI_Drv_Init(void)
     #elif (DISPLAY_MODE == DISPLAY_MODE_BIT3)
         for (_dwIdxV = 0; _dwIdxV < YSIZE_PHYS; _dwIdxV++)
         {
-            g_baLcmBuf[_dwIdxV][0] = 0x80;
-            g_baLcmBuf[_dwIdxV][1] = _dwIdxV+1;
+        g_baLcmBuf[_dwIdxV][0] = DRV_MODE_3BIT;
+        g_baLcmBuf[_dwIdxV][1] = _dwIdxV+DRV_LINE_VERTICAL_OFFSET;
 
             g_baLcmBuf[_dwIdxV][X_ARRAY_BYTE_LEN - 2] = 0;
             g_baLcmBuf[_dwIdxV][X_ARRAY_BYTE_LEN - 1] = 0;
@@ -277,8 +281,8 @@ void OLED_JDI_Drv_Init(void)
     #elif (DISPLAY_MODE == DISPLAY_MODE_BIT4)
         for (_dwIdxV = 0; _dwIdxV < YSIZE_PHYS; _dwIdxV++)
         {
-            g_baLcmBuf[_dwIdxV][0] = 0x90;
-            g_baLcmBuf[_dwIdxV][1] = _dwIdxV+1;
+        g_baLcmBuf[_dwIdxV][0] = DRV_MODE_4BIT;
+        g_baLcmBuf[_dwIdxV][1] = _dwIdxV+DRV_LINE_VERTICAL_OFFSET;
             g_baLcmBuf[_dwIdxV][X_ARRAY_BYTE_LEN - 2] = 0;
             g_baLcmBuf[_dwIdxV][X_ARRAY_BYTE_LEN - 1] = 0;
 

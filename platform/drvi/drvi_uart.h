@@ -29,12 +29,28 @@ typedef struct S_UartEvent
     uint8_t bRxBytes;
 } T_UartEvent;
 
+#if (defined(CC6801B0) || defined(CC6801C0))
+typedef struct S_UartRing
+{
+    uint32_t dwHead;
+    uint32_t dwTail;
+    uint32_t dwWrLastPos;
+    int iRxBufSz;
+    uint16_t wCurrRxByteNum;
+    uint8_t *pbRxBuffer;
+} T_UartRing;
+#endif
+
 typedef struct S_UartPort
 {
     uint8_t bPortNum;
     uint32_t dwConfig;
     T_UartEvent tUevent;
+#if (defined(CC6801B0) || defined(CC6801C0))
+    T_UartRing tUring;
 
+    int (*fpDrviUartReceive)(uint8_t *pbBuf, int iSize);
+#endif
     void (*fpDrviUartCb)(T_UartEvent *p_event);
 } T_UartPort;
 
@@ -47,15 +63,6 @@ __forceinline void drvi_UartConfigSet(T_UartPort *pUartPort)
     cc6801_UartConfigSet(pUartPort);
 }
 
-#ifdef CC6801A1
-void drvi_UartRxDoneRegister(uint8_t bIdx, fpDrviUartCallback fpCb);
-#else
-__forceinline void drvi_UartRxDoneRegister(uint8_t bIdx, fpUartRxDone RxCallBack)
-{
-    cc6801_UartRxDoneRegister(bIdx, RxCallBack);
-}
-#endif
-
 #if (UART_USE_DMA) && UART_USE_DMA
 __forceinline int drvi_UartTx(uint8_t bPortNum,
                               uint8_t const * const pData,
@@ -63,12 +70,19 @@ __forceinline int drvi_UartTx(uint8_t bPortNum,
 {
     return cc6801_UartTxDMA(bPortNum, pData, bLen);
 }
-#ifdef CC6801A1
-int drvi_UartReceive(uint8_t bPort, uint8_t *buf, int size);
+
+#if (defined(CC6801B0) || defined(CC6801C0))
+void drvi_UartRxDoneRegister(uint8_t bIdx, fpDrviUartCallback fpCb);
+int drvi_UartReceive(uint8_t bPort, uint8_t *pbBuf, int iSize);
 #else
-__forceinline int drvi_UartRx(uint8_t bPortNum, uint8_t *pData, uint8_t bLen)
+__forceinline void drvi_UartRxDoneRegister(uint8_t bIdx, fpUartRxDone RxCallBack)
 {
-    return cc6801_UartRxDMA(bPortNum, pData, bLen);
+    cc6801_UartRxDoneRegister(bIdx, RxCallBack);
+}
+
+__forceinline int drvi_UartReceive(uint8_t bPort, uint8_t *pbBuf, uint8_t bLen)
+{
+    return cc6801_UartRxDMA(bPort, pbBuf, bLen);
 }
 #endif
 #else

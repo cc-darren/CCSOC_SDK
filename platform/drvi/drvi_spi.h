@@ -57,6 +57,23 @@ __forceinline int drvi_SpiWriteThenRead(uint8_t         bBusNum,
     return cc6801_SpimWriteThenRead(bBusNum, pTxBuf, bTxBufLen, pRxBuf, bRxBufLen);
 }
 
+#if (defined(CC6801B0) || defined(CC6801C0))
+__forceinline void drvi_SpimQuadEnable(uint8_t bBusNum, int iEnable)
+{
+    cc6801_SpimQuadEnable(bBusNum, iEnable);
+}
+
+__forceinline int drvi_SpimDummyClkSet(uint8_t bBusNum, int iCnt)
+{
+    return cc6801_SpimDummyClkSet(bBusNum, iCnt);
+}
+
+__forceinline void drvi_SpimDummyClkEnable(uint8_t bBusNum, int iEnable)
+{
+    cc6801_SpimDummyClkEnable(bBusNum, iEnable);
+}
+#endif
+
 #endif //_DRVI_SPI_H_
 
 

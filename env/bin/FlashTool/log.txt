@@ -7,11 +7,11 @@ Processing script file...
 
 J-Link connection not established yet but required for command.
 Connecting to J-Link via USB...O.K.
-Firmware: J-Link V9 compiled Dec  1 2017 14:40:21
-Hardware version: V9.40
-S/N: 59402096
-License(s): RDI, GDB, FlashDL, FlashBP, JFlash
-VTref = 3.390V
+Firmware: J-Link OB-SAM3U128 V3 compiled Sep 21 2017 14:14:50
+Hardware version: V3.00
+S/N: 483030350
+License(s): RDI
+VTref = 3.300V
 Selecting SWD as current target interface.
 
 Selecting 4000 kHz as target interface speed
@@ -39,9 +39,14 @@ ROMTbl[0][2]: E0002000, CID: B105E00D, PID: 002BB003 FPB
 ROMTbl[0][3]: E0000000, CID: B105E00D, PID: 003BB001 ITM
 ROMTbl[0][4]: E0040000, CID: B105900D, PID: 000BB9A1 TPIU
 Cortex-M4 identified.
-Downloading file [D:/PROJECT/CC6801/ZEUS/COMMIT_ZONE/CC6801/env/bin/FlashTool\tmpbin.bin]...
+Downloading file [.\release\EVB_BL_M4f_20180402.bin]...
 J-Link: Flash download: Bank 0 @ 0x10000000: 1 range affected (262144 bytes)
-J-Link: Flash download: Total time needed: 4.504s (Prepare: 0.014s, Compare: 0.000s, Erase: 0.137s, Program: 2.342s, Verify: 2.004s, Restore: 0.006s)
+J-Link: Flash download: Total time needed: 3.272s (Prepare: 0.040s, Compare: 0.000s, Erase: 0.133s, Program: 0.604s, Verify: 2.487s, Restore: 0.006s)
+O.K.
+
+Downloading file [.\release\EVB_M4f.bin]...
+J-Link: Flash download: Bank 0 @ 0x10000000: 1 range affected (262144 bytes)
+J-Link: Flash download: Total time needed: 3.519s (Prepare: 0.043s, Compare: 0.000s, Erase: 0.144s, Program: 0.790s, Verify: 2.515s, Restore: 0.024s)
 O.K.
 
 

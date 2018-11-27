@@ -32,37 +32,31 @@ typedef struct S_I2cDevice
 {
     uint8_t bBusNum;
     uint8_t bAddr;
-    uint32_t dwFreq;
-
-    void (*fpComplete)(T_I2cEvent *pEvent);
 } T_I2cDevice;
+
+typedef void (*fpComplete)(T_I2cEvent *pEvent);
 
 int drvi_I2cInit(void);
 
-__forceinline void drvi_I2cDeviceRegister(T_I2cDevice *tpDev)
+__forceinline int drvi_I2cWrite(T_I2cDevice *tpDev, uint8_t const *pData, uint16_t wLen)
 {
-    cc6801_I2cDeviceRegister(tpDev);
+    return cc6801_I2cWrite(tpDev, pData, wLen);
 }
 
-__forceinline int drvi_I2cWrite(uint8_t bBusNum, uint8_t const *pData, uint16_t wLen)
+__forceinline int drvi_I2cRead(T_I2cDevice *tpDev, uint8_t *pData, uint16_t wLen)
 {
-    return cc6801_I2cWrite(bBusNum, pData, wLen);
+    return cc6801_I2cRead(tpDev, pData, wLen);
 }
 
-__forceinline int drvi_I2cRead(uint8_t bBusNum, uint8_t *pData, uint16_t wLen)
-{
-    return cc6801_I2cRead(bBusNum, pData, wLen);
-}
-
-#ifdef CC6801A1
-__forceinline int drvi_I2cWriteThenRead(uint8_t bBusNum,
+#if (defined(CC6801B0) || defined(CC6801C0))
+__forceinline int drvi_I2cWriteThenRead(T_I2cDevice *tpDev,
                           uint8_t const *pTxData, uint16_t wTxLen,
                           uint8_t *pRxData, uint16_t wRxLen)
 {
-    return cc6801_I2cWriteThenRead(bBusNum, pTxData, wTxLen, pRxData, wRxLen);
+    return cc6801_I2cWriteThenRead(tpDev, pTxData, wTxLen, pRxData, wRxLen);
 }
 #else
-int drvi_I2cWriteThenRead(uint8_t bBusNum,
+int drvi_I2cWriteThenRead(T_I2cDevice *tpDev,
                           uint8_t const *pTxData, uint16_t wTxLen,
                           uint8_t *pRxData, uint16_t wRxLen);
 #endif
