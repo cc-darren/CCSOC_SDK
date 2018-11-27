@@ -399,7 +399,7 @@
   #define FLASH_IF_ID   (SWT_IF&0x0F)
 #else
   #define FLASH_IF IF_NULL
-  #endif
+#endif
 
 #if defined(MODULE_TEST)
   #if ((defined TEST_I2C0_IF) && (TEST_I2C0_IF))
@@ -499,11 +499,21 @@
 ********************************************************************************/
 #define FIND_MODULE(headername) STRINGIZE(CAT(headername, .h))
 
-#include FIND_MODULE(ACC_HEADER)
-#include FIND_MODULE(MAG_HEADER)
-#include FIND_MODULE(GYR_HEADER)
-#include FIND_MODULE(OLED_HEADER)
-#include FIND_MODULE(PRESSURE_HEADER)
+#if (MODULE_ACC != ACC_NULL)
+    #include FIND_MODULE(ACC_HEADER)
+#endif
+#if (MODULE_MAG != MAG_NULL)
+    #include FIND_MODULE(MAG_HEADER)
+#endif
+#if (MODULE_GYR != GYR_NULL)
+    #include FIND_MODULE(GYR_HEADER)
+#endif
+#if (MODULE_OLED != OLED_NULL)
+    #include FIND_MODULE(OLED_HEADER)
+#endif
+#if (MODULE_PRESSURE != PRESSURE_NULL)
+    #include FIND_MODULE(PRESSURE_HEADER)
+#endif
 #if (MODULE_TOUCH != TOUCH_NULL)
     #include FIND_MODULE(TOUCH_HEADER)
 #endif
