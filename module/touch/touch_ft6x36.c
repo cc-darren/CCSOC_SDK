@@ -157,8 +157,8 @@ void ft6x36_init(T_callback fpGpioIsrCallback)
 {
     //register GPIO as interrupt
     ft6x36_FingerDataReadDone();
-    drvi_RequestIrq(TOUCH_INT_PIN, ft6x36_IntCallback, IRQ_TYPE_LEVEL_LOW);
-    drvi_EnableIrq(TOUCH_INT_PIN);
+    drvi_RequestIrq(TOUCH2D_INT_PIN, ft6x36_IntCallback, IRQ_TYPE_LEVEL_LOW);
+    drvi_EnableIrq(TOUCH2D_INT_PIN);
     fpIntCallback = fpGpioIsrCallback;
 
     //write default value to touch sensor
