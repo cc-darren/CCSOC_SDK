@@ -260,13 +260,13 @@ RETURNS
 ******************************************************************************/
 static void cc6801_ClockEflashCfg(T_EflashConfig *pFlash)
 {
-    //regEFLASH->dwTcpsTadhTah = pFlash->dwTcpsTadhTah;
-    //regEFLASH->dwTwkTpgs     = pFlash->dwTwkTpgs;
-    //regEFLASH->dwTrcvTnvh    = pFlash->dwTrcvTnvh;
-    //regEFLASH->dwTprog       = pFlash->dwTprog;
-    //regEFLASH->dwTerase      = pFlash->dwTerase;
-    //regEFLASH->dwTme         = pFlash->dwTme;
-    //regEFLASH->dwTnvsTnvh1   = pFlash->dwTnvsTnvh1;
+    regEFLASH->dwTcpsTadhTah = pFlash->dwTcpsTadhTah;
+    regEFLASH->dwTwkTpgs     = pFlash->dwTwkTpgs;
+    regEFLASH->dwTrcvTnvh    = pFlash->dwTrcvTnvh;
+    regEFLASH->dwTprog       = pFlash->dwTprog;
+    regEFLASH->dwTerase      = pFlash->dwTerase;
+    regEFLASH->dwTme         = pFlash->dwTme;
+    regEFLASH->dwTnvsTnvh1   = pFlash->dwTnvsTnvh1;
 }
 
 /******************************************************************************
