@@ -1,4 +1,0 @@
-si swd
-speed 4000
-loadfile D:/PROJECT/CC6801/ZEUS/COMMIT_ZONE/CC6801/env/bin/FlashTool\tmpbin.bin 0x10000000
-q
