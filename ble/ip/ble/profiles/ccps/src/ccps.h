@@ -50,6 +50,9 @@
 #define CCPS_HANDLE(idx) (ccps_att_hdl_get(ccps_env, (idx)))
 
 #define CCPS_IDX(hdl)    (ccps_att_idx_get(ccps_env, (hdl)))
+
+#define CCPS_GACK(bOpcode)    (0x80 | bOpcode)    /* RSP: generic ACK */
+
 /*
  * DEFINES
  ****************************************************************************************
@@ -70,6 +73,41 @@
 //#define CCPS_REPORT_MASK               (0x003F) 
 
 #define CCPS_REPORT_ATT_NB             (CCPS_IDX_NB)     
+
+
+#pragma push
+#pragma pack(1)
+
+typedef struct 
+{
+    uint16_t    wLength;
+    uint8_t     bType;
+    uint8_t     bOpCode;
+}   S_CcpsGenericHeader;
+
+#pragma pop
+
+#define CCPS_PKT_HEADER_LENGTH_SIZE    ( sizeof(((S_CcpsGenericHeader *) 0)->wLength) )
+#define CCPS_PKT_HEADER_TYPE_SIZE      ( sizeof(((S_CcpsGenericHeader *) 0)->bType  ) )
+#define CCPS_PKT_HEADER_OPCODE_SIZE    ( sizeof(((S_CcpsGenericHeader *) 0)->bOpCode) )
+
+#define CCPS_PKT_HEADER_LENGTH_POSITION    (0)
+#define CCPS_PKT_HEADER_TYPE_POSITION      (CCPS_PKT_HEADER_LENGTH_POSITION + CCPS_PKT_HEADER_LENGTH_SIZE)
+#define CCPS_PKT_HEADER_OPCODE_POSITION    (CCPS_PKT_HEADER_TYPE_POSITION   + CCPS_PKT_HEADER_TYPE_SIZE  )
+
+
+typedef struct
+{
+    uint16_t    wMtuOfPeer;    // max bytes per packet from peer
+    uint16_t    wMtuOfSelf;    // max bytes per packet to send out
+}   S_CcpsPktCB;
+
+typedef struct
+{
+    uint16_t    wPktTotalSize;
+    uint16_t    wWriteIndex;
+    uint8_t    *pbData;
+}   S_CcpsRcvPktCB;
 
 
 /// Possible states of the CCPS task
@@ -136,6 +174,8 @@ struct ccps_env_tag
     uint8_t ntf_ind_cfg[BLE_CONNECTION_MAX];
     /// State of different task instances
     ke_state_t state[CCPS_IDX_MAX];
+
+    S_CcpsRcvPktCB   tRcvReportPktCB;
 };
 
 /*

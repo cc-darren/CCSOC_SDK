@@ -32,7 +32,10 @@ typedef struct
     uint32_t    file_size;
     uint32_t    file_crc;
     uint32_t    chunk_offset;
-    uint32_t    chunk_size;    
+    uint32_t    chunk_size; 
+    #ifdef FS_CC_MODE_EN
+    uint32_t    fs_magic_no;    
+    #endif
 } S_App_OTA_LocalConfig;
 
 
@@ -41,6 +44,9 @@ typedef struct
 void  ota_handling_init(void);
 void  ota_update_bl_settings(void);
 void  ota_set_mode_enabled(void);
+#if defined(CC6801B0) && defined(FPGA)
+void  ota_erase_user_data_space(void);
+#endif
 
 #ifdef BOOTLOADER
 bool  ota_verify_and_get_app_address(uint32_t *start_address);

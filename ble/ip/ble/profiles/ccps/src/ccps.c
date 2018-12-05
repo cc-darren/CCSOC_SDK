@@ -113,11 +113,14 @@ static uint8_t ccps_init(struct prf_task_env* env, uint16_t* start_hdl, uint16_t
         env->desc.state             = ccps_env->state;
         env->desc.default_handler   = &ccps_default_handler;
 
-        //Save features on the environment
+        // save features on the environment
         ccps_env->features      = params->features;
 
         ccps_env->operation     = NULL;
         memset(ccps_env->ntf_ind_cfg, 0 , sizeof(ccps_env->ntf_ind_cfg));
+
+        // packet control block
+        memset(&(ccps_env->tRcvReportPktCB), 0, sizeof(ccps_env->tRcvReportPktCB));
 
         // service is ready, go into an Idle state
         ke_state_set(env->task, CCPS_IDLE);

@@ -38,25 +38,29 @@
 #include "ble_mgr.h"
 
 #ifdef CFG_BLE_APP
-
+#include <string.h>
 #include "rwble.h"
 #include "app_task.h"
 #include "drvi_eflash.h"
 #include "app.h"
-
+#include "rwip.h"
 
 /******************************************************************************
  * DEFINITION / CONSTANT / ENUM / TYPE
  ******************************************************************************/
 #pragma push
 #pragma pack(1)
-    
-typedef struct 
+
+typedef struct
 {
-    uint8_t  bd_addr[BD_ADDR_LEN];
-    uint8_t  dev_name[APP_DEVICE_NAME_MAX_LEN];
+
+	#if (NVDS_SUPPORT)
+    uint32_t  rsvd_for_magic_num;
+	#endif
+    uint8_t   bd_addr[BD_ADDR_LEN];
+    uint8_t   dev_name[APP_DEVICE_NAME_MAX_LEN];
 } S_NVDS_Device_Info;
-    
+
 #pragma pop
 
 
@@ -132,135 +136,58 @@ const struct rwip_eif_api* rwip_eif_get(uint8_t type)
 
 #ifndef BOOTLOADER
 
-volatile static bool bWaitForWriteFlashDone = false;
-
-
-static void  flash_write_done_callback(uint32_t sys_evt)
-{
-
-    bWaitForWriteFlashDone = false;
-}
-
-
-void    jumptable_check_and_move(void)
-{
-
-    uint8_t empty_space[JUMP_TABLE_SIZE];
-    #ifdef FPGA
-    uint8_t empty_space2[JUMP_TABLE_SIZE];
-    #endif
-    
-    for(uint32_t i = 0; i < JUMP_TABLE_SIZE; i++)
-        empty_space[i] = 0xFF;
-    #ifdef FPGA
-    for(uint32_t i = 0; i < JUMP_TABLE_SIZE; i++)
-        empty_space2[i] = 0x00;
-    #endif
-    
-    #ifdef FPGA
-    if((0x00 == memcmp(empty_space, (uint8_t*)JUMP_TABLE_SWITCH_ADDRESS, JUMP_TABLE_SIZE))
-        ||(0x00 == memcmp(empty_space2, (uint8_t*)JUMP_TABLE_SWITCH_ADDRESS, JUMP_TABLE_SIZE)))
-    #else
-    if(0x00 == memcmp(empty_space, (uint8_t*)JUMP_TABLE_SWITCH_ADDRESS, JUMP_TABLE_SIZE))
-    #endif
-    {
-         drvi_EflashRegisterCallback(flash_write_done_callback);
-
-         drvi_EflashInit();
-
-
-         bWaitForWriteFlashDone = true;
-
-         drvi_EflashErasePage(0);
-
-         while(bWaitForWriteFlashDone)
-            ;
-
-
-         bWaitForWriteFlashDone = true;
-         
-         drvi_EflashProgram(JUMP_TABLE_SWITCH_ADDRESS, (uint8_t*)jump_table_base, JUMP_TABLE_SIZE);
-         
-         while(bWaitForWriteFlashDone)
-            ;
-                  
-         drvi_EflashFlush();         
-    }
-
-}
-
-
 void  set_nvds_device_info(void)
 {
-    
+
 
     uint8_t bd_addr[BD_ADDR_LEN] = APP_DFLT_DEVICE_ADDR;
     uint8_t dev_name[APP_DFLT_DEVICE_NAME_LEN] = APP_DFLT_DEVICE_NAME;
+
+#if (NVDS_SUPPORT)
+    nvds_put(NVDS_TAG_BD_ADDRESS, BD_ADDR_LEN, bd_addr);
+    nvds_put(NVDS_TAG_DEVICE_NAME, APP_DFLT_DEVICE_NAME_LEN, dev_name);
+
+#else
     S_NVDS_Device_Info dev_info;
 
     memcpy(dev_info.bd_addr, bd_addr, BD_ADDR_LEN);
     memcpy(dev_info.dev_name, dev_name, APP_DFLT_DEVICE_NAME_LEN);
 
-
-    drvi_EflashRegisterCallback(flash_write_done_callback);
-
-    drvi_EflashInit();   
-
-
-    bWaitForWriteFlashDone = true;
+    drvi_EflashInit();
 
     drvi_EflashErasePage(0x1003F000);
 
-    while(bWaitForWriteFlashDone)
-       ;
-
-    bWaitForWriteFlashDone = true;
-
     drvi_EflashProgram(0x1003F000, (uint8_t*)&dev_info, sizeof(S_NVDS_Device_Info));
 
-    while(bWaitForWriteFlashDone)
-       ;
+    drvi_EflashFlush();
+#endif
 
-    
-    drvi_EflashFlush();   
 }
 
 
 #endif
 
+
 /******************************************************************************
  * FUNCTION > APP_BLEMGR_Init
  ******************************************************************************/
+
 void    APP_BLEMGR_Init(void)
 {
     uint32_t error = 0;
-
-    #ifndef BOOTLOADER
-    #ifndef FPGA 
-    jumptable_check_and_move();
-
-    set_nvds_device_info();
-    #endif
+    
+    #ifdef CFG_NVDS
+    nvds_init((uint8_t *)0x1003F000, 2048);
     #endif
     
-    NVIC_DisableIRQ(BLE_IRQn);
-            
+    set_nvds_device_info();    
+    
     memset (((void *) 0x40006000), 0, 8192);
-    memset (((void *) 0x20000048), 0, 0x820);   
-
+	
     *((uint32_t *) 0x4000011C) = 0x00000008;
-    #if (SYSTEM_CLOCK_MHZ == 24)
-        *((uint32_t *) 0x40000104) = (*((uint32_t *) 0x40000104) & 0xFFFFFE0) | 0x03; // if SYSTEM_CLOCK_MHZ: 24MHz
-    #elif (SYSTEM_CLOCK_MHZ == 32)
-        *((uint32_t *) 0x40000104) = (*((uint32_t *) 0x40000104) & 0xFFFFFE0) | 0x04; // if SYSTEM_CLOCK_MHZ: 32MHz
-    #endif
+    *((uint32_t *) 0x40000104) = (*((uint32_t *) 0x40000104) & 0xFFFFFE0) | (SYSTEM_CLOCK_MHZ/8);
     
     rwip_init(error);
-    
-    NVIC_EnableIRQ(BLE_IRQn);
-    GLOBAL_INT_START();
-
-
 }
 
 
@@ -268,7 +195,7 @@ void    APP_BLEMGR_Init(void)
 void    APP_SW_Timer_Init(void)
 {
 
-     while (APPM_ADVERTISING != ke_state_get(TASK_APP))    
+     while (APPM_ADVERTISING != ke_state_get(TASK_APP))
      {
             rwip_schedule();
      }
@@ -279,6 +206,7 @@ void    APP_SW_Timer_Init(void)
 /******************************************************************************
  * FUNCTION > BLE_IRQHandler
  ******************************************************************************/
+
 void    BLE_IRQHandler(void)
 {    
     rwble_isr();

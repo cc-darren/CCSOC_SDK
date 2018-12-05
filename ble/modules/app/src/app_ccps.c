@@ -41,7 +41,6 @@
 #include "drvi_clock.h"
 #include "sw_timer.h"
 #include "tracer.h"
-#include "scheduler.h"
 #include "rwip.h"
 #include "app_ota.h"
 #ifdef CFG_SDK_CCPS_EN
@@ -67,6 +66,21 @@
  */
 
 
+#ifndef CFG_SDK_CCPS_EN 
+static void ccps_packet_send_generic_ack(uint8_t type, uint8_t op_code)
+{
+
+    S_App_CC_Messages tx_msg;                    
+
+    tx_msg.len      = SIZE_OF_CC_MSG_HDR;
+    tx_msg.type     = type;
+    tx_msg.op       = op_code | 0x80;    
+
+    app_ota_notify_send((uint8_t*)&tx_msg, (tx_msg.len + SIZE_OF_CC_MSG_LEN)); 
+
+}
+#endif
+
  /**
  ****************************************************************************************
  * @brief Handles reception of the write request event via "Report characteristic"
@@ -78,6 +92,7 @@
  * @return If the message was consumed or not.
  ****************************************************************************************
  */
+
 static int ccps_packet_send_cmd_handler(ke_msg_id_t const msgid,
                                         struct ccps_packet_send_cmd const *param,
                                         ke_task_id_t const dest_id,
@@ -94,6 +109,8 @@ static int ccps_packet_send_cmd_handler(ke_msg_id_t const msgid,
 
     if(ptAppCCMessage->len >= SIZE_OF_CC_MSG_HDR)
     {
+        ccps_packet_send_generic_ack(ptAppCCMessage->type, ptAppCCMessage->op);
+    
         switch(ptAppCCMessage->type)
         {
             case E_CCPS_FTYPE_OTA: 

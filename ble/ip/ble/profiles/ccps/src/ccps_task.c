@@ -186,7 +186,36 @@ static int ccps_indicate_send_req_handler(ke_msg_id_t const msgid,
     return (msg_status);
 }
 
+#if 0
+static void _ccps_send_gack(void)
+{
+    
+    // Get the address of the environment
+    struct ccps_env_tag *ccps_env = PRF_ENV_GET(CCPS, ccps);
+    
+    // allocate operation to execute
+    ccps_env->operation    = (struct ccps_op *) ke_malloc(sizeof(struct ccps_op) + CCPS_REPORT_MAX_LEN, KE_MEM_ATT_DB);
+    
+    // Initialize operation parameters
+    ccps_env->operation->cursor  = 0;
+    ccps_env->operation->dest_id = TASK_APP;
+    ccps_env->operation->conidx  = GAP_INVALID_CONIDX;
+    ccps_env->operation->op      = CCPS_CFG_REPORT_NTF;
+    ccps_env->operation->handle  = CCPS_HANDLE(CCPS_IDX_REPORT_VAL);
+    ccps_env->operation->length  = (CCPS_PKT_HEADER_LENGTH_SIZE + CCPS_PKT_HEADER_TYPE_SIZE + CCPS_PKT_HEADER_OPCODE_SIZE);
 
+    // g-ack content
+    *((uint16_t *) &(ccps_env->operation->data[CCPS_PKT_HEADER_LENGTH_POSITION])) = (CCPS_PKT_HEADER_TYPE_SIZE + CCPS_PKT_HEADER_OPCODE_SIZE);
+    ccps_env->operation->data[CCPS_PKT_HEADER_TYPE_POSITION]                      = ccps_env->tRcvReportPktCB.pbData[CCPS_PKT_HEADER_TYPE_POSITION];
+    ccps_env->operation->data[CCPS_PKT_HEADER_OPCODE_POSITION]                    = CCPS_GACK(ccps_env->tRcvReportPktCB.pbData[CCPS_PKT_HEADER_OPCODE_POSITION]);
+
+    // put task in a busy state
+    ke_state_set(prf_get_task_from_id(TASK_ID_CCPS), CCPS_BUSY);
+    
+    // execute operation
+    ccps_exe_operation();
+}
+#endif
 
 /**
  ****************************************************************************************
@@ -228,13 +257,65 @@ static int gattc_write_req_ind_handler(ke_msg_id_t const msgid,
              // check state of the task to know if it can be proceed immediately
              if(state == CCPS_IDLE)
              {
-                 // inform application that update of measurement interval is requested by peer device.
-                 struct ccps_packet_send_cmd * req_ind = KE_MSG_ALLOC(CCPS_PACKET_SEND_CMD,
-                         prf_dst_task_get(&ccps_env->prf_env, conidx), dest_id, ccps_packet_send_cmd);
-                 
-                 req_ind->length =  param->length;
-                 memcpy(req_ind->value, param->value, param->length);
-                 ke_msg_send(req_ind);
+                 #ifdef CFG_SDK_CCPS_EN
+                     // inform application that update of measurement interval is requested by peer device.
+                     struct ccps_packet_send_cmd * req_ind = KE_MSG_ALLOC(CCPS_PACKET_SEND_CMD,
+                             prf_dst_task_get(&ccps_env->prf_env, conidx), dest_id, ccps_packet_send_cmd);
+                     
+                     req_ind->length =  param->length;
+                     memcpy(req_ind->value, param->value, param->length);
+                     ke_msg_send(req_ind);
+                 #else
+                     if (0 == ccps_env->tRcvReportPktCB.wPktTotalSize)
+                     {
+                         S_CcpsGenericHeader   *_ptRcvPkt = ((S_CcpsGenericHeader *) param->value);
+                     
+                         ccps_env->tRcvReportPktCB.wPktTotalSize = (CCPS_PKT_HEADER_LENGTH_SIZE + _ptRcvPkt->wLength);
+                         ccps_env->tRcvReportPktCB.wWriteIndex   = 0;
+                         ccps_env->tRcvReportPktCB.pbData        = ((uint8_t *) ke_malloc(ccps_env->tRcvReportPktCB.wPktTotalSize, KE_MEM_ATT_DB));
+                     }
+
+                     {
+                         uint16_t    _wLength = param->length;
+
+                         if ((ccps_env->tRcvReportPktCB.wWriteIndex + _wLength) > ccps_env->tRcvReportPktCB.wPktTotalSize)
+                             _wLength = (ccps_env->tRcvReportPktCB.wPktTotalSize - ccps_env->tRcvReportPktCB.wWriteIndex);
+
+                         if ((ccps_env->tRcvReportPktCB.pbData) && (_wLength))
+                         {
+                             memcpy(  &ccps_env->tRcvReportPktCB.pbData[ccps_env->tRcvReportPktCB.wWriteIndex]
+                                    , param->value
+                                    , _wLength                                                              );
+    
+                         }
+
+                         ccps_env->tRcvReportPktCB.wWriteIndex += _wLength;
+                     }
+
+                     if (ccps_env->tRcvReportPktCB.wWriteIndex == ccps_env->tRcvReportPktCB.wPktTotalSize)
+                     {
+                         // send GACK to peer
+                         //_ccps_send_gack();
+
+                         // signal upper layer than a complete packet is received
+                         {
+                             struct ccps_packet_send_cmd   *_ptReqIND = KE_MSG_ALLOC(  CCPS_PACKET_SEND_CMD
+                                                                                     , prf_dst_task_get(&ccps_env->prf_env, conidx)
+                                                                                     , dest_id
+                                                                                     , ccps_packet_send_cmd                        );
+                             
+                             _ptReqIND->length = ccps_env->tRcvReportPktCB.wPktTotalSize;
+    
+                             memcpy(_ptReqIND->value, ccps_env->tRcvReportPktCB.pbData, ccps_env->tRcvReportPktCB.wPktTotalSize);
+    
+                             ke_msg_send(_ptReqIND);
+                         }
+
+                         // reset rx packet control block
+                         ke_free(ccps_env->tRcvReportPktCB.pbData);
+                         memset(&(ccps_env->tRcvReportPktCB), 0, sizeof(ccps_env->tRcvReportPktCB));
+                     }
+                 #endif
              }
              else
              {

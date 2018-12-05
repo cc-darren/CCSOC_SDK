@@ -122,6 +122,12 @@
 #define APP_HID_ADV_DATA_UUID_LEN   (4)
 #endif //(BLE_APP_HID)
 
+
+// Heart rate
+#define APP_HR_ADV_DATA_UUID       "\x03\x03\x0D\x18"
+#define APP_HR_ADV_DATA_UUID_LEN   (4)
+
+
 /**
  * Appearance part of ADV Data
  * --------------------------------------------------------------------------------------
@@ -140,6 +146,9 @@
 #if (BLE_APP_HID)
 #define APP_HID_ADV_DATA_APPEARANCE   "\x03\x19\xC2\x03"
 #endif //(BLE_APP_HID)
+
+
+#define APP_WATCH_ADV_DATA_APPEARANCE   "\x03\x19\xC1\x00"
 
 #define APP_ADV_DATA_APPEARANCE_LEN  (4)
 
@@ -272,6 +281,9 @@ static uint32_t reset_ble_cnt = 0;
  * FUNCTION DEFINITIONS
  ****************************************************************************************
  */
+
+extern void appm_set_bdaddr(uint8_t *bd_addr);
+
 
 void rwip_ignore_ll_conn_param_update_patch(void)
 {
@@ -524,15 +536,6 @@ void app_wait_for_reset_ble(void)
 
 
 
-void appm_set_bdaddr(uint8_t *bd_addr)
-{
-    
-    REG_BLE_WR(0x40004024, co_read32p(bd_addr));
-    REG_BLE_WR(0x40004028, co_read16p((bd_addr+4)));
-
-    memcpy((uint8_t *) 0x2000069D, bd_addr, BD_ADDR_LEN);
-
-}
 
 
 bool appm_get_nvds_bdaddr(uint8_t **bd_addr)
@@ -567,13 +570,24 @@ void appm_start_advertising(void)
     // Check if the advertising procedure is already is progress
     if (ke_state_get(TASK_APP) == APPM_READY)
     {
-        uint8_t *bd_addr;
         
-        if(true == appm_get_nvds_bdaddr(&bd_addr))           
+        #if (NVDS_SUPPORT)
+        uint8_t bd_addr[BD_ADDR_LEN];
+        uint8_t bd_len = NVDS_LEN_BD_ADDRESS;
+        if (nvds_get(NVDS_TAG_BD_ADDRESS, &bd_len, (uint8_t *)bd_addr) == NVDS_OK)
+        {
             appm_set_bdaddr(bd_addr);
+        }
         else
-            appm_set_bdaddr(PUBLIC_BD_ADDR);
-
+        #endif //(NVDS_SUPPORT)
+        {
+            uint8_t *dev_addr;
+            
+            if(true == appm_get_nvds_bdaddr(&dev_addr))           
+                appm_set_bdaddr(dev_addr);
+            else
+                appm_set_bdaddr(PUBLIC_BD_ADDR);
+        }
         
         #if defined(BLE_APP_AM0)
         am0_app_start_advertising();
@@ -639,6 +653,7 @@ void appm_start_advertising(void)
             cmd->info.host.adv_data_len       = ADV_DATA_LEN - 3;
             cmd->info.host.scan_rsp_data_len  = SCAN_RSP_DATA_LEN;
 
+
             // Advertising Data
             #if (NVDS_SUPPORT)
             if(nvds_get(NVDS_TAG_APP_BLE_ADV_DATA, &cmd->info.host.adv_data_len,
@@ -647,7 +662,19 @@ void appm_start_advertising(void)
             {
                 cmd->info.host.adv_data_len = 0;
 
+                #if 1              
+                    
                 //Add list of UUID and appearance
+                    // UUID: HR
+                    // Appearance: Sports Watch
+                    memcpy(&cmd->info.host.adv_data[cmd->info.host.adv_data_len],
+                               APP_HR_ADV_DATA_UUID, APP_HR_ADV_DATA_UUID_LEN);
+                    cmd->info.host.adv_data_len += APP_HR_ADV_DATA_UUID_LEN;
+                    memcpy(&cmd->info.host.adv_data[cmd->info.host.adv_data_len],
+                               APP_WATCH_ADV_DATA_APPEARANCE, APP_ADV_DATA_APPEARANCE_LEN);
+                    cmd->info.host.adv_data_len += APP_ADV_DATA_APPEARANCE_LEN;  
+                #else
+                    //Add list of UUID and appearance
                 #if (BLE_APP_HT)
                 memcpy(&cmd->info.host.adv_data[cmd->info.host.adv_data_len],
                        APP_HT_ADV_DATA_UUID, APP_HT_ADV_DATA_UUID_LEN);
@@ -665,7 +692,9 @@ void appm_start_advertising(void)
                        APP_HID_ADV_DATA_APPEARANCE, APP_ADV_DATA_APPEARANCE_LEN);
                 cmd->info.host.adv_data_len += APP_ADV_DATA_APPEARANCE_LEN;
                 #endif //(BLE_APP_HID)
-            }
+                #endif
+            }    
+
 
             // Scan Response Data
             #if (NVDS_SUPPORT)

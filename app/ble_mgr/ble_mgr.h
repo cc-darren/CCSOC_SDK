@@ -18,7 +18,6 @@
 #include "project.h"
 #include "jump_table.h"
 #include "rwip.h"
-#include "scheduler.h"
 
  /******************************************************************************
  * DEFINITION / CONSTANT / ENUM / TYPE

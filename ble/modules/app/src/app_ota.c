@@ -181,26 +181,11 @@ bool APP_OTA_RebootIsReady(void)
  ****************************************************************************************
  */
 
-static void APP_OTA_Generic_Ack(uint8_t op_code)
-{
-    
-    S_App_CC_Messages tx_msg;                    
-
-    tx_msg.len      = SIZE_OF_CC_MSG_HDR;
-    tx_msg.type     = E_CCPS_FTYPE_OTA;
-    tx_msg.op       = op_code | 0x80;    
-
-    app_ota_notify_send((uint8_t*)&tx_msg, (tx_msg.len + SIZE_OF_CC_MSG_LEN)); 
-}
-
-
 static void APP_OTA_Start_Rsp(uint8_t result)
 {
     
     S_App_CC_Messages tx_msg;                    
     S_CCPS_OTA_START_RSP tx_rsp;
-
-    APP_OTA_Generic_Ack(E_CCPS_OPCODE_OTA_CMD_START);
 
     // RSP_START
     tx_rsp.result   = result;
@@ -221,8 +206,6 @@ static void APP_OTA_Config_Rsp(uint8_t  result,      S_App_OTA_LocalConfig  *pLo
     
     S_App_CC_Messages tx_msg;                    
     S_CCPS_OTA_CONFIG_RSP tx_rsp;
-
-    APP_OTA_Generic_Ack(E_CCPS_OPCODE_OTA_CMD_CONFIG);
 
     // RSP_CONFIG
     tx_rsp.result           = result;
@@ -256,8 +239,6 @@ static void APP_OTA_Chunk_Offset_Rsp(uint8_t result)
     S_App_CC_Messages tx_msg;                    
     S_CCPS_OTA_CHUNK_OFFSET_RSP tx_rsp;
 
-    APP_OTA_Generic_Ack(E_CCPS_OPCODE_OTA_CMD_OFFSET);
-
     // RSP_OFFSET
     tx_rsp.result   = result;
 
@@ -275,8 +256,6 @@ static void APP_OTA_CRC_Rsp(uint32_t crc)
     
     S_App_CC_Messages tx_msg;                    
     S_CCPS_OTA_CRC_RSP tx_rsp;
-
-    APP_OTA_Generic_Ack(E_CCPS_OPCODE_OTA_CMD_CRC);
 
     // RSP_CRC
     tx_rsp.crc      = crc;
@@ -525,8 +504,6 @@ void APP_OTA_MsgHandler(S_App_CC_Messages *msg)
 
             }
 
-            APP_OTA_Generic_Ack(E_CCPS_OPCODE_OTA_CMD_CRC_CONFIRM);
-
         }break;
             
         #endif // end of #ifdef BOOTLOADER
@@ -563,8 +540,6 @@ void APP_OTA_MsgHandler(S_App_CC_Messages *msg)
             #endif
 
             APP_OTA_Reboot_Set();
-                          
-            APP_OTA_Generic_Ack(E_CCPS_OPCODE_OTA_CMD_STOP);
             
         }break;
 
@@ -575,8 +550,6 @@ void APP_OTA_MsgHandler(S_App_CC_Messages *msg)
             TracerInfo("\r\nRx OTA CMD_RECONNECT\r\n");
 
             APP_OTA_Reboot_Set();
-            
-            APP_OTA_Generic_Ack(E_CCPS_OPCODE_OTA_CMD_RECONNECT);
 
         }break;
 
@@ -683,7 +656,7 @@ void APP_OTA_Image_Write(const uint8_t *image_data, uint16_t data_size)
  ****************************************************************************************
  */
 
-void   APP_OTA_SelfTest_EventHandler(S_AppSchedEvent *tEvent)
+E_AppSched_EvtHandlerReturn   APP_OTA_SelfTest_EventHandler(S_AppSchedEvent *tEvent)
 {
     
     //TracerInfo(  "[APP_OTA_SelfTest_EventHandler] event: %d, argv: 0x%08X\r\n"
@@ -747,7 +720,8 @@ void   APP_OTA_SelfTest_EventHandler(S_AppSchedEvent *tEvent)
          }
          
     }
-    
+
+    return (E_APP_SCHED_EVT_HANDLER_RET_CONSUMED);
 }
 
 

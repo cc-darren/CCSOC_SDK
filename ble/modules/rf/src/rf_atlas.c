@@ -42,6 +42,9 @@
 #include "plf.h"           // Platform register
 
 #include "drvi_gpio.h"
+#ifdef NVDS_SUPPORT
+#include "nvds.h"
+#endif
 
 // Atlas register definitions and access functions
 static uint32_t rf_atl_reg_rd (uint16_t addr);
@@ -94,14 +97,15 @@ static void rf_atl_reg_wr (uint16_t addr, uint32_t value);
 
 
 // Max burst register
+#if 0
 static uint8_t rf_atl_reg_buf[ATL_MAX_BURST_SIZE + 2]; // max burst size + buffer controls
-
+#endif
 /**
  ****************************************************************************************
  * GLOBAL VARIABLE DEFINITIONS
  *****************************************************************************************
  **/
-
+#if 0 // NOT USED
 /* Icytrx v0x13 static settings */
 static const uint8_t RF_ATL_REG_TBL_13[ICY1x_INIT_TBL_SIZE] =
 {
@@ -210,6 +214,9 @@ static  const uint8_t RF_ATL_REG_TBL_62[ICY62_INIT_TBL_SIZE] =
     0xc2, 0x16, 0x18, 0x00,   0x00, 0x15, 0x25, 0x0e,    0x00, 0x00, 0x00, 0x35,   0x84, 0xc3, 0x90, 0x04, // 0xa*
     0x80, 0xf0, 0xd0, 0x03,   0xcb, 0x11, 0x00, 0x00,    0x40, 0x00, 0x00, 0x89,   0x33, 0x00, 0x09, 0x00
 };
+#endif
+
+#if 0 // old version
 
 /* Icytrx v0x63 static settings - Latest CSEM 0x63 + CEVA patch --- 12/15/2017  */ 
 static  const uint8_t RF_ATL_REG_TBL_63[ICY63_INIT_TBL_SIZE] =
@@ -224,11 +231,33 @@ static  const uint8_t RF_ATL_REG_TBL_63[ICY63_INIT_TBL_SIZE] =
     0x04, 0x28, 0x40, 0x05,   0x4a, 0x52, 0x90, 0xaa,    0x54, 0xb5, 0xea, 0xd5,   0x2f, 0x7f, 0x0e, 0x5c, // 0x7*
     0xa2, 0x6c, 0xec, 0x01,   0x71, 0x00, 0x33, 0xc1,    0x22, 0x61, 0x01, 0x00,   0x00, 0x00, 0x73, 0x66, // 0x8*
     0x38, 0x77, 0x74, 0x9a,   0x77, 0x66, 0x9f, 0x95,    0x06, 0x89, 0x47, 0x00,   0x00, 0x08, 0x0f, 0xc2, // 0x9*
-    0xc2, 0x16, 0x18, 0x00,   0x00, 0x11, 0x25, 0x0f,    0x00, 0x00, 0x00, 0x15,   0x20, 0xc3, 0x50, 0x04, // 0xa*
+    //0xc2, 0x16, 0x18, 0x00,   0x00, 0x11, 0x25, 0x0f,    0x00, 0x00, 0x00, 0x15,   0x20, 0xc3, 0x50, 0x04, // 0xa*
+    0xc2, 0x16, 0x18, 0x00,   0x00, 0x11, 0x25, 0x0f,    0x00, 0x00, 0x00, 0x15,   0x20, 0xc3, 0xA0, 0x04, // 0xa*
     0x80, 0xf0, 0xd0, 0x03,   0xc3, 0x11, 0x00, 0x00,    0x40, 0x00, 0x00, 0x8e,   0x33, 0x00, 0x19, 0xf1, // 0xb* 
 };
 
+
+#else
+/* Icytrx v0x63 static settings - Latest CSEM 0x63 + CEVA patch  */ 
+static  const uint8_t RF_ATL_REG_TBL_63[ICY63_INIT_TBL_SIZE] =
+{	
+    0x22, 0x08, 0x00, 0x00,   0x00, 0x22, 0x0b, 0xf0,    0x09, 0x20, 0x00, 0x10,   0x03, 0x00, 0xff, 0xff, // 0x0*
+    0x0f, 0x00, 0x00, 0x80,   0x23, 0x82, 0x1b, 0xc7,    0x15, 0x82, 0x00, 0x00,   0x01, 0x01, 0x72, 0x1c, // 0x1*
+    0x07, 0x00, 0x82, 0xff,   0x01, 0x55, 0x00, 0x00,    0x00, 0x00, 0x00, 0x00,   0x29, 0x41, 0x76, 0x71, // 0x2*
+    0x03, 0x2d, 0x03, 0x80,   0x00, 0x55, 0x55, 0x55,    0x00, 0x00, 0x00, 0x00,   0x00, 0x00, 0x00, 0x00, // 0x3*
+    0x00, 0x00, 0x00, 0x00,   0x00, 0x00, 0x00, 0x01,    0x02, 0x07, 0x10, 0x20,   0x37, 0x50, 0x66, 0x76, // 0x4*
+    0x7e, 0x2b, 0x11, 0xa0,   0x21, 0x74, 0xca, 0xfe,    0x3f, 0x00, 0x04, 0x50,   0x1f, 0x1b, 0x30, 0x44, // 0x5*
+    0x0b, 0x55, 0x15, 0x11,   0x19, 0x0e, 0x3d, 0x0b,    0x12, 0x2c, 0xfe, 0xb0,   0x40, 0x6f, 0x00, 0x00, // 0x6* 
+    0x04, 0x28, 0x40, 0x05,   0x4a, 0x52, 0x90, 0xaa,    0x54, 0xb5, 0xea, 0xd5,   0x2f, 0x7f, 0x0e, 0x5c, // 0x7*
+    0xa2, 0x6c, 0xec, 0x01,   0x71, 0x00, 0x33, 0xc1,    0x22, 0x61, 0x01, 0x00,   0x00, 0x00, 0x73, 0x66, // 0x8*
+    0x38, 0x77, 0x74, 0x9a,   0x77, 0x66, 0x9f, 0x95,    0x06, 0x89, 0x47, 0x00,   0x00, 0x08, 0x0f, 0xc2, // 0x9*
+    0xc2, 0x16, 0x18, 0x00,   0x00, 0x11, 0x25, 0x0f,    0x00, 0x00, 0x00, 0x15,   0x20, 0xc3, 0x75, 0x04, // 0xa* 
+    0x80, 0xf0, 0xd0, 0x03,   0xc3, 0x11, 0x00, 0x00,    0x40, 0x00, 0x00, 0x8e,   0x33, 0x00, 0x19, 0xf1, // 0xb* 
+};
+#endif
+
 /* Frequency Table for IcyTRx 0x13/0x14 */
+#if 0
 static const uint32_t RF_ATL_FREQ_TBL[EM_RF_FREQ_TABLE_LEN/4] =
 {
   [0x00] = 0x82810da7,   // 2404 MHz
@@ -272,6 +301,8 @@ static const uint32_t RF_ATL_FREQ_TBL[EM_RF_FREQ_TABLE_LEN/4] =
   [0x26] = 0x8286eb85,   // 2426 MHz
   [0x27] = 0x829551ec    // 2480 MHz
 };
+#endif
+#if 0 // Not used 
 
 /* Frequency Table for IcyTRx65 v0x20*/
 static const uint32_t RF_ATL_FREQ_TBL20[EM_RF_FREQ_TABLE_LEN/4] =
@@ -497,7 +528,7 @@ static const uint32_t RF_ATL_FREQ_TBL62[EM_RF_FREQ_TABLE_LEN/4] =
   [0x26] = 0x821b1c71,    // 2426MHz
   [0x27] = 0x82271c71,    // 2480MHz
 };
-
+#endif
 /* Frequency Table for IcyTRx55 v0x63 - CC6801 - Used same as 0x62 */
 static const uint32_t RF_ATL_FREQ_TBL63[EM_RF_FREQ_TABLE_LEN/4] =
 {
@@ -624,6 +655,7 @@ enum
  * @brief SPI access
  ***************************************************************************************
  */
+#if 0
 static void rf_atl_spi_tf(void)
 {
     //launch SPI transfer
@@ -632,7 +664,7 @@ static void rf_atl_spi_tf(void)
     //wait for transfer to be completed
     while (!ble_spicomp_getf());
 }
-
+#endif
 /**
  ****************************************************************************************
  * @brief Atlas specific read access
@@ -644,6 +676,7 @@ static void rf_atl_spi_tf(void)
  */
 static uint32_t rf_atl_reg_rd (uint16_t addr)
 {
+    #if 0
     // Next Pointr to 0x0
     rf_atl_reg_buf[0] = (uint8_t)(0);  // Next Pointer set to 0x0000 to stop the SPI Chained access
     rf_atl_reg_buf[1] = (uint8_t)(0);
@@ -660,6 +693,17 @@ static uint32_t rf_atl_reg_rd (uint16_t addr)
     rf_atl_spi_tf();
 
     return (uint32_t)(*((uint8_t *)(RF_EM_SPI_ADRESS + 4)));
+
+
+
+    #else
+    
+    return (uint32_t)*(volatile uint8_t *)(BLEPHY_ADDR_BASE + addr);
+    
+    #endif
+
+
+    
 }
 
 /**
@@ -674,6 +718,7 @@ static uint32_t rf_atl_reg_rd (uint16_t addr)
  */
 static void rf_atl_reg_wr (uint16_t addr, uint32_t value)
 {
+    #if 0
     rf_atl_reg_buf[0] = (uint8_t)(0);  // Next Pointer set to 0x0000 to stop the SPI Chained access
     rf_atl_reg_buf[1] = (uint8_t)(0);
 
@@ -691,6 +736,15 @@ static void rf_atl_reg_wr (uint16_t addr, uint32_t value)
 
     //do the transfer
     rf_atl_spi_tf();
+
+    #else
+
+    *(volatile uint8_t *)(BLEPHY_ADDR_BASE + addr) = value & 0xFF;
+
+    #endif
+
+    
+  
 }
 
 /**
@@ -706,6 +760,8 @@ static void rf_atl_reg_wr (uint16_t addr, uint32_t value)
  **/
 static void rf_atl_reg_burst_wr (uint16_t addr, uint8_t size, uint8_t *data)
 {
+
+    #if 0
     rf_atl_reg_buf[0] = (uint8_t)(0);  // Next Pointer set to 0x0000 to stop the SPI Chained access
     rf_atl_reg_buf[1] = (uint8_t)(0);
 
@@ -724,6 +780,16 @@ static void rf_atl_reg_burst_wr (uint16_t addr, uint8_t size, uint8_t *data)
 
     //do the transfer
     rf_atl_spi_tf();
+
+    #else
+
+    for(uint32_t offset = 0; offset < size; offset++)
+    {
+        rf_atl_reg_wr(addr + offset, *(data + offset));
+        
+    }
+
+    #endif
 }
 
 /**
@@ -773,6 +839,22 @@ static void rf_sleep(void)
                       BLE_DEEP_SLEEP_ON_BIT |    // RW BLE Core sleep
                       BLE_RADIO_SLEEP_EN_BIT |   // Radio sleep
                       BLE_OSC_SLEEP_EN_BIT);     // Oscillator sleep
+#if 1
+
+    // BLE SLEEP ======================================================= BEGIN =
+    #if 1
+    while (1)
+    {
+        if (ble_deepslcntl_get() & 0x00008000)
+            break;
+    }
+    #endif
+    
+    NVIC_ClearPendingIRQ(BLE_IRQn);
+    NVIC_EnableIRQ(BLE_IRQn);
+    // BLE SLEEP ========================================================= END =
+#endif
+
     #endif // CFG_BLE
 }
 
@@ -797,7 +879,7 @@ static int8_t rf_rssi_convert (uint8_t rssi_reg)
 
 #define REG_WRITE(addr, data)    *((volatile uint32_t *) addr) = data
 #define REG_READ(addr, data)     data = *((volatile uint32_t *) addr)
-
+#if 0
 static void _spi_go(void)
 {
     volatile uint32_t    _dwSpiComp = 0;
@@ -812,7 +894,7 @@ static void _spi_go(void)
             break;
     }
 }
-
+#endif
 void    _delay_100us(void)
 {
     volatile uint64_t    _lDelayCount = 0;
@@ -834,8 +916,11 @@ void    _delay_300us(void)
 void _Radio55nmPmuInit(void)
 {
     #if defined(TC4CC6801)
-        drvi_GpioWrite(GPIO_PIN_0, 1); //DCDC SPI
-    
+        //drvi_GpioWrite(GPIO_PIN_0, 1); //DCDC SPI
+        //REG_GPIO(0)->dw.output |= (1UL << PIN(0));
+        //set_ports(0, 1, 0, 0x1);
+        //REG_WRITE(0x40000204, 1);
+        set_ports(0, 0, 0, 0x01, 0x01);
         #ifdef DCDC_MODE
             /****Turn-ON the DCDC and put it in DCDC mode****/
             REG_WRITE(0x40004070, 0x00880000);
@@ -877,18 +962,52 @@ void _Radio55nmPmuInit(void)
     
         _delay_100us();    //ADD 100us delay// This lets the vddd to settle
     
-        drvi_GpioWrite(GPIO_PIN_0, 0); //Radio SPI
-    #endif  //(TC4CC6801)
-    
+        //drvi_GpioWrite(GPIO_PIN_0, 0); //Radio SPI
+        //REG_GPIO(0)->dw.output &= ~(1UL << PIN(0));
+        //set_ports(0, 1, 0, 0x0);
+        //REG_WRITE(0x40000204, 0);
+        set_ports(0, 0, 0, 0x01, 0x00);
+       
+    #else		//(TC4CC6801)
+
+
+    #if 0 // old version
+
     REG_WRITE(0x40004070, 0x00880000);
     REG_WRITE(0x40004074, 0x04031000);
     REG_WRITE(0x40007000, 0xE1810000); // address = 0xe1
     REG_WRITE(0x40007004, 0x000000ff); // Turning on all the LDOs
+    
+    
     //   REG_WRITE(0x40007008, 0xE2811010); // address = 0xe2
     //   REG_WRITE(0x4000700c, 0x0000004a); // trimming value LDO_syn , LDO_pa
     //   REG_WRITE(0x40007010, 0xE3810000); // address = 0xe3
     //   REG_WRITE(0x40007014, 0x00000029); // trimming value for LDO_a
     _spi_go();
+
+
+    #else
+		//CC6801 PMU programming//		
+		REG_WRITE(0x40002304, 0x0103450b);
+		REG_WRITE(0x40002308, 0x6800007F);
+//		#define ldomode
+		#ifdef ldomode
+		REG_WRITE(0x40002300, 0x06300002);
+		_delay_300us();	
+		#endif
+		//RF-LDO trimming//
+	/* REG_WRITE(0x40004070, 0x00880000);
+    REG_WRITE(0x40004074, 0x04031008);
+    REG_WRITE(0x40007008, 0xE2811010); // address = 0xe2
+    REG_WRITE(0x4000700c, 0x000000CE); // trimming value LDO_syn , LDO_pa
+    REG_WRITE(0x40007010, 0xE3810000); // address = 0xe3
+    REG_WRITE(0x40007014, 0x00000039); // trimming value for LDO_a
+    _spi_go(); */
+
+        
+    #endif
+        
+    #endif  //(CC6801_MPW)
 }
 
 /**
@@ -897,20 +1016,89 @@ void _Radio55nmPmuInit(void)
  ****************************************************************************************
  **/
 
-//uint8_t rand_array[1000];
+#if 1
+uint8_t vco_backup_data[EM_RF_VCO_TABLE_LEN];
+
+
+void rwip_restore_vco_calibration(void)
+{
+
+    for(uint8_t idx=0; idx < EM_RF_VCO_TABLE_LEN; idx++)
+    {
+        // Initialize VCO sub Table pointer in EM
+        uint8_t *ptr_vcosub=(uint8_t *)(EM_BASE_ADDR+EM_FT_OFFSET+EM_RF_FREQ_TABLE_LEN+idx);
+
+        // Program PLLCNTL values / take value from RF_ATL_FREQ_TBL
+        // 0x63
+        rf_atl_reg_burst_wr(ICY63_CENTER_FREQ, 4, (uint8_t *) &RF_ATL_FREQ_TBL63[idx]);
+
+        *ptr_vcosub = vco_backup_data[idx];
+
+    }
+
+}
+
+void rwip_execute_vco_calibration(void)
+{
+
+  uint8_t vco_sub_read = 0;
+
+  for(uint8_t idx=0; idx < EM_RF_VCO_TABLE_LEN; idx++)
+  {
+    // Initialize VCO sub Table pointer in EM
+      uint8_t *ptr_vcosub=(uint8_t *)(EM_BASE_ADDR+EM_FT_OFFSET+EM_RF_FREQ_TABLE_LEN+idx);
+     
+      // Program PLLCNTL values / take value from RF_ATL_FREQ_TBL
+      // 0x63
+      rf_atl_reg_burst_wr(ICY63_CENTER_FREQ, 4, (uint8_t *) &RF_ATL_FREQ_TBL63[idx]);
+
+        
+      // TxEN + Enable VCO Calibration in RF for v0x1-,  v0x2- and CS1 / @0xC0 write 0x6
+      // RxEN + Enable VCO Calibration in RF for CS2 / @0xC0 write 0x3
+      // 0x63
+      rf_atl_reg_wr(ICY_FSM_MODE,0x02);
+
+      
+      // Poll on @0xC0 until it is equal to 0x0
+      while (rf_atl_reg_rd(ICY_FSM_MODE) != 0x00);
+         
+      // WARNING !! Problem of SW dynamic resolved by adding this loop in order to prevent from erasing VCO table @ index 0
+      for(uint32_t cpt=0;cpt<1000;cpt++);
+
+
+      // Store VCO sub-band read value
+      // 0x63
+      vco_sub_read = rf_atl_reg_rd((uint16_t)ICY63_SW_CAP_FSM);
+      *ptr_vcosub = vco_sub_read;
+
+       vco_backup_data[idx] = *ptr_vcosub;
+  }
+
+}
+#endif
 
 void rf_init(struct rwip_rf_api *api)
 {
    	volatile uint32_t icy_version = 0; // Default version is Atlas
 	uint8_t idx = 0;
 
-	#if !defined(RP_HWSIM_BYPASS)
-	uint8_t vco_sub_read = 0;
-	#endif // RP_HWSIM_BYPASS
-
+	//#if !defined(RP_HWSIM_BYPASS)
+	//uint8_t vco_sub_read = 0;
+	//#endif // RP_HWSIM_BYPASS
+   
+    // Store it in NVDS
+    #if (NVDS_SUPPORT)
+    // Store the generated value in NVDS
+    if (nvds_put(NVDS_TAG_RF_INIT_TABLE, ICY63_INIT_TBL_SIZE, (uint8_t *)RF_ATL_REG_TBL_63) != NVDS_OK)
+    {
+        ASSERT_INFO(0, NVDS_TAG_RF_INIT_TABLE, 0);
+    }
+    #endif // #if (NVDS_SUPPORT)
+ 
   #if defined(CC6801_MPW) || defined(TC4CC6801)
     _Radio55nmPmuInit();
   #endif
+
 
    // Initialize the RF driver API structure
   api->reg_rd = rf_atl_reg_rd;
@@ -931,10 +1119,10 @@ void rf_init(struct rwip_rf_api *api)
   // Detect the RF version
   icy_version = rf_atl_reg_rd(0xFF);
 
-
   // Select proper sub-version of IcyTRx Radio Controller / Need BLE Core xls update 1st
   switch(icy_version)
     {
+#if 0 // Not used        
     case(0x30):  // CS1
       ble_subversion_setf(0x1);
       // Set Platform RF selection register
@@ -954,6 +1142,7 @@ void rf_init(struct rwip_rf_api *api)
       // Set Platform RF selection register
       plf_rf_interface_sel(RF_INTF_V3X_V4X);
     break;
+#endif    
     case(0x63):// Used same as the 0x62
       ble_subversion_setf(0x4);
       // Set Platform RF selection register
@@ -969,6 +1158,7 @@ void rf_init(struct rwip_rf_api *api)
   // Tx/Rx Power Up - Sync Position - JEF Select
   switch(icy_version)
   {
+#if 0 // Not used     
   case(0x13):
     ble_rtrip_delay_setf(0x30); // Stable 30 Sept. 2014
     ble_rxpwrup_setf(0x60);
@@ -1039,6 +1229,7 @@ void rf_init(struct rwip_rf_api *api)
 	ble_jef_select_setf(0x1);
 	ble_rfrxtmda_setf(0x1);
         break;
+#endif        
   case(0x63):// Used same as 0x62
 	ble_rtrip_delay_setf(0x3E);
 	ble_rxpwrup_setf(0x6b);
@@ -1057,6 +1248,7 @@ void rf_init(struct rwip_rf_api *api)
   // IcyTRx Register Initialization
   switch(icy_version)
   {
+#if 0 // Not used     
   case(0x13):
 	  rf_atl_reg_burst_wr(0x00, 0x70, (uint8_t *) &RF_ATL_REG_TBL_13[0]);
 	  rf_atl_reg_burst_wr(0x70, 0x18, (uint8_t *) &RF_ATL_REG_TBL_13[0x70]);
@@ -1086,9 +1278,11 @@ void rf_init(struct rwip_rf_api *api)
        rf_atl_reg_burst_wr(0x00, 0x70, (uint8_t *) &RF_ATL_REG_TBL_62[0]);
        rf_atl_reg_burst_wr(0x70, 0x50, (uint8_t *) &RF_ATL_REG_TBL_62[0x70]);
     break;
+#endif    
   case(0x63): //Used same as 0x62
-       rf_atl_reg_burst_wr(0x00, 0x70, (uint8_t *) &RF_ATL_REG_TBL_63[0]);
-       rf_atl_reg_burst_wr(0x70, 0x50, (uint8_t *) &RF_ATL_REG_TBL_63[0x70]);
+          rf_atl_reg_burst_wr(0x00, 0x70, (uint8_t *) &RF_ATL_REG_TBL_63[0]);
+          rf_atl_reg_burst_wr(0x70, 0x50, (uint8_t *) &RF_ATL_REG_TBL_63[0x70]);
+
     break;
   default:
     ASSERT_ERR(0);
@@ -1101,6 +1295,7 @@ void rf_init(struct rwip_rf_api *api)
   {
     switch(icy_version)
     {
+#if 0 // Not used         
     case(0x13):
       *ft_ptr++=RF_ATL_FREQ_TBL[idx];
 	  break;
@@ -1122,6 +1317,7 @@ void rf_init(struct rwip_rf_api *api)
     case(0x62):
       *ft_ptr++=RF_ATL_FREQ_TBL62[idx];
       break;
+#endif    
     case(0x63)://Used same as the 0x62
       *ft_ptr++=RF_ATL_FREQ_TBL63[idx];
       break;
@@ -1142,6 +1338,7 @@ void rf_init(struct rwip_rf_api *api)
   // VCO Sub-band Calibration process / bypassed in HW simulations
   switch(icy_version)
   {
+#if 0 // Not used     
   case(0x20):
     rf_atl_reg_wr(ICY_TIMING,0x90);
 	break;
@@ -1157,6 +1354,7 @@ void rf_init(struct rwip_rf_api *api)
   case(0x62):
     rf_atl_reg_wr(ICY62_SB_OFFSET,0x00);
     break;
+#endif  
   case(0x63)://Used same as 0x62 
     rf_atl_reg_wr(ICY63_SB_OFFSET,0x00);
     break;
@@ -1164,6 +1362,27 @@ void rf_init(struct rwip_rf_api *api)
   break;
   }
 
+
+#if 1
+    static bool vco_done = false;
+    //static uint16_t vco_cali_cnt = 0;
+  
+    if(vco_done == false)    
+    //if((vco_cali_cnt++ % 3600) == 0)
+    {
+        rwip_execute_vco_calibration();
+    
+        vco_done = true;
+        //vco_cali_cnt = 1;
+    }
+    else
+    {
+        rwip_restore_vco_calibration();
+    
+    }
+#endif
+
+#if 0
   for(idx=0; idx < EM_RF_VCO_TABLE_LEN; idx++)
     {
     // Initialize VCO sub Table pointer in EM
@@ -1172,6 +1391,7 @@ void rf_init(struct rwip_rf_api *api)
     // Program PLLCNTL values / take value from RF_ATL_FREQ_TBL
     switch(icy_version)
     {
+#if 0 // Not used         
     case(0x20):
       rf_atl_reg_burst_wr(ICY1x_2x_CENTER_FREQ, 4, (uint8_t *) &RF_ATL_FREQ_TBL20[idx]);
 	  break;
@@ -1187,6 +1407,7 @@ void rf_init(struct rwip_rf_api *api)
     case(0x62):
        rf_atl_reg_burst_wr(ICY62_CENTER_FREQ, 4, (uint8_t *) &RF_ATL_FREQ_TBL62[idx]);
     break;
+#endif    
     case(0x63): //Used same as 0x62
        rf_atl_reg_burst_wr(ICY63_CENTER_FREQ, 4, (uint8_t *) &RF_ATL_FREQ_TBL63[idx]);
     break;
@@ -1199,12 +1420,14 @@ void rf_init(struct rwip_rf_api *api)
     // RxEN + Enable VCO Calibration in RF for CS2 / @0xC0 write 0x3
     switch(icy_version)
     {
+#if 0 // Not used         
     case(0x31):
        rf_atl_reg_wr(ICY_FSM_MODE,0x03);
        break;
     case(0x62):
        rf_atl_reg_wr(ICY_FSM_MODE,0x02);
        break;
+#endif    
     case(0x63)://Used same as 0x62
        rf_atl_reg_wr(ICY_FSM_MODE,0x02);
        break;
@@ -1222,6 +1445,7 @@ void rf_init(struct rwip_rf_api *api)
     // Store VCO sub-band read value
     switch(icy_version)
       {
+#if 0 // Not used         
       case(0x30):
         vco_sub_read = rf_atl_reg_rd((uint16_t)ICY30_SW_CAP_FSM);
         // Invert half byte as Rx VCO sub-band programming is using bit [7:4]
@@ -1239,6 +1463,7 @@ void rf_init(struct rwip_rf_api *api)
         vco_sub_read = rf_atl_reg_rd((uint16_t)ICY62_SW_CAP_FSM);
         *ptr_vcosub = vco_sub_read;
       break;
+#endif      
       case(0x63)://Used same as 0x62
         vco_sub_read = rf_atl_reg_rd((uint16_t)ICY63_SW_CAP_FSM);
         *ptr_vcosub = vco_sub_read;
@@ -1250,9 +1475,11 @@ void rf_init(struct rwip_rf_api *api)
       break;
       }
     }
+#endif
 
     switch(icy_version)
     {
+#if 0 // Not used         
     case(0x20):
       rf_atl_reg_wr(ICY_TIMING,0x40);
 	break;
@@ -1268,6 +1495,7 @@ void rf_init(struct rwip_rf_api *api)
     case(0x62):
       rf_atl_reg_wr(ICY62_SB_OFFSET,0xD0);
     break;
+#endif    
     case(0x63)://Used same as 0x62
       rf_atl_reg_wr(ICY63_SB_OFFSET,0xD0);
     break;
@@ -1312,6 +1540,7 @@ void rf_init(struct rwip_rf_api *api)
   RF_ICTRX_EM_BLE_WR(txonptr,     txonptr+0x8);
   switch(icy_version)
   {
+#if 0 // Not used     
   case(0x30):   // CS1
 	RF_ICTRX_EM_BLE_WR(txonptr+0x2, 0x1684);
   break;
@@ -1324,6 +1553,7 @@ void rf_init(struct rwip_rf_api *api)
   case(0x62):   // CS553
     RF_ICTRX_EM_BLE_WR(txonptr+0x2, 0x1684);
   break;
+#endif  
   case(0x63):   // Used same as 0x62
     RF_ICTRX_EM_BLE_WR(txonptr+0x2, 0x1684);
   break;
@@ -1359,6 +1589,7 @@ void rf_init(struct rwip_rf_api *api)
   RF_ICTRX_EM_BLE_WR(rxonptr,      rxonptr+0x8);
   switch(icy_version)
   {
+#if 0 // Not used     
   case(0x30):   // CS1
 	RF_ICTRX_EM_BLE_WR(rxonptr+0x2, 0x1684);
   break;
@@ -1371,6 +1602,7 @@ void rf_init(struct rwip_rf_api *api)
   case(0x62):   // CS553
     RF_ICTRX_EM_BLE_WR(rxonptr+0x2, 0x1684);
   break;
+#endif  
   case(0x63):   // Used same as the 0x62
     RF_ICTRX_EM_BLE_WR(rxonptr+0x2, 0x1684);
   break;
@@ -1390,6 +1622,7 @@ void rf_init(struct rwip_rf_api *api)
   RF_ICTRX_EM_BLE_WR(rxonptr+0x8,  rxonptr+0x10);
   switch(icy_version)
   {
+#if 0 // Not used     
   case(0x30):   // CS1
 	RF_ICTRX_EM_BLE_WR(rxonptr+0xA,  0x9681);
     RF_ICTRX_EM_BLE_WR(rxonptr+0xC,  0x0000);
@@ -1406,6 +1639,7 @@ void rf_init(struct rwip_rf_api *api)
     RF_ICTRX_EM_BLE_WR(rxonptr+0xA,  0xA481);
     RF_ICTRX_EM_BLE_WR(rxonptr+0xC,  0x0000);
   break;
+#endif  
   case(0x63):   // Used same as the 0x62
     RF_ICTRX_EM_BLE_WR(rxonptr+0xA,  0xA481);
     RF_ICTRX_EM_BLE_WR(rxonptr+0xC,  0x0000);
@@ -1426,6 +1660,7 @@ void rf_init(struct rwip_rf_api *api)
   RF_ICTRX_EM_BLE_WR(rxonptr+0x12, 0xC081);
   switch(icy_version)
   {
+#if 0 // Not used     
   case(0x31):   // CS2
 	RF_ICTRX_EM_BLE_WR(rxonptr+0x14, 0x0001);
   break;
@@ -1435,6 +1670,7 @@ void rf_init(struct rwip_rf_api *api)
   case(0x62):   // CS553
     RF_ICTRX_EM_BLE_WR(rxonptr+0x14, 0x0001);
   break;
+#endif  
   case(0x63):   // Used samae as the 0x62
     RF_ICTRX_EM_BLE_WR(rxonptr+0x14, 0x0001);
   break;
@@ -1452,6 +1688,7 @@ void rf_init(struct rwip_rf_api *api)
   RF_ICTRX_EM_BLE_WR(rxonptr+0x18, 0x0000);
   switch(icy_version)
   {
+#if 0 // Not used     
   case(0x30):   // CS1
 	RF_ICTRX_EM_BLE_WR(rxonptr+0x1A, 0x2C84);
   break;
@@ -1464,6 +1701,7 @@ void rf_init(struct rwip_rf_api *api)
   case(0x62):   // CS553
     RF_ICTRX_EM_BLE_WR(rxonptr+0x1A, 0x2C84);
   break;
+#endif  
   case(0x63):   // Used same as the 0x62
     RF_ICTRX_EM_BLE_WR(rxonptr+0x1A, 0x2C84);
   break;
