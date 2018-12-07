@@ -59,18 +59,17 @@ Head Block of The File
     #include "config_DVK.h"
 #elif defined(DVK403A) && DVK403A
     #include "config_DVK403A.h"
-#elif defined(DC404A) && DC404A
-    #include "config_DC404A.h"
+#elif defined(DVK_DC404A) && DVK_DC404A
+    #include "config_DVK_DC404A.h"
+#elif defined(DVK_DC405A) && DVK_DC405A
+    #include "config_DVK_DC405A.h"
 #elif defined(ASIC) && ASIC
     #include "config_ASIC.h"
 #else
     #error "There is no defined project. Please select one project!!"
 #endif
 
-
-
 #include "option_check.h"
-
 
 /******************************************************************************
 Declaration of External Variables & Functions
