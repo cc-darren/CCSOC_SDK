@@ -5,22 +5,22 @@
  * STANDARD SOFTWARE LICENSE AGREEMENT.
  *
  * Licensees are granted free, non-transferable use of the information.
- * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
  * from the file.
  */
 
 /******************************************************************************
 *  Filename:
 *  ---------
-*  config_DVK403A.h
+*  config_DVK_DC405A.h
 *
 *  Project:
 *  --------
-*  DVK403A
+*  DC405A
 *
 *  Description:
 *  ------------
-*  FW configuration for DVK403A
+*  FW configuration for DC405A
 *
 *  Author:
 *  -------
@@ -30,8 +30,8 @@
 *
 ******************************************************************************/
 
-#ifndef _CONFIG_DVK403A_H_
-#define _CONFIG_DVK403A_H_
+#ifndef _CONFIG_DVK_DC405A_H_
+#define _CONFIG_DVK_DC405A_H_
 
 /******************************************************************************
 Head Block of The File
@@ -96,7 +96,7 @@ Head Block of The File
 *   ACC_IF_ID   : the ACC interface id
 ***************************************************/
 #define MODULE_ACC              ACC_NULL
-#define ACC_IF                  UseInterface(SPI,1)
+//#define ACC_IF                  UseInterface(SPI,1)
 
 
 
@@ -111,8 +111,8 @@ Head Block of The File
 *   MAG_IF_TYPE : the MAG interface type
 *   MAG_IF_ID   : the MAG interface id
 ***************************************************/
-#define MODULE_MAG              MAG_NULL
-#define MAG_IF                  UseInterface(I2C,0)
+#define MODULE_AUDIO            AUDIO_SGTL5000
+#define AUDIO_IF                UseInterface(I2C,0)
 
 
 
@@ -128,12 +128,13 @@ Head Block of The File
 *   GYR_IF_ID   : the GYR interface id
 ***************************************************/
 #define MODULE_GYR              GYR_NULL
-#define GYR_IF                  UseInterface(SPI,1)
+//#define GYR_IF                  UseInterface(SPI,1)
+
 
 
 /**************************************************
 *   Choose OLED model and config OLED interface
-*   (pick one GYRO sensor from module_supported.h)
+*   (pick one OLED sensor from module_supported.h)
 *   (please select OLED_NULL if OLED is not in use)
 *
 *   OLED_IF : the interface assigned to OLED
@@ -142,14 +143,8 @@ Head Block of The File
 *   OLED_IF_TYPE : the OLED interface type
 *   OLED_IF_ID   : the OLED interface id
 ***************************************************/
-
 #define MODULE_OLED             OLED_NULL
-#define LCD_JDI_DISP_PIN        GPIO_PIN_43
-#define LCD_JDI_EXTCOM_PIN      GPIO_PIN_21
-#define LCD_JDI_PWR_EN          GPIO_PIN_20
-#define LCD_JDI_BK_PIN          GPIO_PIN_1
-#define OLED_IF                 UseInterface(SPI,2)
-
+//#define OLED_IF                 UseInterface(SPI,2)
 
 /**************************************************
 *   Choose PPG model and config PPG interface
@@ -162,25 +157,8 @@ Head Block of The File
 *   PPG_IF_TYPE : the PPG interface type
 *   PPG_IF_ID   : the PPG interface id
 ***************************************************/
-#define MODULE_PPG              PPG_PXT_PAH8002
+#define MODULE_PPG              PPG_NULL
 #define PPG_IF                  UseInterface(I2C,1)
-
-/**************************************************
-*   Choose Touch model and config Touch interface
-*   (pick one Touch sensor from module_supported.h)
-*   (please select TOUCH_NULL if Touch sensor is not in use)
-*
-*   TOUCH_IF : the interface assigned to Touch sensor
-*
-*   TOUCH_IF_TYPE / TOUCH_IF_ID will be generated automatically.
-*   TOUCH_IF_TYPE : the Touch interface type
-*   TOUCH_IF_ID   : the Touch interface id
-***************************************************/
-#define MODULE_TOUCH            TOUCH_NULL
-#define TOUCH_IF                UseInterface(I2C,0)
-#define TOUCH2D_INT_PIN         GPIO_PIN_4
-#define TOUCH_FT6X36_SLAVE_ADDR (0x38)
-#define TOUCH_SUPPORTED_FINGERS (1)
 
 /**************************************************
 *   Config Tracer interface
@@ -194,6 +172,19 @@ Head Block of The File
 #define TRACER_IF               UseInterface(UART,0)
 #define TRACER_LOGBUF_SIZE      TRACER_LOGBUF_1024
 #define TRACER_LOGLEVEL         TRACER_LOGLEVEL_ALL
+
+/** DZ. Use UART 0 for AWE now..**/
+/**************************************************
+*   Config AWE interface
+*
+*   AWE_IF : the interface assigned to AWE
+*
+*   AWE_IF_TYPE / AWE_IF_ID will be generated automatically.
+*   AWE_IF_TYPE : the AWE interface type
+*   AWE_IF_ID   : the AWE interface id
+***************************************************/
+#define AWE_IF                  UseInterface(UART,0)
+/** DZ. **/
 
 /**************************************************
 *   Config HCI interface
@@ -216,18 +207,18 @@ Head Block of The File
 *   SWT_IF_TYPE : the SWT interface type
 *   SWT_IF_ID   : the SWT interface id
 ***************************************************/
-#define SWT_IF                  UseInterface(WKTM,0)
+//#define SWT_IF                  UseInterface(WKTM,0)
 
 /**************************************************
 *   Config VIBRATOR interface
 *
-*   VIBRATOR_IF : the interface assigned to SWT
+*   VIBRATOR_IF : the interface assigned to VIBRATOR
 *
 *   VIBRATOR_IF_TYPE / VIBRATOR_IF_ID will be generated automatically.
-*   VIBRATOR_IF_TYPE : the SWT interface type
-*   VIBRATOR_IF_ID   : the SWT interface id
+*   VIBRATOR_IF_TYPE : the VIBRATOR interface type
+*   VIBRATOR_IF_ID   : the VIBRATOR interface id
 ***************************************************/
-#define VIBRATOR_IF             UseInterface(PWM,0)
+//#define VIBRATOR_IF             UseInterface(PWM,0)
 
 /**************************************************
 *   Config ADC interface
@@ -252,46 +243,21 @@ Head Block of The File
 *   FLASH_IF_TYPE : the FLASH interface type
 *   FLASH_IF_ID   : the FLASH interface id
 ***************************************************/
-#define MODULE_FLASH              FLASH_W25Q256JV//FLASH_W25Q80DV
-#define FLASH_IF                  UseInterface(SPI,0)
-
-/**************************************************
-*   Config PRESSURE interface
-*
-*   PRESSURE_IF : the interface assigned to PRESSURE
-*
-*   PRESSURE_IF_TYPE / ADC_IF_ID will be generated automatically.
-*   PRESSURE_IF_TYPE : the ADC interface type
-*   PRESSURE_IF_ID   : the ADC interface id
-***************************************************/
-#define MODULE_PRESSURE              PRESSURE_NULL
-#define PRESSURE_IF                  UseInterface(I2C,1)
-//#define PRESSURE_INT_PIN             38
+#define MODULE_FLASH              FLASH_NULL
+//#define FLASH_IF                  UseInterface(SPI,0)
 
 
 /**************************************************
-*   Config VIBRATOR interface
+*   Config AUDIO interface
 *
-*   BACKLIGHT_IF : the interface assigned to SWT
+*   AUDIO_IF : the interface assigned to AUDIO
 *
-*   VIBRATOR_IF_TYPE / VIBRATOR_IF_ID will be generated automatically.
-*   VIBRATOR_IF_TYPE : the SWT interface type
-*   VIBRATOR_IF_ID   : the SWT interface id
+*   AUDIO_IF_TYPE / AUDIO_IF_ID will be generated automatically.
+*   AUDIO_IF_TYPE : the AUDIO interface type
+*   AUDIO_IF_ID   : the AUDIO interface id
 ***************************************************/
-#define BACKLIGHT_IF             UseInterface(PWM,1)
-
-
-/**************************************************
-*   Config GPS interface
-*
-*   GPS_IF : the interface assigned to HCI
-*
-*   GPS_IF_TYPE / GPS_IF_ID will be generated automatically.
-*   GPS_IF_TYPE : the GPS interface type
-*   GPS_IF_ID   : the GPS interface id
-***************************************************/
-#define GPS_IF                  UseInterface(UART,2)
-
+#define MODULE_AUDIO            AUDIO_SGTL5000
+#define AUDIO_IF                UseInterface(I2C,0)
 
 /******************************************************************************************************************
 *   Set SPI master configuration
@@ -301,12 +267,11 @@ Head Block of The File
 *    Ex : SPIM0_CONFIG         (SPI_MODE_0 | SPI_CS_HIGH)
 *******************************************************************************************************************/
 #define SPIM0_CONFIG            (SPI_MODE_0)
-#define SPIM0_CLOCK             (24000000)
+#define SPIM0_CLOCK             (1000000)
 #define SPIM1_CONFIG            (SPI_MODE_3)
 #define SPIM1_CLOCK             (10000000)
-#define SPIM2_CONFIG            (SPI_MODE_0 | SPI_CS_HIGH)
-#define SPIM2_CLOCK             (4000000)
-
+#define SPIM2_CONFIG            (SPI_MODE_3)
+#define SPIM2_CLOCK             (8000000)
 
 
 /******************************************************************************************************************
@@ -361,7 +326,7 @@ Head Block of The File
 *   WDT_DEFAULT_TIMEOUT     Unit : ms
 *******************************************************************************************************************/
 //#define WDT_INUSE               TRUE
-//#define WDT_DEFAULT_TIMEOUT     30000
+#define WDT_DEFAULT_TIMEOUT     30000
 
 
 /******************************************************************************************************************
@@ -372,89 +337,124 @@ Head Block of The File
 *    Ex : GPIO0_CONFIG         ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
 *******************************************************************************************************************/
 // GPIO Pin Group0
-#define GPIO_MODE_PINGROUP0                  GPIO_MODE_PWM_GPIO
-#define GPIO0_CONFIG                         ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
-#define GPIO1_CONFIG                         ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
-#define GPIO2_CONFIG                         ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
-#define GPIO3_CONFIG                         ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
+#define GPIO_MODE_PINGROUP0                  GPIO_MODE_GPIO_PWM
+#define GPIO0_CONFIG                         ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#define GPIO1_CONFIG                         ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#define GPIO2_CONFIG                         ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#define GPIO3_CONFIG                         ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
 
 // GPIO Pin Group1
-#define GPIO_MODE_PINGROUP1                  GPIO_MODE_GPIO
-#define GPIO4_CONFIG                         ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
-#define GPIO5_CONFIG                         ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#define GPIO_MODE_PINGROUP1                  GPIO_MODE_DMIC
+#define GPIO4_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
+#define GPIO5_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
 #define GPIO6_CONFIG                         ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
 #define GPIO7_CONFIG                         ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
 
 // GPIO Pin Group2
-#define GPIO_MODE_PINGROUP2                  GPIO_MODE_GPIO
+#define GPIO_MODE_PINGROUP2                  GPIO_MODE_GPIO_PWM
 #define GPIO8_CONFIG                         ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
 #define GPIO9_CONFIG                         ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
-#define GPIO10_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
+#define GPIO10_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
 #define GPIO11_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
 
 // GPIO Pin Group3
-#define GPIO_MODE_PINGROUP3                  GPIO_MODE_I2C_GPIO
-#define GPIO12_CONFIG                        ((GPIO_PULL_UP)   | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
-#define GPIO13_CONFIG                        ((GPIO_PULL_UP)   | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#define GPIO_MODE_PINGROUP3                  GPIO_MODE_UART_GPIO
+#define GPIO12_CONFIG                        ((GPIO_PULL_UP)   | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
+#define GPIO13_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT)  | (GPIO_DIR_OUTPUT))
 #define GPIO14_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
-#define GPIO15_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
+#define GPIO15_CONFIG                        ((GPIO_PULL_UP)   | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
 
 // GPIO Pin Group4
-#define GPIO_MODE_PINGROUP4                  GPIO_MODE_SPI_4WIRE
-#define GPIO16_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
-#define GPIO17_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
-#define GPIO18_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
-#define GPIO19_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#define GPIO_MODE_PINGROUP4                  GPIO_MODE_GPIO_PWM
+#define GPIO16_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#define GPIO17_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#define GPIO18_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#define GPIO19_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
 
 // GPIO Pin Group5
-#define GPIO_MODE_PINGROUP5                  GPIO_MODE_SPI_3WIRE
-#define GPIO20_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
-#define GPIO21_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
-#define GPIO22_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
-#define GPIO23_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
+#define GPIO_MODE_PINGROUP5                  GPIO_MODE_GPIO_PWM
+#define GPIO20_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#define GPIO21_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#define GPIO22_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#define GPIO23_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
 
 // GPIO Pin Group6
-#define GPIO_MODE_PINGROUP6                  GPIO_MODE_SPI_4WIRE
-#define GPIO24_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
-#define GPIO25_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
-#define GPIO26_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
-#define GPIO27_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#define GPIO_MODE_PINGROUP6                  GPIO_MODE_GPIO_PWM
+#define GPIO24_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#define GPIO25_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#define GPIO26_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#define GPIO27_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+//#define GPIO_MODE_PINGROUP6                  GPIO_MODE_SPI_QUAD
+//#define GPIO24_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+//#define GPIO25_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
+//#define GPIO26_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+//#define GPIO27_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
 
 // GPIO Pin Group7
 #define GPIO_MODE_PINGROUP7                  GPIO_MODE_GPIO
-#define GPIO28_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
-#define GPIO29_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
-#define GPIO30_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
-#define GPIO31_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#define GPIO28_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
+#define GPIO29_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
+#define GPIO30_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
+#define GPIO31_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
 
 // GPIO Pin Group8
-#define GPIO_MODE_PINGROUP8                  GPIO_MODE_GPIO
-#define GPIO32_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
-#define GPIO33_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
-#define GPIO34_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT) | (GPIO_INPUT_NOPULL))
-#define GPIO35_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#define GPIO_MODE_PINGROUP8                  GPIO_MODE_SPI_4WIRE
+#define GPIO32_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
+#define GPIO33_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
+#define GPIO34_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
+#define GPIO35_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+//#define GPIO_MODE_PINGROUP8                  GPIO_MODE_SPI_QUAD
+//#define GPIO32_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
+//#define GPIO33_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
+//#define GPIO34_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+//#define GPIO35_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
 
 // GPIO Pin Group9
-#define GPIO_MODE_PINGROUP9                  GPIO_MODE_UART
-#define GPIO36_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
-#define GPIO37_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
-#define GPIO38_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
-#define GPIO39_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#define GPIO_MODE_PINGROUP9                  GPIO_MODE_GPIO_PWM
+#define GPIO36_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#define GPIO37_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#define GPIO38_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#define GPIO39_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
 
 // GPIO Pin Group10
-#define GPIO_MODE_PINGROUP10                 GPIO_MODE_GPIO_I2C
-#define GPIO40_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT)  | (GPIO_OUTPUT_LOW))
-#define GPIO41_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT)  | (GPIO_OUTPUT_LOW))
-#define GPIO42_CONFIG                        ((GPIO_PULL_UP)   | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
-#define GPIO43_CONFIG                        ((GPIO_PULL_UP)   | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#define GPIO_MODE_PINGROUP10                 GPIO_MODE_I2S_MASTER
+#define GPIO40_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
+#define GPIO41_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
+#define GPIO42_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
+#define GPIO43_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
 
 // GPIO Pin Group11
-#define GPIO_MODE_PINGROUP11                 GPIO_MODE_UART
-#define GPIO44_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
-#define GPIO45_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
-#define GPIO46_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
-#define GPIO47_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#define GPIO_MODE_PINGROUP11                 GPIO_MODE_GPIO_PWM
+#define GPIO44_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#define GPIO45_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#define GPIO46_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#define GPIO47_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
 
+
+#define TEST_I2C_BUS        TEST_I2C0_IF_ID
+#define TEST_I2C_ADDRESS    0x50
+#define TEST_I2C_CLKRATE    I2C0_CLOCK
+
+//#define TEST_UART0_BUS      TEST_UART0_IF_ID
+#define TEST_UART1_BUS      TEST_UART1_IF_ID
+//#define TEST_UART2_BUS      TEST_UART2_IF_ID
+
+
+//#define TEST_AES 1
+//#define TEST_CLOCK 1
+//#define TEST_MEMRW 1
+//#define TEST_SPI 1
+//#define TEST_I2C 1
+//#define TEST_UART_LOOPBACK 1
+//#define TEST_WKTM 1
+//#define TEST_DMIC  1        //When DMIC is enabled, other testing must be disabled.
+//#define TEST_DHRYSTONE 1
+//#define TEST_EFLASH 1
+//#define TEST_WDT 1
+//#define TEST_ADC 1
+//#define TEST_UARTRX 1
+//#define TEST_RETRAM 1
+#define TEST_INTEGRATION 1
 
 /******************************************************************************
 Declaration of External Variables & Functions
@@ -462,11 +462,14 @@ Declaration of External Variables & Functions
 // Sec 3: declaration of external variable
 
 // Sec 4: declaration of external function prototype
-
+#define SGTL5000_SLAVE_ADDRESS      0x0A
 
 //I2C parameters
 
 //UART parameters
+
+//SPI parameters
+//#define WINBOND_QUAD_ENABLE   1
 
 /******************************************************************************
 Declaration of data structure
@@ -485,9 +488,10 @@ Declaration of static Global Variables & Functions
 ******************************************************************************/
 // Sec 8: declaration of static global variable
 
+// Sec 9: declaration of static function prototype
 
+/******************************************************************************
+// Sec 10: C Functions
+******************************************************************************/
 
-
-
-#endif //_CONFIG_DVK403A_H_
-
+#endif // _CONFIG_DVK_DC405A_H_
