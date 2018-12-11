@@ -1716,7 +1716,7 @@
             <v6WtE>0</v6WtE>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>EVB605A CC6801B0</Define>
+              <Define>DVK_DC404A CC6801B0</Define>
               <Undefine></Undefine>
               <IncludePath>.\config;..\..\..\cfg\project;..\..\..\inc;..\..\..\inc\CMSIS;..\..\..\platform\init\inc;..\..\..\platform\asic\6801b0;..\..\..\platform\drvi;..\..\..\module\mems;..\..\..\module\oled;..\..\..\service\gps;..\..\..\service\tracer</IncludePath>
             </VariousControls>
