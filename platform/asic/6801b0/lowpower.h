@@ -1,13 +1,12 @@
-/* Copyright (c) 2013 Nordic Semiconductor. All Rights Reserved.
+/* Copyright (c) 2018 Cloudchip, Inc. All Rights Reserved.
  *
- * The information contained herein is property of Nordic Semiconductor ASA.
- * Terms and conditions of usage are described in detail in NORDIC
- * SEMICONDUCTOR STANDARD SOFTWARE LICENSE AGREEMENT.
+ * The information contained herein is property of Cloudchip, Inc.
+ * Terms and conditions of usage are described in detail in CLOUDCHIP
+ * STANDARD SOFTWARE LICENSE AGREEMENT.
  *
- * Licensees are granted free, non-transferable use of the information. NO
- * WARRANTY of ANY KIND is provided. This heading must NOT be removed from
- * the file.
- *
+ * Licensees are granted free, non-transferable use of the information.
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed
+ * from the file.
  */
 
 
@@ -80,7 +79,7 @@
 
 
 //#define CKGEN_CLKEN_REG             (CKGEN_ADDR_BASE + 0x00000014)
-// definition bit for elk en 
+// definition bit for elk en
 #define CLKEN_BLE       0x00000002
 #define CLKEN_WKT0      0x00000004
 #define CLKEN_WKT1      0x00000008
@@ -108,7 +107,7 @@
 
 
 //#define CKGEN_SWRST_REG             (CKGEN_ADDR_BASE + 0x00000018)
-// definition bit for sw reset 
+// definition bit for sw reset
 #define SWRST_BLEPHY    0x00000001
 #define SWRST_BLE       0x00800002
 #define SWRST_WKT0      0x00000004
@@ -164,7 +163,7 @@
     #define PMU_RADIOEN_BGP         0x02000000
     #define PMU_RADIOEN_LDOVDDD     0x04000000
     #define PMU_RADIOEN_MASK        0x07000000
-    
+
 #define PMU_BUCKEN_RADIOCTRL    0x40002308
 #define PMU_CUCTRL              0x40002314
     #define ldo_pd0dig_vreg_trim_MASK   0x0000000F
