@@ -10,7 +10,7 @@
       <TargetName>EVB605A_M0p</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pArmCC>5060750::V5.06 update 6 (build 750)::ARMCC</pArmCC>
+      <pArmCC>5060183::V5.06 update 2 (build 183)::..\Backup.001\ARM\ARMCC</pArmCC>
       <pCCUsed>5060183::V5.06 update 2 (build 183)::ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
@@ -640,7 +640,7 @@
       <TargetName>EVB605A_M4f</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pArmCC>5060750::V5.06 update 6 (build 750)::ARMCC</pArmCC>
+      <pArmCC>5060183::V5.06 update 2 (build 183)::..\Backup.001\ARM\ARMCC</pArmCC>
       <pCCUsed>5060183::V5.06 update 2 (build 183)::ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
@@ -1270,7 +1270,7 @@
       <TargetName>DC405A_M0p</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pArmCC>5060750::V5.06 update 6 (build 750)::ARMCC</pArmCC>
+      <pArmCC>5060183::V5.06 update 2 (build 183)::..\Backup.001\ARM\ARMCC</pArmCC>
       <pCCUsed>5060183::V5.06 update 2 (build 183)::ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
@@ -1900,7 +1900,7 @@
       <TargetName>DC405A_M4f</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pArmCC>5060750::V5.06 update 6 (build 750)::ARMCC</pArmCC>
+      <pArmCC>5060183::V5.06 update 2 (build 183)::..\Backup.001\ARM\ARMCC</pArmCC>
       <pCCUsed>5060183::V5.06 update 2 (build 183)::ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
