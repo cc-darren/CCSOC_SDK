@@ -1953,6 +1953,27 @@
   </Targets>
 
   <RTE>
+    <packages>
+      <filter>
+        <targetInfos/>
+      </filter>
+      <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.0.1">
+        <targetInfos>
+          <targetInfo name="DC405A_M0p" versionMatchMode="fixed"/>
+          <targetInfo name="DC405A_M4f" versionMatchMode="fixed"/>
+          <targetInfo name="EVB605A_M0p" versionMatchMode="fixed"/>
+          <targetInfo name="EVB605A_M4f" versionMatchMode="fixed"/>
+        </targetInfos>
+      </package>
+      <package name="ARM_Compiler" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="Keil" version="1.1.1">
+        <targetInfos>
+          <targetInfo name="DC405A_M0p" versionMatchMode="fixed"/>
+          <targetInfo name="DC405A_M4f" versionMatchMode="fixed"/>
+          <targetInfo name="EVB605A_M0p" versionMatchMode="fixed"/>
+          <targetInfo name="EVB605A_M4f" versionMatchMode="fixed"/>
+        </targetInfos>
+      </package>
+    </packages>
     <apis/>
     <components/>
     <files>
