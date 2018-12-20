@@ -92,7 +92,11 @@ to exclude the API function. */
 
 /*************************/
 /* Add from FreeRTOS web */
+#ifdef __TARGET_CPU_CORTEX_M0_
+#define configUSE_PORT_OPTIMISED_TASK_SELECTION 0
+#else
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION 1
+#endif
 #define configUSE_TICKLESS_IDLE                 1
 #define configUSE_TASK_NOTIFICATIONS            1
 #define configUSE_ALTERNATIVE_API               0 /* Deprecated! */
