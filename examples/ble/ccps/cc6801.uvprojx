@@ -370,7 +370,7 @@
             <TextAddressRange>0x00000000</TextAddressRange>
             <DataAddressRange>0x20000000</DataAddressRange>
             <pXoBase></pXoBase>
-            <ScatterFile>.\FPGA_eflash.sct</ScatterFile>
+            <ScatterFile>.\eflash.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
             <Misc>.\rom_symdef_M0.txt --keep=jump_table.o(jump_table_mem_area)</Misc>
@@ -996,7 +996,7 @@
             <TextAddressRange>0x00000000</TextAddressRange>
             <DataAddressRange>0x20000000</DataAddressRange>
             <pXoBase></pXoBase>
-            <ScatterFile>.\FPGA_eflash.sct</ScatterFile>
+            <ScatterFile>.\eflash.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
             <Misc>.\rom_symdef_M4.txt --keep=jump_table.o(jump_table_mem_area)</Misc>
