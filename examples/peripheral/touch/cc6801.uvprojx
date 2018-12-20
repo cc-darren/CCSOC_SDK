@@ -1965,7 +1965,7 @@
           <targetInfo name="EVB605A_M4f" versionMatchMode="fixed"/>
         </targetInfos>
       </package>
-      <package name="ARM_Compiler" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="Keil" version="1.1.1">
+      <package name="ARM_Compiler" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="Keil" version="1.1.0">
         <targetInfos>
           <targetInfo name="DC404A_M0p" versionMatchMode="fixed"/>
           <targetInfo name="DC404A_M4f" versionMatchMode="fixed"/>
