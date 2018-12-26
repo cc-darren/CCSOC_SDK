@@ -67,7 +67,8 @@ static uint8_t m_tx_buf[32];
 
 /* Imported variables --------------------------------------------------------*/
 
-extern uint8_t g_GyroEnable;
+//extern uint8_t g_GyroEnable;
+uint8_t g_GyroEnable = 1;
 
 /* Private typedef -----------------------------------------------------------*/
 typedef struct

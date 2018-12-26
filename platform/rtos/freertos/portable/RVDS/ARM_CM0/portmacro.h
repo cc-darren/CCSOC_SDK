@@ -52,6 +52,11 @@ extern "C" {
 #define portSTACK_TYPE  uint32_t
 #define portBASE_TYPE   long
 
+
+#ifdef __TARGET_CPU_CORTEX_M0_
+#define portINLINE __inline
+#endif
+
 typedef portSTACK_TYPE StackType_t;
 typedef long BaseType_t;
 typedef unsigned long UBaseType_t;

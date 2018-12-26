@@ -395,8 +395,8 @@
 #endif
 
 #if ((defined FLASH_IF) && (FLASH_IF))
-  #define FLASH_IF_TYPE (SWT_IF&0xF0)
-  #define FLASH_IF_ID   (SWT_IF&0x0F)
+  #define FLASH_IF_TYPE (FLASH_IF&0xF0)
+  #define FLASH_IF_ID   (FLASH_IF&0x0F)
 #else
   #define FLASH_IF IF_NULL
 #endif

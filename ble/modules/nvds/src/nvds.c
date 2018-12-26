@@ -693,7 +693,7 @@ uint8_t nvds_del(uint8_t tag)
     uint8_t status;
     struct nvds_tag_header tag_hdr;
     uint32_t tag_addr;
-    uint8_t status_to_write;
+    //uint8_t status_to_write;
 
     // look for the TAG
     status = nvds_browse_tag(tag, &tag_hdr, &tag_addr);
@@ -708,10 +708,16 @@ uint8_t nvds_del(uint8_t tag)
     if (status == NVDS_OK)
     {
         // then we set parameter to erased
+        tag_hdr.status = NVDS_SET_TAG_ERASED(tag_hdr);
+        nvds_env.write((uint32_t)(tag_addr),
+                   (uint32_t) sizeof(tag_hdr),
+                   (uint8_t*) &tag_hdr);        
+        /*
         status_to_write = NVDS_SET_TAG_ERASED(tag_hdr);
         nvds_env.write((uint32_t)(tag_addr+offsetof(struct nvds_tag_header, status)),
                        (uint32_t) sizeof(status_to_write),
                        (uint8_t*) &status_to_write);
+        */
     }
     return(status);
 }
@@ -744,7 +750,7 @@ uint8_t nvds_put(uint8_t tag, nvds_tag_len_t length, uint8_t *buf)
     struct nvds_tag_header tag_hdr;
     uint8_t tag_buffer[NVDS_PARAMETER_MAX_LENGTH];
     uint32_t cur_tag_addr, nxt_tag_addr;
-    uint8_t status_to_write;
+    //uint8_t status_to_write;
     uint32_t total_length;
 
     /* parse once all the TAG elements of the NVDS to:
@@ -786,10 +792,16 @@ uint8_t nvds_put(uint8_t tag, nvds_tag_len_t length, uint8_t *buf)
                 }
 
                 // then we set parameter to erased
+                tag_hdr.status = NVDS_SET_TAG_ERASED(tag_hdr);
+                nvds_env.write((uint32_t)cur_tag_addr,
+                           (uint32_t) sizeof(tag_hdr),
+                           (uint8_t*) &tag_hdr);                
+                /*
                 status_to_write = NVDS_SET_TAG_ERASED(tag_hdr);
                 nvds_env.write((uint32_t)(cur_tag_addr+offsetof(struct nvds_tag_header, status)),
                                (uint32_t) sizeof(status_to_write),
                                (uint8_t*) &status_to_write);
+                */
             }
             else
             {

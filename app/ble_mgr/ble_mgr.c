@@ -44,6 +44,12 @@
 #include "drvi_eflash.h"
 #include "app.h"
 #include "rwip.h"
+#ifdef FREERTOS
+#include "FreeRTOS.h"
+#include "task.h"
+#include "queue.h"
+#endif
+
 
 /******************************************************************************
  * DEFINITION / CONSTANT / ENUM / TYPE
@@ -72,7 +78,9 @@ typedef struct
 /******************************************************************************
  *  VARIABLE
  ******************************************************************************/
-
+#ifdef FREERTOS
+extern QueueHandle_t qBleMgrSched;
+#endif
 /******************************************************************************
  * FUNCTION > UART APIs (TODO: should link to real uart APIs)
  ******************************************************************************/
@@ -209,7 +217,20 @@ void    APP_SW_Timer_Init(void)
 
 void    BLE_IRQHandler(void)
 {    
+    
+    #ifdef FREERTOS
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+    uint8_t qdata = 0;
+
     rwble_isr();
+
+    xQueueSendFromISR( qBleMgrSched, &qdata, &xHigherPriorityTaskWoken );
+
+    portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+    
+    #else
+    rwble_isr();
+    #endif
 }
 
 #endif    //(CFG_BLE_APP)
