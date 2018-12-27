@@ -25,9 +25,14 @@
 #include "timers.h"
 #include "ble_mgr.h"
 #include "rwble.h"
+#include "app_ccps.h"
 #include "app.h"
 #include "ff_stdio.h"
 #include "ff_spidisk.h"
+
+#define BLE_TX_TEST_EN
+#define FILE_ACCESS_TEST_EN
+#define ALG_TEST_EN
 
 /* The number and size of sectors that will make up the flash disk. */
 #define mainSPI_DISK_SECTOR_SIZE		512UL /* Currently fixed! */
@@ -45,7 +50,7 @@ extern void TaskInit(void);
 extern QueueHandle_t qBleMgrSched;
 
 static FF_Disk_t *pxSPIDisk;
-
+static uint32_t dwTxPacketCounter = 0;
 
 void vApplicationIdleHook(void)
 {
@@ -66,6 +71,11 @@ void vApplicationMallocFailedHook(void)
 {
 
 }    
+
+void Pedo_Algorithm_Process(int16_t *_wAccelData, uint32_t *pResult)
+{
+
+}
 
 void vTaskBleScheduleManger( void *pvParameters )
 {
@@ -95,8 +105,14 @@ void vTaskBleScheduleManger( void *pvParameters )
 void vTaskSensorTask(void *p)
 {
        
-    int16_t _wAccelData[3]  = { 0 };
-    bool    bSensorInitDone = false;
+    int16_t  _wAccelData[3]  = { 0 };
+    int16_t  _wReadData[3]   = { 0 };
+    bool     bSensorInitDone = false;
+    uint32_t dwErrorNo;
+    FF_FILE  *pxFile;
+    char     tx_data[100]; 
+    uint8_t  tx_len;    
+    uint32_t algo_result;
    
     if(LSM6DS3_X_Init() == MEMS_ERROR)
     {
@@ -114,7 +130,8 @@ void vTaskSensorTask(void *p)
         CC_LSM6DSX_AccelPowerON(LSM6DS3_ACC_GYRO_ODR_XL_52Hz);
         CC_LSM6DSX_GyroPowerON (LSM6DS3_ACC_GYRO_ODR_G_52Hz );        
     }
-   
+
+#ifdef FILE_ACCESS_TEST_EN    
     #if  defined(EMWIN_LOAD_EXT_FLASH) && EMWIN_LOAD_EXT_FLASH
 	/* Create the SPI flash disk. */
 	pxSPIDisk = FF_SPIDiskInit( mainSPI_DISK_NAME, mainSPI_DISK_SECTORS );
@@ -122,19 +139,71 @@ void vTaskSensorTask(void *p)
 
 	/* Print out information on the SPI flash disk. */
 	FF_SPIDiskShowPartition( pxSPIDisk );
-    #endif
     
+    dwErrorNo = ff_mkdir("/spi/ccps/");
+    if(dwErrorNo != 0)
+    {
+        TracerInfo("ff_mkdir error\r\n");
+        configASSERT(!dwErrorNo);
+    }
+    #endif
+#endif    
     
     while(1)
     {
         
         if(bSensorInitDone == true)
         {
+            // Get accelometer data 
             LSM6DS3_ACC_GYRO_GetRawAccData(NULL, (i16_t *) _wAccelData); 
-            TracerInfo("Acc_X: %d, Acc_Y: %d, Acc_Z: %d\r\n", _wAccelData[0], _wAccelData[1], _wAccelData[2]);
+            TracerInfo("[Sensor Read] Acc_X: %d, Acc_Y: %d, Acc_Z: %d\r\n", _wAccelData[0], _wAccelData[1], _wAccelData[2]);
+
+#ifdef BLE_TX_TEST_EN
+            // BLE send messages:                       
+            tx_len = sprintf (tx_data, "NTF: %d, %d, %d\r\n", _wAccelData[0], _wAccelData[1], _wAccelData[2]);
+            
+            app_ccps_notify_send((uint8_t*)tx_data, tx_len); 
+
+            tx_len = sprintf (tx_data, "IND: %d, %d, %d\r\n", _wAccelData[0], _wAccelData[1], _wAccelData[2]);
+            app_ccps_indicate_send((uint8_t*)tx_data, tx_len);            
+#endif
+
+#ifdef ALG_TEST_EN
+            Pedo_Algorithm_Process(_wAccelData, &algo_result);
+#endif
+            
+#ifdef FILE_ACCESS_TEST_EN            
+            #if  defined(EMWIN_LOAD_EXT_FLASH) && EMWIN_LOAD_EXT_FLASH
+            // Write & Read File
+            TracerInfo("[File Write] Acc_X: %d, Acc_Y: %d, Acc_Z: %d\r\n", _wAccelData[0], _wAccelData[1], _wAccelData[2]);
+            
+            pxFile = ff_fopen("/spi/ccps/acc_data", "w");
+            ff_fwrite(_wAccelData, sizeof(_wAccelData), 1, pxFile);
+            ff_fclose(pxFile);
+            
+            memset(_wReadData, 0x00, sizeof(_wReadData));
+            pxFile = ff_fopen("/spi/ccps/acc_data", "r");
+            ff_fread(_wReadData, sizeof(_wReadData), 1, pxFile);
+            ff_fclose(pxFile);
+            TracerInfo("[File Read] Acc_X: %d, Acc_Y: %d, Acc_Z: %d\r\n", _wReadData[0], _wReadData[1], _wReadData[2]);
+            #endif
+#endif            
+        }
+        else
+        {
+#ifdef BLE_TX_TEST_EN            
+            dwTxPacketCounter++;
+            
+            tx_len = sprintf (tx_data, "NTF packet No. %d\r\n", dwTxPacketCounter);
+            
+            app_ccps_notify_send((uint8_t*)tx_data, tx_len); 
+
+            tx_len = sprintf (tx_data, "IND packet No. %d\r\n",dwTxPacketCounter);
+            app_ccps_indicate_send((uint8_t*)tx_data, tx_len);              
+#endif            
         }
         
-        vTaskDelay(pdMS_TO_TICKS(1000));
+        vTaskDelay(pdMS_TO_TICKS(20));
     }    
     
 }
@@ -149,14 +218,8 @@ int main(void)
     //Must be first in main()
     sys_InitMain();
 
-    //start interrupt handling
-    //GLOBAL_INT_START(); 
-
     drvi_initialize();   
-            
-    //timerA_handle = xTimerCreate("timerA", (70/portTICK_PERIOD_MS), pdTRUE, 0, timerA_callback);
-    //if(timerA_handle != NULL) xTimerStart(timerA_handle, 0);
-
+      
     TaskInit();
     
     vTaskStartScheduler();

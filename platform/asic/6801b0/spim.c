@@ -29,7 +29,6 @@
 *===========================================================================/
 *  20170203 PAT initial version
 ******************************************************************************/
-#define TracerFormat(fmt) "SPI: " fmt
 //#define SPI_9BIT_ENABLE 1
 
 #include <stdio.h>
@@ -38,7 +37,16 @@
 #include "drvi_clock.h"
 #include "drvi_spi.h"
 #include "spim.h"
-#include "tracer.h"
+
+#ifdef FREERTOS
+#include "FreeRTOS.h"
+#include "semphr.h"
+#if defined(SEMAPHORE_H)
+    extern SemaphoreHandle_t g_xSemaphoreSpim0;
+    extern SemaphoreHandle_t g_xSemaphoreSpim1;
+    extern SemaphoreHandle_t g_xSemaphoreSpim2;
+#endif
+#endif
 
 static int cc6801_Spim0Xfer(S_regSPI * pSpim0Base);
 static int cc6801_Spim1Xfer(S_regSPI * pSpim1Base);
@@ -82,18 +90,59 @@ void SPI0_M_IRQHandler(void)
 {
     cc6801_SpimIntStatusClr(regSPI0);
     SPI0_M_INTR = 1;
+
+    #if defined(SEMAPHORE_H)
+    {
+        BaseType_t xHigherPriorityTaskWoken;
+        xHigherPriorityTaskWoken = pdFALSE;
+
+        if( g_xSemaphoreSpim0 != NULL)
+        {
+            xSemaphoreGiveFromISR( g_xSemaphoreSpim0, &xHigherPriorityTaskWoken );
+        }
+        portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+    }
+    #endif
 }
 
 void SPI1_M_IRQHandler(void)
 {
     cc6801_SpimIntStatusClr(regSPI1);
     SPI1_M_INTR = 1;
+
+    #if defined(SEMAPHORE_H)
+    {
+        BaseType_t xHigherPriorityTaskWoken;
+        xHigherPriorityTaskWoken = pdFALSE;
+
+        if( g_xSemaphoreSpim1 != NULL)
+        {
+            xSemaphoreGiveFromISR( g_xSemaphoreSpim1, &xHigherPriorityTaskWoken );
+        }
+        portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+    }
+   #endif
 }
 
 void SPI2_M_IRQHandler(void)
 {
     cc6801_SpimIntStatusClr(regSPI2);
     SPI2_M_INTR = 1;
+    
+#if(defined SPI2_INUSE) && (SPI2_INUSE)
+    #if defined(SEMAPHORE_H)
+    {
+        BaseType_t xHigherPriorityTaskWoken;
+        xHigherPriorityTaskWoken = pdFALSE;
+
+        if( g_xSemaphoreSpim2 != NULL)
+        {
+            xSemaphoreGiveFromISR( g_xSemaphoreSpim2, &xHigherPriorityTaskWoken );
+        }
+        portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+    }
+    #endif
+#endif    
 }
 
 void SPI3_M_IRQHandler(void)
@@ -106,6 +155,12 @@ static int cc6801_Spim0Xfer(S_regSPI * pSpim0Base)
     NVIC_EnableIRQ(SPI0_M_IRQn);
 
     pSpim0Base->dmaCtrl |= SPIM_DMA_ENALBE_MASK;
+
+    #if defined(SEMAPHORE_H)
+    {
+        BaseType_t xResult = xSemaphoreTake( g_xSemaphoreSpim0, portMAX_DELAY );
+    }
+    #endif
 
     while(!SPI0_M_INTR);
     SPI0_M_INTR = 0;
@@ -120,6 +175,12 @@ static int cc6801_Spim1Xfer(S_regSPI * pSpim1Base)
 
     pSpim1Base->dmaCtrl |= SPIM_DMA_ENALBE_MASK;
 
+    #if defined(SEMAPHORE_H)
+    {
+        BaseType_t xResult = xSemaphoreTake( g_xSemaphoreSpim1, portMAX_DELAY );
+    }
+    #endif
+
     while(!SPI1_M_INTR);
     SPI1_M_INTR = 0;
 
@@ -133,6 +194,14 @@ static int cc6801_Spim2Xfer(S_regSPI * pSpim2Base)
 
     pSpim2Base->dmaCtrl |= SPIM_DMA_ENALBE_MASK;
 
+    #if(defined SPI2_INUSE) && (SPI2_INUSE)
+    #if defined(SEMAPHORE_H)
+    {
+        BaseType_t xResult = xSemaphoreTake( g_xSemaphoreSpim2, portMAX_DELAY );
+    }
+    #endif
+    #endif
+    
     while(!SPI2_M_INTR);
     SPI2_M_INTR = 0;
 
@@ -247,15 +316,6 @@ static void cc6801_SpimConfig(S_regSPI * pSpimBase,
     pSpimBase->bit9Mode |= SPIM_9BIT_ENABLE_MASK;
 #endif
 
-    //Todo: When RTOS is enabled, interrupt must be disabled during initialization.
-    //      So, tracer function can't be enabled.
-    //      We need to implement UART direct output function
-    //TracerInfo("setup mode %d, %s%s%s %u Hz\r\n",
-    //    (int) (spi->wMode & (SPI_CPOL | SPI_CPHA)),
-    //    (spi->wMode & SPI_CS_HIGH) ? "cs_high, " : "",
-    //    (spi->wMode & SPI_LSB_FIRST) ? "lsb, " : "",
-    //    (spi->wMode & SPI_3WIRE) ? "3wire, " : "",
-    //    g_tSpim[spi->bBusNum].dwClkHz);
 }
 
 static int cc6801_SpimClkDivSet(uint8_t bBusNum, uint32_t dwMaxSpeedHz)
@@ -302,7 +362,7 @@ static int cc6801_SpimClkDivSet(uint8_t bBusNum, uint32_t dwMaxSpeedHz)
     }
     else
     {
-        TracerErr("Not Support SPI%d\r\n", bBusNum);
+        //TracerErr("Not Support SPI%d\r\n", bBusNum);
         return CC_ERROR_INVALID_PARAM;
     }
 

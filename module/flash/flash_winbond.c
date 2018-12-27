@@ -38,6 +38,8 @@ Head Block of The File
 
 #include "drvi_gpio.h"
 #include "drvi_spi.h"
+#include "drvi_clock.h"
+
 #include "tracer.h"
 #include "flash_winbond.h"
 
@@ -96,7 +98,23 @@ Head Block of The File
                         ((((_x)&0x04) >> 2) << 16) | \
                         ((((_x)&0x08) >> 3) << 20) | \
                         ((((_x)&0x01) >> 0) << 24) | \
-                        ((((_x)&0x02) >> 1) << 28)   \
+                        ((((_x)&0x02) >> 1) << 28) | \
+                        ((      0x1UL     ) <<  7) | \
+                        ((      0x1UL     ) <<  3) | \
+                        ((      0x1UL     ) << 15) | \
+                        ((      0x1UL     ) << 11) | \
+                        ((      0x1UL     ) << 23) | \
+                        ((      0x1UL     ) << 19) | \
+                        ((      0x1UL     ) << 31) | \
+                        ((      0x1UL     ) << 27) | \
+                        ((      0x1UL     ) <<  6) | \
+                        ((      0x1UL     ) <<  2) | \
+                        ((      0x1UL     ) << 14) | \
+                        ((      0x1UL     ) << 10) | \
+                        ((      0x1UL     ) << 22) | \
+                        ((      0x1UL     ) << 18) | \
+                        ((      0x1UL     ) << 30) | \
+                        ((      0x1UL     ) << 26)   \
                     )
 
 #define QUAD_VAL(_x) (uint8_t) ( \
@@ -717,21 +735,27 @@ int winbond_Init(void)
 
     g_pFlash = &sWinbond;
 
+    cc6801_ClockDelayMs(100);
+
 #ifdef WINBOND_QUAD_ENABLE
     drvi_SpimDummyClkSet(FLASH_IF_ID, 4);
     drvi_SpimDummyClkEnable(FLASH_IF_ID, 0);
     drvi_SpimQuadEnable(FLASH_IF_ID, 1);
+    cc6801_ClockDelayMs(100); 
 
     winbond_WriteEnable();
+    cc6801_ClockDelayMs(100);
+
     winbond_WriteStatusReg1(REG_WRSR2_QE);
+    cc6801_ClockDelayMs(100);
 #endif
 
     g_pFlash->read_id(&bManu, &bDevice);
 
-    TracerInfo("SPI Flash Manufacturer=0x%X, Device ID=0x%X...\n", bManu, bDevice);
+    TracerInfo("SPI Flash Manufacturer=0x%X, Device ID=0x%X...\r\n", bManu, bDevice);
     if ((bManu != WINBOND_MANUFACTURER) || (bDevice != WINBOND_DEVICE))
     {
-        TracerInfo("SPI Flash error...\n");
+        TracerInfo("SPI Flash error...\r\n");
         return CC_ERROR_NO_MEM;
     }
 

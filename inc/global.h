@@ -17,7 +17,8 @@
 #include "ll.h"
 #include "compiler.h"
 #include "error.h"
-
+#define malloc(size)		pvPortMalloc(size)
+#define free(ptr)			vPortFree(ptr)
 #define UINT8               unsigned char           // 1 byte
 #define UINT16              unsigned short          // 2 bytes
 #define UINT32              unsigned long           // 4 bytes

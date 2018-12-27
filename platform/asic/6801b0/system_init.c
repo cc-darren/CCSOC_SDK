@@ -82,7 +82,35 @@ void sys_InitMain (void)
 /******************************/
 /* re-arrange IRQ priority    */
 /******************************/
-
+NVIC_SetPriority(WDT_IRQn,          5);
+NVIC_SetPriority(I2C0_M_IRQn,       5);
+NVIC_SetPriority(SPI3_M_IRQn,       5);
+NVIC_SetPriority(WKTM0_IRQn,        5);
+NVIC_SetPriority(UART0_RXDMA_IRQn,  5);
+NVIC_SetPriority(UART1_RXDMA_IRQn,  5);
+NVIC_SetPriority(UART2_RXDMA_IRQn,  5);
+NVIC_SetPriority(SPI0_M_IRQn,       5);
+NVIC_SetPriority(SPI1_M_IRQn,       5);
+NVIC_SetPriority(SPI2_M_IRQn,       5);
+NVIC_SetPriority(I2C1_M_IRQn,       5);
+NVIC_SetPriority(UART0_TXDMA_IRQn,  5);
+NVIC_SetPriority(UART0_IP_IRQn,     5);
+NVIC_SetPriority(UART1_TXDMA_IRQn,  5);
+NVIC_SetPriority(UART1_IP_IRQn,     5);
+NVIC_SetPriority(UART2_TXDMA_IRQn,  5);
+NVIC_SetPriority(UART2_IP_IRQn,     5);
+NVIC_SetPriority(HS_IRQn,           5);
+NVIC_SetPriority(PWM0_IRQn,         5);
+NVIC_SetPriority(PWM1_IRQn,         5);
+NVIC_SetPriority(RTC_IRQn,          5);
+NVIC_SetPriority(VOICE_WKUP_IRQn,   5);
+NVIC_SetPriority(I2S_RXDMA_IRQn,    5);
+NVIC_SetPriority(I2S_TXDMA_IRQn,    5);
+NVIC_SetPriority(I2S_IP_IRQn,       5);
+NVIC_SetPriority(DMIC_IRQn,         5);
+NVIC_SetPriority(AHBBRG_IRQn,       5);
+NVIC_SetPriority(AES_IRQn,          5);
+NVIC_SetPriority(EFLASH_IRQn,       5);
 
 
 /******************************/
@@ -93,7 +121,8 @@ void sys_InitMain (void)
     //for test, we can easily enable IRQ here
 
 #ifdef CFG_BLE_APP    
-    NVIC_EnableIRQ(BLE_IRQn        );
+    NVIC_SetPriority(BLE_IRQn        ,4);
+    //NVIC_EnableIRQ(BLE_IRQn        );
 #endif
 
 /******************************/

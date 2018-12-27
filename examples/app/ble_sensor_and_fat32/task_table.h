@@ -58,7 +58,7 @@ Head Block of The File
 // CC Task Stack Size constant #
 //##############################
 #define TASK_STK_BLE            (1580) /*STACK_SIZE_TASK_BLE*/
-#define TASK_STK_SEN            (200)  /*STACK_SIZE_TASK_SEN*/
+#define TASK_STK_SEN            (1000)  /*STACK_SIZE_TASK_SEN*/
 
 //#################################################
 // CC Queue Size constant (elements of the queue) #
