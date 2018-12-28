@@ -196,6 +196,8 @@ void    APP_BLEMGR_Init(void)
     *((uint32_t *) 0x40000104) = (*((uint32_t *) 0x40000104) & 0xFFFFFE0) | (SYSTEM_CLOCK_MHZ/8);
     
     rwip_init(error);
+	
+	NVIC_EnableIRQ(BLE_IRQn);
 }
 
 

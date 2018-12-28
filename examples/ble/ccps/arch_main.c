@@ -42,9 +42,7 @@ int main(void)
     
     APP_BLEMGR_Init();  
 
-    APP_SW_Timer_Init();    
-    
-    TracerInfo("\r\n===== [CC6801] SDK %s =====\r\n", SDK_FW_VERSION);
+    APP_SW_Timer_Init();
     
     #ifdef CFG_SDK_CCPS_EN
     sdk_ccps_test_code();
