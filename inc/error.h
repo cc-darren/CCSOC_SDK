@@ -1,4 +1,4 @@
-/* Copyright (c) 2018 Cloudchip, Inc. All Rights Reserved.
+/* Copyright (c) 2019 Cloudchip, Inc. All Rights Reserved.
  *
  * The information contained herein is property of Cloudchip, Inc.
  * Terms and conditions of usage are described in detail in CLOUDCHIP
