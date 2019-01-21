@@ -191,6 +191,7 @@ enum NVDS_TAG
     /// Application specific
     NVDS_TAG_APP_SPECIFIC_FIRST         = 0x90,
     NVDS_TAG_RF_INIT_TABLE              = 0x91,
+    NVDS_TAG_DEV_NAME_LEN               = 0x92,
     NVDS_TAG_APP_SPECIFIC_LAST          = 0xAF,
 };
 

@@ -89,12 +89,19 @@
 0x0001bd3b T ke_timer_set
 0x0001be65 T ke_timer_target_get
 0x00019a0d T ea_timer_target_get
+0x000096cf T attm_uuid_comp
+0x00009725 T attm_uuid16_comp
+0x00001bed T gapc_get_conidx
 0x00015ff1 T lld_sleep_enter
 ;0x0001602d T lld_sleep_wakeup
 ;0x00016057 T lld_sleep_wakeup_end
+0x0001ba1b T ke_task_handler_get
+0x00013329 T lld_con_update_ind
+0x00019e49 T co_list_push_front
 
 0x20025e44 D rwip_rf
 0x20025e34 D rwip_env
 0x20025be4 D lld_evt_env
 0x200235dc D lld_sleep_env ; for debug
-
+0x20025bc4 D llc_env
+0x20025d90 D ke_env
