@@ -572,8 +572,8 @@ Declaration of static Global Variables & Functions
 #define CFG_NVDS
 #define CFG_HW_AUDIO
 
-//#define CFG_SEC_CON
-//#define CFG_APP_SEC
+#define CFG_SEC_CON
+#define CFG_APP_SEC
 
 //#define CFG_ATTC
 #define CFG_ATTS

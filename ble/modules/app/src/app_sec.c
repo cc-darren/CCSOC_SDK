@@ -50,6 +50,7 @@
 #include "am0_app.h"
 #endif // BLE_APP_AM0
 
+#include "jump_table.h"
 /*
  * GLOBAL VARIABLE DEFINITIONS
  ****************************************************************************************
@@ -121,7 +122,7 @@ void app_sec_remove_bond(void)
             ASSERT_ERR(0);
         }
 
-        #if (BLE_APP_HT)
+        #if 1//(BLE_APP_HT)
         if (nvds_del(NVDS_TAG_LTK) != NVDS_OK)
         {
             ASSERT_ERR(0);
@@ -153,9 +154,11 @@ void app_sec_send_security_req(uint8_t conidx)
 
     cmd->operation = GAPC_SECURITY_REQ;
 
-    #if (BLE_APP_HID || BLE_APP_HT)
+    #if 0//(BLE_APP_HID || BLE_APP_HT)
     cmd->auth      = GAP_AUTH_REQ_MITM_BOND;
     #elif defined(BLE_APP_AM0)
+    cmd->auth      = GAP_AUTH_REQ_NO_MITM_BOND;
+    #elif defined(BLE_APP_CCPS)
     cmd->auth      = GAP_AUTH_REQ_NO_MITM_BOND;
     #else
     cmd->auth      = GAP_AUTH_REQ_NO_MITM_NO_BOND;
@@ -195,17 +198,21 @@ static int gapc_bond_req_ind_handler(ke_msg_id_t const msgid,
             {
                 cfm->accept  = true;
 
-                #if (BLE_APP_HID || BLE_APP_HT)
+                #if 0//(BLE_APP_HID || BLE_APP_HT)
                 // Pairing Features
                 cfm->data.pairing_feat.auth      = GAP_AUTH_REQ_MITM_BOND;
                 #elif defined(BLE_APP_AM0)
+                cfm->data.pairing_feat.auth      = GAP_AUTH_REQ_NO_MITM_BOND;
+                #elif defined(BLE_APP_CCPS)
                 cfm->data.pairing_feat.auth      = GAP_AUTH_REQ_NO_MITM_BOND;
                 #else
                 cfm->data.pairing_feat.auth      = GAP_AUTH_REQ_NO_MITM_NO_BOND;
                 #endif //(BLE_APP_HID || BLE_APP_HT)
 
-                #if (BLE_APP_HT)
+                #if 0//(BLE_APP_HT)
                 cfm->data.pairing_feat.iocap     = GAP_IO_CAP_DISPLAY_ONLY;
+                #elif defined(BLE_APP_CCPS)
+                cfm->data.pairing_feat.iocap     = GAP_IO_CAP_NO_INPUT_NO_OUTPUT;
                 #else
                 cfm->data.pairing_feat.iocap     = GAP_IO_CAP_NO_INPUT_NO_OUTPUT;
                 #endif //(BLE_APP_HT)
@@ -284,6 +291,8 @@ static int gapc_bond_req_ind_handler(ke_msg_id_t const msgid,
             // Generate a PIN Code- (Between 100000 and 999999)
             uint32_t pin_code = (100000 + (co_rand_word()%900000));
 
+            
+
             #if DISPLAY_SUPPORT
             // Display the PIN Code
             app_display_pin_code(pin_code);
@@ -327,7 +336,7 @@ static int gapc_bond_ind_handler(ke_msg_id_t const msgid,
             app_sec_env.bonded = true;
 
             // Update the bonding status in the environment
-            #if (PLF_NVDS)
+            #if (PLF_NVDS)            
             if (nvds_put(NVDS_TAG_PERIPH_BONDED, NVDS_LEN_PERIPH_BONDED,
                          (uint8_t *)&app_sec_env.bonded) != NVDS_OK)
             {

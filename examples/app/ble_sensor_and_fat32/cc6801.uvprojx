@@ -138,7 +138,7 @@
           </Flash1>
           <bUseTDR>0</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3>"..\..\..\env\bin\FlashTool\cc6801_DL.exe" (CC6801_b0_M0 .\Release\@L.bin 0x10000000 .\Release\@L_mbr.bin 0x1003E800)</Flash3>
+          <Flash3>"..\..\..\env\bin\FlashTool\cc6801_DL.exe" (CC6801_b0_M0 .\Release\@L.bin 0x10000000 ..\..\..\env\bin\bl\BL_DC404A_M0.bin 0x1003C000 .\Release\@L_mbr.bin 0x1003E800)</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -1002,7 +1002,7 @@
           </Flash1>
           <bUseTDR>0</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3>"..\..\..\env\bin\FlashTool\cc6801_DL.exe" (CC6801_b0_M4 .\Release\@L.bin 0x10000000 .\Release\@L_mbr.bin 0x1003E800)</Flash3>
+          <Flash3>"..\..\..\env\bin\FlashTool\cc6801_DL.exe" (CC6801_b0_M4 .\Release\@L.bin 0x10000000 ..\..\..\env\bin\bl\BL_DC404A_M4.bin 0x1003C000 .\Release\@L_mbr.bin 0x1003E800)</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>

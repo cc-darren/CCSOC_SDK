@@ -1,4 +1,15 @@
-#<SYMDEFS># ARM Linker, 5060183: Last Updated: Tue Dec 11 14:45:11 2018
+#<SYMDEFS># ARM Linker, 5060183: Last Updated: Wed Sep 19 16:17:17 2018
+
+;0x0001c273 T rwip_wakeup
+;0x0001c2a9 T rwip_wakeup_end
+;0x0001c2d1 T rwip_wakeup_delay_set
+0x0001c24d T rwip_prevent_sleep_set
+;0x0001c283 T rwip_prevent_sleep_clear
+;0x0001c2f7 T rwip_sleep_lpcycles_2_us
+;0x0001c2c7 T rwip_us_2_lpcycles
+;0x0001c02d T rwip_slot_2_lpcycles
+;0x0001c039 T rwip_time_get
+0x00019031 T ea_finetimer_isr
 
 0x0000197d T gapc_get_bdaddr
 0x0001bd61 T appm_set_bdaddr
@@ -15,12 +26,23 @@
 0x0001826b T rwble_init
 0x00018339 T rwble_isr
 0x0001828b T rwble_reset
+0x000182df T rwble_sleep_check
 0x0001830d T rwble_version
+;0x0001c00d T rwip_check_wakeup_boundary
+;0x0001c2f1 T rwip_ext_wakeup_enable
 0x0001b917 T rwip_init
+;0x0001c283 T rwip_prevent_sleep_clear
+;0x0001c24d T rwip_prevent_sleep_set
 0x0001b993 T rwip_reset
 0x0001ba2d T rwip_schedule
-0x0001ba3d T rwip_sleep
+;0x0001c171 T rwip_sleep
+;0x0001c2eb T rwip_sleep_enable
+;0x0001c2f7 T rwip_sleep_lpcycles_2_us
+;0x0001c2c7 T rwip_us_2_lpcycles
 0x0001ba25 T rwip_version
+;0x0001c273 T rwip_wakeup
+;0x0001c2d1 T rwip_wakeup_delay_set
+;0x0001c2a9 T rwip_wakeup_end
 0x0001bbdf T rwip_wlcoex_set
 0x0001aee3 T ke_check_malloc
 0x0001ad41 T ke_event_callback_set
@@ -64,6 +86,21 @@
 0x0001b67f T ke_timer_clear
 0x0001b5d3 T ke_timer_init
 0x0001b5eb T ke_timer_set
+0x0001b70f T ke_timer_target_get
+0x000192d1 T ea_timer_target_get
+0x000158cb T lld_sleep_enter
+;0x00015909 T lld_sleep_wakeup
+;0x0001592d T lld_sleep_wakeup_end
+0x0000935d T attm_uuid_comp
+0x000093b5 T attm_uuid16_comp
+0x00001923 T gapc_get_conidx
+0x0001b2b9 T ke_task_handler_get
+0x00012d89 T lld_con_update_ind
+0x0001972b T co_list_push_front
 
-
-
+0x20025e44 D rwip_rf
+0x20025e34 D rwip_env
+0x20025be4 D lld_evt_env
+0x200235dc D lld_sleep_env ; for debug
+0x20025bc4 D llc_env
+0x20025d90 D ke_env

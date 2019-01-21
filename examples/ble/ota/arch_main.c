@@ -44,7 +44,7 @@ int main(void)
 
     APP_SW_Timer_Init();    
     
-    TracerInfo("\r\n===== [CC6801] SDK %s =====\r\n", SDK_FW_VERSION);
+    TracerInfo("\r\n===== [CC6801] SDK for OTA =====\r\n");
             
     while(1)
     {

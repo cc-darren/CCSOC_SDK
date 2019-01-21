@@ -545,6 +545,11 @@ static int gapc_cmp_evt_handler(ke_msg_id_t const msgid,
  * @return If the message was consumed or not.
  ****************************************************************************************
  */
+
+// workaround for OTA of BL
+#define EF_ENTRY(addr)               (addr+4)
+#define EF_ENTRY_PTR(addr)           (*(volatile uint32_t*)EF_ENTRY(addr))
+#define gotoBootloader(addr)         ((void (*)(void))(EF_ENTRY_PTR(addr)))()
 static int gapc_disconnect_ind_handler(ke_msg_id_t const msgid,
                                       struct gapc_disconnect_ind const *param,
                                       ke_task_id_t const dest_id,
@@ -557,7 +562,14 @@ static int gapc_disconnect_ind_handler(ke_msg_id_t const msgid,
 
     if(true == APP_OTA_RebootIsReady())
     {
-        appm_system_reset();
+        //appm_system_reset();
+
+        (*((volatile uint32_t *) 0xe000e010)) &= ~(1UL << 0UL); // close system tick timer
+        
+        gotoBootloader(0x1003C000); // workaround for OTA of BL
+
+        while(1)
+            ;
     }
 
     // Go to the ready state

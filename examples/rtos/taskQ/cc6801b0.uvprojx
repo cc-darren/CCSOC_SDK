@@ -10,7 +10,7 @@
       <TargetName>EVB605A_M0p</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pArmCC>5060183::V5.06 update 2 (build 183)::..\Backup.001\ARM\ARMCC</pArmCC>
+      <pArmCC>5060183::V5.06 update 2 (build 183)::ARMCC</pArmCC>
       <pCCUsed>5060183::V5.06 update 2 (build 183)::ARMCC</pCCUsed>
       <TargetOption>
         <TargetCommonOption>
@@ -138,7 +138,7 @@
           </Flash1>
           <bUseTDR>0</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3>"..\..\..\env\bin\FlashTool\cc6801_DL.exe" (CC6801_b0_M0 .\Release\@L.bin 0x10000000 .\Release\@L_mbr.bin 0x1003E800)</Flash3>
+          <Flash3>"..\..\..\env\bin\FlashTool\cc6801_DL.exe" (CC6801_b0_M0 .\Release\@L.bin 0x10000000 ..\..\..\env\bin\bl\BL_DC404A_M0.bin 0x1003C000 .\Release\@L_mbr.bin 0x1003E800)</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -704,7 +704,7 @@
       <TargetName>EVB605A_M4f</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pArmCC>5060183::V5.06 update 2 (build 183)::..\Backup.001\ARM\ARMCC</pArmCC>
+      <pArmCC>5060183::V5.06 update 2 (build 183)::ARMCC</pArmCC>
       <pCCUsed>5060183::V5.06 update 2 (build 183)::ARMCC</pCCUsed>
       <TargetOption>
         <TargetCommonOption>
@@ -832,7 +832,7 @@
           </Flash1>
           <bUseTDR>0</bUseTDR>
           <Flash2>Segger\JL2CM3.dll</Flash2>
-          <Flash3>"..\..\..\env\bin\FlashTool\cc6801_DL.exe" (CC6801_b0_M4 .\Release\@L.bin 0x10000000 .\Release\@L_mbr.bin 0x1003E800)</Flash3>
+          <Flash3>"..\..\..\env\bin\FlashTool\cc6801_DL.exe" (CC6801_b0_M4 .\Release\@L.bin 0x10000000 ..\..\..\env\bin\bl\BL_DC404A_M4.bin 0x1003C000 .\Release\@L_mbr.bin 0x1003E800)</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -1398,8 +1398,8 @@
       <TargetName>DVK403A_M0p</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pArmCC>5060183::V5.06 update 2 (build 183)::..\Backup.001\ARM\ARMCC</pArmCC>
-      <pCCUsed>5060183::V5.06 update 2 (build 183)::..\Backup.001\ARM\ARMCC</pCCUsed>
+      <pArmCC>5060183::V5.06 update 2 (build 183)::ARMCC</pArmCC>
+      <pCCUsed>5060183::V5.06 update 2 (build 183)::ARMCC</pCCUsed>
       <TargetOption>
         <TargetCommonOption>
           <Device>ARMCM0P</Device>
@@ -1526,7 +1526,7 @@
           </Flash1>
           <bUseTDR>0</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3>"..\..\..\env\bin\FlashTool\cc6801_DL.exe" (CC6801_b0_M0 .\Release\@L.bin 0x10000000 .\Release\@L_mbr.bin 0x1003E800)</Flash3>
+          <Flash3>"..\..\..\env\bin\FlashTool\cc6801_DL.exe" (CC6801_b0_M0 .\Release\@L.bin 0x10000000 ..\..\..\env\bin\bl\BL_DC404A_M0.bin 0x1003C000 .\Release\@L_mbr.bin 0x1003E800)</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -2092,8 +2092,8 @@
       <TargetName>DVK403A_M4f</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pArmCC>5060183::V5.06 update 2 (build 183)::..\Backup.001\ARM\ARMCC</pArmCC>
-      <pCCUsed>5060183::V5.06 update 2 (build 183)::..\Backup.001\ARM\ARMCC</pCCUsed>
+      <pArmCC>5060183::V5.06 update 2 (build 183)::ARMCC</pArmCC>
+      <pCCUsed>5060183::V5.06 update 2 (build 183)::ARMCC</pCCUsed>
       <TargetOption>
         <TargetCommonOption>
           <Device>ARMCM4_FP</Device>
@@ -2220,7 +2220,7 @@
           </Flash1>
           <bUseTDR>0</bUseTDR>
           <Flash2>Segger\JL2CM3.dll</Flash2>
-          <Flash3>"..\..\..\env\bin\FlashTool\cc6801_DL.exe" (CC6801_b0_M4 .\Release\@L.bin 0x10000000 .\Release\@L_mbr.bin 0x1003E800)</Flash3>
+          <Flash3>"..\..\..\env\bin\FlashTool\cc6801_DL.exe" (CC6801_b0_M4 .\Release\@L.bin 0x10000000 ..\..\..\env\bin\bl\BL_DC404A_M4.bin 0x1003C000 .\Release\@L_mbr.bin 0x1003E800)</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
