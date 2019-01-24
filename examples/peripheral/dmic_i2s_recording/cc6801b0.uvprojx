@@ -82,7 +82,7 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>..\..\..\env\bin\ex_afterbuild.bat @L !L</UserProg1Name>
+            <UserProg1Name>..\..\..\env\bin\afterbuild.bat @L !L #K</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -704,7 +704,7 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>..\..\..\env\bin\ex_afterbuild.bat @L !L</UserProg1Name>
+            <UserProg1Name>..\..\..\env\bin\afterbuild.bat @L !L #K</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -1326,7 +1326,7 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>..\..\..\env\bin\ex_afterbuild.bat @L !L</UserProg1Name>
+            <UserProg1Name>..\..\..\env\bin\afterbuild.bat @L !L #K</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -1948,7 +1948,7 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>..\..\..\env\bin\ex_afterbuild.bat @L !L</UserProg1Name>
+            <UserProg1Name>..\..\..\env\bin\afterbuild.bat @L !L #K</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
