@@ -12,15 +12,15 @@
 /******************************************************************************
 *  Filename:
 *  ---------
-*  config_DVK_DC404A.h
+*  config_DVK403A_DC404A.h
 *
 *  Project:
 *  --------
-*  DVK403A
+*  DVK403A_DC404A
 *
 *  Description:
 *  ------------
-*  FW configuration for DVK403A
+*  FW configuration for DVK403A_DC404A
 *
 *  Author:
 *  -------
@@ -30,8 +30,8 @@
 *
 ******************************************************************************/
 
-#ifndef _CONFIG_DVK_DC404A_H_
-#define _CONFIG_DVK_DC404A_H_
+#ifndef _CONFIG_DVK403A_DC404A_H_
+#define _CONFIG_DVK403A_DC404A_H_
 
 /******************************************************************************
 Head Block of The File
@@ -896,4 +896,4 @@ typedef struct
 
 #define CFG_APP
 #define CFG_APP_CCPS   1
-#endif // _CONFIG_EVB_H_
+#endif // _CONFIG_DVK403A_DC404A_H_

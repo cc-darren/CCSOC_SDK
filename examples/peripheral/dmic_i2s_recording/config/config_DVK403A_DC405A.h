@@ -5,14 +5,14 @@
  * STANDARD SOFTWARE LICENSE AGREEMENT.
  *
  * Licensees are granted free, non-transferable use of the information.
- * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed
  * from the file.
  */
 
 /******************************************************************************
 *  Filename:
 *  ---------
-*  config_DVK_DC405A.h
+*  config_DVK403A_DC405A.h
 *
 *  Project:
 *  --------
@@ -30,8 +30,8 @@
 *
 ******************************************************************************/
 
-#ifndef _CONFIG_DVK_DC405A_H_
-#define _CONFIG_DVK_DC405A_H_
+#ifndef _CONFIG_DVK403A_DC405A_H_
+#define _CONFIG_DVK403A_DC405A_H_
 
 /******************************************************************************
 Head Block of The File
@@ -494,4 +494,4 @@ Declaration of static Global Variables & Functions
 // Sec 10: C Functions
 ******************************************************************************/
 
-#endif // _CONFIG_DVK_DC405A_H_
+#endif // _CONFIG_DVK403A_DC405A_H_

@@ -12,15 +12,15 @@
 /******************************************************************************
 *  Filename:
 *  ---------
-*  config_DVK_DC404A.h
+*  config_DVK403A_DC404A.h
 *
 *  Project:
 *  --------
-*  DVK403A
+*  DVK403A_DC404A
 *
 *  Description:
 *  ------------
-*  FW configuration for DVK403A
+*  FW configuration for DVK403A_DC404A
 *
 *  Author:
 *  -------
@@ -30,8 +30,8 @@
 *
 ******************************************************************************/
 
-#ifndef _CONFIG_DVK_DC404A_H_
-#define _CONFIG_DVK_DC404A_H_
+#ifndef _CONFIG_DVK403A_DC404A_H_
+#define _CONFIG_DVK403A_DC404A_H_
 
 /******************************************************************************
 Head Block of The File
@@ -173,8 +173,8 @@ Head Block of The File
 *   TOUCH_IF_TYPE : the Touch interface type
 *   TOUCH_IF_ID   : the Touch interface id
 ***************************************************/
-#define MODULE_TOUCH            TOUCH_FOCAL_FT6X36
-#define TOUCH_IF                UseInterface(I2C,1)
+#define MODULE_TOUCH            TOUCH_NULL
+//#define TOUCH_IF                UseInterface(I2C,1)
 #define TOUCH2D_INT_PIN         GPIO_PIN_6
 #define TOUCH_FT6X36_SLAVE_ADDR (0x38)
 #define TOUCH_SUPPORTED_FINGERS (1)
@@ -499,4 +499,4 @@ Declaration of static Global Variables & Functions
 ******************************************************************************/
 // Sec 8: declaration of static global variable
 
-#endif // _CONFIG_DVK_DC404A_H_
+#endif // _CONFIG_DVK403A_DC404A_H_

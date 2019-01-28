@@ -12,15 +12,15 @@
 /******************************************************************************
 *  Filename:
 *  ---------
-*  config_DVK_DC404A.h
+*  config_DVK403A_DC404A.h
 *
 *  Project:
 *  --------
-*  DVK403A
+*  DVK403A_DC404A
 *
 *  Description:
 *  ------------
-*  FW configuration for DVK403A
+*  FW configuration for DVK403A_DC404A
 *
 *  Author:
 *  -------
@@ -30,8 +30,8 @@
 *
 ******************************************************************************/
 
-#ifndef _CONFIG_DVK_DC404A_H_
-#define _CONFIG_DVK_DC404A_H_
+#ifndef _CONFIG_DVK403A_DC404A_H_
+#define _CONFIG_DVK403A_DC404A_H_
 
 /******************************************************************************
 Head Block of The File
@@ -40,6 +40,8 @@ Head Block of The File
 
 // Sec 1: Include File
 #include "global.h"
+#include "CC_Calorie_burn.h"
+#include "util_calendar.h"
 
 // Sec 2: Constant Definitions, Imported Symbols, miscellaneous
 
@@ -111,8 +113,9 @@ Head Block of The File
 *   MAG_IF_TYPE : the MAG interface type
 *   MAG_IF_ID   : the MAG interface id
 ***************************************************/
-#define MODULE_MAG              MAG_NULL
-//#define MAG_IF                  UseInterface(I2C,0)
+#define MODULE_MAG              MAG_AKM_AK09912C
+#define MAG_IF                  UseInterface(I2C,0)
+#define AMK_PWN_EN              GPIO_PIN    36
 
 
 
@@ -127,8 +130,9 @@ Head Block of The File
 *   GYR_IF_TYPE : the GYR interface type
 *   GYR_IF_ID   : the GYR interface id
 ***************************************************/
-#define MODULE_GYR              GYR_NULL
-//#define GYR_IF                  UseInterface(SPI,1)
+#define MODULE_GYR              GYR_ST_LSM6DSL
+#define GYR_IF                  UseInterface(SPI,1)
+
 
 
 /**************************************************
@@ -143,13 +147,11 @@ Head Block of The File
 *   OLED_IF_ID   : the OLED interface id
 ***************************************************/
 
-#define MODULE_OLED             OLED_NULL
-#define LCD_JDI_DISP_PIN        GPIO_PIN_43
-#define LCD_JDI_EXTCOM_PIN      GPIO_PIN_21
-#define LCD_JDI_PWR_EN          GPIO_PIN_20
-#define LCD_JDI_BK_PIN          GPIO_PIN_1
-//#define OLED_IF                 UseInterface(SPI,2)
-
+#define MODULE_OLED             OLED_JDI_LPM013M126A
+#define LCD_JDI_DISP_PIN        GPIO_PIN_25
+#define LCD_JDI_EXTCOM_PIN      GPIO_PIN_43
+#define LCD_JDI_PWR_EN          GPIO_PIN_24
+#define OLED_IF                 UseInterface(SPI,2)
 
 /**************************************************
 *   Choose PPG model and config PPG interface
@@ -162,8 +164,11 @@ Head Block of The File
 *   PPG_IF_TYPE : the PPG interface type
 *   PPG_IF_ID   : the PPG interface id
 ***************************************************/
-#define MODULE_PPG              PPG_NULL
-//#define PPG_IF                  UseInterface(I2C,1)
+#define MODULE_PPG              PPG_PXT_PAH8002
+#define PPG_IF                  UseInterface(I2C,0)
+#define HRM_INT_PIN             GPIO_PIN_14
+#define HRM_RST_PIN             GPIO_PIN_13
+#define HRM_PWR_EN              GPIO_PIN_2
 
 /**************************************************
 *   Choose Touch model and config Touch interface
@@ -176,9 +181,9 @@ Head Block of The File
 *   TOUCH_IF_TYPE : the Touch interface type
 *   TOUCH_IF_ID   : the Touch interface id
 ***************************************************/
-#define MODULE_TOUCH            TOUCH_NULL
-//#define TOUCH_IF                UseInterface(I2C,0)
-#define TOUCH2D_INT_PIN         GPIO_PIN_4
+#define MODULE_TOUCH            TOUCH_FOCAL_FT6X36
+#define TOUCH_IF                UseInterface(I2C,1)
+#define TOUCH2D_INT_PIN         GPIO_PIN_6
 #define TOUCH_FT6X36_SLAVE_ADDR (0x38)
 #define TOUCH_SUPPORTED_FINGERS (1)
 
@@ -204,7 +209,7 @@ Head Block of The File
 *   HCI_IF_TYPE : the HCI interface type
 *   HCI_IF_ID   : the HCI interface id
 ***************************************************/
-#define HCI_IF                  UseInterface(UART,1)
+#define HCI_IF                  UseInterface(UART,2)
 
 /**************************************************
 *   Config SWT interface (Software Timer)
@@ -216,18 +221,18 @@ Head Block of The File
 *   SWT_IF_TYPE : the SWT interface type
 *   SWT_IF_ID   : the SWT interface id
 ***************************************************/
-//#define SWT_IF                  UseInterface(WKTM,0)
+#define SWT_IF                  UseInterface(WKTM,0)
 
 /**************************************************
 *   Config VIBRATOR interface
 *
-*   VIBRATOR_IF : the interface assigned to SWT
+*   VIBRATOR_IF : the interface assigned to VIBRATOR
 *
 *   VIBRATOR_IF_TYPE / VIBRATOR_IF_ID will be generated automatically.
-*   VIBRATOR_IF_TYPE : the SWT interface type
-*   VIBRATOR_IF_ID   : the SWT interface id
+*   VIBRATOR_IF_TYPE : the VIBRATOR interface type
+*   VIBRATOR_IF_ID   : the VIBRATOR interface id
 ***************************************************/
-//#define VIBRATOR_IF             UseInterface(PWM,0)
+#define VIBRATOR_IF             UseInterface(PWM,0)
 
 /**************************************************
 *   Config ADC interface
@@ -238,8 +243,8 @@ Head Block of The File
 *   ADC_IF_TYPE : the ADC interface type
 *   ADC_IF_ID   : the ADC interface id
 ***************************************************/
-#define MODULE_ADC              ADC_NULL
-//#define ADC_IF                  UseInterface(I2C,0)
+#define MODULE_ADC              ADC_MCP_MCP3421
+#define ADC_IF                  UseInterface(I2C,0)
 
 /**************************************************
 *   Choose FLASH and config FLASH interface
@@ -264,8 +269,8 @@ Head Block of The File
 *   PRESSURE_IF_TYPE : the ADC interface type
 *   PRESSURE_IF_ID   : the ADC interface id
 ***************************************************/
-#define MODULE_PRESSURE              PRESSURE_NULL
-//#define PRESSURE_IF                  UseInterface(I2C,1)
+#define MODULE_PRESSURE              PRESSURE_LPS33HW
+#define PRESSURE_IF                  UseInterface(I2C,1)
 //#define PRESSURE_INT_PIN             38
 
 
@@ -278,8 +283,8 @@ Head Block of The File
 *   VIBRATOR_IF_TYPE : the SWT interface type
 *   VIBRATOR_IF_ID   : the SWT interface id
 ***************************************************/
-//#define BACKLIGHT_IF             UseInterface(PWM,1)
-
+#define BACKLIGHT_IF             UseInterface(PWM,1)
+#define LCD_JDI_BK_PIN           GPIO_PIN_1
 
 /**************************************************
 *   Config GPS interface
@@ -290,7 +295,7 @@ Head Block of The File
 *   GPS_IF_TYPE : the GPS interface type
 *   GPS_IF_ID   : the GPS interface id
 ***************************************************/
-#define GPS_IF                  UseInterface(UART,2)
+#define GPS_IF                  UseInterface(UART,1)
 
 
 /******************************************************************************************************************
@@ -407,41 +412,41 @@ Head Block of The File
 #define GPIO19_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
 
 // GPIO Pin Group5
-#define GPIO_MODE_PINGROUP5                  GPIO_MODE_PWM_GPIO
-#define GPIO20_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
-#define GPIO21_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
-#define GPIO22_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
-#define GPIO23_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#define GPIO_MODE_PINGROUP5                  GPIO_MODE_I2C_GPIO
+#define GPIO20_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#define GPIO21_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#define GPIO22_CONFIG                        ((GPIO_PULL_UP)   | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
+#define GPIO23_CONFIG                        ((GPIO_PULL_UP)   | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
 
 // GPIO Pin Group6
-#if (defined(WINBOND_QUAD_ENABLE) && (WINBOND_QUAD_ENABLE))
-#define GPIO_MODE_PINGROUP6                  GPIO_MODE_SPI_QUAD
-#define GPIO24_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
-#define GPIO25_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
-#define GPIO26_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
-#define GPIO27_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#if defined(WINBOND_QUAD_ENABLE) && WINBOND_QUAD_ENABLE
+  #define GPIO_MODE_PINGROUP6                  GPIO_MODE_SPI_QUAD
+  #define GPIO24_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
+  #define GPIO25_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
+  #define GPIO26_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+  #define GPIO27_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
 #else
 #define GPIO_MODE_PINGROUP6                  GPIO_MODE_GPIO
 #define GPIO24_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
 #define GPIO25_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_LOW))
-#define GPIO26_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))  //output high to disable write protect(WPn) for Winbond ROM in SPI single mode
-#define GPIO27_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))  //output high to disable hold(HDn) for Winbond ROM in SPI single mode
+  #define GPIO26_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))  //output high to disable write protect(WPn) for Winbond ROM in SPI single mode
+  #define GPIO27_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))  //output high to disable hold(HDn) for Winbond ROM in SPI single mode
 #endif
 
 // GPIO Pin Group7
 #define GPIO_MODE_PINGROUP7                  GPIO_MODE_I2C_GPIO
-#define GPIO28_CONFIG                        ((GPIO_PULL_UP)   | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
-#define GPIO29_CONFIG                        ((GPIO_PULL_UP)   | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#define GPIO28_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#define GPIO29_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
 #define GPIO30_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
 #define GPIO31_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_DISABLE) | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
 
 // GPIO Pin Group8
-#if (defined(WINBOND_QUAD_ENABLE) && (WINBOND_QUAD_ENABLE))
-#define GPIO_MODE_PINGROUP8                  GPIO_MODE_SPI_QUAD
-#define GPIO32_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
-#define GPIO33_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
-#define GPIO34_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
-#define GPIO35_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+#if defined(WINBOND_QUAD_ENABLE) && WINBOND_QUAD_ENABLE
+  #define GPIO_MODE_PINGROUP8                  GPIO_MODE_SPI_QUAD
+  #define GPIO32_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
+  #define GPIO33_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
+  #define GPIO34_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
+  #define GPIO35_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_INPUT)  | (GPIO_INPUT_NOPULL))
 #else
 #define GPIO_MODE_PINGROUP8                  GPIO_MODE_SPI_4WIRE
 #define GPIO32_CONFIG                        ((GPIO_PULL_DOWN) | (GPIO_PINMUX_ENABLE)  | (GPIO_DIR_OUTPUT) | (GPIO_OUTPUT_HIGH))
@@ -501,8 +506,338 @@ Declaration of Global Variables & Functions
 Declaration of static Global Variables & Functions
 ******************************************************************************/
 // Sec 8: declaration of static global variable
+//#define FSTORAGE_ENABLED     1
+//#define FDS_ENABLED          1
 
+
+//TODO: should seperate two configuration files: one for BLE, the other for APP
+
+/**************************/
+/*** CONFIG > SCHEDULER ***/
+/**************************/
+#define CC_SCHEDULER    (1)
+#define FREE_RTOS       (2)
+
+#define CC_CONFIG_SCHEDULER    FREE_RTOS
+#define CFG_RTOS_TICKLESS_LCLOCK_EN
+
+/**************************/
+/*** CONFIG > XXXXXXXXX ***/
+/**************************/
+#define FSTORAGE_ENABLED     1
+#define FDS_ENABLED          1
+
+
+/**************************/
+/*** CONFIG > BLE Sleep ***/
+/**************************/
+#define CFG_BLE_BB_OFF
+#define CFG_TOUCH_POLL_MODE
+
+// Sec 9: declaration of static function prototype
+
+/******************************************************************************
+// Sec 10: C Functions
+******************************************************************************/
+
+
+
+
+
+
+/******************************************************************************
+// Sec 11: Application settings
+******************************************************************************/
+
+
+
+
+#define DEVICE_MODEL "CC_WATCH"
+#define SDK_FW_VERSION "v1.000.002"
+
+#define MMI_TASK_EN
+
+
+// EMWIN AND JDI
+#define EMWIN_ENABLE
 #define EMWIN_LOAD_EXT_FLASH            1
+#define SYS_DO_STRESS_TEST              0
+
+#ifdef EMWIN_ENABLE
+#define JDI_DRAW_WIHTTIMER
+//#define EN_PAH80211ES
+#endif
+
+#define SLEEP_EN
+#define SWIMMING_EN
+
+//#define LONGSIT_EN
+//#define PEDO_EN
+//#define HRM_EN
+//#define BLE_OTA_BL_MODE_EN
+#define nFS_EN
+#define nDB_EN
+#define FS_CC_MODE_EN
+#define FIFO_MODE_EN
+#define FACTORY_RESET
+
+#define APP_VIB_MGR
+
+#define SWAP_ACC_DIRECTION_EN
+
+#define FORCE_LIFTARM_TEST_EN   // for test
+//#define FORCE_SWIM_TEST_EN   // for test
+//#define FORCE_HRS_TEST_EN   // for test
+
+#define SENSOR_MGR_EN
+#ifdef SENSOR_MGR_EN
+//#define SM_TEST_EN
+//#define SVC_MGR_TEST_EN
+#endif
+#define SW_TIMER_BY_KERNEL  // min timer: 10ms
+
+//-----------------------------------
+//  _bState : 1  , Init form system reboot
+//          : 2 ,  Init form Venus app setting
+//------------------------------------
+#define   DB_INIT_FROM_SYSTEM       1
+#define   DB_INIT_FROM_APP              2
+#define   DB_INIT_FROM_APP_FACTORY_RESET 3
+
+#define  TIME_OF_24_HOUR     86400
+
+
+typedef enum
+{
+
+    eSysStateInit=1,
+    eSysStateNormal,
+    eSysStateLowPwr,
+    eSysInvaild
+}eSystem_Battery_State_t;
+
+
+
+ typedef enum
+{
+    eDEVICE_CHARGE_IN = 0,
+    eDEVICE_CHARGE_OUT
+}eDEV_CHARGE_STATE_t;
+
+typedef enum
+{
+    eDEVICE_CHARGE_NOFULL = 0,
+    eDEVICE_CHARGE_FULL
+}eDEV_CHARGEFULL_STATE_t;
+
+typedef enum
+{
+    eSWIM_25M = 0,
+    eSWIM_50M,
+    eSWIM_25YD,
+    eSWIM_33_33M,
+    eSWIM_33_33YD,
+    eeSWIM_UNKNOWN
+}eSWIM_LEN_SET_t;
+
+
+typedef enum
+{
+    eHRMCLOSE_ID_TOUCH=0,
+    eHRMCLOSE_ID_GENERALTIMEOUT,
+    eHRMCLOSE_ID_DUMMY
+}eHrm_Close_EventID;
+
+typedef enum
+{
+    eHRM_Off=0,
+    eHRM_On,
+    eHRM_Invaild
+}eHrmOp_State;
+
+
+typedef enum
+{
+    eStateOff=0,
+    eStateOn,
+    eStateInvaild
+}eCommon_State;
+
+
+typedef enum
+{
+    eDisable=0,
+    eEnable,
+    eInvaild,
+}eStete_t;
+
+
+typedef enum
+{
+    eOne=1,
+    eDayofChange
+}eClear_DB_Setting_t;
+
+
+typedef enum
+{
+    eSwimCalProcStop=0,
+    eSwimCalProcStart =1,
+    eSwimCalProcInvaild,
+}eSwim_Cal_ProcState_t;
+
+typedef enum
+{
+    eSwimCalInit=1,
+    eSwimCalProc,
+    eSwimCalRetry,
+    eSwimCalExit,
+    eSwimCalInvaild,
+}eSwim_Cal_State_t;
+
+typedef enum
+{
+    eLongsitNoResult = 0,
+    eLongsitNoWear =1,
+    eLongsitWearOnHand,
+}eLongsit_Wear_State_t;
+
+
+typedef enum
+{
+    ePedo_Stop = 0x00,
+    ePedo_Walk = 0x01,
+    ePedo_Run  = 0x02,
+}ePedo_State_t;
+
+typedef struct
+{
+    uint8_t    bCount;
+    uint8_t    baPadding[2];
+    uint32_t  dwData;
+}   S_VenusEvent;
+
+typedef enum
+{
+    eLiftarm_None =0,
+    eLiftarm_Up = 1,
+    eLiftarm_Down,
+}eLiftarm_Mode;
+
+#define CHARGE_MAX_USERS 8
+typedef void (*charge_cb_t)(eDEV_CHARGE_STATE_t eState);
+
+#if 1
+
+
+
+#if 1 // from venus: ble_rscs.h
+
+typedef struct
+{
+   uint8_t     command;
+   uint8_t     is_update_steps;
+   uint32_t    dwTotal_steps;
+   uint32_t    dwTotal_calorie;
+
+}CC_Ble_Ped_Info_T;
+
+typedef struct
+{
+   uint8_t     command;
+   uint8_t     is_update_hrm;  //bit 0: Ped = 0xF1, Hrm = 0xF2 Sleep = 0xF3
+   uint16_t    hrmdata;
+}CC_Ble_Hrm_Info_T;
+
+typedef struct
+{
+   uint8_t     command;
+   uint8_t     is_Swim_En;  //bit 0: Ped = 0xF1, Hrm = 0xF2 Sleep = 0xF3  Swim = 0xF4
+   uint8_t     style_type;
+   uint32_t   dwSwimCnt;
+   uint32_t     cSwimLap;
+   unsigned long   dwTimestamp;
+}CC_Ble_Swim_Info_T;
+
+
+typedef struct
+{
+    uint8_t cHeight;
+    uint8_t cWeight;
+    uint8_t cAge;
+    CC_Gender_t cGender; // 0: Man, 1: Female
+    uint8_t cStride_Lenght;
+    eSWIM_LEN_SET_t cSwim_Pool_Size;
+    uint8_t bBandLocation;
+
+    uint8_t bRestingHrMax;
+    uint8_t bRestingHrMin;
+    uint8_t bExerciseHrMax;
+    uint8_t bExerciseHrMin;
+    uint8_t BRsv;
+
+}CC_Ble_General_Info_T;
+
+
+typedef struct
+{
+    uint8_t cUnitLength;
+    uint8_t cUnitWeight;
+    uint16_t rsvd;
+}CC_Ble_Unit_Info_T;
+
+
+typedef enum
+{
+    eCALLDISABLE =0,
+    eCALLENABLE,
+    eCALLINCOMMING,
+    eCALLINCOMMINGOFF,
+    eCALLUNKNOWN
+}eCALL_state_t;
+
+
+typedef enum
+{
+    eSMSDISABLE =0,
+    eSMSENABLE,
+    eSMSCOMMING,
+    eSMSUNKNOWN
+}eSMS_state_t;
+
+typedef enum
+{
+    eLONGSITDISABLE =0,
+    eLONGSITENABLE,
+    eLONGSITUNKNOWN
+}eLONGSIT_state_t;
+
+typedef enum
+{
+    eLIFTARMDISABLE =0,
+    eLIFTARMENABLE,
+    eLIFTARMUNKNOWN
+}eLIFTARM_state_t;
+
+typedef struct
+{
+    uint8_t cIndex;
+    uint8_t cHour;
+    uint8_t cMinute;
+    uint8_t cSetting;
+
+}CC_Ble_Clock_Set_T;
+
+typedef struct
+{
+    uint8_t cTotalNum;
+    CC_Ble_Clock_Set_T cAlarmTime[4];
+}CC_Ble_Clock_Alarm_T;
+
+#endif
+
+#endif
+
 
 /******************************************************************************
 // Sec 12: BLE config settings
@@ -512,10 +847,10 @@ Declaration of static Global Variables & Functions
 #define CFG_BLE    1
 
 // <h> BLE - DEVICE NAME
-#define APP_DFLT_DEVICE_NAME    "DVK-B0-APP"
+#define APP_DFLT_DEVICE_NAME    "DVK-DC-B0-ZEUS"
 
 // <h> BLE - DEVICE ADDRESS
-#define APP_DFLT_DEVICE_ADDR    { 0x11, 0xBB, 0xAA, 0x79, 0x23, 0x01 }
+#define APP_DFLT_DEVICE_ADDR    { 0x55, 0xBB, 0xAA, 0x79, 0x23, 0x01 }
 
 // <h> BLE - Data Length Extension (v4.2)
 #define CFG_DLE_EN
@@ -561,9 +896,4 @@ Declaration of static Global Variables & Functions
 
 #define CFG_APP
 #define CFG_APP_CCPS   1
-
-#define SW_TIMER_BY_KERNEL  // min timer: 10ms
-
-
-#endif //_CONFIG_DVK403A_H_
-
+#endif // _CONFIG_DVK403A_DC404A_H_

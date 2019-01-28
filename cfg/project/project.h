@@ -5,7 +5,7 @@
  * STANDARD SOFTWARE LICENSE AGREEMENT.
  *
  * Licensees are granted free, non-transferable use of the information.
- * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed 
+ * NO WARRANTY of ANY KIND is provided. This heading must NOT be removed
  * from the file.
  */
 
@@ -60,9 +60,9 @@ Head Block of The File
 #elif defined(DVK403A) && DVK403A
     #include "config_DVK403A.h"
 #elif defined(DVK_DC404A) && DVK_DC404A
-    #include "config_DVK_DC404A.h"
+    #include "config_DVK403A_DC404A.h"
 #elif defined(DVK_DC405A) && DVK_DC405A
-    #include "config_DVK_DC405A.h"
+    #include "config_DVK403A_DC405A.h"
 #elif defined(ASIC) && ASIC
     #include "config_ASIC.h"
 #else
