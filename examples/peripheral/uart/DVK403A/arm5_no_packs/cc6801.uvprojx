@@ -370,10 +370,10 @@
             <TextAddressRange></TextAddressRange>
             <DataAddressRange></DataAddressRange>
             <pXoBase></pXoBase>
-            <ScatterFile>.\eflash.sct</ScatterFile>
+            <ScatterFile>..\..\..\..\..\env\bin\CC6801B_common.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
-            <Misc></Misc>
+            <Misc>--diag_suppress=L6314</Misc>
             <LinkerInputFile></LinkerInputFile>
             <DisabledWarnings></DisabledWarnings>
           </LDads>
@@ -476,7 +476,7 @@
       <TargetName>DVK403A_M4f</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pArmCC>5060183::V5.06 update 2 (build 183)::ARMCC</pArmCC>
+      <pArmCC>5060183::V5.06 update 2 (build 183)::..\Backup.001\ARM\ARMCC</pArmCC>
       <pCCUsed>5060183::V5.06 update 2 (build 183)::..\Backup.001\ARM\ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
@@ -836,10 +836,10 @@
             <TextAddressRange>0x00000000</TextAddressRange>
             <DataAddressRange>0x20000000</DataAddressRange>
             <pXoBase></pXoBase>
-            <ScatterFile>.\eflash.sct</ScatterFile>
+            <ScatterFile>..\..\..\..\..\env\bin\CC6801B_common.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
-            <Misc></Misc>
+            <Misc>--diag_suppress=L6314</Misc>
             <LinkerInputFile></LinkerInputFile>
             <DisabledWarnings></DisabledWarnings>
           </LDads>
