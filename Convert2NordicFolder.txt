@@ -1,4 +1,4 @@
 For *.uvprojx and *.uvoptx
 1. replace ..\..\..\                -> ..\..\..\..\..\
 2. replace .\arch_main.c            -> ..\..\arch_main.c
-3. replace <IncludePath>.\config    -> <IncludePath>..\config
+3. replace .\config                 -> ..\config
