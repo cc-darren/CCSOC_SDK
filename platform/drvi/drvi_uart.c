@@ -170,10 +170,12 @@ int drvi_UartGet(T_UartPort *ptPort, uint8_t *pbBuf, int iSize)
 }
 
 #if defined UART0_INUSE && (UART0_INUSE)
+#if !(defined(UART_IP_MODE) && (UART_IP_MODE))
 static void drvi_Uart0RxCallback(T_cc6801UartEvent *pEvent)
 {
     drvi_UartRingHandle(&g_tDrviUartPort[0], pEvent);
 }
+#endif
 
 int drvi_Uart0Receive(uint8_t *pbBuf, int iSize)
 {
