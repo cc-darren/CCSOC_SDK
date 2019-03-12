@@ -35,6 +35,7 @@
 #include "clock.h"
 #include "uart.h"
 #include "drvi_uart.h"
+#include <stdio.h>
 
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
 
@@ -365,9 +366,16 @@ int cc6801_UartConfigSet(T_UartPort *pUartPort)
         bMdsl |= UART_MDSL_FCE_ENABLE_MASK;
     }
 
+	#if defined(UART_IP_MODE) && (UART_IP_MODE)
+	    bIntCtrl |= (
+                 UART_CTRL_INT_EEI_ENABLE_MASK |
+                 UART_CTRL_INT_ERI_ENABLE_MASK);
+
+	#else
     bIntCtrl |= (UART_CTRL_INT_ETI_ENABLE_MASK |
                  UART_CTRL_INT_EEI_ENABLE_MASK |
                  UART_CTRL_INT_ERI_ENABLE_MASK);
+	#endif
 
     bMdsl |= (UART_MDSL_RTS_ENABLE_MASK |
               UART_MDSL_ETD_ENABLE_MASK |
@@ -375,7 +383,11 @@ int cc6801_UartConfigSet(T_UartPort *pUartPort)
 
     pUartCtrlBase->dw.ictrl = bIntCtrl;
     pUartCtrlBase->dw.frs = bFrs;
+	#if defined(UART_IP_MODE) && (UART_IP_MODE)
+	pUartCtrlBase->dw.mdsl = 0;
+	#else
     pUartCtrlBase->dw.mdsl = bMdsl;
+	#endif
 
     bIdx = pUartPort->bPortNum;
     cc6801_UartTxIntEnable(g_tUartPort[bIdx].pDmaReg, 1);
@@ -528,5 +540,103 @@ int cc6801_UartTx(uint8_t bPortNum,
     }
 
     return CC_SUCCESS;
+}
+
+#if defined(UART_IP_MODE) && (UART_IP_MODE)
+
+fpUartRxCallBack g_UartRxCallBack;
+void uart_RxCallbackRegister(fpUartRxCallBack UartRxCallBack)
+{
+    if (UartRxCallBack)
+        g_UartRxCallBack = UartRxCallBack;
+}
+
+/**
+* @brief       This function is UART interrupt handler
+* @param[in]   N/A
+* @return      N/A
+*/
+void UART0_IP_IRQHandler (void)
+{
+    uint32_t UnSTAT = regUART0CTRL->dw.stat;
+    uint32_t UnICTRL = regUART0CTRL->dw.ictrl;
+	uint8_t  cr;
+
+    if (UnSTAT & 0x0000000FUL)
+    {
+        printf("UART0 Error Status: 0x%08X\r\n", UnSTAT & 0xF);
+        return;
+    }
+
+    while (UnICTRL & 0x00000002UL)
+    {
+		cr = regUART0CTRL->dw.bufRx;
+		g_UartRxCallBack(&cr, 1);
+			
+		UnICTRL = regUART0CTRL->dw.ictrl;
+    }
+
+    if (UnICTRL & 0x00000001UL)
+    {
+        return;
+    }
+}
+
+/**
+* @brief       This function used to write data to UART TX
+* @param[in]   ptr: Pointer to a data buffer
+* @param[in]   length: data length
+* @return      N/A
+**/
+void fputmc(uint8_t *ptr, uint8_t length)
+{
+	uint16_t i = 0;
+	
+	while(i != length)
+	{
+		do
+		{
+		} while((regUART0CTRL->dw.ictrl & 0x01UL) == 0);
+
+		//
+		// Transmit Data Buffer Register (UnTBUF)
+		//
+		regUART0CTRL->dw.bufTx = ptr[i++];
+	}
+	
+	return;
+}
+#endif
+
+int fputc(int c, FILE *stream)
+{
+    //
+    // Prevent compiler warning
+    //
+    stream = stream;
+
+    //
+    // Interrupt Control Register (UnICTRL)
+    // [Bit 7] UnEEI    - 0: Disables receive error interrupt, 1: Enables receive error interrupt.
+    // [Bit 6] UnERI    - 0: Disables receiver interrupt, 1: Enables receiver interrupt.
+    // [Bit 5] UnETI    - 0: Disables transmitter interrupt, 1: Enables transmitter interrupt.
+    // [Bit 4] UnEFCI   - 0: Disables flow control interrupt, 1: Enables flow control interrupt.
+    // [Bit 3] UnCTS    - 0: ucts_n input equals 1, 1: ucts_n input equals 0.
+    // [Bit 2] UnDCTS   - 0: ucts_n input has not changed since UnICTRL was read, 1: ucts_n input has changed since UnICTRL was read.
+    // [Bit 1] UnRBF    - 0: Receive buffer not full, 1: Receive buffer full.
+    // [Bit 0] UnTBE    - 0: Transmit buffer not empty, 1: Transmit buffer empty.
+    //
+    // Wait for the UART to be ready.
+    //
+    do
+    {
+    } while((regUART0CTRL->dw.ictrl & 0x01UL) == 0);
+
+    //
+    // Transmit Data Buffer Register (UnTBUF)
+    //
+    regUART0CTRL->dw.bufTx = c;
+
+    return c;
 }
 

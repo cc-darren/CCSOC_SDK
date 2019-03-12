@@ -228,6 +228,10 @@ extern const struct prf_task_cbs* otat_prf_itf_get(void);
 extern const struct prf_task_cbs* ccps_prf_itf_get(void);
 #endif //(BLE_CCPS_SERVER)
 
+#if (BLE_BLEUARTS_SERVER)
+extern const struct prf_task_cbs* bleuarts_prf_itf_get(void);
+#endif //(BLE_BLEUARTS_SERVER)
+
 /*
  * TYPE DEFINITIONS
  ****************************************************************************************
@@ -555,7 +559,12 @@ static const struct prf_task_cbs * prf_itf_get(uint16_t task_id)
             break;
         #endif //(BLE_CCPS_SERVER)
 
-        
+        #if (BLE_BLEUARTS_SERVER)
+        case TASK_ID_BLEUARTS:
+            prf_cbs = bleuarts_prf_itf_get();
+            break;
+        #endif //(BLE_BLEUARTS_SERVER)
+
         default: /* Nothing to do */ break;
     }
 

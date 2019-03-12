@@ -85,9 +85,9 @@
 /// OTA
 #if defined(CFG_APP_OTA)
 #define BLE_APP_OTA           1
-#else // defined(CFG_APP_HT)
+#else // defined(CFG_APP_OTA)
 #define BLE_APP_OTA           0
-#endif // defined(CFG_APP_HT)
+#endif // defined(CFG_APP_OTA)
 
 
 /// CCPS
@@ -96,6 +96,13 @@
 #else // defined(CFG_APP_CCPS)
 #define BLE_APP_CCPS           0
 #endif // defined(CFG_APP_CCPS)
+
+/// BLEUARTS
+#if defined(CFG_APP_BLEUARTS)
+#define BLE_APP_BLEUARTS           1
+#else // defined(CFG_APP_BLEUARTS)
+#define BLE_APP_BLEUARTS           0
+#endif // defined(CFG_APP_BLEUARTS)
 
 
 /// @} rwapp_config

@@ -170,4 +170,11 @@ int cc6801_UartTx(uint8_t bPortNum,
 
 int cc6801_UartRx(uint8_t bPortNum, uint8_t *pData, uint8_t bLen);
 
+#if UART_IP_MODE
+typedef void (*fpUartRxCallBack)(uint8_t *ptr, uint16_t length);
+
+void uart_RxCallbackRegister(fpUartRxCallBack UartRxCallBack);
+void fputmc(uint8_t *ptr, uint8_t length);
+#endif
+
 #endif //_UART_H

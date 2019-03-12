@@ -152,7 +152,10 @@ enum TASK_API_ID
 
     TASK_ID_CCPS         = 67,   // CloudChip Proprietary Services Task
     TASK_ID_CCPC         = 68,   // 
-    
+
+    TASK_ID_BLEUARTS	 = 69,   // CloudChip Proprietary Services Task
+    TASK_ID_BLEUARTC	 = 70,   // 
+
     /* 240 -> 241 reserved for Audio Mode 0 */
     TASK_ID_AM0          = 240,  // BLE Audio Mode 0 Task
     TASK_ID_AM0_HAS      = 241,  // BLE Audio Mode 0 Hearing Aid Service Task

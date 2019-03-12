@@ -74,15 +74,20 @@
 #include "am0_app.h"             // Audio Mode 0 Application
 #endif //defined(BLE_APP_AM0)
 
-#include "app_ota.h"               // OTA Module Definition
 #if (BLE_APP_OTA)
+#include "app_ota.h"               // OTA Module Definition
 #include "otat_task.h"
 #endif //(BLE_APP_OTA)
 
 #if (BLE_APP_CCPS)
 #include "app_ccps.h"               // CCPS Module Definition
 #include "ccps_task.h"
-#endif //(BLE_APP_OTA)
+#endif //(BLE_APP_CCPS)
+
+#if (BLE_APP_BLEUARTS)
+#include "app_bleuarts.h"			// BLEUARTS Module Definition
+#include "bleuarts_task.h"
+#endif //(BLE_APP_BLEUARTS)
 
 #if (DISPLAY_SUPPORT)
 #include "app_display.h"          // Application Display Definition
@@ -560,6 +565,7 @@ static int gapc_disconnect_ind_handler(ke_msg_id_t const msgid,
     if(APPM_CONNECTED != ke_state_get(TASK_APP))
         return (KE_MSG_CONSUMED);
 
+	#if (APP_OTA)
     if(true == APP_OTA_RebootIsReady())
     {
         //appm_system_reset();
@@ -571,6 +577,7 @@ static int gapc_disconnect_ind_handler(ke_msg_id_t const msgid,
         while(1)
             ;
     }
+	#endif
 
     // Go to the ready state
     ke_state_set(TASK_APP, APPM_READY);
@@ -712,20 +719,29 @@ static int appm_msg_handler(ke_msg_id_t const msgid,
         } break;
         #endif // defined(BLE_APP_AM0)
 
-#if (BLE_APP_OTA)
+		#if (BLE_APP_OTA)
         case (TASK_ID_OTAT):
         {
             // Call the OTA Module
             //msg_pol = appm_get_handler(&app_ota_table_handler, msgid, param, src_id); // not used now
         } break;
-#endif //(BLE_APP_OTA)
-#if (BLE_APP_CCPS)
+		#endif //(BLE_APP_OTA)
+
+		#if (BLE_APP_CCPS)
         case (TASK_ID_CCPS):
         {
             // Call the CCPS Module
             msg_pol = appm_get_handler(&app_ccps_table_handler, msgid, param, src_id);
         } break;
-#endif //(BLE_APP_HT)
+		#endif //(BLE_APP_CCPS)
+
+		#if (BLE_APP_BLEUARTS)
+        case (TASK_ID_BLEUARTS):
+        {
+            // Call the BLEUARTS Module
+            msg_pol = appm_get_handler(&app_bleuarts_table_handler, msgid, param, src_id);
+        } break;
+		#endif //(BLE_APP_BLEUARTS)
 
         default:
         {

@@ -62,12 +62,16 @@
 #include "app_hid.h"                 // HID Application Definitions
 #endif //(BLE_APP_HID)
 
-//#if (BLE_APP_OTA)
+#if (BLE_APP_OTA)
 #include "app_ota.h"                 // OTA Application Definitions
-//#endif //(BLE_APP_OTA)
+#endif //(BLE_APP_OTA)
 
 #if (BLE_APP_CCPS)
 #include "app_ccps.h"
+#endif
+
+#if (BLE_APP_BLEUARTS)
+#include "app_bleuarts.h"
 #endif
 
 #if (DISPLAY_SUPPORT)
@@ -209,13 +213,15 @@ enum appm_svc_list
     #ifdef BLE_APP_AM0
     APPM_SVC_AM0_HAS,
     #endif //defined(BLE_APP_AM0)
-#if (BLE_APP_OTA)
+	#if (BLE_APP_OTA)
     //APPM_SVC_OTAT,
-#endif //(BLE_APP_HID)
-#if (BLE_APP_CCPS)
+	#endif //(BLE_APP_OTA)
+	#if (BLE_APP_CCPS)
     APPM_SVC_CCPS,
-#endif
-
+	#endif
+	#if (BLE_APP_BLEUARTS)
+    APPM_SVC_BLEUARTS,
+	#endif
 
     APPM_SVC_LIST_STOP,
 };
@@ -252,6 +258,9 @@ static const appm_add_svc_func_t appm_add_svc_func_list[APPM_SVC_LIST_STOP] =
     #endif //(BLE_APP_HID)    
     #if (BLE_APP_CCPS)
     (appm_add_svc_func_t)app_ccps_add_ccpss,
+    #endif
+	#if (BLE_APP_BLEUARTS)
+    (appm_add_svc_func_t)app_bleuarts_add_bleuartss,
     #endif
 };
 
@@ -448,13 +457,17 @@ void appm_init()
     am0_app_init();
     #endif // defined(BLE_APP_AM0)
 
-    //#if (BLE_APP_OTA)
+    #if (BLE_APP_OTA)
     // OTA
     app_ota_init();
-    //#endif //(BLE_APP_OTA)    
+    #endif //(BLE_APP_OTA)    
 
     #if (BLE_APP_CCPS)
     app_ccps_init();
+    #endif
+	
+	#if (BLE_APP_BLEUARTS)
+    app_bleuarts_init();
     #endif
 }
 

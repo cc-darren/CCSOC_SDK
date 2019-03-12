@@ -23,7 +23,9 @@ T_UartPort g_tDrviUartPort[UART_TOTAL_SUPPORTED];
 #endif
 
 #if defined UART0_INUSE && (UART0_INUSE)
+#if !(defined(UART_IP_MODE) && (UART_IP_MODE))
 static uint8_t g_baUart0RxBuffer[UART_BUFFER_SIZE] = {0};
+#endif
 #endif
 #if defined UART1_INUSE && (UART1_INUSE)
 static uint8_t g_baUart1RxBuffer[UART_BUFFER_SIZE] = {0};
@@ -252,6 +254,9 @@ int drvi_UartInit(void)
     g_tDrviUartPort[0].bPortNum = 0;
     g_tDrviUartPort[0].dwConfig = UART0_CONFIG;
     cc6801_UartConfigSet(&g_tDrviUartPort[0]);
+	#if defined(UART_IP_MODE) && (UART_IP_MODE)
+	NVIC_EnableIRQ(UART0_IP_IRQn);
+	#else
 #if (defined(CC6801B0) || defined(CC6801C0))
     g_tDrviUartPort[0].fpDrviUartReceive = drvi_Uart0Receive;
     g_tDrviUartPort[0].tUring.pbRxBuffer = g_baUart0RxBuffer;
@@ -263,6 +268,8 @@ int drvi_UartInit(void)
     cc6801_UartRxCallbackRegister(g_tDrviUartPort[0].bPortNum, drvi_Uart0RxCallback);
     drvi_UartRx(g_tDrviUartPort[0].bPortNum, g_tDrviUartPort[0].tUring.wCurrRxByteNum);
 #endif
+	#endif
+
 #endif
 
 #if defined UART1_INUSE && (UART1_INUSE)
