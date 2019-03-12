@@ -1,0 +1,28 @@
+; sample macro of Tera Term
+;
+; File: test_uartrx.ttl
+; Description: repeat generate A-Z and a-z
+; Environment: generic
+; Update: 2018/8/10
+; Author: Blake Lai
+
+val = 0
+str = $40
+
+while 1
+  random val 16
+  for i 1 val
+    str = str+1
+
+    if str<=$5A then
+      send str
+    elseif str+$6<=$7A then
+      send str+$6
+    else
+      str = $40
+    endif
+  next
+  pause 1
+endwhile
+
+exit

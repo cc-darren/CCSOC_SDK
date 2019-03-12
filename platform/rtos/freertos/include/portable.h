@@ -131,6 +131,11 @@ void vPortFree( void *pv ) PRIVILEGED_FUNCTION;
 void vPortInitialiseBlocks( void ) PRIVILEGED_FUNCTION;
 size_t xPortGetFreeHeapSize( void ) PRIVILEGED_FUNCTION;
 size_t xPortGetMinimumEverFreeHeapSize( void ) PRIVILEGED_FUNCTION;
+#include <stdlib.h>
+#define calloc( nmemb, size )
+#define free( ptr ) vPortFree( ( ptr ) )
+#define malloc( size ) pvPortMalloc( ( size ) )
+#define realloc( ptr, size )
 
 /*
  * Setup the hardware ready for the scheduler to take control.  This generally

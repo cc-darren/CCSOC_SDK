@@ -7,6 +7,15 @@
 
 #if (MODULE_MAG == MAG_AKM_AK09912C)
 
+/* Private macro -------------------------------------------------------------*/
+#define AK09912_IF_ADDRESS      0x0C
+/* Private variables ---------------------------------------------------------*/
+static uint8_t m_rx_buf[32];
+static uint8_t m_tx_buf[32];
+/* Private function prototypes -----------------------------------------------*/
+
+
+
 /* Imported constants --------------------------------------------------------*/
 
 /* Imported macro ------------------------------------------------------------*/
@@ -16,20 +25,17 @@
     #define AK09912_IF_Write(buf,len)                       drvi_SpiWrite(MAG_IF_ID,buf,len)
 #elif (MAG_IF_TYPE == IF_I2C)
     #include "drvi_i2c.h"
-    #define AK09912_IF_WriteThenRead(tbuf,tlen,rbuf,rlen)   drvi_I2cWriteThenRead(MAG_IF_ID,tbuf,tlen,rbuf,rlen)
-    #define AK09912_IF_Write(buf,len)                       drvi_I2cWrite(MAG_IF_ID,buf,len)
+    T_I2cDevice tMagDev = {
+       .bBusNum          = MAG_IF_ID,
+       .bAddr            = AK09912_IF_ADDRESS,
+    };
+    #define AK09912_IF_WriteThenRead(tbuf,tlen,rbuf,rlen)   drvi_I2cWriteThenRead(&tMagDev,tbuf,tlen,rbuf,rlen)
+    #define AK09912_IF_Write(buf,len)                       drvi_I2cWrite(&tMagDev,buf,len)
 #else
     #define AK09912_IF_WriteThenRead(tbuf,tlen,rbuf,rlen)      
     #define AK09912_IF_Write(buf,len)                            
 #endif
 
-
-/* Private macro -------------------------------------------------------------*/
-#define AK09912_IF_ADDRESS      0x0C
-/* Private variables ---------------------------------------------------------*/
-static uint8_t m_rx_buf[32];
-static uint8_t m_tx_buf[32];
-/* Private function prototypes -----------------------------------------------*/
 
 /*******************************************************************************
 * Function Name        : AK09912_MAG_ReadReg
@@ -403,14 +409,7 @@ status_t AK09912_MAG_Init(void)
 {
     status_t response;
     u8_t id;
-    #if (MAG_IF_TYPE == IF_I2C)
-    T_I2cDevice i2c_sensor_config = {
-       .bBusNum          = MAG_IF_ID,
-       .bAddr            = AK09912_IF_ADDRESS,
-    };
 
-    drvi_I2cDeviceRegister(&i2c_sensor_config);
-    #endif
  response = AK09912_MAG_GetAKMID(&id);
  if(id != AKM_COMPANY_ID) {
      return MEMS_ERROR;

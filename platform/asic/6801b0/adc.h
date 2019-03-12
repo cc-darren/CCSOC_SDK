@@ -13,12 +13,31 @@
 #ifndef _ADC_H_
 #define _ADC_H_
 #include "global.h"
+#include "project.h"
 
-typedef int (*cc6801_AdcCB)(uint32_t *pdwBatVol);
+#define ADC_INTERNAL_R2_OHM     1000000     //default internal resistor divider in CC6801 ADC input
 
-void cc6801_AdcInit(cc6801_AdcCB fpAdcCB);
-int cc6801_AdcSample(uint32_t *dwValue);
-uint32_t cc6801_Adc2BatVol(uint32_t dwAdcVol);
+
+typedef enum
+{
+    ADC_VBR12_OUTPUT_1V208 = 0,
+    ADC_VBR12_OUTPUT_1V222,
+    ADC_VBR12_OUTPUT_1V237,
+    ADC_VBR12_OUTPUT_1V252,
+    ADC_VBR12_OUTPUT_1V150,
+    ADC_VBR12_OUTPUT_1V165,
+    ADC_VBR12_OUTPUT_1V180,
+    ADC_VBR12_OUTPUT_1V193,
+}E_AdcBGRSelect;
+
+
+void cc6801_AdcEnable(void);
+void cc6801_AdcDisable(void);
+void cc6801_AdcInit(void);
+int cc6801_AdcVbatt(uint32_t*);
+void cc6801_AdcBGRSelSet(E_AdcBGRSelect);
+E_AdcBGRSelect cc6801_AdcBGRSelGet(void);
+
 
 
 

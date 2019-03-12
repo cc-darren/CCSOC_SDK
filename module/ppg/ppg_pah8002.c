@@ -20,6 +20,15 @@
 
 #if (MODULE_PPG == PPG_PXT_PAH8002)
 
+/* Private macro -------------------------------------------------------------*/
+#define PAH8002_IF_ADDRESS  0x15  //I2C 7-bit ID
+/* Private variables ---------------------------------------------------------*/
+static uint8_t m_rx_buf[32];
+static uint8_t m_tx_buf[32];
+/* Private function prototypes -----------------------------------------------*/
+
+
+
 /* Imported constants --------------------------------------------------------*/
 
 /* Imported function --------------------------------------------------------*/
@@ -29,19 +38,16 @@
 
 #elif (PPG_IF_TYPE == IF_I2C)
     #include "drvi_i2c.h"
-    #define PAH8002_IF_WriteThenRead(tbuf,tlen,rbuf,rlen)   drvi_I2cWriteThenRead(PPG_IF_ID,tbuf,tlen,rbuf,rlen)
-    #define PAH8002_IF_Write(buf,len)                       drvi_I2cWrite(PPG_IF_ID,buf,len)
+    T_I2cDevice tPpgDev = {
+       .bBusNum          = PPG_IF_ID,
+       .bAddr            = PAH8002_IF_ADDRESS,
+    };
+    #define PAH8002_IF_WriteThenRead(tbuf,tlen,rbuf,rlen)   drvi_I2cWriteThenRead(&tPpgDev,tbuf,tlen,rbuf,rlen)
+    #define PAH8002_IF_Write(buf,len)                       drvi_I2cWrite(&tPpgDev,buf,len)
 #else
     #define PAH8002_IF_WriteThenRead(tbuf,tlen,rbuf,rlen)      
     #define PAH8002_IF_Write(buf,len)       
 #endif
-
-/* Private macro -------------------------------------------------------------*/
-#define PAH8002_IF_ADDRESS  0x15  //I2C 7-bit ID
-/* Private variables ---------------------------------------------------------*/
-static uint8_t m_rx_buf[32];
-static uint8_t m_tx_buf[32];
-/* Private function prototypes -----------------------------------------------*/
 
 
 /**
@@ -49,15 +55,7 @@ static uint8_t m_tx_buf[32];
  */
 void pah8002_twi_init (void)
 {
-         
-    #if (PPG_IF_TYPE == IF_I2C)
-    T_I2cDevice i2c_sensor_config = {
-       .bBusNum          = PPG_IF_ID,
-       .bAddr            = PAH8002_IF_ADDRESS,
-    };
-
-    drvi_I2cDeviceRegister(&i2c_sensor_config);
-    #endif
+    // Nothing to do
 }
 
 void pah8002_twi_deinit(void)

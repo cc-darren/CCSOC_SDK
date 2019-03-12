@@ -342,7 +342,8 @@ typedef volatile union U_regSCU
         uint32_t pdBgr:1;           //power down for Bang Gap Fule Gauge
         uint32_t pdAdc:1;           //power down for ADC except BGFR
         uint32_t adc_temp:1;        //0:ADC, 1:Temperature sensor
-        uint32_t reserved1:5;
+        uint32_t en_ext:1;          //Internal resistor, 0:floating, 1:connect to GND
+        uint32_t reserved1:4;
         uint32_t bgrSel:3;          //Fine tune for Bang Gap Fule Gauge
         uint32_t reserved2:5;
         uint32_t adc:7;             //ADC digital output
