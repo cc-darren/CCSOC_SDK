@@ -10,7 +10,6 @@
       <TargetName>EVB_M0p</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pArmCC>5060183::V5.06 update 2 (build 183)::..\Backup.001\ARM\ARMCC</pArmCC>
       <pCCUsed>5060183::V5.06 update 2 (build 183)::..\Backup.001\ARM\ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
@@ -1815,7 +1814,6 @@
       <TargetName>DVK_M0p</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pArmCC>5060183::V5.06 update 2 (build 183)::..\Backup.001\ARM\ARMCC</pArmCC>
       <pCCUsed>5060183::V5.06 update 2 (build 183)::..\Backup.001\ARM\ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
@@ -1935,8 +1933,8 @@
         </DebugOption>
         <Utilities>
           <Flash1>
-            <UseTargetDll>0</UseTargetDll>
-            <UseExternalTool>1</UseExternalTool>
+            <UseTargetDll>1</UseTargetDll>
+            <UseExternalTool>0</UseExternalTool>
             <RunIndependent>0</RunIndependent>
             <UpdateFlashBeforeDebugging>0</UpdateFlashBeforeDebugging>
             <Capability>1</Capability>
@@ -2718,7 +2716,6 @@
       <TargetName>DVK_M4F</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pArmCC>5060183::V5.06 update 2 (build 183)::..\Backup.001\ARM\ARMCC</pArmCC>
       <pCCUsed>5060183::V5.06 update 2 (build 183)::..\Backup.001\ARM\ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
@@ -2838,8 +2835,8 @@
         </DebugOption>
         <Utilities>
           <Flash1>
-            <UseTargetDll>0</UseTargetDll>
-            <UseExternalTool>1</UseExternalTool>
+            <UseTargetDll>1</UseTargetDll>
+            <UseExternalTool>0</UseExternalTool>
             <RunIndependent>0</RunIndependent>
             <UpdateFlashBeforeDebugging>0</UpdateFlashBeforeDebugging>
             <Capability>1</Capability>
@@ -3621,7 +3618,6 @@
       <TargetName>DVK_DC_M0p</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pArmCC>5060183::V5.06 update 2 (build 183)::..\Backup.001\ARM\ARMCC</pArmCC>
       <pCCUsed>5060183::V5.06 update 2 (build 183)::..\Backup.001\ARM\ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
@@ -3741,8 +3737,8 @@
         </DebugOption>
         <Utilities>
           <Flash1>
-            <UseTargetDll>0</UseTargetDll>
-            <UseExternalTool>1</UseExternalTool>
+            <UseTargetDll>1</UseTargetDll>
+            <UseExternalTool>0</UseExternalTool>
             <RunIndependent>0</RunIndependent>
             <UpdateFlashBeforeDebugging>0</UpdateFlashBeforeDebugging>
             <Capability>1</Capability>
@@ -3939,8 +3935,8 @@
             <uC99>1</uC99>
             <uGnu>0</uGnu>
             <useXO>0</useXO>
-            <v6Lang>0</v6Lang>
-            <v6LangP>0</v6LangP>
+            <v6Lang>3</v6Lang>
+            <v6LangP>3</v6LangP>
             <vShortEn>1</vShortEn>
             <vShortWch>1</vShortWch>
             <v6Lto>0</v6Lto>
@@ -4524,7 +4520,6 @@
       <TargetName>DVK_DC_M4F</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pArmCC>5060183::V5.06 update 2 (build 183)::..\Backup.001\ARM\ARMCC</pArmCC>
       <pCCUsed>5060183::V5.06 update 2 (build 183)::..\Backup.001\ARM\ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
@@ -4644,8 +4639,8 @@
         </DebugOption>
         <Utilities>
           <Flash1>
-            <UseTargetDll>0</UseTargetDll>
-            <UseExternalTool>1</UseExternalTool>
+            <UseTargetDll>1</UseTargetDll>
+            <UseExternalTool>0</UseExternalTool>
             <RunIndependent>0</RunIndependent>
             <UpdateFlashBeforeDebugging>0</UpdateFlashBeforeDebugging>
             <Capability>1</Capability>
