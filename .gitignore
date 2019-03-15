@@ -8,5 +8,5 @@ JLinkSettings.ini
 /cfg/cfg_ble_ip.h
 build_log
 cmdscript.jlink
-
+EventRecorderStub.scvd
 
