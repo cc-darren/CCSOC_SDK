@@ -537,7 +537,7 @@ Declaration of static Global Variables & Functions
 #define CFG_BLE    1
 
 // <h> BLE - DEVICE NAME
-#define APP_DFLT_DEVICE_NAME    "DVK-B0-ZEUS"
+#define APP_DFLT_DEVICE_NAME    "DVK-B1-CCPS"
 
 // <h> BLE - DEVICE ADDRESS
 #define APP_DFLT_DEVICE_ADDR    { 0x11, 0xBB, 0xAA, 0x79, 0x23, 0x01 }

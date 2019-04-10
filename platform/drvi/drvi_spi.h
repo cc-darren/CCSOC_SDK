@@ -11,6 +11,7 @@
  
 #ifndef _DRVI_SPI_H_
 #define _DRVI_SPI_H_
+
 #include "global.h"
 #include "project.h"
 #include "spim.h"
@@ -57,7 +58,7 @@ __forceinline int drvi_SpiWriteThenRead(uint8_t         bBusNum,
     return cc6801_SpimWriteThenRead(bBusNum, pTxBuf, bTxBufLen, pRxBuf, bRxBufLen);
 }
 
-#if (defined(CC6801B0) || defined(CC6801C0))
+#if (defined(CC6801B0) || defined(CC6801B1))
 __forceinline void drvi_SpimQuadEnable(uint8_t bBusNum, int iEnable)
 {
     cc6801_SpimQuadEnable(bBusNum, iEnable);

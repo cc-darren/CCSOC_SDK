@@ -11,7 +11,6 @@
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <pCCUsed>5060183::V5.06 update 2 (build 183)::ARMCC</pCCUsed>
-      <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>ARMCM0P</Device>
@@ -184,7 +183,6 @@
             <hadXRAM>0</hadXRAM>
             <uocXRam>0</uocXRam>
             <RvdsVP>0</RvdsVP>
-            <RvdsMve>0</RvdsMve>
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -325,7 +323,6 @@
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <uC99>1</uC99>
-            <uGnu>0</uGnu>
             <useXO>0</useXO>
             <v6Lang>0</v6Lang>
             <v6LangP>0</v6LangP>
@@ -333,12 +330,11 @@
             <vShortWch>1</vShortWch>
             <v6Lto>0</v6Lto>
             <v6WtE>0</v6WtE>
-            <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>EVB605A CC6801B0</Define>
+              <Define>EVB605A CC6801B1</Define>
               <Undefine></Undefine>
-              <IncludePath>..\config;..\..\..\..\..\cfg\project;..\..\..\..\..\inc;..\..\..\..\..\inc\CMSIS;..\..\..\..\..\platform\init\inc;..\..\..\..\..\platform\asic\6801b0;..\..\..\..\..\platform\drvi;..\..\..\..\..\module\mems;..\..\..\..\..\module\oled;..\..\..\..\..\service\tracer;..\..\..\..\..\service\uart_ring;..\..\..\..\..\service\gps</IncludePath>
+              <IncludePath>..\config;..\..\..\..\..\cfg\project;..\..\..\..\..\inc;..\..\..\..\..\inc\CMSIS;..\..\..\..\..\platform\init\inc;..\..\..\..\..\platform\asic\6801b1;..\..\..\..\..\platform\drvi;..\..\..\..\..\module\mems;..\..\..\..\..\module\oled;..\..\..\..\..\service\tracer;..\..\..\..\..\service\uart_ring;..\..\..\..\..\service\gps</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -351,7 +347,6 @@
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
-            <uClangAs>0</uClangAs>
             <VariousControls>
               <MiscControls>--cpreproc</MiscControls>
               <Define></Define>
@@ -380,27 +375,27 @@
       </TargetOption>
       <Groups>
         <Group>
-          <GroupName>6801b0</GroupName>
+          <GroupName>6801b1</GroupName>
           <Files>
             <File>
               <FileName>clock.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\platform\asic\6801b0\clock.c</FilePath>
+              <FilePath>..\..\..\..\..\platform\asic\6801b1\clock.c</FilePath>
             </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\platform\asic\6801b0\gpio.c</FilePath>
-            </File>
-            <File>
-              <FileName>uart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\platform\asic\6801b0\uart.c</FilePath>
+              <FilePath>..\..\..\..\..\platform\asic\6801b1\gpio.c</FilePath>
             </File>
             <File>
               <FileName>system_init.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\platform\asic\6801b0\system_init.c</FilePath>
+              <FilePath>..\..\..\..\..\platform\asic\6801b1\system_init.c</FilePath>
+            </File>
+            <File>
+              <FileName>uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\platform\asic\6801b1\uart.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -465,7 +460,7 @@
             <File>
               <FileName>startup_ARMCortexM.s</FileName>
               <FileType>2</FileType>
-              <FilePath>..\..\..\..\..\platform\asic\6801b0\bootcode\startup_ARMCortexM.s</FilePath>
+              <FilePath>..\..\..\..\..\platform\asic\6801b1\bootcode\startup_ARMCortexM.s</FilePath>
             </File>
           </Files>
         </Group>
@@ -476,7 +471,6 @@
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <pCCUsed>5060183::V5.06 update 2 (build 183)::ARMCC</pCCUsed>
-      <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>ARMCM4_FP</Device>
@@ -649,7 +643,6 @@
             <hadXRAM>0</hadXRAM>
             <uocXRam>0</uocXRam>
             <RvdsVP>2</RvdsVP>
-            <RvdsMve>0</RvdsMve>
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -790,7 +783,6 @@
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <uC99>1</uC99>
-            <uGnu>0</uGnu>
             <useXO>0</useXO>
             <v6Lang>1</v6Lang>
             <v6LangP>1</v6LangP>
@@ -798,12 +790,11 @@
             <vShortWch>1</vShortWch>
             <v6Lto>0</v6Lto>
             <v6WtE>0</v6WtE>
-            <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>EVB605A CC6801B0</Define>
+              <Define>EVB605A CC6801B1</Define>
               <Undefine></Undefine>
-              <IncludePath>..\config;..\..\..\..\..\cfg\project;..\..\..\..\..\inc;..\..\..\..\..\inc\CMSIS;..\..\..\..\..\platform\init\inc;..\..\..\..\..\platform\asic\6801b0;..\..\..\..\..\platform\drvi;..\..\..\..\..\module\mems;..\..\..\..\..\module\oled;..\..\..\..\..\service\gps;..\..\..\..\..\service\tracer</IncludePath>
+              <IncludePath>..\config;..\..\..\..\..\cfg\project;..\..\..\..\..\inc;..\..\..\..\..\inc\CMSIS;..\..\..\..\..\platform\init\inc;..\..\..\..\..\platform\asic\6801b1;..\..\..\..\..\platform\drvi;..\..\..\..\..\module\mems;..\..\..\..\..\module\oled;..\..\..\..\..\service\gps;..\..\..\..\..\service\tracer</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -816,7 +807,6 @@
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
-            <uClangAs>0</uClangAs>
             <VariousControls>
               <MiscControls>--cpreproc</MiscControls>
               <Define></Define>
@@ -845,27 +835,27 @@
       </TargetOption>
       <Groups>
         <Group>
-          <GroupName>6801b0</GroupName>
+          <GroupName>6801b1</GroupName>
           <Files>
             <File>
               <FileName>clock.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\platform\asic\6801b0\clock.c</FilePath>
+              <FilePath>..\..\..\..\..\platform\asic\6801b1\clock.c</FilePath>
             </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\platform\asic\6801b0\gpio.c</FilePath>
-            </File>
-            <File>
-              <FileName>uart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\platform\asic\6801b0\uart.c</FilePath>
+              <FilePath>..\..\..\..\..\platform\asic\6801b1\gpio.c</FilePath>
             </File>
             <File>
               <FileName>system_init.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\platform\asic\6801b0\system_init.c</FilePath>
+              <FilePath>..\..\..\..\..\platform\asic\6801b1\system_init.c</FilePath>
+            </File>
+            <File>
+              <FileName>uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\..\..\platform\asic\6801b1\uart.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -930,7 +920,7 @@
             <File>
               <FileName>startup_ARMCortexM.s</FileName>
               <FileType>2</FileType>
-              <FilePath>..\..\..\..\..\platform\asic\6801b0\bootcode\startup_ARMCortexM.s</FilePath>
+              <FilePath>..\..\..\..\..\platform\asic\6801b1\bootcode\startup_ARMCortexM.s</FilePath>
             </File>
           </Files>
         </Group>

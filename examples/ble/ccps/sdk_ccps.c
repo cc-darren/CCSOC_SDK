@@ -111,6 +111,7 @@ void sdk_ccps_rx_req_data(const uint8_t *rx_data, uint16_t length)
 void sdk_ccps_test_code(void)
 {
     TracerInfo("\nSDK EXAMPLE >> CCPS starts ==========\r\n");
+    
         // send notify/indicate packets per 1sec while CCCD is enabled.
     sw_timer_create(&s_tCCPSTimerTime, SW_TIMER_MODE_REPEATED, sdk_ccps_test_send);      
     sw_timer_start(s_tCCPSTimerTime, 1000, NULL);

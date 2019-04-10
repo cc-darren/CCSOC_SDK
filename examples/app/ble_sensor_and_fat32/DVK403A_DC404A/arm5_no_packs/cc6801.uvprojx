@@ -11,7 +11,6 @@
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <pCCUsed>5060183::V5.06 update 2 (build 183)::ARMCC</pCCUsed>
-      <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>ARMCM0P</Device>
@@ -184,7 +183,6 @@
             <hadXRAM>0</hadXRAM>
             <uocXRam>0</uocXRam>
             <RvdsVP>0</RvdsVP>
-            <RvdsMve>0</RvdsMve>
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -325,7 +323,6 @@
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <uC99>1</uC99>
-            <uGnu>0</uGnu>
             <useXO>0</useXO>
             <v6Lang>1</v6Lang>
             <v6LangP>1</v6LangP>
@@ -333,12 +330,11 @@
             <vShortWch>1</vShortWch>
             <v6Lto>0</v6Lto>
             <v6WtE>0</v6WtE>
-            <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls>--preinclude ..\..\..\..\..\cfg\project\project.h --preinclude ..\..\..\..\..\inc\global.h</MiscControls>
-              <Define>DVK_DC404A CC6801B0 FREERTOS</Define>
+              <Define>DVK_DC404A CC6801B1 FREERTOS</Define>
               <Undefine></Undefine>
-              <IncludePath>..\config;..\..\..\..\..\cfg\project;..\..\..\..\..\inc;..\..\..\..\..\inc\CMSIS;..\..\..\..\..\platform\init\inc;..\..\..\..\..\platform\asic\6801b0;..\..\..\..\..\platform\drvi;..\..\..\..\..\service\tracer;..\..\..\..\..\service\uart_ring;..\..\..\..\..\service\sw_timer;..\..\..\..\..\platform\rtos\freertos\include;..\..\..\..\..\platform\rtos\freertos\portable\RVDS\ARM_CM0;..\..\..\..\..\ble\inc;..\..\..\..\..\ble\ip\ahi\api;..\..\..\..\..\ble\ip\ble\hl\api;..\..\..\..\..\ble\ip\ble\hl\inc;..\..\..\..\..\ble\ip\ble\hl\src\gap;..\..\..\..\..\ble\ip\ble\hl\src\gap\gapc;..\..\..\..\..\ble\ip\ble\hl\src\gap\gapm;..\..\..\..\..\ble\ip\ble\hl\src\gap\smpc;..\..\..\..\..\ble\ip\ble\hl\src\gap\smpm;..\..\..\..\..\ble\ip\ble\hl\src\gatt;..\..\..\..\..\ble\ip\ble\hl\src\gatt\attc;..\..\..\..\..\ble\ip\ble\hl\src\gatt\attm;..\..\..\..\..\ble\ip\ble\hl\src\gatt\atts;..\..\..\..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\..\..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\..\..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\..\..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\..\..\..\ble\ip\ble\hl\src\rwble_hl;..\..\..\..\..\ble\ip\ble\ll\src\em;..\..\..\..\..\ble\ip\ble\ll\src\llc;..\..\..\..\..\ble\ip\ble\ll\src\lld;..\..\..\..\..\ble\ip\ble\ll\src\llm;..\..\..\..\..\ble\ip\ble\ll\src\rwble;..\..\..\..\..\ble\ip\ble\profiles\anp;..\..\..\..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\..\..\..\ble\ip\ble\profiles\anp\anps\api;..\..\..\..\..\ble\ip\ble\profiles\bas\basc\api;..\..\..\..\..\ble\ip\ble\profiles\bas\bass\api;..\..\..\..\..\ble\ip\ble\profiles\blp;..\..\..\..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\..\..\..\ble\ip\ble\profiles\blp\blps\api;..\..\..\..\..\ble\ip\ble\profiles\cpp;..\..\..\..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\..\..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\..\..\..\ble\ip\ble\profiles\cscp;..\..\..\..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\..\..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\..\..\..\ble\ip\ble\profiles\dis\disc\api;..\..\..\..\..\ble\ip\ble\profiles\dis\diss\api;..\..\..\..\..\ble\ip\ble\profiles\find;..\..\..\..\..\ble\ip\ble\profiles\find\findl\api;..\..\..\..\..\ble\ip\ble\profiles\find\findt\api;..\..\..\..\..\ble\ip\ble\profiles\glp;..\..\..\..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\..\..\..\ble\ip\ble\profiles\glp\glps\api;..\..\..\..\..\ble\ip\ble\profiles\hogp;..\..\..\..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\..\..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\..\..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\..\..\..\ble\ip\ble\profiles\hrp;..\..\..\..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\..\..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\..\..\..\ble\ip\ble\profiles\htp;..\..\..\..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\..\..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\..\..\..\ble\ip\ble\profiles\lan;..\..\..\..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\..\..\..\ble\ip\ble\profiles\lan\lans\api;..\..\..\..\..\ble\ip\ble\profiles\pasp;..\..\..\..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\..\..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\..\..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\..\..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\..\..\..\ble\ip\ble\profiles\rscp;..\..\..\..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\..\..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\..\..\..\ble\ip\ble\profiles\scpp;..\..\..\..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\..\..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\..\..\..\ble\ip\ble\profiles\tip;..\..\..\..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\..\..\..\ble\ip\ble\profiles\tip\tips\api;..\..\..\..\..\ble\ip\ea\api;..\..\..\..\..\ble\ip\em\api;..\..\..\..\..\ble\ip\hci\api;..\..\..\..\..\ble\modules\app\api;..\..\..\..\..\ble\modules\common\api;..\..\..\..\..\ble\modules\dbg\api;..\..\..\..\..\ble\modules\display\api;..\..\..\..\..\ble\modules\ecc_p256\api;..\..\..\..\..\ble\modules\h4tl\api;..\..\..\..\..\ble\modules\ke\api;..\..\..\..\..\ble\modules\ke\src;..\..\..\..\..\ble\modules\nvds\api;..\..\..\..\..\ble\modules\rf\api;..\..\..\..\..\ble\modules\rwip\api;..\..\..\..\..\ble\modules\app\src;..\..\..\..\..\ble\ip\ble\profiles\ota\otat;..\..\..\..\..\ble\ip\ble\profiles\ota\otat\api;..\..\..\..\..\ble\ip\ble\profiles\ota\otat\src;..\..\..\..\..\ble\ip\ble\profiles\ccps\api;..\..\..\..\..\ble\ip\ble\profiles\ccps\src;..\..\..\..\..\app\ble_mgr;..\..\..\..\..\platform\bootloader;..\ble_sensor_and_fat32;..\..\..\..\..\module\mems;..\..\..\..\..\platform\rtos\freertos_fat\include;..\..\..\..\..\platform\rtos\freertos_fat\portable\cc6801;..\..\..\..\..\module\flash</IncludePath>
+              <IncludePath>..\config;..\..\..\..\..\cfg\project;..\..\..\..\..\inc;..\..\..\..\..\inc\CMSIS;..\..\..\..\..\platform\init\inc;..\..\..\..\..\platform\asic\6801b1;..\..\..\..\..\platform\drvi;..\..\..\..\..\service\tracer;..\..\..\..\..\service\uart_ring;..\..\..\..\..\service\sw_timer;..\..\..\..\..\platform\rtos\freertos\include;..\..\..\..\..\platform\rtos\freertos\portable\RVDS\ARM_CM0;..\..\..\..\..\ble\inc;..\..\..\..\..\ble\ip\ahi\api;..\..\..\..\..\ble\ip\ble\hl\api;..\..\..\..\..\ble\ip\ble\hl\inc;..\..\..\..\..\ble\ip\ble\hl\src\gap;..\..\..\..\..\ble\ip\ble\hl\src\gap\gapc;..\..\..\..\..\ble\ip\ble\hl\src\gap\gapm;..\..\..\..\..\ble\ip\ble\hl\src\gap\smpc;..\..\..\..\..\ble\ip\ble\hl\src\gap\smpm;..\..\..\..\..\ble\ip\ble\hl\src\gatt;..\..\..\..\..\ble\ip\ble\hl\src\gatt\attc;..\..\..\..\..\ble\ip\ble\hl\src\gatt\attm;..\..\..\..\..\ble\ip\ble\hl\src\gatt\atts;..\..\..\..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\..\..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\..\..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\..\..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\..\..\..\ble\ip\ble\hl\src\rwble_hl;..\..\..\..\..\ble\ip\ble\ll\src\em;..\..\..\..\..\ble\ip\ble\ll\src\llc;..\..\..\..\..\ble\ip\ble\ll\src\lld;..\..\..\..\..\ble\ip\ble\ll\src\llm;..\..\..\..\..\ble\ip\ble\ll\src\rwble;..\..\..\..\..\ble\ip\ble\profiles\anp;..\..\..\..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\..\..\..\ble\ip\ble\profiles\anp\anps\api;..\..\..\..\..\ble\ip\ble\profiles\bas\basc\api;..\..\..\..\..\ble\ip\ble\profiles\bas\bass\api;..\..\..\..\..\ble\ip\ble\profiles\blp;..\..\..\..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\..\..\..\ble\ip\ble\profiles\blp\blps\api;..\..\..\..\..\ble\ip\ble\profiles\cpp;..\..\..\..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\..\..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\..\..\..\ble\ip\ble\profiles\cscp;..\..\..\..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\..\..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\..\..\..\ble\ip\ble\profiles\dis\disc\api;..\..\..\..\..\ble\ip\ble\profiles\dis\diss\api;..\..\..\..\..\ble\ip\ble\profiles\find;..\..\..\..\..\ble\ip\ble\profiles\find\findl\api;..\..\..\..\..\ble\ip\ble\profiles\find\findt\api;..\..\..\..\..\ble\ip\ble\profiles\glp;..\..\..\..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\..\..\..\ble\ip\ble\profiles\glp\glps\api;..\..\..\..\..\ble\ip\ble\profiles\hogp;..\..\..\..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\..\..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\..\..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\..\..\..\ble\ip\ble\profiles\hrp;..\..\..\..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\..\..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\..\..\..\ble\ip\ble\profiles\htp;..\..\..\..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\..\..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\..\..\..\ble\ip\ble\profiles\lan;..\..\..\..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\..\..\..\ble\ip\ble\profiles\lan\lans\api;..\..\..\..\..\ble\ip\ble\profiles\pasp;..\..\..\..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\..\..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\..\..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\..\..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\..\..\..\ble\ip\ble\profiles\rscp;..\..\..\..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\..\..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\..\..\..\ble\ip\ble\profiles\scpp;..\..\..\..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\..\..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\..\..\..\ble\ip\ble\profiles\tip;..\..\..\..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\..\..\..\ble\ip\ble\profiles\tip\tips\api;..\..\..\..\..\ble\ip\ea\api;..\..\..\..\..\ble\ip\em\api;..\..\..\..\..\ble\ip\hci\api;..\..\..\..\..\ble\modules\app\api;..\..\..\..\..\ble\modules\common\api;..\..\..\..\..\ble\modules\dbg\api;..\..\..\..\..\ble\modules\display\api;..\..\..\..\..\ble\modules\ecc_p256\api;..\..\..\..\..\ble\modules\h4tl\api;..\..\..\..\..\ble\modules\ke\api;..\..\..\..\..\ble\modules\ke\src;..\..\..\..\..\ble\modules\nvds\api;..\..\..\..\..\ble\modules\rf\api;..\..\..\..\..\ble\modules\rwip\api;..\..\..\..\..\ble\modules\app\src;..\..\..\..\..\ble\ip\ble\profiles\ota\otat;..\..\..\..\..\ble\ip\ble\profiles\ota\otat\api;..\..\..\..\..\ble\ip\ble\profiles\ota\otat\src;..\..\..\..\..\ble\ip\ble\profiles\ccps\api;..\..\..\..\..\ble\ip\ble\profiles\ccps\src;..\..\..\..\..\app\ble_mgr;..\..\..\..\..\platform\bootloader;..\ble_sensor_and_fat32;..\..\..\..\..\module\mems;..\..\..\..\..\platform\rtos\freertos_fat\include;..\..\..\..\..\platform\rtos\freertos_fat\portable\cc6801;..\..\..\..\..\module\flash</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -351,7 +347,6 @@
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
-            <uClangAs>0</uClangAs>
             <VariousControls>
               <MiscControls>--cpreproc</MiscControls>
               <Define></Define>
@@ -372,7 +367,7 @@
             <ScatterFile>.\eflash.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
-            <Misc>.\rom_symdef_M0.txt --keep=jump_table.o(jump_table_mem_area) --diag_suppress=L6314</Misc>
+            <Misc>..\..\..\..\..\platform\asic\6801b1\rom_symdef_M0.txt --keep=jump_table.o(jump_table_mem_area) --diag_suppress=L6314</Misc>
             <LinkerInputFile></LinkerInputFile>
             <DisabledWarnings></DisabledWarnings>
           </LDads>
@@ -380,47 +375,47 @@
       </TargetOption>
       <Groups>
         <Group>
-          <GroupName>6801b0</GroupName>
+          <GroupName>6801b1</GroupName>
           <Files>
             <File>
               <FileName>clock.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\platform\asic\6801b0\clock.c</FilePath>
+              <FilePath>..\..\..\..\..\platform\asic\6801b1\clock.c</FilePath>
             </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\platform\asic\6801b0\gpio.c</FilePath>
+              <FilePath>..\..\..\..\..\platform\asic\6801b1\gpio.c</FilePath>
             </File>
             <File>
               <FileName>uart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\platform\asic\6801b0\uart.c</FilePath>
+              <FilePath>..\..\..\..\..\platform\asic\6801b1\uart.c</FilePath>
             </File>
             <File>
               <FileName>system_init.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\platform\asic\6801b0\system_init.c</FilePath>
+              <FilePath>..\..\..\..\..\platform\asic\6801b1\system_init.c</FilePath>
             </File>
             <File>
               <FileName>i2c.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\platform\asic\6801b0\i2c.c</FilePath>
+              <FilePath>..\..\..\..\..\platform\asic\6801b1\i2c.c</FilePath>
             </File>
             <File>
               <FileName>pwm.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\platform\asic\6801b0\pwm.c</FilePath>
+              <FilePath>..\..\..\..\..\platform\asic\6801b1\pwm.c</FilePath>
             </File>
             <File>
               <FileName>wktm.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\platform\asic\6801b0\wktm.c</FilePath>
+              <FilePath>..\..\..\..\..\platform\asic\6801b1\wktm.c</FilePath>
             </File>
             <File>
               <FileName>spim.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\platform\asic\6801b0\spim.c</FilePath>
+              <FilePath>..\..\..\..\..\platform\asic\6801b1\spim.c</FilePath>
             </File>
             <File>
               <FileName>ota_handling.c</FileName>
@@ -430,12 +425,12 @@
             <File>
               <FileName>eflash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\platform\asic\6801b0\eflash.c</FilePath>
+              <FilePath>..\..\..\..\..\platform\asic\6801b1\eflash.c</FilePath>
             </File>
             <File>
               <FileName>wdt.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\platform\asic\6801b0\wdt.c</FilePath>
+              <FilePath>..\..\..\..\..\platform\asic\6801b1\wdt.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -559,7 +554,7 @@
             <File>
               <FileName>startup_ARMCortexM.s</FileName>
               <FileType>2</FileType>
-              <FilePath>..\..\..\..\..\platform\asic\6801b0\bootcode\startup_ARMCortexM.s</FilePath>
+              <FilePath>..\..\..\..\..\platform\asic\6801b1\bootcode\startup_ARMCortexM.s</FilePath>
             </File>
             <File>
               <FileName>jump_table.c</FileName>
@@ -733,7 +728,6 @@
                     <uThumb>2</uThumb>
                     <uSurpInc>2</uSurpInc>
                     <uC99>2</uC99>
-                    <uGnu>2</uGnu>
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
@@ -741,7 +735,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>0</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>
@@ -881,7 +874,6 @@
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <pCCUsed>5060183::V5.06 update 2 (build 183)::ARMCC</pCCUsed>
-      <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>ARMCM4_FP</Device>
@@ -1054,7 +1046,6 @@
             <hadXRAM>0</hadXRAM>
             <uocXRam>0</uocXRam>
             <RvdsVP>2</RvdsVP>
-            <RvdsMve>0</RvdsMve>
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -1195,7 +1186,6 @@
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <uC99>1</uC99>
-            <uGnu>0</uGnu>
             <useXO>0</useXO>
             <v6Lang>1</v6Lang>
             <v6LangP>1</v6LangP>
@@ -1203,12 +1193,11 @@
             <vShortWch>1</vShortWch>
             <v6Lto>0</v6Lto>
             <v6WtE>0</v6WtE>
-            <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls>--preinclude ..\..\..\..\..\cfg\project\project.h --preinclude ..\..\..\..\..\inc\global.h</MiscControls>
-              <Define>DVK_DC404A CC6801B0 FREERTOS</Define>
+              <Define>DVK_DC404A CC6801B1 FREERTOS</Define>
               <Undefine></Undefine>
-              <IncludePath>..\config;..\..\..\..\..\cfg\project;..\..\..\..\..\inc;..\..\..\..\..\inc\CMSIS;..\..\..\..\..\platform\init\inc;..\..\..\..\..\platform\asic\6801b0;..\..\..\..\..\platform\drvi;..\..\..\..\..\service\tracer;..\..\..\..\..\service\uart_ring;..\..\..\..\..\service\sw_timer;..\..\..\..\..\platform\rtos\freertos\include;..\..\..\..\..\platform\rtos\freertos\portable\RVDS\ARM_CM4F;..\..\..\..\..\ble\inc;..\..\..\..\..\ble\ip\ahi\api;..\..\..\..\..\ble\ip\ble\hl\api;..\..\..\..\..\ble\ip\ble\hl\inc;..\..\..\..\..\ble\ip\ble\hl\src\gap;..\..\..\..\..\ble\ip\ble\hl\src\gap\gapc;..\..\..\..\..\ble\ip\ble\hl\src\gap\gapm;..\..\..\..\..\ble\ip\ble\hl\src\gap\smpc;..\..\..\..\..\ble\ip\ble\hl\src\gap\smpm;..\..\..\..\..\ble\ip\ble\hl\src\gatt;..\..\..\..\..\ble\ip\ble\hl\src\gatt\attc;..\..\..\..\..\ble\ip\ble\hl\src\gatt\attm;..\..\..\..\..\ble\ip\ble\hl\src\gatt\atts;..\..\..\..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\..\..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\..\..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\..\..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\..\..\..\ble\ip\ble\hl\src\rwble_hl;..\..\..\..\..\ble\ip\ble\ll\src\em;..\..\..\..\..\ble\ip\ble\ll\src\llc;..\..\..\..\..\ble\ip\ble\ll\src\lld;..\..\..\..\..\ble\ip\ble\ll\src\llm;..\..\..\..\..\ble\ip\ble\ll\src\rwble;..\..\..\..\..\ble\ip\ble\profiles\anp;..\..\..\..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\..\..\..\ble\ip\ble\profiles\anp\anps\api;..\..\..\..\..\ble\ip\ble\profiles\bas\basc\api;..\..\..\..\..\ble\ip\ble\profiles\bas\bass\api;..\..\..\..\..\ble\ip\ble\profiles\blp;..\..\..\..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\..\..\..\ble\ip\ble\profiles\blp\blps\api;..\..\..\..\..\ble\ip\ble\profiles\cpp;..\..\..\..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\..\..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\..\..\..\ble\ip\ble\profiles\cscp;..\..\..\..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\..\..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\..\..\..\ble\ip\ble\profiles\dis\disc\api;..\..\..\..\..\ble\ip\ble\profiles\dis\diss\api;..\..\..\..\..\ble\ip\ble\profiles\find;..\..\..\..\..\ble\ip\ble\profiles\find\findl\api;..\..\..\..\..\ble\ip\ble\profiles\find\findt\api;..\..\..\..\..\ble\ip\ble\profiles\glp;..\..\..\..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\..\..\..\ble\ip\ble\profiles\glp\glps\api;..\..\..\..\..\ble\ip\ble\profiles\hogp;..\..\..\..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\..\..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\..\..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\..\..\..\ble\ip\ble\profiles\hrp;..\..\..\..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\..\..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\..\..\..\ble\ip\ble\profiles\htp;..\..\..\..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\..\..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\..\..\..\ble\ip\ble\profiles\lan;..\..\..\..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\..\..\..\ble\ip\ble\profiles\lan\lans\api;..\..\..\..\..\ble\ip\ble\profiles\pasp;..\..\..\..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\..\..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\..\..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\..\..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\..\..\..\ble\ip\ble\profiles\rscp;..\..\..\..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\..\..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\..\..\..\ble\ip\ble\profiles\scpp;..\..\..\..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\..\..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\..\..\..\ble\ip\ble\profiles\tip;..\..\..\..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\..\..\..\ble\ip\ble\profiles\tip\tips\api;..\..\..\..\..\ble\ip\ea\api;..\..\..\..\..\ble\ip\em\api;..\..\..\..\..\ble\ip\hci\api;..\..\..\..\..\ble\modules\app\api;..\..\..\..\..\ble\modules\common\api;..\..\..\..\..\ble\modules\dbg\api;..\..\..\..\..\ble\modules\display\api;..\..\..\..\..\ble\modules\ecc_p256\api;..\..\..\..\..\ble\modules\h4tl\api;..\..\..\..\..\ble\modules\ke\api;..\..\..\..\..\ble\modules\ke\src;..\..\..\..\..\ble\modules\nvds\api;..\..\..\..\..\ble\modules\rf\api;..\..\..\..\..\ble\modules\rwip\api;..\..\..\..\..\ble\modules\app\src;..\..\..\..\..\ble\ip\ble\profiles\ota\otat;..\..\..\..\..\ble\ip\ble\profiles\ota\otat\api;..\..\..\..\..\ble\ip\ble\profiles\ota\otat\src;..\..\..\..\..\ble\ip\ble\profiles\ccps\api;..\..\..\..\..\ble\ip\ble\profiles\ccps\src;..\..\..\..\..\app\ble_mgr;..\..\..\..\..\platform\bootloader;..\ble_sensor_and_fat32;..\..\..\..\..\module\mems;..\..\..\..\..\platform\rtos\freertos_fat\include;..\..\..\..\..\platform\rtos\freertos_fat\portable\cc6801;..\..\..\..\..\module\flash</IncludePath>
+              <IncludePath>..\config;..\..\..\..\..\cfg\project;..\..\..\..\..\inc;..\..\..\..\..\inc\CMSIS;..\..\..\..\..\platform\init\inc;..\..\..\..\..\platform\asic\6801b1;..\..\..\..\..\platform\drvi;..\..\..\..\..\service\tracer;..\..\..\..\..\service\uart_ring;..\..\..\..\..\service\sw_timer;..\..\..\..\..\platform\rtos\freertos\include;..\..\..\..\..\platform\rtos\freertos\portable\RVDS\ARM_CM4F;..\..\..\..\..\ble\inc;..\..\..\..\..\ble\ip\ahi\api;..\..\..\..\..\ble\ip\ble\hl\api;..\..\..\..\..\ble\ip\ble\hl\inc;..\..\..\..\..\ble\ip\ble\hl\src\gap;..\..\..\..\..\ble\ip\ble\hl\src\gap\gapc;..\..\..\..\..\ble\ip\ble\hl\src\gap\gapm;..\..\..\..\..\ble\ip\ble\hl\src\gap\smpc;..\..\..\..\..\ble\ip\ble\hl\src\gap\smpm;..\..\..\..\..\ble\ip\ble\hl\src\gatt;..\..\..\..\..\ble\ip\ble\hl\src\gatt\attc;..\..\..\..\..\ble\ip\ble\hl\src\gatt\attm;..\..\..\..\..\ble\ip\ble\hl\src\gatt\atts;..\..\..\..\..\ble\ip\ble\hl\src\gatt\gattc;..\..\..\..\..\ble\ip\ble\hl\src\gatt\gattm;..\..\..\..\..\ble\ip\ble\hl\src\l2c\l2cc;..\..\..\..\..\ble\ip\ble\hl\src\l2c\l2cm;..\..\..\..\..\ble\ip\ble\hl\src\rwble_hl;..\..\..\..\..\ble\ip\ble\ll\src\em;..\..\..\..\..\ble\ip\ble\ll\src\llc;..\..\..\..\..\ble\ip\ble\ll\src\lld;..\..\..\..\..\ble\ip\ble\ll\src\llm;..\..\..\..\..\ble\ip\ble\ll\src\rwble;..\..\..\..\..\ble\ip\ble\profiles\anp;..\..\..\..\..\ble\ip\ble\profiles\anp\anpc\api;..\..\..\..\..\ble\ip\ble\profiles\anp\anps\api;..\..\..\..\..\ble\ip\ble\profiles\bas\basc\api;..\..\..\..\..\ble\ip\ble\profiles\bas\bass\api;..\..\..\..\..\ble\ip\ble\profiles\blp;..\..\..\..\..\ble\ip\ble\profiles\blp\blpc\api;..\..\..\..\..\ble\ip\ble\profiles\blp\blps\api;..\..\..\..\..\ble\ip\ble\profiles\cpp;..\..\..\..\..\ble\ip\ble\profiles\cpp\cppc\api;..\..\..\..\..\ble\ip\ble\profiles\cpp\cpps\api;..\..\..\..\..\ble\ip\ble\profiles\cscp;..\..\..\..\..\ble\ip\ble\profiles\cscp\cscpc\api;..\..\..\..\..\ble\ip\ble\profiles\cscp\cscps\api;..\..\..\..\..\ble\ip\ble\profiles\dis\disc\api;..\..\..\..\..\ble\ip\ble\profiles\dis\diss\api;..\..\..\..\..\ble\ip\ble\profiles\find;..\..\..\..\..\ble\ip\ble\profiles\find\findl\api;..\..\..\..\..\ble\ip\ble\profiles\find\findt\api;..\..\..\..\..\ble\ip\ble\profiles\glp;..\..\..\..\..\ble\ip\ble\profiles\glp\glpc\api;..\..\..\..\..\ble\ip\ble\profiles\glp\glps\api;..\..\..\..\..\ble\ip\ble\profiles\hogp;..\..\..\..\..\ble\ip\ble\profiles\hogp\hogpbh\api;..\..\..\..\..\ble\ip\ble\profiles\hogp\hogpd\api;..\..\..\..\..\ble\ip\ble\profiles\hogp\hogprh\api;..\..\..\..\..\ble\ip\ble\profiles\hrp;..\..\..\..\..\ble\ip\ble\profiles\hrp\hrpc\api;..\..\..\..\..\ble\ip\ble\profiles\hrp\hrps\api;..\..\..\..\..\ble\ip\ble\profiles\htp;..\..\..\..\..\ble\ip\ble\profiles\htp\htpc\api;..\..\..\..\..\ble\ip\ble\profiles\htp\htpt\api;..\..\..\..\..\ble\ip\ble\profiles\lan;..\..\..\..\..\ble\ip\ble\profiles\lan\lanc\api;..\..\..\..\..\ble\ip\ble\profiles\lan\lans\api;..\..\..\..\..\ble\ip\ble\profiles\pasp;..\..\..\..\..\ble\ip\ble\profiles\pasp\paspc\api;..\..\..\..\..\ble\ip\ble\profiles\pasp\pasps\api;..\..\..\..\..\ble\ip\ble\profiles\prox\proxm\api;..\..\..\..\..\ble\ip\ble\profiles\prox\proxr\api;..\..\..\..\..\ble\ip\ble\profiles\rscp;..\..\..\..\..\ble\ip\ble\profiles\rscp\rscpc\api;..\..\..\..\..\ble\ip\ble\profiles\rscp\rscps\api;..\..\..\..\..\ble\ip\ble\profiles\scpp;..\..\..\..\..\ble\ip\ble\profiles\scpp\scppc\api;..\..\..\..\..\ble\ip\ble\profiles\scpp\scpps\api;..\..\..\..\..\ble\ip\ble\profiles\tip;..\..\..\..\..\ble\ip\ble\profiles\tip\tipc\api;..\..\..\..\..\ble\ip\ble\profiles\tip\tips\api;..\..\..\..\..\ble\ip\ea\api;..\..\..\..\..\ble\ip\em\api;..\..\..\..\..\ble\ip\hci\api;..\..\..\..\..\ble\modules\app\api;..\..\..\..\..\ble\modules\common\api;..\..\..\..\..\ble\modules\dbg\api;..\..\..\..\..\ble\modules\display\api;..\..\..\..\..\ble\modules\ecc_p256\api;..\..\..\..\..\ble\modules\h4tl\api;..\..\..\..\..\ble\modules\ke\api;..\..\..\..\..\ble\modules\ke\src;..\..\..\..\..\ble\modules\nvds\api;..\..\..\..\..\ble\modules\rf\api;..\..\..\..\..\ble\modules\rwip\api;..\..\..\..\..\ble\modules\app\src;..\..\..\..\..\ble\ip\ble\profiles\ota\otat;..\..\..\..\..\ble\ip\ble\profiles\ota\otat\api;..\..\..\..\..\ble\ip\ble\profiles\ota\otat\src;..\..\..\..\..\ble\ip\ble\profiles\ccps\api;..\..\..\..\..\ble\ip\ble\profiles\ccps\src;..\..\..\..\..\app\ble_mgr;..\..\..\..\..\platform\bootloader;..\ble_sensor_and_fat32;..\..\..\..\..\module\mems;..\..\..\..\..\platform\rtos\freertos_fat\include;..\..\..\..\..\platform\rtos\freertos_fat\portable\cc6801;..\..\..\..\..\module\flash</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1221,7 +1210,6 @@
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
-            <uClangAs>0</uClangAs>
             <VariousControls>
               <MiscControls>--cpreproc</MiscControls>
               <Define></Define>
@@ -1242,7 +1230,7 @@
             <ScatterFile>.\eflash.sct</ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
-            <Misc>.\rom_symdef_M4.txt --keep=jump_table.o(jump_table_mem_area) --diag_suppress=L6314</Misc>
+            <Misc>..\..\..\..\..\platform\asic\6801b1\rom_symdef_M4.txt --keep=jump_table.o(jump_table_mem_area) --diag_suppress=L6314</Misc>
             <LinkerInputFile></LinkerInputFile>
             <DisabledWarnings></DisabledWarnings>
           </LDads>
@@ -1250,47 +1238,47 @@
       </TargetOption>
       <Groups>
         <Group>
-          <GroupName>6801b0</GroupName>
+          <GroupName>6801b1</GroupName>
           <Files>
             <File>
               <FileName>clock.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\platform\asic\6801b0\clock.c</FilePath>
+              <FilePath>..\..\..\..\..\platform\asic\6801b1\clock.c</FilePath>
             </File>
             <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\platform\asic\6801b0\gpio.c</FilePath>
+              <FilePath>..\..\..\..\..\platform\asic\6801b1\gpio.c</FilePath>
             </File>
             <File>
               <FileName>uart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\platform\asic\6801b0\uart.c</FilePath>
+              <FilePath>..\..\..\..\..\platform\asic\6801b1\uart.c</FilePath>
             </File>
             <File>
               <FileName>system_init.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\platform\asic\6801b0\system_init.c</FilePath>
+              <FilePath>..\..\..\..\..\platform\asic\6801b1\system_init.c</FilePath>
             </File>
             <File>
               <FileName>i2c.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\platform\asic\6801b0\i2c.c</FilePath>
+              <FilePath>..\..\..\..\..\platform\asic\6801b1\i2c.c</FilePath>
             </File>
             <File>
               <FileName>pwm.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\platform\asic\6801b0\pwm.c</FilePath>
+              <FilePath>..\..\..\..\..\platform\asic\6801b1\pwm.c</FilePath>
             </File>
             <File>
               <FileName>wktm.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\platform\asic\6801b0\wktm.c</FilePath>
+              <FilePath>..\..\..\..\..\platform\asic\6801b1\wktm.c</FilePath>
             </File>
             <File>
               <FileName>spim.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\platform\asic\6801b0\spim.c</FilePath>
+              <FilePath>..\..\..\..\..\platform\asic\6801b1\spim.c</FilePath>
             </File>
             <File>
               <FileName>ota_handling.c</FileName>
@@ -1300,12 +1288,12 @@
             <File>
               <FileName>eflash.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\platform\asic\6801b0\eflash.c</FilePath>
+              <FilePath>..\..\..\..\..\platform\asic\6801b1\eflash.c</FilePath>
             </File>
             <File>
               <FileName>wdt.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\..\platform\asic\6801b0\wdt.c</FilePath>
+              <FilePath>..\..\..\..\..\platform\asic\6801b1\wdt.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1429,7 +1417,7 @@
             <File>
               <FileName>startup_ARMCortexM.s</FileName>
               <FileType>2</FileType>
-              <FilePath>..\..\..\..\..\platform\asic\6801b0\bootcode\startup_ARMCortexM.s</FilePath>
+              <FilePath>..\..\..\..\..\platform\asic\6801b1\bootcode\startup_ARMCortexM.s</FilePath>
             </File>
             <File>
               <FileName>jump_table.c</FileName>
@@ -1598,7 +1586,6 @@
                     <uThumb>2</uThumb>
                     <uSurpInc>2</uSurpInc>
                     <uC99>2</uC99>
-                    <uGnu>2</uGnu>
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
@@ -1606,7 +1593,6 @@
                     <vShortWch>2</vShortWch>
                     <v6Lto>0</v6Lto>
                     <v6WtE>0</v6WtE>
-                    <v6Rtti>2</v6Rtti>
                     <VariousControls>
                       <MiscControls></MiscControls>
                       <Define></Define>

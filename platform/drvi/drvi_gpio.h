@@ -145,7 +145,6 @@ __forceinline void drvi_RequestIrq(uint8_t bPinNum, fpGpiIrqHandler callback, ui
 }
 
 
-
 #endif //_DRVI_GPIO_H_
 
 

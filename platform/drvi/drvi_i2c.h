@@ -48,7 +48,7 @@ __forceinline int drvi_I2cRead(T_I2cDevice *tpDev, uint8_t *pData, uint16_t wLen
     return cc6801_I2cRead(tpDev, pData, wLen);
 }
 
-#if (defined(CC6801B0) || defined(CC6801C0))
+#if (defined(CC6801B0) || defined(CC6801B1))
 __forceinline int drvi_I2cWriteThenRead(T_I2cDevice *tpDev,
                           uint8_t const *pTxData, uint16_t wTxLen,
                           uint8_t *pRxData, uint16_t wRxLen)

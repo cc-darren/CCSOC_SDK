@@ -11,5 +11,3 @@
  
 #include "project.h"
 #include "drvi_rtc.h"
-
-

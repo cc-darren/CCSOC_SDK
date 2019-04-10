@@ -10,18 +10,17 @@
  */
  
 #include "drvi_i2c.h"
-#include "tracer.h"
 
-#if defined I2C_INUSE && (I2C_INUSE)
-int drvi_I2cInit(void)
+#if (defined I2C_INUSE && (I2C_INUSE))
+int32_t drvi_I2cInit(void)
 {
-    int iResult = 0;
+    int32_t iResult = 0;
 
-    #if defined I2C0_INUSE && (I2C0_INUSE)
+#if defined I2C0_INUSE && (I2C0_INUSE)
     do
     {
         iResult = cc6801_I2cInit(I2C_0);
-    if (iResult)
+        if(iResult)
         {
             //Todo: When RTOS is enabled, interrupt must be disabled during initialization.
             //      So, tracer function can't be enabled.
@@ -34,15 +33,16 @@ int drvi_I2cInit(void)
             //Todo: When RTOS is enabled, interrupt must be disabled during initialization.
             //      So, tracer function can't be enabled.
             //      We need to implement UART direct output function
-        //if (iResult)
-            //TracerErr("I2C%d clock set error\r\n", I2C_0);
+            //if(iResult)
+            //    TracerErr("I2C%d clock set error\r\n", I2C_0);
     } while(0);
-    #endif
-    #if defined I2C1_INUSE && (I2C1_INUSE)
+#endif
+
+#if defined I2C1_INUSE && (I2C1_INUSE)
     do
     {
         iResult = cc6801_I2cInit(I2C_1);
-    if (iResult)
+        if(iResult)
         {
             //Todo: When RTOS is enabled, interrupt must be disabled during initialization.
             //      So, tracer function can't be enabled.
@@ -55,26 +55,28 @@ int drvi_I2cInit(void)
             //Todo: When RTOS is enabled, interrupt must be disabled during initialization.
             //      So, tracer function can't be enabled.
             //      We need to implement UART direct output function
-        //if (iResult)
-            //TracerErr("I2C%d clock set error\r\n", I2C_1);
+            //if (iResult)
+            //    TracerErr("I2C%d clock set error\r\n", I2C_1);
     } while(0);
-    #endif
+#endif
 
     return iResult;
 }
 
-#if !(defined(CC6801B0) || defined(CC6801C0))
-int drvi_I2cWriteThenRead(T_I2cDevice *tpDev,
+#if (!(defined(CC6801B0) || defined(CC6801B1)))
+int32_t drvi_I2cWriteThenRead(T_I2cDevice *tpDev,
                           uint8_t const *pTxData, uint16_t wTxLen,
                           uint8_t *pRxData, uint16_t wRxLen)
 {
-    int iResult = 0;
+    int32_t iResult = 0;
 
     do
     {
         iResult = cc6801_I2cWrite(tpDev, pTxData, wTxLen);
-        if (CC_SUCCESS != iResult)
+        if(CC_SUCCESS != iResult)
+        {
             break;
+        }
 
         iResult = cc6801_I2cRead(tpDev, pRxData, wRxLen);
     } while(0);

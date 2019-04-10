@@ -11,8 +11,8 @@
  
 #ifndef _DRVI_TIMER_H_
 #define _DRVI_TIMER_H_
-#include "wktm.h"
 
+#include "wktm.h"
 
 __forceinline void drvi_wktmCounterGet(T_IF_ID _wktm, uint32_t *_data)
 {
@@ -47,5 +47,3 @@ __forceinline void drvi_wktmRegisterCallback(T_IF_ID _wktm, T_callback _fp)
 void drvi_wktmInit(void);
 
 #endif //_DRVI_TIMER_H_
-
-

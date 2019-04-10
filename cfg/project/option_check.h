@@ -434,11 +434,14 @@
 #if ((ACC_IF==Interface_SPI2) || (MAG_IF==Interface_SPI2) || (GYR_IF==Interface_SPI2) || (OLED_IF==Interface_SPI2) || (FLASH_IF==Interface_SPI2))
   #define SPI2_INUSE  TRUE
 #endif
-#if ((ACC_IF==Interface_I2C0) || (MAG_IF==Interface_I2C0) || (GYR_IF==Interface_I2C0) || (OLED_IF==Interface_I2C0) || (PPG_IF==Interface_I2C0) || (ADC_IF==Interface_I2C0) || (AUDIO_IF==Interface_I2C0) || (TEST_I2C0_IF==Interface_I2C0))
+#if ((ACC_IF==Interface_I2C0) || (MAG_IF==Interface_I2C0) || (GYR_IF==Interface_I2C0) || (OLED_IF==Interface_I2C0) || (PPG_IF==Interface_I2C0) || (ADC_IF==Interface_I2C0) || (AUDIO_IF==Interface_I2C0) || (TOUCH_IF == Interface_I2C0) ||(TEST_I2C0_IF==Interface_I2C0))
   #define I2C0_INUSE  TRUE
 #endif
-#if ((ACC_IF==Interface_I2C1) || (MAG_IF==Interface_I2C1) || (GYR_IF==Interface_I2C1) || (OLED_IF==Interface_I2C1) || (PPG_IF==Interface_I2C1) || (ADC_IF==Interface_I2C1) || (AUDIO_IF==Interface_I2C1) || (TEST_I2C1_IF==Interface_I2C1))
+#if ((ACC_IF==Interface_I2C1) || (MAG_IF==Interface_I2C1) || (GYR_IF==Interface_I2C1) || (OLED_IF==Interface_I2C1) || (PPG_IF==Interface_I2C1) || (ADC_IF==Interface_I2C1) || (AUDIO_IF==Interface_I2C1) || (TOUCH_IF == Interface_I2C1) ||(TEST_I2C1_IF==Interface_I2C1))
   #define I2C1_INUSE  TRUE
+#endif
+#if ((MAG_IF==Interface_SW_I2C))
+  #define SW_I2C_INUSE  TRUE
 #endif
 #if ((TRACER_IF==Interface_UART0) || (HCI_IF==Interface_UART0) || (TEST_UART0_IF==Interface_UART0) || (GPS_IF==Interface_UART0))
   #define UART0_INUSE TRUE
@@ -474,7 +477,7 @@
   #define SPI_INUSE TRUE
 #endif
 
-#if ((I2C0_INUSE) || (I2C1_INUSE))
+#if ((I2C0_INUSE) || (I2C1_INUSE) || (SW_I2C_INUSE))
   #define I2C_INUSE TRUE
 #endif
 

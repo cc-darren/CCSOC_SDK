@@ -51,7 +51,7 @@ extern const T_ClockConfig g_aClockTable[];
 
 #define configCPU_CLOCK_HZ                    (g_aClockTable[g_dwCurrentClock].dwMHz)
 #define configTICK_RATE_HZ                    ((TickType_t)100) //minimum @96MHz:6, @16MHz:1
-#define configTOTAL_HEAP_SIZE                 ((size_t)(32 * 1024))
+#define configTOTAL_HEAP_SIZE                 ((size_t)(64 * 1024))
 #define configMINIMAL_STACK_SIZE              (128)     //unit: sizeof(uint32_t)
 #define configMAX_PRIORITIES                  (16)      //this is TASK priority used by task creation, NOT interrupt priority
 #define configUSE_PREEMPTION                  0

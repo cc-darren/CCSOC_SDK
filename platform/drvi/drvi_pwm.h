@@ -11,36 +11,45 @@
  
 #ifndef _DRVI_PWM_H_
 #define _DRVI_PWM_H_
+
 #include "pwm.h"
 
+__forceinline void drvi_pwmCounterGet(T_IF_ID _pwm, uint32_t *data)
+{
+    cc6801_pwmCounterGet((E_pwmTotal) _pwm, data);
+}
 
-#define drvi_pwmCounterGet(x,y)         cc6801_pwmCounterGet((E_pwmTotal)x,y)
-#define drvi_pwmCounterClear(x)            cc6801_pwmCounterClear((E_pwmTotal)x)
-#define drvi_pwmDuty(x,y)               cc6801_pwmDuty((E_pwmTotal)x,y)
-#define drvi_pwmStart(x)                   cc6801_pwmStart((E_pwmTotal)x)
-#define drvi_pwmStop(x)                    cc6801_pwmStop((E_pwmTotal)x)
-#define drvi_pwmLoadPrescaler(x,y)      cc6801_pwmLoadPrescaler((E_pwmTotal)x,y)
-#define drvi_pwmRegisterCallback(x,y)    cc6801_pwmRegisterCallback((E_pwmTotal)x,y)
+__forceinline void drvi_pwmCounterClear(T_IF_ID _pwm)
+{
+    cc6801_pwmCounterClear((E_pwmTotal) _pwm);
+}
+
+__forceinline void drvi_pwmLoadPrescaler(T_IF_ID _pwm, uint32_t data)
+{
+    cc6801_pwmLoadPrescaler((E_pwmTotal) _pwm, data);
+}
+
+__forceinline void drvi_pwmStart(T_IF_ID _pwm)
+{
+    cc6801_pwmStart((E_pwmTotal) _pwm);
+}
+
+__forceinline void drvi_pwmStop(T_IF_ID _pwm)
+{
+    cc6801_pwmStop((E_pwmTotal) _pwm);
+}
+
+__forceinline void drvi_pwmRegisterCallback(T_IF_ID _pwm, T_callback _fp)
+{
+    cc6801_pwmRegisterCallback((E_pwmTotal) _pwm, _fp);
+}
+
+__forceinline void drvi_pwmDuty(T_IF_ID _pwm, uint32_t data)
+{
+    cc6801_pwmDuty((E_pwmTotal) _pwm, data);
+}
 
 void drvi_pwmInit(void);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 #endif //_DRVI_PWM_H_
 

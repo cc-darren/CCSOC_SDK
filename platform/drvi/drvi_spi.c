@@ -11,67 +11,46 @@
 
 #include "drvi_spi.h"
 
-#ifdef FREERTOS
-#include "FreeRTOS.h"
-#include "semphr.h"
-#if defined(SEMAPHORE_H)
-    #if defined(SPI1_INUSE) && (SPI1_INUSE)
-        SemaphoreHandle_t g_xSemaphoreSpim0 = NULL;
-    #endif
-
-    #if defined(SPI1_INUSE) && (SPI1_INUSE)
-        SemaphoreHandle_t g_xSemaphoreSpim1 = NULL;
-    #endif
-
-    #if(defined SPI2_INUSE) && (SPI2_INUSE)
-        SemaphoreHandle_t g_xSemaphoreSpim2 = NULL;
-    #endif
-#endif
-#endif
-
-#if defined SPI_INUSE && (SPI_INUSE)
+#if (defined(SPI_INUSE) && (SPI_INUSE))
 int drvi_SpiInit(void)
 {
     T_SpiDevice tSpiDev;
-    int iResult = 0;
+    int32_t iResult = 0;
 
-    #if defined SPI0_INUSE && (SPI0_INUSE)
-    tSpiDev.bBusNum = 0;
-    tSpiDev.wMode = SPIM0_CONFIG;
-    tSpiDev.dwMaxSpeedHz = SPIM0_CLOCK;
-    iResult = cc6801_SpimInit(&tSpiDev);
-
-    #if defined(SEMAPHORE_H)
-    {
-        g_xSemaphoreSpim0 = xSemaphoreCreateBinary();
-    }
-    #endif
-    #endif
-
-    #if defined SPI1_INUSE && (SPI1_INUSE)
-    tSpiDev.bBusNum = 1;
-    tSpiDev.wMode = SPIM1_CONFIG;
-    tSpiDev.dwMaxSpeedHz = SPIM1_CLOCK;
-    iResult = cc6801_SpimInit(&tSpiDev);
-
-    #if defined(SEMAPHORE_H)
-    {
-        g_xSemaphoreSpim1 = xSemaphoreCreateBinary();
-    }
-    #endif
+    #if (defined(SPI0_INUSE) && (SPI0_INUSE))
+        tSpiDev.bBusNum = 0;
+        tSpiDev.wMode = SPIM0_CONFIG;
+        tSpiDev.dwMaxSpeedHz = SPIM0_CLOCK;
+        iResult = cc6801_SpimInit(&tSpiDev);
+        //Todo: When RTOS is enabled, interrupt must be disabled during initialization.
+        //      So, tracer function can't be enabled.
+        //      We need to implement UART direct output function
+        //if (iResult)
+        //    TracerErr("SPI0 initial error\n");
     #endif
 
-    #if defined SPI2_INUSE && (SPI2_INUSE)
-    tSpiDev.bBusNum = 2;
-    tSpiDev.wMode = SPIM2_CONFIG;
-    tSpiDev.dwMaxSpeedHz = SPIM2_CLOCK;
-    iResult = cc6801_SpimInit(&tSpiDev);
-
-    #if defined(SEMAPHORE_H)
-    {
-        g_xSemaphoreSpim2 = xSemaphoreCreateBinary();
-    }
+    #if (defined(SPI1_INUSE) && (SPI1_INUSE))
+        tSpiDev.bBusNum = 1;
+        tSpiDev.wMode = SPIM1_CONFIG;
+        tSpiDev.dwMaxSpeedHz = SPIM1_CLOCK;
+        iResult = cc6801_SpimInit(&tSpiDev);
+        //Todo: When RTOS is enabled, interrupt must be disabled during initialization.
+        //      So, tracer function can't be enabled.
+        //      We need to implement UART direct output function
+        //if (iResult)
+        //    TracerErr("SPI1 initial error\n");
     #endif
+
+    #if (defined(SPI2_INUSE) && (SPI2_INUSE))
+        tSpiDev.bBusNum = 2;
+        tSpiDev.wMode = SPIM2_CONFIG;
+        tSpiDev.dwMaxSpeedHz = SPIM2_CLOCK;
+        iResult = cc6801_SpimInit(&tSpiDev);
+        //Todo: When RTOS is enabled, interrupt must be disabled during initialization.
+        //      So, tracer function can't be enabled.
+        //      We need to implement UART direct output function
+        //if (iResult)
+        //    TracerErr("SPI2 initial error\n");
     #endif
 
     return iResult;

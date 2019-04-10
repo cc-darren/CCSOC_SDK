@@ -4,7 +4,7 @@
 
 SOC 0x10000000 0x3C000  ; 240KB
 {
-    STARTUP + 0
+    STARTUP + 0 
     {
         *(VECTOR_TABLE, +First)
     }
@@ -16,7 +16,7 @@ SOC 0x10000000 0x3C000  ; 240KB
 
     IMAGE_RO + 0
     {
-        *(InRoot$$Sections)
+        *(InRoot$$Sections)        
         *(+RO)
     }
 
@@ -31,10 +31,19 @@ SOC 0x10000000 0x3C000  ; 240KB
         *(+ZI)
     }
 
-    BLE_JUMP_TABLE 0x20029C00 
+    BLE_JUMP_TABLE 0x20029BF8 
     {
         *(jump_table_mem_area)
     }
 
+    SLEEP_FLAG 0x20029FF8 EMPTY UNINIT 0x8      ; save deep sleep flag and key to the bottom of RAM address
+    {
+        ;     +-----------------+
+        ;0x00 |   0xBEEFBEEF    |
+        ;     +-----------------+
+        ;0x04 | &Wakeup_Handler |
+        ;     +-----------------+
+    }
 }
+
 

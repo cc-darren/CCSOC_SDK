@@ -14,7 +14,6 @@
 
 #include "eflash.h"
 
-
 __forceinline void drvi_EflashInit(void)
 {
     cc6801_EflashInit();
@@ -24,26 +23,32 @@ __forceinline void drvi_EflashFlush(void)
 {
     cc6801_EflashFlush();
 }
+
 __forceinline BOOL drvi_EflashEraseALL(void)
 {
     return cc6801_EflashEraseALL();
 }
+
 __forceinline BOOL drvi_EflashErasePage(uint32_t dwEflashAdr)
 {
     return cc6801_EflashErasePage(dwEflashAdr);
 }
+
 __forceinline void drvi_EflashProgram(uint32_t dwEflashAdr,unsigned char * pBufAdr,uint32_t dwBufSize)
 {
     cc6801_EflashProgram(dwEflashAdr,pBufAdr,dwBufSize);
 }
+
 __forceinline void drvi_EflashRegisterCallback(fpEflash_Callback fpCB)
 {
     cc6801_EflashRegisterCallback(fpCB);
 }
+
 __forceinline void drvi_SecurityProtect(void)
 {
     cc6801_SecurityProtect();
 }
+
 /**@brief SoC Events. */
 enum E_DRVI_EFLASH_EVTS
 {
@@ -51,4 +56,5 @@ enum E_DRVI_EFLASH_EVTS
   E_DRVI_EFLASH_OPERATION_ERROR,                /**< Event indicating that the ongoing flash operation has timed out with an error. */
   E_DRVI_EFLASH_NUMBER_OF_EVTS
 };
+
 #endif

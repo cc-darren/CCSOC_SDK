@@ -58,10 +58,12 @@ Head Block of The File
 //##############################
 // CC Task Stack Size constant #
 //##############################
-#define TASK_STK_TEST1          (80)
-#define TASK_STK_TEST2          (80)
-#define TASK_STK_TEST3          (80)
-#define TASK_STK_TEST4          (80)
+#define TASK_STK_SIZE           (128)
+
+#define TASK_STK_TEST1          TASK_STK_SIZE
+#define TASK_STK_TEST2          TASK_STK_SIZE
+#define TASK_STK_TEST3          TASK_STK_SIZE
+#define TASK_STK_TEST4          TASK_STK_SIZE
 
 //#################################################
 // CC Queue Size constant (elements of the queue) #
