@@ -2108,7 +2108,7 @@
             <v6WtE>0</v6WtE>
             <VariousControls>
               <MiscControls>--no_inline --no_multifile -DMSC_CLOCK</MiscControls>
-              <Define>DVK403A CC6801B1</Define>
+              <Define>DVK403B CC6801B1</Define>
               <Undefine></Undefine>
               <IncludePath>..\config;..\..\..\..\..\cfg\project;..\..\..\..\..\inc;..\..\..\..\..\inc\CMSIS;..\..\..\..\..\app\Display;..\..\..\..\..\platform\init\inc;..\..\..\..\..\platform\asic\6801b1;..\..\..\..\..\platform\drvi;..\..\..\..\..\module\flash;..\..\..\..\..\module\mems;..\..\..\..\..\module\oled;..\..\..\..\..\module\ppg;..\..\..\..\..\service\experimental_section_vars;..\..\..\..\..\service\fifo;..\..\..\..\..\service\fstorage;..\..\..\..\..\service\tracer;..\..\..\..\..\service\uart_ring;..\..\..\..\..\test;..\..\..\..\..\test\inc</IncludePath>
             </VariousControls>
@@ -2996,7 +2996,7 @@
             <v6WtE>0</v6WtE>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>DVK403A CC6801B1</Define>
+              <Define>DVK403B CC6801B1</Define>
               <Undefine></Undefine>
               <IncludePath>..\config;..\..\..\..\..\cfg\project;..\..\..\..\..\inc;..\..\..\..\..\inc\CMSIS;..\..\..\..\..\app\Display;..\..\..\..\..\platform\asic\6801b1;..\..\..\..\..\platform\drvi;..\..\..\..\..\platform\init\inc;..\..\..\..\..\module\flash;..\..\..\..\..\module\mems;..\..\..\..\..\module\oled;..\..\..\..\..\module\ppg;..\..\..\..\..\service\experimental_section_vars;..\..\..\..\..\service\fifo;..\..\..\..\..\service\fstorage;..\..\..\..\..\service\tracer;..\..\..\..\..\service\uart_ring;..\..\..\..\..\test;..\..\..\..\..\test\inc</IncludePath>
             </VariousControls>

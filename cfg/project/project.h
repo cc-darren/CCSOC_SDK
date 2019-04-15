@@ -57,12 +57,12 @@ Head Block of The File
     #include "config_EVB_QFN60L.h"
 #elif defined(DVK) && DVK
     #include "config_DVK.h"
-#elif defined(DVK403A) && DVK403A
-    #include "config_DVK403A.h"
+#elif defined(DVK403B) && DVK403B
+    #include "config_DVK403B.h"
 #elif defined(DVK_DC404A) && DVK_DC404A
-    #include "config_DVK403A_DC404A.h"
+    #include "config_DVK403B_DC404A.h"
 #elif defined(DVK_DC405A) && DVK_DC405A
-    #include "config_DVK403A_DC405A.h"
+    #include "config_DVK403B_DC405A.h"
 #elif defined(ASIC) && ASIC
     #include "config_ASIC.h"
 #else
