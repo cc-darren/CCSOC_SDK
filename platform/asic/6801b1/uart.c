@@ -549,6 +549,8 @@ void uart_RxCallbackRegister(fpUartRxCallBack UartRxCallBack)
 {
     if (UartRxCallBack)
         g_UartRxCallBack = UartRxCallBack;
+	
+	NVIC_EnableIRQ(UART0_IP_IRQn);
 }
 
 /**
