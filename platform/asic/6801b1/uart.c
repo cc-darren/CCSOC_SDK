@@ -617,6 +617,7 @@ int fputc(int c, FILE *stream)
     //
     stream = stream;
 
+#if (TRACER_IF == Interface_UART0)
     //
     // Interrupt Control Register (UnICTRL)
     // [Bit 7] UnEEI    - 0: Disables receive error interrupt, 1: Enables receive error interrupt.
@@ -639,6 +640,20 @@ int fputc(int c, FILE *stream)
     //
     regUART0CTRL->dw.bufTx = c;
 
+#elif (TRACER_IF == Interface_UART1)
+    do
+    {
+    } while((regUART1CTRL->dw.ictrl & 0x01UL) == 0);
+
+    regUART1CTRL->dw.bufTx = c;
+
+#elif (TRACER_IF == Interface_UART2)
+    do
+    {
+    } while((regUART2CTRL->dw.ictrl & 0x01UL) == 0);
+
+    regUART2CTRL->dw.bufTx = c;
+#endif
+
     return c;
 }
-

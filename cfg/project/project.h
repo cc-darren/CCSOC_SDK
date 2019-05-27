@@ -53,6 +53,8 @@ Head Block of The File
     #include "config_EVB605A.h"
 #elif defined(EVB605A_IOdown) && EVB605A_IOdown
     #include "config_EVB605A_IOdown.h"
+#elif defined(EVB607A) && EVB607A
+    #include "config_EVB607A.h"
 #elif defined(EVB_QFN60L) && EVB_QFN60L
     #include "config_EVB_QFN60L.h"
 #elif defined(DVK) && DVK
