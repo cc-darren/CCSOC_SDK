@@ -130,7 +130,7 @@ void cc6801_wktmStart(E_wktmTotal bPort)
         g_taWktm[bPort].pReg->bf.intEn = 1;                 //enable interrupt;
         g_taWktm[bPort].pReg->dw.lowCounter = 0xFFFFFF;     //default load 24bit counter to match design
         g_taWktm[bPort].pReg->bf.clear = 0;
-        g_taWktm[bPort].pReg->bf.repeat = 1;                //start from repeat mode
+        g_taWktm[bPort].pReg->bf.repeat = 0;                //start from repeat mode
         g_taWktm[bPort].pReg->bf.enable = 1;
     }
     else
@@ -146,7 +146,7 @@ void cc6801_wktmStop(E_wktmTotal bPort)
         g_taWktm[bPort].pReg->bf.enable = 0;
         g_taWktm[bPort].pReg->bf.intEn = 0;         //default disable interrupt;
         g_taWktm[bPort].pReg->bf.intSts = 1;        //clear interrupt;
-        g_taWktm[bPort].pReg->bf.repeat = 1;        //default one-shot
+        g_taWktm[bPort].pReg->bf.repeat = 0;        //default one-shot
     }
     else
     {
@@ -169,7 +169,7 @@ void cc6801_wktmInit(E_wktmTotal bPort)
         g_taWktm[bPort].pReg->dw.lowCounter = 0xFFFFFF;
         g_taWktm[bPort].pReg->bf.pwmTimerSel = 1;   //select Timer
         g_taWktm[bPort].pReg->bf.clear = 1;
-        g_taWktm[bPort].pReg->bf.repeat = 1;        //default one-shot
+        g_taWktm[bPort].pReg->bf.repeat = 0;        //default one-shot
         g_taWktm[bPort].pReg->bf.pwmOutEn = 0;      //this is timer, no PWM output
     
         g_taWktm[bPort].pReg->bf.prescaler = 0;     //default to highest clock

@@ -37,7 +37,7 @@ static void test_WdtHandler(void *event)
 int main(void)
 {
     uint32_t dwCounter = 0;
-    
+
     //Must be first in main()
     sys_InitMain();
 
@@ -49,7 +49,7 @@ int main(void)
     printf("== CC6801 - WDT - Start ==\r\n");
 
     g_Wdt_Trigger = TRUE;
-    
+
     /*******************************/
     /****** Application Start ******/
     /*******************************/
@@ -58,8 +58,20 @@ int main(void)
         if(g_Wdt_Trigger == TRUE)
         {
             g_Wdt_Trigger = FALSE;
-            drvi_WdtRegisterCallback(1000, test_WdtHandler);            
+
+            if (dwCounter >= 9)
+            {
+                TracerInfo("[W:%04d] watchdog reset\r\n", ++dwCounter);
+                drvi_WdtRstSet(1000);
+                while(1);
+            }
+            else
+            {
+                drvi_WdtRegisterCallback(1000, test_WdtHandler);
+            }
+
             drvi_WdtEnable();
+
             TracerInfo("[W:%04d] watchdog trigger\r\n", ++dwCounter);
         }
     }

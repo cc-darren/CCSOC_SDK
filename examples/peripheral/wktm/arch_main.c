@@ -52,19 +52,20 @@ int main(void)
     /*******************************/
     /****** Application Start ******/
     /*******************************/
+
+    cc6801_wktmInit(WKTM_0);
+    drvi_wktmRegisterCallback(WKTM_PORT_0, test_WktmHandler);
+    NVIC_EnableIRQ(WKTM0_IRQn);
+
+    drvi_wktmStart(WKTM_PORT_0);
+    drvi_wktmCounterLoad(WKTM_PORT_0, 32768);
+    drvi_wktmCounterClear(WKTM_PORT_0);
+
     while(1)
     {
         if(g_Wktm_Trigger == TRUE)
         {
             g_Wktm_Trigger = FALSE;
-
-            cc6801_wktmInit(WKTM_0);
-            drvi_wktmRegisterCallback(WKTM_PORT_0, test_WktmHandler);
-            NVIC_EnableIRQ(WKTM0_IRQn);
-
-            drvi_wktmStart(WKTM_PORT_0);
-            drvi_wktmCounterLoad(WKTM_PORT_0, 32768);
-            drvi_wktmCounterClear(WKTM_PORT_0);
 
             printf("[W:%04d] wktm trigger\r\n", ++dwCounter);
         }
